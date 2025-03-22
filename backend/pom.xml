@@ -8,11 +8,11 @@
 		<version>3.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>no.ntnu.idatt2105</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>edu.ntnu.stu</groupId>
+	<artifactId>idatt2105-prosjektoppgave</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ov5</name>
-	<description>Øving 5 i fullstack</description>
+	<description>Prosjektoppgave i idatt2105</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
