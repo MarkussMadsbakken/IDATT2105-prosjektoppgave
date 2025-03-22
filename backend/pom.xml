@@ -8,7 +8,7 @@
 		<version>3.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>edu.ntnu.stu</groupId>
+	<groupId>edu.ntnu.stud</groupId>
 	<artifactId>idatt2105-prosjektoppgave</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ov5</name>
