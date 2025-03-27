@@ -1,0 +1,3 @@
+<template>
+    Create listing
+</template>
