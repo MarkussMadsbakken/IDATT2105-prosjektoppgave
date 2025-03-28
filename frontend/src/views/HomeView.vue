@@ -1,6 +1,43 @@
 <script setup lang="ts">
 import ListingCard from "@/components/ListingCard.vue";
+import CategoryCard from "@/components/CategoryCard.vue";
 import type { Listing } from "@/types";
+import type { CategoryIcons } from "@/util/CategoryIcons";
+
+const Categories: { name: string; icon: keyof typeof CategoryIcons }[] = [
+  {
+    icon: "armchair",
+    name: "interior"
+  },
+  {
+    icon: "monitorSmartphone",
+    name: "electronics"
+  },
+  {
+    icon: "washingMachine",
+    name: "appliances"
+  },
+  {
+    icon: "mountainSnow",
+    name: "leisure"
+  },
+  {
+    icon: "volleyball",
+    name: "sports"
+  },
+  {
+    icon: "shirt",
+    name: "clothing"
+  },
+  {
+    icon: "car",
+    name: "transport"
+  },
+  {
+    icon: "shrub",
+    name: "garden"
+  }
+]
 
 const listings: Listing[] = [
   {
@@ -39,6 +76,13 @@ const listings: Listing[] = [
 
 <template>
   <div class="page-wrapper">
+    <div class="categories">
+      <div v-for="category in Categories">
+        <CategoryCard :icon="category.icon" :categoryname="category.name">
+          {{ $t(category.name) }}
+        </CategoryCard>
+      </div>
+    </div>
     <div class="header-title">
       {{ $t('recommended') }}
     </div>
@@ -51,6 +95,15 @@ const listings: Listing[] = [
 </template>
 
 <style scoped>
+.categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  justify-content: center;
+  justify-items: center;
+  margin-bottom: 5rem;
+}
+
 .header-title {
   font-size: x-large;
   font-weight: 600;
@@ -76,6 +129,13 @@ const listings: Listing[] = [
   .recommended-listings {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+@media only screen and (min-width: 1200px) {
+  .categories {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
 }
 
 .page-wrapper {
