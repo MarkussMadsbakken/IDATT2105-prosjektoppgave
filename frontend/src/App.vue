@@ -54,10 +54,6 @@ import { UserRound, MessageSquare, Bell, SquarePlus } from 'lucide-vue-next';
   background-color: #1E6676;
 }
 
-main {
-  margin-top: 6rem;
-}
-
 .profile-wrapper {
   border: solid white;
   height: min-content;
@@ -67,7 +63,7 @@ main {
 }
 
 .logo {
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 15px;
   border: solid white;
 }
@@ -91,13 +87,15 @@ main {
 }
 
 header {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
   height: fit-content;
   border: black;
   border-width: 1px;
+  z-index: 999;
+  line-height: 0;
 }
 
 nav {
