@@ -28,6 +28,8 @@
   --color-background-mute: var(--vt-c-white-mute);
   --color-primaryButton: rgba(30,102,118);
   --color-secondaryButton: rgba(223,129,185);
+  --color-destructiveButton: rgba(223,78,78);
+  --color-acceptButton: rgba(0,201,81);
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
 

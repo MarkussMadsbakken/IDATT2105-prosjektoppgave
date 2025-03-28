@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 const props = withDefaults(defineProps<{
-  variant : 'primary' | 'secondary'
+  variant : 'primary' | 'secondary' | 'outline' | 'destructive' | 'accept'
   width?: string
   height?: string
 }>(), {
@@ -23,11 +23,11 @@ const props = withDefaults(defineProps<{
 
 .base-button {
   all: unset;
-  font-weight: bold;
+  font-weight: normal;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   padding: 0.5rem 1rem;
-
+  font-size: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,12 +37,28 @@ const props = withDefaults(defineProps<{
   cursor: pointer;
 }
 .primary{
+  font-weight: bold;
   background-color: var(--color-primaryButton);
   color: white;
 }
 .secondary{
+  font-weight: bold;
   background-color: var(--color-secondaryButton);
   color: black;
+}
+.outline{
+  outline: black;
+  border: 1px solid black;
+}
+.destructive{
+  background-color: var(--color-destructiveButton);
+  color: white;
+  font-weight: bold;
+}
+.accept{
+  background-color: var(--color-acceptButton);
+  color: white;
+  font-weight: bold;
 }
 
 </style>
