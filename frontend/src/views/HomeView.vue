@@ -40,7 +40,7 @@ const listings: Listing[] = [
 <template>
   <div class="page-wrapper">
     <div class="header-title">
-
+      {{ $t('recommended') }}
     </div>
     <div class="recommended-listings">
       <div v-for="listing in listings">
@@ -51,6 +51,11 @@ const listings: Listing[] = [
 </template>
 
 <style scoped>
+.header-title {
+  font-size: x-large;
+  font-weight: 600;
+}
+
 .recommended-listings {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -78,6 +83,6 @@ const listings: Listing[] = [
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  gap: 5rem;
+  gap: 1rem;
 }
 </style>
