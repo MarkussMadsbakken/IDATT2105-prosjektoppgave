@@ -1,85 +1,111 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { UserRound, MessageSquare, Bell, SquarePlus } from 'lucide-vue-next';
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <div class="background" />
+    <nav>
+      <div>
+        <RouterLink to="/" class="link">
+          <div class="logo">
+            Logo
+          </div>
+        </RouterLink>
+      </div>
+      <div class="right-elements">
+        <RouterLink to="/profile/listings/create" class="link">
+          <SquarePlus />
+        </RouterLink>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+        <!-- Endre til en dropdown når komponenten er ferdig -->
+        <div class="link">
+          <Bell />
+        </div>
+        <RouterLink to="/messages" class="link">
+          <MessageSquare />
+        </RouterLink>
+        <RouterLink to="/profile" class="link profile">
+          <div class="profile-wrapper">
+            <UserRound :size="40" :stroke-width="1" />
+          </div>
+        </RouterLink>
+      </div>
+    </nav>
   </header>
-
-  <RouterView />
+  <main>
+    <RouterView />
+  </main>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.link.profile {
+  margin-left: 1rem;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 95%;
+  background-color: #1E6676;
+}
+
+main {
+  margin-top: 6rem;
+}
+
+.profile-wrapper {
+  border: solid white;
+  height: min-content;
+  line-height: 0;
+  padding: 0.5rem;
+  border-radius: 999px;
 }
 
 .logo {
-  display: block;
-  margin: 0 auto 2rem;
+  padding: 1rem;
+  border-radius: 15px;
+  border: solid white;
+}
+
+.right-elements {
+  display: flex;
+  flex: row;
+  gap: 2rem;
+  height: fit-content;
+  align-items: center;
+}
+
+.right-elements>* {
+  height: fit-content;
+}
+
+.link {
+  text-decoration-color: white;
+  color: white;
+  text-decoration-line: none;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: fit-content;
+  border: black;
+  border-width: 1px;
 }
 
 nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
 }
 </style>
