@@ -36,14 +36,10 @@ public class User {
      *
      * @param username  the username of the user
      * @param password  the password of the user
-     * @param firstName the first name of the user
-     * @param lastName  the last name of the user
      */
     public User(String username, String password, String firstName, String lastName) {
         this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     /**

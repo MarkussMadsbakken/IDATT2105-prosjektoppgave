@@ -1,6 +1,8 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,11 +12,17 @@ import java.util.List;
  * Repository class for managing User entities in the database.
  * This class provides methods to add, retrieve, and list users.
  */
+@Repository
 public class UserRepo {
 
-    private final String url = System.getenv("DB_URL");
-    private final String user = System.getenv("DB_USER");
-    private final String password = System.getenv("DB_PASSWORD");
+    @Value("${spring.datasource.url}")
+    private String url;
+
+    @Value("${spring.datasource.username}")
+    private String user;
+
+    @Value("${spring.datasource.password}")
+    private String password;
 
     /**
      * Initializes the UserRepo and loads the MySQL JDBC driver.
@@ -33,7 +41,7 @@ public class UserRepo {
      * @param user the User object to be added
      */
     public void addUser(User user) {
-        String query = "INSERT INTO users (username, password, first_name, last_name, created_at, is_admin) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (username, password, first_name, last_name, is_admin) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(url, this.user, this.password);
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -41,8 +49,7 @@ public class UserRepo {
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
             statement.setString(4, user.getLastName());
-            statement.setString(5, user.getCreatedAt());
-            statement.setBoolean(6, user.isAdmin());
+            statement.setBoolean(5, user.isAdmin());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
@@ -84,6 +91,38 @@ public class UserRepo {
         }
         return null;
     }
+
+    /**
+     * Retrieves a user from the database by their username
+     *
+     * @param username the username of the user to retrieve
+     * @return the User object, or null if not found
+     **/
+    public User getUserByUsername(String username) {
+    String query = "SELECT * FROM users WHERE username = ?";
+    try (Connection connection = DriverManager.getConnection(url, this.user, this.password);
+         PreparedStatement statement = connection.prepareStatement(query)) {
+
+        statement.setString(1, username);
+        try (ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                User user = new User(
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name")
+                );
+                user.setId(resultSet.getLong("id"));
+                user.setCreatedAt(resultSet.getString("created_at"));
+                user.setAdmin(resultSet.getBoolean("is_admin"));
+                return user;
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
 
     /**
      * Retrieves all users from the database.
