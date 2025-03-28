@@ -19,13 +19,30 @@ const i18n = createI18n({
     fallbackLocale: "en",
     messages: {
         no: {
-            recommended: "Anbefalinger"
+            recommended: "Anbefalinger",
+            interior: "Interiør",
+            electronics: "Elektronikk",
+            appliances: "Hvitevarer",
+            leisure: "Fritid",
+            sports: "Sport",
+            clothing: "Klær",
+            transport: "Transport",
+            garden: "Hage"
+
         },
         en: {
-            recommended: "Recommended"
+            recommended: "Recommended",
+            interior: "Interior",
+            electronics: "Electronics",
+            appliances: "Appliances",
+            leisure: "Leisure",
+            sports: "Sports",
+            clothing: "Clothing",
+            transport: "Transport",
+            garden: "Garden"
         }
     },
-})
+});
 
 app.use(i18n);
 
