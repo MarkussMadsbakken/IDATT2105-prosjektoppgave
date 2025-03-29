@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useLogin from '@/actions/login';
+import useRegister from '@/actions/register';
 import Button from '@/components/Button.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import TextInput from '@/components/TextInput.vue';
@@ -11,9 +11,9 @@ const password = ref("");
 
 const router = useRouter();
 
-const { isError, error, isPending, mutate: login } = useLogin({
+const { isError, error, isPending, mutate: register } = useRegister({
     onSuccess: () => {
-        router.push("/");
+        router.push({ name: "me" });
     }
 });
 
@@ -24,7 +24,7 @@ const onSubmit = async (event: Event) => {
         return;
     }
 
-    login({ username: username.value, password: password.value });
+    register({ username: username.value, password: password.value });
     password.value = "";
 }
 
@@ -36,8 +36,8 @@ const onEnter = (event: KeyboardEvent) => {
 
 <template>
     <div class="outer-wrapper">
-        <h1 class="title">{{ $t("login") }}</h1>
-        <form class="login-form" @submit="onSubmit">
+        <h1 class="title">{{ $t("register") }}</h1>
+        <form class="register-form" @submit="onSubmit">
             <div>
                 <label for="username">{{ $t('username') }}</label>
                 <TextInput v-model="username" type="text" id="username" name="username" autocomplete="off"
@@ -52,15 +52,15 @@ const onEnter = (event: KeyboardEvent) => {
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t("login") }}
+                    {{ $t("register") }}
                 </template>
             </button>
         </form>
         <div v-if="isError" class="errorText">{{ error?.message ?? $t("somethingWentWrong") }} </div>
         <div>
-            {{ $t("noAccount") }}
-            <RouterLink to="/register" class="register-link">
-                {{ $t("register") }}
+            {{ $t("haveAccount") }}
+            <RouterLink to="/profile" class="login-link">
+                {{ $t("login") }}
             </RouterLink>
         </div>
     </div>
@@ -81,13 +81,13 @@ const onEnter = (event: KeyboardEvent) => {
     font-size: 2.5rem;
 }
 
-.login-form {
+.register-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.login-form>div {
+.register-form>div {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;

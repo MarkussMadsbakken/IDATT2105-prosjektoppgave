@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { UserRound, MessageSquare, Bell, SquarePlus } from 'lucide-vue-next';
+import { useAuth } from './stores/auth';
+const auth = useAuth();
 </script>
 
 <template>
@@ -15,18 +17,18 @@ import { UserRound, MessageSquare, Bell, SquarePlus } from 'lucide-vue-next';
         </RouterLink>
       </div>
       <div class="right-elements">
-        <RouterLink to="/profile/listings/create" class="link">
+        <RouterLink to="/profile/listings/create" class="link" v-if="auth.isLoggedIn()">
           <SquarePlus />
         </RouterLink>
 
         <!-- Endre til en dropdown når komponenten er ferdig -->
-        <div class="link">
+        <div class="link" v-if="auth.isLoggedIn()">
           <Bell />
         </div>
-        <RouterLink to="/messages" class="link">
+        <RouterLink to="/messages" class="link" v-if="auth.isLoggedIn()">
           <MessageSquare />
         </RouterLink>
-        <RouterLink to="/profile" class="link profile">
+        <RouterLink :to="auth.isLoggedIn() ? '/profile' : '/login'" class="link profile">
           <div class="profile-wrapper">
             <UserRound :size="40" :stroke-width="1" />
           </div>

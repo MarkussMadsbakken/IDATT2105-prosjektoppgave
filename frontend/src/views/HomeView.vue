@@ -2,7 +2,7 @@
 import ListingCard from "@/components/ListingCard.vue";
 import CategoryCard from "@/components/CategoryCard.vue";
 import type { Listing } from "@/types";
-import type { CategoryIcons } from "@/util/CategoryIcons";
+import type { CategoryIcons } from "@/util/categoryIcons";
 
 const Categories: { name: string; icon: keyof typeof CategoryIcons }[] = [
   {
@@ -45,30 +45,18 @@ const listings: Listing[] = [
     title: "kult kjøleskap",
     description: "Veldig kult kjøleskap jeg fant! Bare å komme med et tilbud, jeg hadde satt stor pris på det. I tillegg skal jeg bare si noe langt her slik at teksten overflower!!",
     price: 6000,
-    user: {
-      userid: "1",
-      username: "1",
-    }
   },
   {
     id: "2",
     title: "sjarmerende sofa",
     description: "En utrolig komfortabel og sjarmerende sofa som passer perfekt i stuen din.",
     price: 3500,
-    user: {
-      userid: "2",
-      username: "bruker2",
-    }
   },
   {
     id: "3",
     title: "elegant lampe",
     description: "En elegant lampe som sprer et varmt lys og skaper en koselig atmosfære.",
-    price: 1500,
-    user: {
-      userid: "3",
-      username: "bruker3",
-    }
+    price: 1500
   },
 ]
 

@@ -4,7 +4,7 @@ export type Listing = {
     id: string,
     title: string;
     description?: string;
-    user: User;
+    user?: User;
     price: number;
     image?: string | string[];
 }
