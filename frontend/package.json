@@ -19,6 +19,7 @@
   "dependencies": {
     "@primeuix/themes": "^1.0.0",
     "@tanstack/vue-query": "^5.69.0",
+    "jwt-decode": "^4.0.0",
     "lucide-vue-next": "^0.484.0",
     "pinia": "^3.0.1",
     "primevue": "^4.3.3",

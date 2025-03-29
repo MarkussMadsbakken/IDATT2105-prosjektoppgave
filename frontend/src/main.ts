@@ -9,16 +9,39 @@ import App from './App.vue'
 import router from './router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
+import { useAuth } from './stores/auth';
 
 const app = createApp(App)
 
 app.use(createPinia())
+
+const auth = useAuth();
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!auth.isLoggedIn()) {
+            next({ name: 'login' })
+        } else {
+            next()
+        }
+
+    } else if (to.matched.some(record => record.meta.requiresUnauthorized)) {
+        if (auth.isLoggedIn()) {
+            next({ name: 'me' })
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
+});
+
 app.use(router)
 app.use(VueQueryPlugin)
 app.use(PrimeVue, {
-  theme: {
-    preset: Aura,
-  }
+    theme: {
+        preset: Aura,
+    }
 
 })
 
@@ -27,7 +50,7 @@ const i18n = createI18n({
     fallbackLocale: "en",
     messages: {
         no: {
-            recommended: "Anbefalinger",
+            recommended: "Anbefalt for deg",
             interior: "Interiør",
             electronics: "Elektronikk",
             appliances: "Hvitevarer",
@@ -35,11 +58,20 @@ const i18n = createI18n({
             sports: "Sport",
             clothing: "Klær",
             transport: "Transport",
-            garden: "Hage"
-
+            garden: "Hage",
+            username: "Brukernavn",
+            password: "Passord",
+            login: "Logg inn",
+            register: "Lag en bruker",
+            noAccount: "Har du ikke bruker?",
+            haveAccount: "Har du allerede bruker?",
+            registerHere: "Lag en bruker her",
+            loginHere: "Logg inn her",
+            logout: "Logg av",
+            somethingWentWrong: "Noe gikk galt",
         },
         en: {
-            recommended: "Recommended",
+            recommended: "Recommended for you",
             interior: "Interior",
             electronics: "Electronics",
             appliances: "Appliances",
@@ -47,7 +79,17 @@ const i18n = createI18n({
             sports: "Sports",
             clothing: "Clothing",
             transport: "Transport",
-            garden: "Garden"
+            garden: "Garden",
+            username: "Username",
+            password: "Password",
+            login: "Login",
+            register: "Register",
+            noAccount: "Don't have an account?",
+            haveAccount: "Already have an account?",
+            registerHere: "Register here",
+            loginHere: "Log in here",
+            logout: "Log out",
+            somethingWentWrong: "Something went wrong",
         }
     },
 });

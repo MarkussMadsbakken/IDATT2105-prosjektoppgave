@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CategoryIcons } from '@/util/CategoryIcons';
+import { CategoryIcons } from '@/util/categoryIcons';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 

@@ -1,64 +1,65 @@
 <script setup lang="ts">
 
 const props = withDefaults(defineProps<{
-  variant : 'primary' | 'secondary' | 'outline' | 'destructive' | 'accept'
-  width?: string
-  height?: string
+  variant: 'primary' | 'secondary' | 'outline' | 'destructive' | 'accept';
 }>(), {
-  width: '200px',
-  height: '50px'
-})
+  variant: 'primary',
+});
+
+defineEmits(['click']);
 
 </script>
 <template>
-  <button
-  :class="['base-button',variant]"
-  :style="{width: props.width, height: props.height}"
-  >
+  <button @click="$emit('click')" :class="['base-button', props.variant]">
     <slot />
   </button>
 </template>
 
 <style>
-
 .base-button {
   all: unset;
-  font-weight: normal;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   padding: 0.5rem 1rem;
-  font-size: 20px;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  width: 10rem;
+  height: 2rem;
 }
-.base-button:hover{
+
+.base-button:hover {
   cursor: pointer;
 }
-.primary{
+
+.primary {
   font-weight: bold;
   background-color: var(--color-primaryButton);
   color: white;
 }
-.secondary{
+
+.secondary {
   font-weight: bold;
   background-color: var(--color-secondaryButton);
   color: black;
 }
-.outline{
+
+.outline {
   outline: black;
   border: 1px solid black;
 }
-.destructive{
+
+.destructive {
   background-color: var(--color-destructiveButton);
   color: white;
   font-weight: bold;
 }
-.accept{
+
+.accept {
   background-color: var(--color-acceptButton);
   color: white;
   font-weight: bold;
 }
-
 </style>

@@ -64,7 +64,10 @@ const router = createRouter({
     {
       path: "/profile/listings/create",
       name: "createListing",
-      component: () => import("../views/CreateListingView.vue")
+      component: () => import("../views/CreateListingView.vue"),
+      meta: {
+        requiresAuth: true
+      }
 
     },
     {
@@ -89,6 +92,22 @@ const router = createRouter({
       component: () => import("../views/ChatView.vue"),
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("../views/LoginView.vue"),
+      meta: {
+        requiresUnauthorized: true
+      }
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
+      meta: {
+        requiresUnauthorized: true
       }
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import("../views/NotFoundView.vue") },
