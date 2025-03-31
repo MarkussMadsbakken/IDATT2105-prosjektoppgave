@@ -1,41 +1,50 @@
 <script setup lang="ts">
 import ListingCard from "@/components/ListingCard.vue";
-import CategoryCard from "@/components/CategoryCard.vue";
-import type { Listing } from "@/types";
-import { CategoryIcons } from "@/util/categoryIcons";
+import type { Category, Listing } from "@/types";
+import { useRouter } from "vue-router";
+import SearchOptions from "@/components/SearchOptions.vue";
+import Divider from "@/components/Divider.vue";
 
-const Categories: { name: string; icon: keyof typeof CategoryIcons }[] = [
+const Categories: Category[] = [
   {
     icon: "armchair",
-    name: "interior"
+    name: "interior",
+    id: 1,
   },
   {
     icon: "monitorSmartphone",
-    name: "electronics"
+    name: "electronics",
+    id: 2,
   },
   {
     icon: "washingMachine",
-    name: "appliances"
+    name: "appliances",
+    id: 3,
   },
   {
     icon: "mountainSnow",
-    name: "leisure"
+    name: "leisure",
+    id: 4,
   },
   {
     icon: "volleyball",
-    name: "sports"
+    name: "sports",
+    id: 5,
   },
   {
     icon: "shirt",
-    name: "clothing"
+    name: "clothing",
+    id: 6,
   },
   {
     icon: "car",
-    name: "transport"
+    name: "transport",
+    id: 7,
   },
   {
     icon: "shrub",
-    name: "garden"
+    name: "garden",
+    id: 8,
   }
 ]
 
@@ -60,17 +69,29 @@ const listings: Listing[] = [
   },
 ]
 
+const router = useRouter();
+
+const handleSearch = (searchQuery: string) => {
+  router.push({
+    path: "/search",
+    query: { q: searchQuery }
+  });
+};
+
+const handleCategoryClick = (newCategory: string) => {
+  router.push({
+    path: "/search",
+    query: { category: newCategory }
+  })
+}
+
 </script>
 
 <template>
   <div class="page-wrapper">
-    <div class="categories">
-      <div v-for="category in Categories">
-        <CategoryCard :icon="category.icon" :categoryname="category.name">
-          {{ $t(category.name) }}
-        </CategoryCard>
-      </div>
-    </div>
+    <SearchOptions :categories="Categories" @search="handleSearch" @select-category="handleCategoryClick"
+      :open="true" />
+    <Divider />
     <div class="header-title">
       {{ $t('recommended') }}
     </div>
@@ -83,6 +104,18 @@ const listings: Listing[] = [
 </template>
 
 <style scoped>
+.search {
+  width: 63rem;
+  display: flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 1200px) {
+  .search {
+    width: 31rem;
+  }
+}
+
 .categories {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
