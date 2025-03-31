@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: cd backend
     - uses: actions/checkout@v4
+    - run: cd backend
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
