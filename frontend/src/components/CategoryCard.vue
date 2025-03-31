@@ -4,23 +4,22 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     icon: keyof typeof CategoryIcons;
     categoryname: string;
-}>();
+    selected?: boolean;
+}>(), {
+    selected: false,
+});
+
+defineEmits<(e: "click") => void>();
 
 const Icon = CategoryIcons[props.icon];
-
-const handleClick = () => {
-    const params = new URLSearchParams();
-    params.append('category', props.categoryname);
-    router.push("/search?" + params.toString());
-};
 
 </script>
 
 <template>
-    <div class="outer-wrapper" @click="handleClick">
+    <div class=outer-wrapper :class="{ selected: props.selected }" @click="$emit('click')">
         <div class="icon-wrapper">
             <Icon :size="30" :stroke-width="1.5" />
         </div>
@@ -31,6 +30,11 @@ const handleClick = () => {
 </template>
 
 <style scoped>
+.selected {
+    background-color: var(--color-primaryButton);
+    color: white;
+}
+
 .text-wrapper {
     width: 100%;
     height: 100%;
