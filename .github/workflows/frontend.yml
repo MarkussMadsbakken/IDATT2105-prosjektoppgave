@@ -20,7 +20,7 @@ jobs:
           install: false
           working-directory: frontend
           build: npm run build
-          start: npm start
+          start: npm run preview
 
   build:
     runs-on: ubuntu-latest
