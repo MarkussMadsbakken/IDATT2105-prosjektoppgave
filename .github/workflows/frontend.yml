@@ -18,6 +18,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
+          working-directory: frontend
           build: npm run build
           start: npm start
 
