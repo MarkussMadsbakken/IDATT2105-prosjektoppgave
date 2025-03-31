@@ -18,8 +18,8 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
-          build: cd frontend && npm run build
-          start: cd frontend && npm start
+          build: npm run build
+          start: npm start
 
   build:
     runs-on: ubuntu-latest

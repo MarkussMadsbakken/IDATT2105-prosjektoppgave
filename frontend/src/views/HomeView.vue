@@ -2,7 +2,7 @@
 import ListingCard from "@/components/ListingCard.vue";
 import CategoryCard from "@/components/CategoryCard.vue";
 import type { Listing } from "@/types";
-import type { CategoryIcons } from "@/util/categoryIcons";
+import type { CategoryIcons } from "@/util/categoryIcons.ts";
 
 const Categories: { name: string; icon: keyof typeof CategoryIcons }[] = [
   {
