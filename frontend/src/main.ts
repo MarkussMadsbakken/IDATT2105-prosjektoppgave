@@ -69,6 +69,11 @@ const i18n = createI18n({
             loginHere: "Logg inn her",
             logout: "Logg av",
             somethingWentWrong: "Noe gikk galt",
+            search: "Søk",
+            open: "Åpne",
+            close: "Lukk",
+            showCategories: "Vis kategorier",
+            hideCategories: "Skjul kategorier",
         },
         en: {
             recommended: "Recommended for you",
@@ -90,6 +95,11 @@ const i18n = createI18n({
             loginHere: "Log in here",
             logout: "Log out",
             somethingWentWrong: "Something went wrong",
+            search: "Search",
+            open: "Open",
+            close: "Close",
+            showCategories: "Show categories",
+            hideCategories: "Hide categories",
         }
     },
 });

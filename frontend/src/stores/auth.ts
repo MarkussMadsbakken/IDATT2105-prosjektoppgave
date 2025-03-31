@@ -12,7 +12,6 @@ export const useAuth = defineStore("auth", {
         if (!rawToken) {
             return {
                 loggedIn: false,
-                user: null,
             }
         }
 
@@ -24,7 +23,6 @@ export const useAuth = defineStore("auth", {
             sessionStorage.setItem("token", "");
             return {
                 loggedIn: false,
-                user: null,
             }
         }
 
@@ -37,7 +35,7 @@ export const useAuth = defineStore("auth", {
     },
     getters: {
         isAdmin(state) {
-            return state.decodedToken?.isAdmin;
+            return state.decodedToken?.isAdmin ?? false;
         },
         userId(state) {
             return state.decodedToken?.userId;
@@ -50,6 +48,9 @@ export const useAuth = defineStore("auth", {
         }
     },
     actions: {
+        /**
+         *  Returns and checks if the user is logged in, and that the token is not expired
+         */
         isLoggedIn() {
             // Check if the token is expired, and if so, log out
             if (this.decodedToken?.exp && this.decodedToken.exp < Date.now() / 1000) {
@@ -112,9 +113,10 @@ export const useAuth = defineStore("auth", {
 
         logout() {
             // Clear values
-            this.user = null;
             sessionStorage.setItem("token", "");
             this.loggedIn = false;
+            this.decodedToken = undefined;
+            this.rawToken = undefined;
         },
     }
 });
