@@ -13,7 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - run: cd backend
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
@@ -21,6 +20,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      working-directory: backend
       run: mvn -B package --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
