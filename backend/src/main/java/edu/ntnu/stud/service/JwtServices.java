@@ -21,14 +21,14 @@ import org.springframework.stereotype.Service;
  * from JWTs.
  */
 @Service
-public class JwtService {
+public class JwtServices {
 
   private String secretkey = "";
 
   /**
    * Constructor that initializes the secret key for signing JWTs.
    */
-  public JwtService() {
+  public JwtServices() {
 
     try {
       KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
