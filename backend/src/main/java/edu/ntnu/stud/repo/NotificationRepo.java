@@ -148,4 +148,22 @@ public class NotificationRepo {
     }
     return notifications;
   }
+
+  /**
+   * Marks a notification as read in the database.
+   *
+   * @param id the ID of the notification to mark as read
+   */
+  public void markNotificationAsRead(long id) {
+    String query = "UPDATE notifications SET is_read = ? WHERE id = ?";
+    try (Connection connection = DriverManager.getConnection(url, user, password);
+        PreparedStatement statement = connection.prepareStatement(query)) {
+
+      statement.setBoolean(1, true);
+      statement.setLong(2, id);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
 }
