@@ -4,7 +4,6 @@ import type { User } from '@/types/user.ts'
 import Button from '@/components/Button.vue';
 import { useRouter } from "vue-router";
 
-
 const router = useRouter();
 const props = defineProps<{
     userEntity: User;
@@ -13,9 +12,10 @@ const props = defineProps<{
 
 const fullName = `${props.userEntity.firstName} ${props.userEntity.lastName}`;
 const joinedYear ="Medlem siden " +new Date(props.userEntity.createdAt).getFullYear();
-
+const userName = `(${props.userEntity.username})`
 
 const handleContactClick = () => {
+  // TODO
   router.push(`/message/${props.userEntity.id}`);
 };
 
@@ -30,7 +30,10 @@ const handleContactClick = () => {
             <UserIcon v-else :size="60" stroke-width="1.5" />
         </div>
             <div class="sellerInfo">
-                <div class="sellerName">{{fullName}}</div>
+                <div class="sellerAllNames">
+                    <div class="sellerName">{{fullName}}</div>
+                    <div class="username">{{userName}}</div>
+                </div>
                 <div class="sellerMeta">
                     <span class="joinedSite">{{joinedYear}}</span>
                 </div>
@@ -74,8 +77,16 @@ const handleContactClick = () => {
   align-items: center;
 }
 .sellerName{
+  margin-top: -0.2rem;
   font-weight: bold;
   font-size: 2rem;
+}
+.sellerAllNames{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0rem;
 }
 .joinedSite{
   font-size: 1rem;
