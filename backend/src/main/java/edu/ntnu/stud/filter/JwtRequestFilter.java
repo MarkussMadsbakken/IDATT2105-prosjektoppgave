@@ -1,6 +1,6 @@
 package edu.ntnu.stud.filter;
 
-import edu.ntnu.stud.service.JwtService;
+import edu.ntnu.stud.service.JWTService;
 import edu.ntnu.stud.service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +25,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
   @Autowired
-  private JwtService jwtService;
+  private JWTService jwtService;
 
   @Autowired
   ApplicationContext context;
