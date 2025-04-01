@@ -3,6 +3,9 @@ package edu.ntnu.stud.dao;
 import edu.ntnu.stud.model.Listing;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,6 +22,7 @@ public class ListingDao {
 
   private final RowMapper<Listing> listingRowMapper = (rs, rowNum) -> {
     Listing listing = new Listing();
+    listing.setUuid(rs.getString("uuid"));
     listing.setName(rs.getString("name"));
     listing.setPrice(rs.getDouble("price"));
     listing.setDescription(rs.getString("description"));
@@ -57,14 +61,14 @@ public class ListingDao {
   }
 
   /**
-   * Retrieves a listing by its ID.
+   * Retrieves a listing by its uuid.
    *
-   * @param id the ID of the listing to retrieve
-   * @return the listing with the specified ID
+   * @param uuid the uuid of the listing to retrieve
+   * @return the listing with the specified uuid
    */
-  public Listing findById(Long id) {
-    String sql = "SELECT * FROM listings WHERE id = ?";
-    return jdbcTemplate.queryForObject(sql, listingRowMapper, id);
+  public Listing findByUuid(String uuid) {
+    String sql = "SELECT * FROM listings WHERE uuid = ?";
+    return jdbcTemplate.queryForObject(sql, listingRowMapper, uuid);
   }
 
   /**
@@ -74,10 +78,19 @@ public class ListingDao {
    * @return the number of rows affected
    */
   public int save(Listing listing) {
-    String sql = "INSERT INTO listings (name, price, description, category, postal_code, owner_id)"
-        + " VALUES (?, ?, ?, ?, ?, ?)";
-    return jdbcTemplate.update(sql, listing.getName(), listing.getPrice(), listing.getDescription(),
-        listing.getCategory(), listing.getPostalCode(), listing.getOwnerId());
+    System.out.println(listing.getUuid());
+    String sql = "INSERT INTO listings "
+        + "(uuid, name, price, description, category, postal_code, owner_id)"
+        + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+    return jdbcTemplate.update(
+        sql,
+        listing.getUuid(),
+        listing.getName(),
+        listing.getPrice(),
+        listing.getDescription(),
+        listing.getCategory(),
+        listing.getPostalCode(),
+        listing.getOwnerId());
   }
 
   /**
@@ -89,20 +102,35 @@ public class ListingDao {
   public int update(Listing listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
         + "category = ?, postal_code = ?, active = ?, deleted = ?, sold = ?, "
-        + "owner_id = ? WHERE id = ?";
+        + "owner_id = ? WHERE uuid = ?";
     return jdbcTemplate.update(sql, listing.getName(), listing.getPrice(), listing.getDescription(),
         listing.getCategory(), listing.getPostalCode(), listing.isActive(), listing.isDeleted(),
-        listing.isSold(), listing.getOwnerId(), listing.getOwnerId());
+        listing.isSold(), listing.getOwnerId(), listing.getUuid());
   }
 
   /**
-   * Deletes a listing by its ID.
+   * Deletes a listing by its uuid.
    *
-   * @param id the ID of the listing to delete
+   * @param uuid the uuid of the listing to delete
    * @return the number of rows affected
    */
-  public int deleteById(Long id) {
-    String sql = "DELETE FROM listings WHERE id = ?";
-    return jdbcTemplate.update(sql, id);
+  public int deleteByUuid(String uuid) {
+    String sql = "DELETE FROM listings WHERE uuid = ?";
+    return jdbcTemplate.update(sql, uuid);
+  }
+
+  /**
+   * Retrieves a paginated list of listings from the database.
+   *
+   * @param pageable the pagination information, including page number, page size, and sorting
+   * @return a page of listings
+   */
+  public Page<Listing> findPage(Pageable pageable) {
+    int limit = pageable.getPageSize();
+    long offset = pageable.getOffset();
+    String sql = "SELECT * FROM listings LIMIT ? OFFSET ?";
+    List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, limit, offset);
+    int total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM listings", Integer.class);
+    return new PageImpl<>(listings, pageable, total);
   }
 }
