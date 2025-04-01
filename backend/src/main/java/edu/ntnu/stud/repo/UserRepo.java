@@ -46,8 +46,9 @@ public class UserRepo {
    * @param user the User object to be added
    */
   public void addUser(User user) {
-    String query = "INSERT INTO users (username, password, first_name, last_name, is_admin)"
-        + " VALUES (?, ?, ?, ?, ?)";
+    String query = "INSERT INTO users "
+        + "(username, password, first_name, last_name, is_admin, image_path) "
+        + "VALUES (?, ?, ?, ?, ?, ?)";
     try (Connection connection = DriverManager.getConnection(url, this.user, this.password);
         PreparedStatement statement = 
             connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -57,6 +58,7 @@ public class UserRepo {
       statement.setString(3, user.getFirstName());
       statement.setString(4, user.getLastName());
       statement.setBoolean(5, user.isAdmin());
+      statement.setString(6, user.getImagePath());
 
       int affectedRows = statement.executeUpdate();
       if (affectedRows > 0) {
@@ -89,7 +91,8 @@ public class UserRepo {
               resultSet.getString("username"),
               resultSet.getString("password"),
               resultSet.getString("first_name"),
-              resultSet.getString("last_name"));
+              resultSet.getString("last_name"),
+              resultSet.getString("image_path"));
         }
       }
     } catch (SQLException e) {
@@ -116,7 +119,8 @@ public class UserRepo {
               resultSet.getString("username"),
               resultSet.getString("password"),
               resultSet.getString("first_name"),
-              resultSet.getString("last_name"));
+              resultSet.getString("last_name"),
+              resultSet.getString("image_path"));
           user.setId(resultSet.getLong("id"));
           user.setCreatedAt(resultSet.getString("created_at"));
           user.setAdmin(resultSet.getBoolean("is_admin"));
@@ -146,7 +150,8 @@ public class UserRepo {
             resultSet.getString("username"),
             resultSet.getString("password"),
             resultSet.getString("first_name"),
-            resultSet.getString("last_name"));
+            resultSet.getString("last_name"),
+            resultSet.getString("image_path"));
         user.setId(resultSet.getLong("id"));
         user.setCreatedAt(resultSet.getString("created_at"));
         user.setAdmin(resultSet.getBoolean("is_admin"));
@@ -156,5 +161,30 @@ public class UserRepo {
       e.printStackTrace();
     }
     return users;
+  }
+
+  /**
+   * Updates the details of an existing user in the database.
+   *
+   * @param user the User object with updated details
+   */
+  public void updateUser(User user) {
+    String query = "UPDATE users SET username = ?, password = ?, first_name = ?, last_name = ?, "
+        + "is_admin = ?, image_path = ? WHERE id = ?";
+    try (Connection connection = DriverManager.getConnection(url, this.user, this.password);
+        PreparedStatement statement = connection.prepareStatement(query)) {
+
+      statement.setString(1, user.getUsername());
+      statement.setString(2, user.getPassword());
+      statement.setString(3, user.getFirstName());
+      statement.setString(4, user.getLastName());
+      statement.setBoolean(5, user.isAdmin());
+      statement.setString(6, user.getImagePath());
+      statement.setLong(7, user.getId());
+
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }
