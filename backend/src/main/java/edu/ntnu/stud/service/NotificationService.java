@@ -32,6 +32,7 @@ public class NotificationService {
    */
   public void addNotification(Notification notification) {
     notificationRepo.addNotification(notification);
+    // TODO: Send the notification to the WebSocket topic for real-time updates
   }
 
   /**

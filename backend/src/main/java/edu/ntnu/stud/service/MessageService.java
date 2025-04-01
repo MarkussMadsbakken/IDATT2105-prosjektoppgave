@@ -24,6 +24,7 @@ public class MessageService {
    */
   public void addMessage(Message message) {
     messageRepo.addMessage(message);
+    // TODO: Send the message to the WebSocket topic for real-time updates
   }
 
   /**
