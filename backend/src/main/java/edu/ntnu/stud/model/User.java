@@ -21,9 +21,7 @@ public class User {
 
   private boolean isAdmin;
 
-  // TODO: add functionality for profilepicture, either bytearray, url
-  // or hybrid: link to another profilePicture class with a byteArray bound to
-  // each userId OneToOne
+  private String imagePath;
 
   /**
    * Default constructor.
@@ -166,5 +164,23 @@ public class User {
    */
   public void setAdmin(boolean admin) {
     isAdmin = admin;
+  }
+
+  /**
+   * Returns the image path of the user.
+   *
+   * @return the image path of the user
+   */
+  public String getImagePath() {
+    return imagePath;
+  }
+
+  /**
+   * Sets the image path of the user.
+   *
+   * @param imagePath the image path to set
+   */
+  public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
   }
 }

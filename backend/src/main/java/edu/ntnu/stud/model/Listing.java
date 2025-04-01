@@ -1,6 +1,5 @@
 package edu.ntnu.stud.model;
 
-import java.sql.Blob;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +15,7 @@ public class Listing {
   private String description;
   private String createdAt;
   private String updatedAt;
-  private List<Blob> pictures;
+  private List<String> pictureUrls;
   private String category;
   private List<String> subcategories;
   private int postalCode;
@@ -168,19 +167,19 @@ public class Listing {
   /**
    * Returns the pictures of the listing.
    *
-   * @return the pictures of the listing
+   * @return the pictureUrls of the listing
    */
-  public List<Blob> getPictures() {
-    return pictures;
+  public List<String> getPictureUrls() {
+    return pictureUrls;
   }
 
   /**
    * Sets the pictures of the listing.
    *
-   * @param pictures the pictures to set
+   * @param pictureUrls the pictures to set
    */
-  public void setPictures(List<Blob> pictures) {
-    this.pictures = pictures;
+  public void setPictures(List<String> pictureUrls) {
+    this.pictureUrls = pictureUrls;
   }
 
   /**
