@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { UserRound, MessageSquare, Bell, SquarePlus } from 'lucide-vue-next';
 import { useAuth } from './stores/auth';
+import NotificationDropdown from "@/components/NotificationDropdown.vue";
 import { useI18n } from 'vue-i18n';
 const auth = useAuth();
 const i18n = useI18n();
@@ -29,7 +30,7 @@ const changeLanguage = (lang: string) => {
 
         <!-- Endre til en dropdown når komponenten er ferdig -->
         <div class="link" v-if="auth.isLoggedIn()">
-          <Bell />
+          <NotificationDropdown></NotificationDropdown>
         </div>
         <RouterLink to="/messages" class="link" v-if="auth.isLoggedIn()">
           <MessageSquare />
