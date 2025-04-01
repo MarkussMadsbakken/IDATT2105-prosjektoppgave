@@ -69,9 +69,4 @@ public class AuthController {
       return ResponseEntity.badRequest().body(errorResponse);
     }
   }
-
-  @PostMapping("/test")
-  public ResponseEntity<String> test() {
-    return ResponseEntity.ok("Hei!");
-  }
 }

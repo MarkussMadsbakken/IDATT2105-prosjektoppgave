@@ -4,8 +4,12 @@ import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.service.NotificationService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * This is a controller class for managing notifications in the system.
@@ -13,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * endpoints for creating notifications as these are handled internally.
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/notifications")
 public class NotificationController {
 
   @Autowired
@@ -33,6 +37,7 @@ public class NotificationController {
    *
    * @return a list of all Notification objects
    */
+  @GetMapping
   public List<Notification> getAllNotifications() {
     return notificationService.getAllNotifications();
   }
@@ -43,6 +48,7 @@ public class NotificationController {
    * @param userId the ID of the user whose notifications are to be retrieved
    * @return a list of Notification objects for the specified user
    */
+  @GetMapping("/user")
   public List<Notification> getNotificationsByUserId(long userId) {
     return notificationService.getNotificationsByUserId(userId);
   }
@@ -53,7 +59,8 @@ public class NotificationController {
    * @param id the ID of the notification to be retrieved
    * @return the Notification object with the specified ID, or null if not found
    */
-  public Notification getNotificationById(long id) {
+  @GetMapping("/{id}")
+  public Notification getNotificationById(@PathVariable long id) {
     return notificationService.getNotificationById(id);
   }
 
@@ -62,7 +69,8 @@ public class NotificationController {
    *
    * @param id the ID of the notification to be marked as read
    */
-  public void markNotificationAsRead(long id) {
+  @PatchMapping("/{id}/read")
+  public void markNotificationAsRead(@PathVariable long id) {
     notificationService.markNotificationAsRead(id);
   }
   

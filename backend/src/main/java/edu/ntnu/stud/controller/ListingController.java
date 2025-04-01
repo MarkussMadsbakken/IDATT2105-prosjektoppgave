@@ -68,7 +68,6 @@ public class ListingController {
    */
   @PostMapping
   public ResponseEntity<Listing> createListing(@RequestBody Listing listing) {
-    System.out.println(listing.getUuid());
     int rowsAffected = listingService.saveListing(listing);
     if (rowsAffected > 0) {
       return ResponseEntity.ok(listing);
