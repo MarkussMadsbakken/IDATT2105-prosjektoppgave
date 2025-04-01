@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChevronDown, ChevronUp } from 'lucide-vue-next';
-import { computed, nextTick, onMounted, reactive, ref } from 'vue';
+import { ref } from 'vue';
+import { AnimatePresence, motion } from 'motion-v';
 
 const props = withDefaults(defineProps<{
     open?: boolean;
@@ -11,47 +12,32 @@ const props = withDefaults(defineProps<{
 });
 
 const open = ref(props.open);
-
-const slotWrapper = ref<HTMLElement | null>(null);
-const measuredHeight = ref(0);
-
-const disableTransition = ref(false);
-
-const wrapperStyle = computed(() => ({
-    height: open.value ? `${measuredHeight.value}px` : '0px',
-    transition: disableTransition.value ? 'none' : 'all 0.2s',
-}));
+const initial = ref(open.value);
 
 function toggleOpen() {
-    open.value = !open.value;
-    if (open.value && slotWrapper.value) {
-        nextTick(() => {
-            measuredHeight.value = slotWrapper.value!.scrollHeight;
-        });
+    if (initial.value) {
+        initial.value = false;
     }
+    open.value = !open.value;
 }
 
-onMounted(() => {
-    if (open.value && slotWrapper.value) {
-        measuredHeight.value = slotWrapper.value.scrollHeight;
-        // Disable the transition initially so it just appears open
-        disableTransition.value = true;
-        // Remove the transition disable after the next frame
-        requestAnimationFrame(() => {
-            disableTransition.value = false;
-        });
-    }
-});
+const variants = {
+    open: { height: "auto" },
+    closed: { height: 0, overflow: "hidden" },
+}
 
 </script>
 
 <template>
     <div class="outer-wrapper">
-        <div class="slot-wrapper" :style="wrapperStyle" ref="slotWrapper">
-            <div class="inner-wrapper">
-                <slot />
-            </div>
-        </div>
+        <AnimatePresence>
+            <motion.div layout v-if="open" :initial="initial ? 'open' : 'closed'" animate="open" exit="closed"
+                :variants="variants">
+                <div class="inner-wrapper">
+                    <slot />
+                </div>
+            </motion.div>
+        </AnimatePresence>
         <div class="title" @click="toggleOpen">
             <ChevronUp v-if="open" class="icon" stroke-width="2px" />
             {{ open ? props.closedTitle ?? $t("close") : props.openTitle ?? $t("open") }}
@@ -67,11 +53,6 @@ onMounted(() => {
     margin-bottom: auto;
     align-self: center;
     line-height: 0;
-}
-
-.slot-wrapper {
-    overflow: hidden;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .inner-wrapper {

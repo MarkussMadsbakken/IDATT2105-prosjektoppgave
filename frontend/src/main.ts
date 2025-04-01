@@ -74,6 +74,7 @@ const i18n = createI18n({
             close: "Lukk",
             showCategories: "Vis kategorier",
             hideCategories: "Skjul kategorier",
+            notifications: "Varslinger"
         },
         en: {
             recommended: "Recommended for you",
@@ -100,9 +101,24 @@ const i18n = createI18n({
             close: "Close",
             showCategories: "Show categories",
             hideCategories: "Hide categories",
+            notifications: "Notifications"
         }
     },
 });
+
+app.directive('click-outside', {
+    beforeMount: (el, binding) => {
+        el.clickOutsideEvent = (event: any) => {
+            if (!(el == event.target || el.contains(event.target))) {
+                binding.value();
+            }
+        };
+        document.addEventListener("click", el.clickOutsideEvent);
+    },
+    unmounted: el => {
+        document.removeEventListener("click", el.clickOutsideEvent);
+    },
+})
 
 app.use(i18n);
 
