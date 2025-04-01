@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   @Autowired
-  private JwtServices jwtService;
+  private JwtService jwtService;
 
   @Autowired
   AuthenticationManager authManager;
