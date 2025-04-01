@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Listing } from '@/types';
 import ImageNotFound from './ImageNotFound.vue';
+import { useRouter } from 'vue-router';
 
 const props = withDefaults(defineProps<{
     size?: "small" | "medium";
@@ -10,11 +11,16 @@ const props = withDefaults(defineProps<{
 });
 
 const headerImage = Array.isArray(props.listing.image) ? props.listing.image[0] : props.listing.image;
+const router = useRouter();
 
+const handleClick = (e: any) => {
+    e.stopPropagation();
+    router.push(`/listing/${props.listing.id}`);
+}
 </script>
 
 <template>
-    <RouterLink :to="`/listing/${listing.id}`" class="link">
+    <div @click="handleClick" class="link">
         <div class="outer-wrapper" :class="props.size">
             <div class="image-wrapper" :class="props.size">
                 <div v-if="listing.image">
@@ -39,7 +45,7 @@ const headerImage = Array.isArray(props.listing.image) ? props.listing.image[0] 
                 </div>
             </div>
         </div>
-    </RouterLink>
+    </div>
 </template>
 
 <style scoped>

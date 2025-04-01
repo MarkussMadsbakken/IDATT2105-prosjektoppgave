@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
 import type { Listing, User } from '@/types'
 import SellerInfo from "@/components/SellerInfo.vue";
 import Button from '@/components/Button.vue';
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import PhotoGallery from "@/components/PhotoGallery.vue";
 import { marked } from 'marked';
 import { Trash2, Pencil, Bookmark, BookmarkCheck } from 'lucide-vue-next'
@@ -118,9 +117,9 @@ const toggleBookmark = () => {
       <SellerInfo :user-entity="listing.seller" :can-contact-seller="auth.isLoggedIn()" />
       <div v-if="auth.isLoggedIn()" class="buttonBox">
         <Button variant="primary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("buy")
-        }}</Button>
+          }}</Button>
         <Button variant="secondary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("reserve")
-        }}</Button>
+          }}</Button>
       </div>
     </div>
   </div>
