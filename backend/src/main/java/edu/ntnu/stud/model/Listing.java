@@ -2,6 +2,7 @@ package edu.ntnu.stud.model;
 
 import java.sql.Blob;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a listing in the system.
@@ -9,7 +10,7 @@ import java.util.List;
  * price, description, category, postal code, and owner ID.
  */
 public class Listing {
-
+  private String uuid;
   private String name;
   private double price;
   private String description;
@@ -42,6 +43,7 @@ public class Listing {
       int postalCode,
       Long ownerId
   ) {
+    this.uuid = UUID.randomUUID().toString();
     this.name = name;
     this.price = price;
     this.description = description;
@@ -51,7 +53,27 @@ public class Listing {
   }
 
   public Listing() {
+    this.uuid = UUID.randomUUID().toString();
   }
+
+  /**
+   * Returns the uuid of the listing.
+   *
+   * @return the uuid of the listing
+   */
+  public String getUuid() {
+    return uuid;
+  }
+
+  /**
+   * Sets the uuid of the listing.
+   *
+   * @param uuid the uuid to set
+   */
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
 
   /**
    * Returns the name of the listing.
