@@ -19,47 +19,60 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * This class configures the security settings for the application.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+  @Autowired
+  private UserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+  @Autowired
+  private JwtRequestFilter jwtRequestFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**").permitAll()
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .headers(httpSecurityHeadersConfigurer ->
-                        httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+  /**
+   * Configures the security filter chain for the application. 
+   * This method sets up CORS, CSRF, authorization rules, session management,
+   * HTTP headers, and the JWT filter.
+  */
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http
+        .cors(Customizer.withDefaults())
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(request -> request
+            .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**").permitAll()
+            .anyRequest().authenticated())
+        .httpBasic(Customizer.withDefaults())
+        .sessionManagement(session 
+            -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
+            .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
+  }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
-        provider.setUserDetailsService(userDetailsService);
+  /**
+   * Creates an AuthenticationProvider bean that uses a DaoAuthenticationProvider
+   * with a BCryptPasswordEncoder for password encoding and a UserDetailsService.
+   */
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+    provider.setUserDetailsService(userDetailsService);
 
+    return provider;
+  }
 
-        return provider;
-    }
+  
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) 
+      throws Exception {
+    return config.getAuthenticationManager();
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-
-    }
-
+  }
 
 }
