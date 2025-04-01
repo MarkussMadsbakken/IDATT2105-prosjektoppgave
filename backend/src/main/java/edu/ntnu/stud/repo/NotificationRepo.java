@@ -11,11 +11,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 
 /**
  * This is a repository class for managing notifications in the database.
  * It provides methods to add, retrieve, and list notifications.
  */
+@Repository
 public class NotificationRepo {
 
   @Value("${spring.datasource.url}")

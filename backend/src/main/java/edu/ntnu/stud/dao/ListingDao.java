@@ -78,7 +78,6 @@ public class ListingDao {
    * @return the number of rows affected
    */
   public int save(Listing listing) {
-    System.out.println(listing.getUuid());
     String sql = "INSERT INTO listings "
         + "(uuid, name, price, description, category, postal_code, owner_id)"
         + " VALUES (?, ?, ?, ?, ?, ?, ?)";
