@@ -5,8 +5,8 @@ import ListingPage from "@/components/ListingPage.vue";
 
 
 const users: User[] = [
-  {id: 1, username:"Jackyboy", firstName: "Jacob", lastName:"Lein", createdAt:new Date('2002-08-12'), isAdmin: false},
-  {id: 1, username:"MattiBattiboy", firstName: "Markus", lastName:"Madsbakken", createdAt:new Date('2004-01-13'), isAdmin: false}
+  { id: 1, username: "Jackyboy", firstName: "Jacob", lastName: "Lein", createdAt: new Date('2002-08-12'), isAdmin: false },
+  { id: 1, username: "MattiBattiboy", firstName: "Markus", lastName: "Madsbakken", createdAt: new Date('2004-01-13'), isAdmin: false }
 ]
 // Dummy-data for testing
 
@@ -19,7 +19,8 @@ refrigeratorImages = [
 ];
 
 const listings: Listing[] = [
-  { id: "1", title: "Kult kjøleskap", seller:users[0], description: "Beskrivelse \n" +
+  {
+    id: "1", title: "Kult kjøleskap", seller: users[0], description: "Beskrivelse \n" +
       " \n" +
       "Velkommen til Max Hvitevarer As \n" +
       "Brukte hvitevarer med garanti! \n" +
@@ -47,8 +48,9 @@ const listings: Listing[] = [
       "Man-fre fra 11:00 til 18:00 \n" +
       "Lør fra 11:00 til 15:00 \n" +
       " \n" +
-      "Tlf : 45804666", price: 60000000 , image: refrigeratorImages},
-  { id: "2", title: "sjarmerende sofa", seller:users[1], description: "Komfortabel sofa.", price: 3500 },
+      "Tlf : 45804666", price: 60000000, image: refrigeratorImages
+  },
+  { id: "2", title: "sjarmerende sofa", seller: users[1], description: "Komfortabel sofa.", price: 3500 },
   { id: "3", title: "elegant lampe", seller: users[1], description: "Elegant lampe.", price: 1500 }
 ]
 
