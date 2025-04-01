@@ -35,9 +35,13 @@ public class User {
    * @param username the username of the user
    * @param password the password of the user
    */
-  public User(String username, String password, String firstName, String lastName) {
+  public User(
+      String username, String password, String firstName, String lastName, String imagePath) {
     this.username = username;
     this.password = password;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.imagePath = imagePath;
   }
 
   /**
