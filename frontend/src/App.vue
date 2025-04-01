@@ -3,7 +3,13 @@ import { RouterLink, RouterView } from 'vue-router'
 import { UserRound, MessageSquare, Bell, SquarePlus } from 'lucide-vue-next';
 import { useAuth } from './stores/auth';
 import NotificationDropdown from "@/components/NotificationDropdown.vue";
+import { useI18n } from 'vue-i18n';
 const auth = useAuth();
+const i18n = useI18n();
+
+const changeLanguage = (lang: string) => {
+  i18n.locale.value = lang;
+}
 </script>
 
 <template>
@@ -37,12 +43,44 @@ const auth = useAuth();
       </div>
     </nav>
   </header>
-  <main>
+  <main class="main">
     <RouterView />
   </main>
+  <footer class="footer">
+    <div class="translation-selector">
+      <div class="translation-button" v-for="lang in i18n.availableLocales" :key="lang" @click="changeLanguage(lang)"
+        :style="{ textDecoration: i18n.locale.value === lang ? 'underline' : '' }">
+        {{ lang }}
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style scoped>
+.main {
+  min-height: 70.4vh;
+}
+
+.translation-button {
+  cursor: pointer;
+  user-select: none;
+  font-size: 1rem
+}
+
+.translation-selector {
+  margin-right: 1rem;
+  display: flex;
+  justify-content: right;
+  gap: 1rem;
+}
+
+.footer {
+  margin-top: 5rem;
+  padding: 1rem;
+  background-color: #1E6676;
+  color: white;
+}
+
 .link.profile {
   margin-left: 1rem;
 }
