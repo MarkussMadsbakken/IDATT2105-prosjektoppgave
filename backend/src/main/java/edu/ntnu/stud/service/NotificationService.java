@@ -4,11 +4,13 @@ import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.repo.NotificationRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * This is a service class for managing notifications in the system.
  * It provides methods to create, retrieve, and list notifications.
  */
+@Service
 public class NotificationService {
   
   @Autowired
