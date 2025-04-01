@@ -33,7 +33,7 @@ const prev = () => {
 
 </template>
 
-<style>
+<style scoped>
 .gallery{
   display:flex;
   flex-direction: row;

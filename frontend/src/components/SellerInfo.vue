@@ -44,7 +44,7 @@ const handleContactClick = () => {
 
 </template>
 
-<style>
+<style scoped>
 .sellerContainer{
   display: flex;
   justify-content: flex-start;

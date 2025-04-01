@@ -73,7 +73,7 @@ const toggleBookmark = () => {
 
 </template>
 
-<style>
+<style scoped>
 .listing {
   display: flex;
   flex-direction: column;
