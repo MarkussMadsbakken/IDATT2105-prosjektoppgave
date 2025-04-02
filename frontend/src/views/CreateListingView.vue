@@ -30,7 +30,8 @@ const onSubmit = () => {
         description: description.value,
         price: Number(price.value),
         postalCode: Number(postalCode.value),
-        category: category.value
+        category: category.value,
+        images: selectedImages.value
     });
 }
 

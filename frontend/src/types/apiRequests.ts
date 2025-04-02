@@ -23,4 +23,5 @@ export type CreateListingRequest = {
     description: string,
     category: string,
     postalCode: number,
+    images: File[];
 }

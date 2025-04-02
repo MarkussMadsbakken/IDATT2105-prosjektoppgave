@@ -18,6 +18,8 @@ export const useAuth = defineStore("auth", {
         // Decode the token
         let token: Token = jwtDecode(rawToken);
 
+        console.log(jwtDecode(rawToken));
+
         // If the token is expired, log out
         if (token?.exp && token.exp < Date.now() / 1000) {
             sessionStorage.setItem("token", "");
