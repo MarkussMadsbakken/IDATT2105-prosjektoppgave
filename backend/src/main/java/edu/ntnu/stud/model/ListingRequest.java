@@ -89,7 +89,7 @@ public class ListingRequest {
   }
 
   public void setPictures(List<MultipartFile> pictures) {
-    // this.pictures = pictures;
+    this.pictures = pictures;
   }
 
   public String getCategory() {

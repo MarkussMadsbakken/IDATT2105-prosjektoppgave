@@ -78,9 +78,14 @@ public class ListingService {
     long ownerId = jwtService.extractUserId(token.substring(7));
     Listing listing = convertToListing(listingRequest);
     listing.setOwnerId(ownerId);
-    listingRepo.saveListing(listing);
 
     System.out.println("saving listing with ownerid: " + ownerId);
+
+    listingRepo.saveListing(listing);
+
+    System.out.println("saving listing images with listingId: " + listing.getUuid());
+
+    saveListingImages(listingRequest,listing.getUuid());
 
     return convertToResponse(listing);
   }
@@ -122,21 +127,6 @@ public class ListingService {
     listing.setActive(listingRequest.isActive());
     listing.setDeleted(listingRequest.isDeleted());
     listing.setSold(listingRequest.isSold());
-
-    // save images for the listing
-    listingRequest.getPictures().forEach(image -> {
-
-      ListingImage listingImage = new ListingImage();
-      listingImage.setListingUuid(listing.getUuid());
-      try {
-        listingImage.setImageBlob(convertMultipartFileToBlob(image));
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
-      listingImageService.saveListingImage(listingImage);
-    });
 
     return listing;
   }
@@ -180,5 +170,20 @@ public class ListingService {
   private Blob convertMultipartFileToBlob(MultipartFile file) throws IOException, SQLException {
     byte[] fileBytes = file.getBytes();
     return new SerialBlob(fileBytes);
+  }
+
+  private void saveListingImages(ListingRequest listingRequest, String listingUuid) {
+    listingRequest.getPictures().forEach(image -> {
+      ListingImage listingImage = new ListingImage();
+      listingImage.setListingUuid(listingUuid);
+      try {
+        listingImage.setImageBlob(convertMultipartFileToBlob(image));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+      listingImageService.saveListingImage(listingImage);
+    });
   }
 }
