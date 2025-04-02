@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller class for managing Categories and subcategories entities.
  */
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
   @Autowired
@@ -179,7 +179,7 @@ public class CategoryController {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403)
-            .body("Error: You are not authorized to update subcategories.");
+          .body("Error: You are not authorized to update subcategories.");
     }
     subCategoryService.updateSubCategory(subCategory);
     return ResponseEntity.ok("Subcategory updated successfully.");
@@ -196,7 +196,7 @@ public class CategoryController {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403)
-            .body("Error: You are not authorized to delete subcategories.");
+          .body("Error: You are not authorized to delete subcategories.");
     }
     subCategoryService.deleteSubCategory(id);
     return ResponseEntity.ok("Subcategory deleted successfully.");
