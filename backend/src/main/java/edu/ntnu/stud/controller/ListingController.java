@@ -1,20 +1,17 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.ListingRequest;
+import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.service.ListingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 
 
 /**
@@ -35,10 +32,10 @@ public class ListingController {
    * @return the listing with the specified UUID, or a 404 Not Found status if not found
    */
   @GetMapping("/{uuid}")
-  public ResponseEntity<Listing> getListingByUuid(@PathVariable String uuid) {
-    Listing listing = listingService.getListingByUuid(uuid);
-    if (listing != null) {
-      return ResponseEntity.ok(listing);
+  public ResponseEntity<ListingResponse> getListingByUuid(@PathVariable String uuid) {
+    ListingResponse listingResponse = listingService.getListingByUuid(uuid);
+    if (listingResponse != null) {
+      return ResponseEntity.ok(listingResponse);
     } else {
       return ResponseEntity.notFound().build();
     }
@@ -52,27 +49,29 @@ public class ListingController {
    * @return a page of listings
    */
   @GetMapping
-  public ResponseEntity<Page<Listing>> getListingsPage(
+  public ResponseEntity<Page<ListingResponse>> getListingsPage(
       @RequestParam int page,
       @RequestParam int offset) {
     Pageable pageable = PageRequest.of(page, offset);
-    Page<Listing> listingsPage = listingService.getListingsPage(pageable);
+    Page<ListingResponse> listingsPage = listingService.getListingsPage(pageable);
     return ResponseEntity.ok(listingsPage);
   }
 
   /**
    * Creates a new listing.
    *
-   * @param listing the listing to create
-   * @return the created listing, or a 500 Internal Server Error status if the creation failed
+   * @param listingRequest the ListingRequest to save as a Listing
+   * @param token the JWT token for authorization
+   * @param images the list of MultipartFile objects representing the pictures
+   * @return the created listings corresponding response object
    */
   @PostMapping
-  public ResponseEntity<Listing> createListing(@RequestBody Listing listing) {
-    int rowsAffected = listingService.saveListing(listing);
-    if (rowsAffected > 0) {
-      return ResponseEntity.ok(listing);
-    } else {
-      return ResponseEntity.status(500).build();
-    }
+  public ResponseEntity<ListingResponse> createListing(
+      @RequestPart("listingRequest") ListingRequest listingRequest,
+      @RequestPart("pictures") List<MultipartFile> images,
+      @RequestHeader("Authorization") String token) {
+    listingRequest.setPictures(images);
+    ListingResponse listingResponse = listingService.saveListing(listingRequest, token);
+    return ResponseEntity.ok(listingResponse);
   }
 }
