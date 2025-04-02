@@ -42,12 +42,11 @@ public class SubCategoryRepo {
    */
   public void addCategory(SubCategory category) {
     String query = 
-        "INSERT INTO categories (name, description, icon, parrent_id) VALUES (?, ?, ?, ?)";
+        "INSERT INTO categories (name, description, parrent_id) VALUES (?, ?, ?)";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setString(1, category.getName());
       statement.setString(2, category.getDescription());
-      statement.setString(3, category.getIcon());
       statement.setInt(4, category.getParrentId());
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -78,12 +77,11 @@ public class SubCategoryRepo {
    */
   public void updateCategory(SubCategory category) {
     String query =
-        "UPDATE categories SET name = ?, description = ?, icon = ?, parrent_id = ? WHERE id = ?";
+        "UPDATE categories SET name = ?, description = ?, parrent_id = ? WHERE id = ?";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setString(1, category.getName());
       statement.setString(2, category.getDescription());
-      statement.setString(3, category.getIcon());
       statement.setInt(4, category.getId());
       statement.setInt(5, category.getParrentId());
       statement.executeUpdate();
@@ -109,7 +107,6 @@ public class SubCategoryRepo {
             resultSet.getInt("id"),
             resultSet.getString("name"),
             resultSet.getString("description"),
-            resultSet.getString("icon"),
             resultSet.getInt("parrent_id"));
       }
     } catch (SQLException e) {
@@ -134,7 +131,6 @@ public class SubCategoryRepo {
             resultSet.getInt("id"),
             resultSet.getString("name"),
             resultSet.getString("description"),
-            resultSet.getString("icon"),
             resultSet.getInt("parrent_id")));
       }
     } catch (SQLException e) {
@@ -161,7 +157,6 @@ public class SubCategoryRepo {
             resultSet.getInt("id"),
             resultSet.getString("name"),
             resultSet.getString("description"),
-            resultSet.getString("icon"),
             resultSet.getInt("parrent_id")));
       }
     } catch (SQLException e) {

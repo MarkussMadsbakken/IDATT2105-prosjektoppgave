@@ -7,7 +7,6 @@ public class SubCategory {
   private int id;
   private String name;
   private String description;
-  private String icon;
   private int parrentId;
 
   /**
@@ -16,14 +15,12 @@ public class SubCategory {
    * @param id          the ID of the subcategory
    * @param name        the name of the subcategory
    * @param description a description of the subcategory
-   * @param icon        an icon representing the subcategory
    * @param categoryId  the ID of the parent category
    */
-  public SubCategory(int id, String name, String description, String icon, int categoryId) {
+  public SubCategory(int id, String name, String description, int categoryId) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.icon = icon;
     this.parrentId = categoryId;
   }
 
@@ -49,14 +46,6 @@ public class SubCategory {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public String getIcon() {
-    return icon;
-  }
-
-  public void setIcon(String icon) {
-    this.icon = icon;
   }
 
   public int getParrentId() {
