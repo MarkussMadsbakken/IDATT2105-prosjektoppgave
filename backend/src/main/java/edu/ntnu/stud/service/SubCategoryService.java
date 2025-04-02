@@ -17,6 +17,11 @@ public class SubCategoryService {
   @Autowired
   private SubCategoryRepo subCategoryRepo;
 
+  /**
+   * Initializes the SubCategoryService with a CategoryService instance.
+   *
+   * @param categoryService the CategoryService instance to be used
+   */
   SubCategoryService(CategoryService categoryService) {
     this.categoryService = categoryService;
   }
