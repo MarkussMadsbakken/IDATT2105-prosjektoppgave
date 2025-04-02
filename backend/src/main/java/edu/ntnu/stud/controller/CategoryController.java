@@ -1,7 +1,9 @@
 package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.Category;
+import edu.ntnu.stud.model.CategoryRequest;
 import edu.ntnu.stud.model.SubCategory;
+import edu.ntnu.stud.model.SubCategoryRequest;
 import edu.ntnu.stud.service.CategoryService;
 import edu.ntnu.stud.service.JWTService;
 import edu.ntnu.stud.service.SubCategoryService;
@@ -108,7 +110,7 @@ public class CategoryController {
    * @param category the category to add
    */
   @PostMapping
-  public ResponseEntity<String> addCategory(@RequestBody Category category,
+  public ResponseEntity<String> addCategory(@RequestBody CategoryRequest category,
       @RequestHeader("Authorization") String token) {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
@@ -156,7 +158,7 @@ public class CategoryController {
    * @param subCategory the subcategory to add
    */
   @PostMapping("/subcategories")
-  public ResponseEntity<String> addSubCategory(@RequestBody SubCategory subCategory,
+  public ResponseEntity<String> addSubCategory(@RequestBody SubCategoryRequest subCategory,
       @RequestHeader("Authorization") String token) {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {

@@ -1,6 +1,8 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.SubCategory;
+import edu.ntnu.stud.model.SubCategoryRequest;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,14 +42,14 @@ public class SubCategoryRepo {
    *
    * @param category the category to be added
    */
-  public void addCategory(SubCategory category) {
+  public void addCategory(SubCategoryRequest category) {
     String query = 
         "INSERT INTO categories (name, description, parrent_id) VALUES (?, ?, ?)";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setString(1, category.getName());
       statement.setString(2, category.getDescription());
-      statement.setInt(4, category.getParrentId());
+      statement.setInt(3, category.getParrentId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();

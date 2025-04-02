@@ -1,6 +1,7 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Category;
+import edu.ntnu.stud.model.CategoryRequest;
 import edu.ntnu.stud.repo.CategoryRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class CategoryService {
    *
    * @param category the category to be added
    */
-  public void addCategory(Category category) {
+  public void addCategory(CategoryRequest category) {
     categoryRepo.addCategory(category);
   }
 

@@ -1,35 +1,27 @@
 package edu.ntnu.stud.model;
 
 /**
- * Represents a subcategory of items in the system.
+ * Represents a request to create or update a subcategory in the system.
  */
-public class SubCategory {
-  private int id;
+public class SubCategoryRequest {
   private String name;
   private String description;
+  private String icon;
   private int parrentId;
 
   /**
-   * Constructor for SubCategory.
+   * Constructor for SubCategoryRequest.
    *
-   * @param id          the ID of the subcategory
    * @param name        the name of the subcategory
    * @param description a description of the subcategory
+   * @param icon        an icon representing the subcategory
    * @param parrentId  the ID of the parent category
    */
-  public SubCategory(int id, String name, String description, int parrentId) {
-    this.id = id;
+  public SubCategoryRequest(String name, String description, String icon, int parrentId) {
     this.name = name;
     this.description = description;
+    this.icon = icon;
     this.parrentId = parrentId;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public String getName() {
@@ -46,6 +38,14 @@ public class SubCategory {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public String getIcon() {
+    return icon;
+  }
+
+  public void setIcon(String icon) {
+    this.icon = icon;
   }
 
   public int getParrentId() {
