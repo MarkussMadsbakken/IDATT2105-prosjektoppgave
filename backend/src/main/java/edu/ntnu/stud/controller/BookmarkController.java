@@ -31,16 +31,6 @@ public class BookmarkController {
   }
 
   /**
-   * Retrieves a list of bookmarks for a listing from the database.
-   */
-  @GetMapping("/listing")
-  public ResponseEntity<List<Long>> getListingBookmarks(
-      @RequestHeader("Authorization") String token) {
-    List<Long> bookmarks = bookmarkService.getBookmarksFromListing(token.substring(7));
-    return ResponseEntity.ok(bookmarks);
-  }
-
-  /**
    * Adds a new bookmark to the database.
    */
   @PostMapping
