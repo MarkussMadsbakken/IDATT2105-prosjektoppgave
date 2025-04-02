@@ -5,4 +5,5 @@ export type User = {
     lastName: string;
     createdAt: Date;
     isAdmin: boolean;
+    imageUrl?: string;
 }

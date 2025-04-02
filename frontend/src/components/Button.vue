@@ -15,7 +15,7 @@ defineEmits(['click']);
   </button>
 </template>
 
-<style>
+<style scoped>
 .base-button {
   all: unset;
   border-radius: 5px;

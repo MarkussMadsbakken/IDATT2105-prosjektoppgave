@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 const props = withDefaults(defineProps<{
-    type?: "text" | "password";
+    type?: "text" | "password" | "number";
     placeholder?: string;
     modelValue?: string;
 }>(), {
@@ -26,6 +26,5 @@ input {
     width: 100%;
     box-sizing: border-box;
     font-size: 16px;
-    margin-bottom: 1rem;
 }
 </style>
