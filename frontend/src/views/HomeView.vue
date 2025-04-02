@@ -7,49 +7,6 @@ import Divider from "@/components/Divider.vue";
 import { getListings, useGetListings } from "@/actions/getListing";
 import { computed } from "vue";
 
-const Categories: Category[] = [
-  {
-    icon: "armchair",
-    name: "interior",
-    id: 1,
-  },
-  {
-    icon: "monitorSmartphone",
-    name: "electronics",
-    id: 2,
-  },
-  {
-    icon: "washingMachine",
-    name: "appliances",
-    id: 3,
-  },
-  {
-    icon: "mountainSnow",
-    name: "leisure",
-    id: 4,
-  },
-  {
-    icon: "volleyball",
-    name: "sports",
-    id: 5,
-  },
-  {
-    icon: "shirt",
-    name: "clothing",
-    id: 6,
-  },
-  {
-    icon: "car",
-    name: "transport",
-    id: 7,
-  },
-  {
-    icon: "shrub",
-    name: "garden",
-    id: 8,
-  }
-]
-
 const {
   data,
   isError,
@@ -83,8 +40,7 @@ const handleCategoryClick = (newCategory: string) => {
   <span v-if="isPending">Loading...</span>
   <span v-else-if="isError">Error: {{ error?.message }}</span>
   <div class="page-wrapper" v-else>
-    <SearchOptions :categories="Categories" @search="handleSearch" @select-category="handleCategoryClick"
-      :open="true" />
+    <SearchOptions @search="handleSearch" @select-category="handleCategoryClick" :open="true" />
     <Divider />
     <div class="header-title">
       {{ $t('recommended') }}

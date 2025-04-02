@@ -1,3 +1,5 @@
+import type { Category } from "./category";
+
 /**
  * Type for sending a login request to the server
  */
@@ -30,3 +32,5 @@ export type GetListingsRequest = {
     page: number;
     offset: number;
 }
+
+export type CreateCategoryRequest = Omit<Category, 'id'>;

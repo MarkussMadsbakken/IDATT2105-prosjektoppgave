@@ -66,7 +66,7 @@
 body {
   min-height: 100vh;
   color: var(--color-text);
-  background: var(--color-background);
+  background: rgba(30, 102, 118);
   transition:
     color 0.5s,
     background-color 0.5s;
@@ -93,4 +93,51 @@ body {
 .page-title {
   font-size: 2rem;
   font-weight: 600;
+}
+
+/* Dialog */
+.p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.p-dialog-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.p-dialog {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+  border-radius: 0.5rem;
+}
+
+.p-dialog-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.p-dialog-header-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.p-dialog-maximize-button .p-dialog-close-button {
+  cursor: pointer;
+}
+
+.p-dialog-content {
+  padding: 1rem;
+}
+
+.p-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
 }
