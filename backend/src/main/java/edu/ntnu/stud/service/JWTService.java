@@ -75,6 +75,11 @@ public class JWTService {
     return extractClaim(token, Claims::getSubject);
   }
 
+  public long extractUserId(String token) {
+    // extract the userId from jwt token
+    return extractClaim(token, claims -> (long) claims.get("userId"));
+  }
+
   private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
     final Claims claims = extractAllClaims(token);
     return claimResolver.apply(claims);
