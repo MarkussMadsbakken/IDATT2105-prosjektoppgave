@@ -2,6 +2,7 @@ package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.Category;
 import edu.ntnu.stud.model.CategoryRequest;
+import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.model.SubCategory;
 import edu.ntnu.stud.model.SubCategoryRequest;
 import edu.ntnu.stud.service.CategoryService;
@@ -111,14 +112,15 @@ public class CategoryController {
    * @param category the category to add
    */
   @PostMapping
-  public ResponseEntity<String> addCategory(@RequestBody CategoryRequest category,
+  public ResponseEntity<DefaultResponse> addCategory(@RequestBody CategoryRequest category,
       @RequestHeader("Authorization") String token) {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
-      return ResponseEntity.status(403).body("Error: You are not authorized to add categories.");
+      return ResponseEntity.status(403)
+          .body(new DefaultResponse("Error: You are not authorized to add categories.", "CategoryAddFailed"));
     }
     categoryService.addCategory(category);
-    return ResponseEntity.ok("Category added successfully.");
+    return ResponseEntity.ok().body(new DefaultResponse("Category added successfully.", "CategoryAddSuccessfull"));
   }
 
   /**
@@ -127,14 +129,15 @@ public class CategoryController {
    * @param category the category to update
    */
   @PutMapping
-  public ResponseEntity<String> updateCategory(@RequestBody Category category,
+  public ResponseEntity<DefaultResponse> updateCategory(@RequestBody Category category,
       @RequestHeader("Authorization") String token) {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
-      return ResponseEntity.status(403).body("Error: You are not authorized to update categories.");
+      return ResponseEntity.status(403)
+          .body(new DefaultResponse("Error: You are not authorized to update categories.", "CategoryUpdateFailed"));
     }
     categoryService.updateCategory(category);
-    return ResponseEntity.ok("Category updated successfully.");
+    return ResponseEntity.ok().body(new DefaultResponse("Category updated successfully.", "CategoryUpdateSuccessfull"));
   }
 
   /**
@@ -143,14 +146,15 @@ public class CategoryController {
    * @param id the ID of the category to delete
    */
   @DeleteMapping("/{id}")
-  public ResponseEntity<String> deleteCategory(@PathVariable int id,
+  public ResponseEntity<DefaultResponse> deleteCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
-      return ResponseEntity.status(403).body("Error: You are not authorized to delete categories.");
+      return ResponseEntity.status(403)
+          .body(new DefaultResponse("Error: You are not authorized to delete categories.", "CategoryDeleteFailed"));
     }
     categoryService.deleteCategory(id);
-    return ResponseEntity.ok("Category deleted successfully.");
+    return ResponseEntity.ok().body(new DefaultResponse("Category deleted successfully.", "CategoryDeleteSuccessfull"));
   }
 
   /**
