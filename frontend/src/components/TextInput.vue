@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 const props = withDefaults(defineProps<{
-    type?: "text" | "password";
+    type?: "text" | "password" | "number";
     placeholder?: string;
     modelValue?: string;
 }>(), {

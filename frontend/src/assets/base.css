@@ -26,10 +26,10 @@
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
-  --color-primaryButton: rgba(30,102,118);
-  --color-secondaryButton: rgba(223,129,185);
-  --color-destructiveButton: rgba(223,78,78);
-  --color-acceptButton: rgba(0,201,81);
+  --color-primaryButton: rgba(30, 102, 118);
+  --color-secondaryButton: rgba(223, 129, 185);
+  --color-destructiveButton: rgba(223, 78, 78);
+  --color-acceptButton: rgba(0, 201, 81);
   --color-secondaryGray: rgba(243 242 242);
 
   --color-border: var(--vt-c-divider-light-2);
@@ -89,7 +89,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.pageTitle{
-  font-size: 5rem;
-  font-weight: bold;
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 600;
 }

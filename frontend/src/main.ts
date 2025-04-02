@@ -79,6 +79,13 @@ const i18n = createI18n({
             contactSeller: "Kontakt selger",
             buy: "Kjøp",
             reserve: "Reserver",
+            createListing: "Opprett en ny annonse",
+            title: "Tittel",
+            description: "Beskrivelse",
+            price: "Pris",
+            postNumber: "Postnummer",
+            image: "Bilde",
+            create: "Opprett",
         },
         en: {
             recommended: "Recommended for you",
@@ -110,6 +117,13 @@ const i18n = createI18n({
             contactSeller: "Contact seller",
             buy: "Buy",
             reserve: "Reserve",
+            createListing: "Create a new listing",
+            title: "Title",
+            description: "Description",
+            price: "Price",
+            postNumber: "Post number",
+            image: "Image",
+            create: "Create",
         }
     },
 });
