@@ -3,11 +3,12 @@ package edu.ntnu.stud.controller;
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.service.JWTService;
 import edu.ntnu.stud.service.MessageService;
-
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,19 +48,21 @@ public class MessageController {
    * @param message the message to be added
    */
   @PostMapping
-  public void addMessage(
+  public ResponseEntity<String> addMessage(
       @RequestBody Message message, @RequestHeader("Authorization") String token) {
     long senderFromToken = jwtService.extractUserId(token);
-    if (
-        !((senderFromToken == message.getByerId() && message.isSentByBuyer()) 
-        || (senderFromToken == message.getSellerId() && !message.isSentByBuyer()))
-    ) {
-      logger.error("Sender ID does not match the message sender.");
-      throw new IllegalArgumentException("Sender ID does not match the message sender.");
+
+    try {
+      messageService.validateMessage(message);
+      messageService.verifySender(message, senderFromToken);
+    } catch (Exception e) {
+      logger.error("Validation or verification failed: {}", e.getMessage());
+      return ResponseEntity.badRequest().body("Error: " + e.getMessage());
     }
-    // more validation can be added here
+
     logger.info("Adding message: {}", message);
     messageService.addMessage(message);
+    return ResponseEntity.ok("Message added successfully.");
   }
 
   /**
