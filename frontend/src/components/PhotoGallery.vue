@@ -22,13 +22,12 @@ const prev = () => {
 <template>
 
   <div class="gallery">
-    <ArrowLeft class="arrow" :size="50" @click="prev"></ArrowLeft>
+    <ArrowLeft class="arrow" :size="50" @click="prev" v-if="images.length > 1" />
     <div class="imageWrapper">
       <img v-if="props.images.length > 0" class="mainImage" :src="props.images[currentIndex]" alt="image" />
-      <ImageNotFound v-else :size="100"></ImageNotFound>
+      <ImageNotFound v-else :size="100" />
     </div>
-
-    <ArrowRight class="arrow" :size="50" @click="next"></ArrowRight>
+    <ArrowRight class="arrow" :size="50" @click="next" v-if="images.length > 1" />
   </div>
 
 </template>
@@ -47,6 +46,7 @@ const prev = () => {
 
 .imageWrapper {
   aspect-ratio: 16 / 9;
+  margin: auto;
   width: 700px;
   max-width: 100%;
   background-color: #eee;
