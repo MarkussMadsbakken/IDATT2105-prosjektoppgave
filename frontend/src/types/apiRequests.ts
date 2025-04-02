@@ -13,3 +13,14 @@ export type RegisterRequest = {
     username: string;
     password: string;
 }
+
+/**
+ * Type for creating a listing
+ */
+export type CreateListingRequest = {
+    name: string,
+    price: number,
+    description: string,
+    category: string,
+    postalCode: number,
+}

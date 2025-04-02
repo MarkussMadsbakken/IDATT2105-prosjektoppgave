@@ -22,6 +22,7 @@ export default async function Fetch(input: string | URL | globalThis.Request, in
 
     if (!res.ok) {
         const err = await res.json();
+        console.log(err);
         throw new ApiError(err.error);
     }
 

@@ -1,3 +1,5 @@
+import type { Listing } from "./listing";
+
 /**
  * Login response returned from the API
  */
@@ -12,6 +14,10 @@ export type LoginResponse = {
 export type RegisterResponse = {
     token: string;
     message: string;
+}
+
+export type CreateListingResponse = {
+    listing: Listing;
 }
 
 /**
