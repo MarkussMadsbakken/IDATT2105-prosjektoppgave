@@ -33,21 +33,20 @@ public class SecurityConfig {
   private JwtRequestFilter jwtRequestFilter;
 
   /**
-   * Configures the security filter chain for the application. 
+   * Configures the security filter chain for the application.
    * This method sets up CORS, CSRF, authorization rules, session management,
    * HTTP headers, and the JWT filter.
-  */
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
         .cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(request -> request
-            .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/api/listing/").permitAll()
+            .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/api/listing").permitAll()
             .anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults())
-        .sessionManagement(session 
-            -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
             .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
@@ -67,9 +66,8 @@ public class SecurityConfig {
     return provider;
   }
 
-  
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) 
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
 
