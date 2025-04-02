@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ListingCard from "@/components/ListingCard.vue";
-import type { Category, Listing } from "@/types";
+import type { Category, Listing, User } from "@/types";
 import { useRouter } from "vue-router";
 import SearchOptions from "@/components/SearchOptions.vue";
 import Divider from "@/components/Divider.vue";
@@ -54,18 +54,21 @@ const listings: Listing[] = [
     title: "kult kjøleskap",
     description: "Veldig kult kjøleskap jeg fant! Bare å komme med et tilbud, jeg hadde satt stor pris på det. I tillegg skal jeg bare si noe langt her slik at teksten overflower!!",
     price: 6000,
+    seller: {} as User,
   },
   {
     id: "2",
     title: "sjarmerende sofa",
     description: "En utrolig komfortabel og sjarmerende sofa som passer perfekt i stuen din.",
     price: 3500,
+    seller: {} as User,
   },
   {
     id: "3",
     title: "elegant lampe",
     description: "En elegant lampe som sprer et varmt lys og skaper en koselig atmosfære.",
-    price: 1500
+    price: 1500,
+    seller: {} as User,
   },
 ]
 
