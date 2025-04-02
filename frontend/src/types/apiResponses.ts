@@ -1,3 +1,4 @@
+import type { Category } from "./category";
 import type { Listing } from "./listing";
 
 export type Page<T> = {
@@ -48,6 +49,10 @@ export type CreateListingResponse = {
  * Response from the API when getting listings
  */
 export type GetListingsResponse = Page<Listing>;
+
+export type GetCategoriesResponse = Category[];
+
+export type CreateCategoryResponse = Category;
 
 /**
  * Error response returned from the API

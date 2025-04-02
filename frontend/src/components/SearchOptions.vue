@@ -3,6 +3,9 @@ import Searchbar from './Searchbar.vue';
 import CategoryCard from './CategoryCard.vue';
 import type { Category } from '@/types';
 import Collapsible from './Collapsible.vue';
+import { useAuth } from '@/stores/auth';
+import EditCategories from './admin/EditCategories.vue';
+import Button from './Button.vue';
 
 
 const props = withDefaults(defineProps<{
@@ -19,6 +22,8 @@ defineEmits<{
   (e: "selectCategory", index: string): void
   (e: "newSearchValue", value: string): void
 }>();
+
+const auth = useAuth();
 
 </script>
 

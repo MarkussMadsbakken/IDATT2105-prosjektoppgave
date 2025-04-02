@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { UserRound, MessageSquare, Bell, SquarePlus } from 'lucide-vue-next';
+import { UserRound, MessageSquare, Bell, SquarePlus, ShieldUser } from 'lucide-vue-next';
 import { useAuth } from './stores/auth';
 import NotificationDropdown from "@/components/NotificationDropdown.vue";
+import DynamicDialog from 'primevue/dynamicdialog';
 import { useI18n } from 'vue-i18n';
 const auth = useAuth();
 const i18n = useI18n();
@@ -24,6 +25,13 @@ const changeLanguage = (lang: string) => {
         </RouterLink>
       </div>
       <div class="right-elements">
+        <RouterLink to="/admin" class="link" v-if="auth.isAdmin">
+          <div class="admin-link">
+            Admin
+            <ShieldUser stroke-width="1px" />
+          </div>
+        </RouterLink>
+
         <RouterLink to="/profile/listings/create" class="link" v-if="auth.isLoggedIn()">
           <SquarePlus />
         </RouterLink>
@@ -43,9 +51,12 @@ const changeLanguage = (lang: string) => {
       </div>
     </nav>
   </header>
-  <main class="main">
-    <RouterView />
-  </main>
+  <div class="color-wrapper">
+    <main class="main">
+      <DynamicDialog />
+      <RouterView />
+    </main>
+  </div>
   <footer class="footer">
     <div class="translation-selector">
       <div class="translation-button" v-for="lang in i18n.availableLocales" :key="lang" @click="changeLanguage(lang)"
@@ -56,9 +67,19 @@ const changeLanguage = (lang: string) => {
   </footer>
 </template>
 
-<style scoped>
+<style>
+.admin-link {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.color-wrapper {
+  background-color: var(--color-background);
+}
+
 .main {
-  min-height: 70.4vh;
+  min-height: 80vh;
 }
 
 .translation-button {
@@ -75,7 +96,6 @@ const changeLanguage = (lang: string) => {
 }
 
 .footer {
-  margin-top: 5rem;
   padding: 1rem;
   background-color: #1E6676;
   color: white;
