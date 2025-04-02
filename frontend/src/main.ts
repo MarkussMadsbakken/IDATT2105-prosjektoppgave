@@ -98,6 +98,7 @@ const i18n = createI18n({
             chooseImage: "Velg bilde",
             imageSelected: "Bilde valgt!",
             name: "Navn",
+            thisFieldIsRequired: "Dette feltet er påkrevd",
         },
         en: {
             recommended: "Recommended for you",
@@ -142,6 +143,7 @@ const i18n = createI18n({
             chooseImage: "Choose image",
             imageSelected: "Image selected!",
             name: "Name",
+            thisFieldIsRequired: "This field is required",
         }
     },
 });

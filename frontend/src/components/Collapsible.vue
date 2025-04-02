@@ -31,7 +31,7 @@ const variants = {
 <template>
     <div class="outer-wrapper">
         <AnimatePresence>
-            <motion.div layout v-if="open" :initial="initial ? 'open' : 'closed'" animate="open" exit="closed"
+            <motion.div v-if="open" :initial="initial ? 'open' : 'closed'" animate="open" exit="closed"
                 :variants="variants">
                 <div class="inner-wrapper">
                     <slot />

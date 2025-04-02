@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import Searchbar from './Searchbar.vue';
 import CategoryCard from './CategoryCard.vue';
-import type { Category } from '@/types';
 import Collapsible from './Collapsible.vue';
-import { useAuth } from '@/stores/auth';
-import EditCategories from './admin/EditCategories.vue';
-import Button from './Button.vue';
+import { useCategories } from '@/actions/categories';
 
 
 const props = withDefaults(defineProps<{
-  categories: Category[];
   selectedCategory?: string;
   searchValue?: string;
   open?: boolean;
@@ -23,7 +19,7 @@ defineEmits<{
   (e: "newSearchValue", value: string): void
 }>();
 
-const auth = useAuth();
+const { data: categories, isError, error, isPending } = useCategories();
 
 </script>
 
@@ -34,7 +30,7 @@ const auth = useAuth();
   </div>
   <Collapsible :openTitle="$t('showCategories')" :closedTitle="$t('hideCategories')" :open="props.open">
     <div class="categories">
-      <div v-for="category in props.categories">
+      <div v-for="category in categories" :key="category.name">
         <CategoryCard :icon="category.icon" :categoryname="category.name"
           :selected="category.name === props.selectedCategory" @click="$emit('selectCategory', category.name)">
           {{ $t(category.name) }}

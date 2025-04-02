@@ -4,32 +4,44 @@ import TextInput from '../TextInput.vue';
 import Button from '../Button.vue';
 import { CategoryIcons } from '@/util/categoryIcons';
 import Select from 'primevue/select';
-import { useCreateCategory } from '@/actions/categories';
+import { createCategory } from '@/actions/categories';
+import LoadingSpinner from '../LoadingSpinner.vue';
+import FormGroup from '../FormGroup.vue';
+import { useMutation } from '@tanstack/vue-query';
 
 const categoryName = ref("");
 const description = ref("");
 const icon = ref<keyof typeof CategoryIcons>();
 
-const emit = defineEmits<(e: 'onCategoryCreated') => void>();
+const emit = defineEmits(["categoryCreated"]);
 
-const { mutate: createCategory, isError, error, isPending } = useCreateCategory({
+const { mutate: createCategoryMutation, isError, error, isPending } = useMutation({
+    mutationFn: createCategory,
     onSuccess: () => {
-        emit("onCategoryCreated")
+        emit("categoryCreated")
     }
 });
 
+const notFilledInFields = ref<string[]>([]);
+
 const onSubmit = () => {
+    notFilledInFields.value = [];
+
     if (!icon.value) {
-        return;
+        notFilledInFields.value.push("icon");
     }
     if (!categoryName.value) {
+        notFilledInFields.value.push("categoryName");
+    }
+
+    if (notFilledInFields.value.length > 0) {
         return;
     }
 
-    createCategory({
+    createCategoryMutation({
         name: categoryName.value,
         description: description.value,
-        icon: icon.value
+        icon: icon.value!
     })
 }
 
@@ -37,13 +49,12 @@ const onSubmit = () => {
 <template>
     <div class="outer-wrapper">
         <div class="listing-form">
-            <div class="form-group">
-                <label for="categoryName">{{ $t('name') }}</label>
+            <FormGroup name="categoryName" :label="$t('name')"
+                :isNotFilledIn="notFilledInFields.includes('categoryName')">
                 <TextInput v-model="categoryName" type="text" id="categoryName" name="categoryName"
                     autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <label for="icon">{{ $t('icon') }}</label>
+            </FormGroup>
+            <FormGroup name="icon" :label="$t('icon')" :isNotFilledIn="notFilledInFields.includes('icon')">
                 <Select v-model="icon" id="icon" name="icon" :options="Object.keys(CategoryIcons)">
                     <template #value="option">
                         <div v-if="option.value" class="icon-option">
@@ -59,13 +70,17 @@ const onSubmit = () => {
                         </div>
                     </template>
                 </Select>
-            </div>
-            <div class="form-group">
-                <label for="description">{{ $t('description') }}</label>
+            </FormGroup>
+            <FormGroup name="description" :label="$t('description')" :isNotFilledIn="false">
                 <TextInput id="description" name="description" v-model="description" type="text" />
-            </div>
+            </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">
-                {{ $t('create') }}
+                <template v-if="isPending">
+                    <LoadingSpinner />
+                </template>
+                <template v-else>
+                    {{ $t('create') }}
+                </template>
             </Button>
         </div>
     </div>
@@ -78,12 +93,6 @@ const onSubmit = () => {
     align-items: center;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    width: 100%;
-}
 
 .listing-form {
     display: flex;

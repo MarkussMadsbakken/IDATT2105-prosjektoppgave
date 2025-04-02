@@ -16,13 +16,15 @@ export const useCategories = () => {
 export const createCategory = async (req: CreateCategoryRequest): Promise<CreateCategoryResponse> => {
     return await Fetch(`${API_BASE_URL}/api/categories`, {
         method: 'POST',
-        body: JSON.stringify(req)
+        body: JSON.stringify(req),
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
 }
 
-export const useCreateCategory = (params?: { onSuccess?: () => void, }) => {
-    return useMutation({
-        mutationFn: createCategory,
-        onSuccess: params?.onSuccess
-    })
+export const deleteCategory = async (id: number) => {
+    return await Fetch(`${API_BASE_URL}/api/categories/${id}`, {
+        method: 'DELETE'
+    });
 }
