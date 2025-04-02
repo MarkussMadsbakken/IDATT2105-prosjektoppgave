@@ -110,7 +110,7 @@ public class CategoryController {
   @PostMapping
   public ResponseEntity<String> addCategory(@RequestBody Category category,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token);
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403).body("Error: You are not authorized to add categories.");
     }
@@ -126,7 +126,7 @@ public class CategoryController {
   @PutMapping
   public ResponseEntity<String> updateCategory(@RequestBody Category category,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token);
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403).body("Error: You are not authorized to update categories.");
     }
@@ -142,7 +142,7 @@ public class CategoryController {
   @PostMapping("/delete/{id}")
   public ResponseEntity<String> deleteCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token);
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403).body("Error: You are not authorized to delete categories.");
     }
@@ -158,7 +158,7 @@ public class CategoryController {
   @PostMapping("/subcategories")
   public ResponseEntity<String> addSubCategory(@RequestBody SubCategory subCategory,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token);
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403).body("Error: You are not authorized to add subcategories.");
     }
@@ -174,7 +174,7 @@ public class CategoryController {
   @PutMapping("/subcategories")
   public ResponseEntity<String> updateSubCategory(@RequestBody SubCategory subCategory,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token);
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403)
             .body("Error: You are not authorized to update subcategories.");
@@ -191,7 +191,7 @@ public class CategoryController {
   @PostMapping("/subcategories/delete/{id}")
   public ResponseEntity<String> deleteSubCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token);
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403)
             .body("Error: You are not authorized to delete subcategories.");
