@@ -5,9 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -16,11 +13,15 @@ public class ListingImageDao {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  private final RowMapper<ListingImage> listingImageRowMapper = new RowMapper<ListingImage>() {
-    @Override
-    public ListingImage mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new ListingImage(rs.getString("uuid"), rs.getBlob("image_blob"));
-    }
+  private final RowMapper<ListingImage> listingImageRowMapper = (rs, rowNum) -> {
+    ListingImage listingImage = new ListingImage();
+    listingImage.setUuid(rs.getString("uuid"));
+    listingImage.setImageBlob(rs.getBlob("image_blob"));
+    listingImage.setListingUuid(rs.getString("listing_uuid"));
+
+    return listingImage;
+
+
   };
 
   public List<ListingImage> findByListingUuid(String listingUuid) {

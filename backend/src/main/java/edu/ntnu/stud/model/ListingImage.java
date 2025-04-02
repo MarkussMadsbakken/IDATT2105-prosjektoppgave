@@ -1,15 +1,23 @@
 package edu.ntnu.stud.model;
 
 import java.sql.Blob;
+import java.util.UUID;
 
 public class ListingImage {
   private String uuid;
 
   private Blob imageBlob;
 
-  public ListingImage(String uuid, Blob imageBlob) {
-    this.uuid = uuid;
+  private String listingUuid;
+
+  public ListingImage(Blob imageBlob, String listingUuid) {
+    this.uuid = UUID.randomUUID().toString();
     this.imageBlob = imageBlob;
+    this.listingUuid = listingUuid;
+  }
+
+  public ListingImage() {
+    this.uuid = UUID.randomUUID().toString();
   }
 
   public String getUuid() {
@@ -26,5 +34,13 @@ public class ListingImage {
 
   public void setImageBlob(Blob imageBlob) {
     this.imageBlob = imageBlob;
+  }
+
+  public String getListingUuid() {
+    return listingUuid;
+  }
+
+  public void setListingUuid(String listingUuid) {
+    this.listingUuid = listingUuid;
   }
 }

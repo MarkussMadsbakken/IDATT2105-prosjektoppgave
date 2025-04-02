@@ -1,10 +1,14 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.ListingImage;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.ListingRepo;
 
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.rowset.serial.SerialBlob;
 
 
 /**
@@ -28,6 +34,9 @@ public class ListingService {
 
   @Autowired
   private JWTService jwtService;
+
+  @Autowired
+  private ListingImageService listingImageService;
 
   /**
    * Retrieves all listings from the database.
@@ -113,6 +122,22 @@ public class ListingService {
     listing.setActive(listingRequest.isActive());
     listing.setDeleted(listingRequest.isDeleted());
     listing.setSold(listingRequest.isSold());
+
+    // save images for the listing
+    listingRequest.getPictures().forEach(image -> {
+
+      ListingImage listingImage = new ListingImage();
+      listingImage.setListingUuid(listing.getUuid());
+      try {
+        listingImage.setImageBlob(convertMultipartFileToBlob(image));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+      listingImageService.saveListingImage(listingImage);
+    });
+
     return listing;
   }
 
@@ -123,13 +148,37 @@ public class ListingService {
     response.setPrice(listing.getPrice());
     response.setDescription(listing.getDescription());
     //TODO: fix setting pictures on response from listing
-//    response.setPictures(listing.getPictures());
+    //    response.setPictures(listing.getPictures());
     response.setCategory(listing.getCategory());
     response.setSubcategories(listing.getSubcategories());
     response.setPostalCode(listing.getPostalCode());
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
+
+    // get images
+    List<ListingImage> images = listingImageService.getImagesByListingUuid(listing.getUuid());
+    List<String> base64Images = images.stream()
+        .map(image -> {
+          try {
+            return convertBlobToBase64(image.getImageBlob());
+          } catch (SQLException e) {
+            throw new RuntimeException(e);
+          }
+        })
+        .collect(Collectors.toList());
+    response.setPictures(base64Images);
+
     return response;
+  }
+
+  private String convertBlobToBase64(Blob blob) throws SQLException {
+    byte[] bytes = blob.getBytes(1, (int) blob.length());
+    return Base64.getEncoder().encodeToString(bytes);
+  }
+
+  private Blob convertMultipartFileToBlob(MultipartFile file) throws IOException, SQLException {
+    byte[] fileBytes = file.getBytes();
+    return new SerialBlob(fileBytes);
   }
 }
