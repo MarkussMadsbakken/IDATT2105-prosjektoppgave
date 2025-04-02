@@ -25,3 +25,8 @@ export type CreateListingRequest = {
     postalCode: number,
     images: File[];
 }
+
+export type GetListingsRequest = {
+    page: number;
+    offset: number;
+}

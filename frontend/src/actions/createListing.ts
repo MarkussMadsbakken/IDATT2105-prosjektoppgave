@@ -24,17 +24,10 @@ export const createListing = async (req: CreateListingRequest): Promise<CreateLi
     console.log(body.get("listingRequest"));
     console.log(body.get("pictures"));
 
-    let res = await Fetch(`${API_BASE_URL}/api/listing`, {
+    return await Fetch(`${API_BASE_URL}/api/listing/`, {
         method: "POST",
         body: body
     });
-
-    if (!res.ok) {
-        const err = await res.json();
-        throw new ApiError(err.error);
-    }
-
-    return res.json();
 }
 
 /**

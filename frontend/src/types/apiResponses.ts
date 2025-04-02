@@ -1,5 +1,10 @@
 import type { Listing } from "./listing";
 
+export type Page<T> = {
+    listings: T[];
+    cursor: number;
+}
+
 /**
  * Login response returned from the API
  */
@@ -16,8 +21,19 @@ export type RegisterResponse = {
     message: string;
 }
 
+/**
+ * Response from the API when creating a listing
+ */
 export type CreateListingResponse = {
     listing: Listing;
+}
+
+
+/**
+ * Response from the API when getting listings
+ */
+export type GetListingsResponse = {
+    listings: Listing[];
 }
 
 /**

@@ -4,6 +4,14 @@ import type { Category, Listing, User } from "@/types";
 import { useRouter } from "vue-router";
 import SearchOptions from "@/components/SearchOptions.vue";
 import Divider from "@/components/Divider.vue";
+import { getListings } from "@/actions/getListing";
+
+const getListing = getListings({
+  page: 0,
+  offset: 10
+})
+
+
 
 const Categories: Category[] = [
   {

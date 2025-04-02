@@ -7,8 +7,8 @@ import { ApiError } from "@/types";
 export default async function Fetch(input: string | URL | globalThis.Request, init?: RequestInit) {
     const auth = useAuth();
 
-    let res = await fetch(input, init && {
-        ...init,
+    let res = await fetch(input, {
+        ...(init || {}),
         headers: {
             ...(init?.headers || {}),
             Authorization: `Bearer ${auth.rawToken}`
