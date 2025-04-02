@@ -89,3 +89,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.pageTitle{
+  font-size: 5rem;
+  font-weight: bold;
+}

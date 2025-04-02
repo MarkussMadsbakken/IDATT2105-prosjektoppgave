@@ -33,7 +33,7 @@ const toggleBookmark = () => {
   <div class="listing">
 
     <div class="titlePicture">
-      <h3 class="listingTitle">
+      <h3 class="pageTitle">
           {{ props.listing.title }}
       </h3>
       <PhotoGallery
@@ -82,7 +82,7 @@ const toggleBookmark = () => {
   padding: 2rem;
 }
 .listingTitle{
-  font-size: 60px;
+  font-size: 5rem;
   font-weight: bold;
 }
 .buttonBox{

@@ -1,3 +1,14 @@
+<script setup lang="ts">
+
+</script>
+
 <template>
-    Create listing
+    <div class="pageTitle">Listing>
+    </div>
+
 </template>
+
+<style scoped>
+
+
+</style>
