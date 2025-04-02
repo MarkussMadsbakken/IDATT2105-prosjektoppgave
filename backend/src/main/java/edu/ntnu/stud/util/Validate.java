@@ -7,39 +7,39 @@ import java.util.function.Predicate;
  */
 public class Validate {
 
-  public <T> Predicate<T> isNotNull() {
+  public static <T> Predicate<T> isNotNull() {
     return value -> value != null;
   }
 
-  public Predicate<String> isNotEmpty() {
+  public static Predicate<String> isNotEmpty() {
     return value -> value != null && !value.isEmpty();
   }
 
-  public Predicate<String> isNotBlank() {
+  public static Predicate<String> isNotBlank() {
     return value -> value != null && !value.isBlank();
   }
 
-  public Predicate<String> isNotEmptyOrBlank() {
+  public static Predicate<String> isNotEmptyOrBlank() {
     return value -> value != null && !value.isEmpty() && !value.isBlank();
   }
 
-  public Predicate<String> isNotEmptyOrBlankOrNull() {
+  public static Predicate<String> isNotEmptyOrBlankOrNull() {
     return value -> value != null && !value.isEmpty() && !value.isBlank();
   }
 
-  public Predicate<Number> isPositive() {
+  public static Predicate<Number> isPositive() {
     return value -> value != null && value.doubleValue() > 0;
   }
 
-  public Predicate<Number> isZero() {
+  public static Predicate<Number> isZero() {
     return value -> value != null && value.doubleValue() == 0;
   }
 
-  public Predicate<Number> isNotZero() {
+  public static Predicate<Number> isNotZero() {
     return value -> value != null && value.doubleValue() != 0;
   }
 
-  public Predicate<Number> isNegative() {
+  public static Predicate<Number> isNegative() {
     return value -> value != null && value.doubleValue() < 0;
   }
 
@@ -53,14 +53,14 @@ public class Validate {
    * @param message the message to include in the exception if validation fails
    * @return the validated value
    */
-  public <T> T that(T value, Predicate<T> predicate, String message) {
+  public static <T> T that(T value, Predicate<T> predicate, String message) {
     if (!predicate.test(value)) {
       throw new IllegalArgumentException(message);
     }
     return value;
   }
 
-  public <T> T that(T value, Predicate<T> predicate) {
+  public static <T> T that(T value, Predicate<T> predicate) {
     return that(value, predicate, "Validation failed for value: " + value);
   }
 }
