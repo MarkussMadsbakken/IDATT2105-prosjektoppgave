@@ -44,10 +44,10 @@ public class SecurityConfig {
       .cors(Customizer.withDefaults())
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(request -> request
-      .requestMatchers(HttpMethod.GET, "/categories/**").permitAll() // Allow GET requests to /categories/**
-      .requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN") // Restrict POST to ADMIN
-      .requestMatchers(HttpMethod.PUT, "/categories/**").hasRole("ADMIN") // Restrict PUT to ADMIN
-      .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN") // Restrict DELETE to ADMIN
+      .requestMatchers(HttpMethod.GET, "/api/category/**").permitAll() // Allow GET requests to /categories/**
+      .requestMatchers(HttpMethod.POST, "/api/category/**").hasRole("ADMIN") // Restrict POST to ADMIN
+      .requestMatchers(HttpMethod.PUT, "/api/category/**").hasRole("ADMIN") // Restrict PUT to ADMIN
+      .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN") // Restrict DELETE to ADMIN
       .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/api/listing").permitAll()
       .anyRequest().authenticated())
       .httpBasic(Customizer.withDefaults())
