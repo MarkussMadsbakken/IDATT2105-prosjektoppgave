@@ -34,10 +34,10 @@ public class SecurityConfig {
   private JwtRequestFilter jwtRequestFilter;
 
   /**
-   * Configures the security filter chain for the application. 
+   * Configures the security filter chain for the application.
    * This method sets up CORS, CSRF, authorization rules, session management,
    * HTTP headers, and the JWT filter.
-  */
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
@@ -72,9 +72,8 @@ public class SecurityConfig {
     return provider;
   }
 
-  
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) 
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
 
