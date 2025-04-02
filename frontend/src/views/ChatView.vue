@@ -3,7 +3,7 @@ import Button from '@/components/Button.vue';
 import ChatMessage from '@/components/ChatMessage.vue';
 import SellerInfo from '@/components/SellerInfo.vue';
 import TextInput from '@/components/TextInput.vue';
-import type { Chat, User } from '@/types';
+import { WS_BASE_URL, type Chat, type User } from '@/types';
 import { computed, nextTick, onMounted, ref } from 'vue';
 
 const user1: User = {
@@ -96,6 +96,13 @@ onMounted(() => {
         lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
     });
 });
+
+const ws = new WebSocket(`${WS_BASE_URL}/ws/chat/${chat.id}/`);
+
+ws.onopen = () => {
+    console.log("connected");
+    ws.send("Hello");
+};
 
 </script>
 
