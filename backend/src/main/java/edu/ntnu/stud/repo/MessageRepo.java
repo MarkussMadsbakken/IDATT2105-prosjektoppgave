@@ -50,8 +50,8 @@ public class MessageRepo {
       statement.setString(1, message.getListingId());
       statement.setLong(2, message.getByerId());
       statement.setString(3, message.getMessage());
-      statement.setString(4, message.getCreatedAt());
-      statement.setBoolean(5, message.isSentByBuyer());
+      statement.setTimestamp(4, message.getCreatedAt());
+      statement.setBoolean(6, message.isSentByBuyer());
 
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -82,7 +82,7 @@ public class MessageRepo {
         message.setListingId(resultSet.getString("listing_id"));
         message.setByerId(resultSet.getLong("byer_id"));
         message.setMessage(resultSet.getString("message"));
-        message.setCreatedAt(resultSet.getString("created_at"));
+        message.setCreatedAt(resultSet.getTimestamp("created_at"));
         message.setSentByBuyer(resultSet.getBoolean("sent_by_buyer"));
         messages.add(message);
       }
@@ -113,7 +113,7 @@ public class MessageRepo {
         message.setListingId(resultSet.getString("listing_id"));
         message.setByerId(resultSet.getLong("byer_id"));
         message.setMessage(resultSet.getString("message"));
-        message.setCreatedAt(resultSet.getString("created_at"));
+        message.setCreatedAt(resultSet.getTimestamp("created_at"));
         message.setSentByBuyer(resultSet.getBoolean("sent_by_buyer"));
         messages.add(message);
       }

@@ -74,7 +74,11 @@ const i18n = createI18n({
             close: "Lukk",
             showCategories: "Vis kategorier",
             hideCategories: "Skjul kategorier",
-            notifications: "Varslinger"
+            notifications: "Varslinger",
+            messages: "Meldinger",
+            contactSeller: "Kontakt selger",
+            buy: "Kjøp",
+            reserve: "Reserver",
         },
         en: {
             recommended: "Recommended for you",
@@ -101,7 +105,11 @@ const i18n = createI18n({
             close: "Close",
             showCategories: "Show categories",
             hideCategories: "Hide categories",
-            notifications: "Notifications"
+            notifications: "Notifications",
+            messages: "Messages",
+            contactSeller: "Contact seller",
+            buy: "Buy",
+            reserve: "Reserve",
         }
     },
 });

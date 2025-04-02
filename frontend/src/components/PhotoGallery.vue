@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {  ArrowRight, ArrowLeft } from 'lucide-vue-next';
+import { ArrowRight, ArrowLeft } from 'lucide-vue-next';
 import ImageNotFound from "@/components/ImageNotFound.vue";
 
 const props = defineProps<{
@@ -14,7 +14,7 @@ const next = () => {
 };
 
 const prev = () => {
-  currentIndex.value = (currentIndex.value - 1+props.images.length)  % props.images.length;
+  currentIndex.value = (currentIndex.value - 1 + props.images.length) % props.images.length;
 };
 
 </script>
@@ -22,23 +22,29 @@ const prev = () => {
 <template>
 
   <div class="gallery">
-    <ArrowLeft class="arrowLeft" :size="50" @click="prev"></ArrowLeft>
+    <ArrowLeft class="arrow" :size="50" @click="prev"></ArrowLeft>
     <div class="imageWrapper">
       <img v-if="props.images.length > 0" class="mainImage" :src="props.images[currentIndex]" alt="image" />
       <ImageNotFound v-else :size="100"></ImageNotFound>
     </div>
 
-    <ArrowRight class="arrowRight" :size="50" @click="next"></ArrowRight>
+    <ArrowRight class="arrow" :size="50" @click="next"></ArrowRight>
   </div>
 
 </template>
 
-<style>
-.gallery{
-  display:flex;
+<style scoped>
+.arrow {
+  cursor: pointer;
+}
+
+.gallery {
+  user-select: none;
+  display: flex;
   flex-direction: row;
   align-items: center;
 }
+
 .imageWrapper {
   aspect-ratio: 16 / 9;
   width: 700px;
@@ -50,6 +56,7 @@ const prev = () => {
   align-items: center;
   border-radius: 10px;
 }
+
 .mainImage {
   width: 100%;
   height: 100%;

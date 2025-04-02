@@ -1,13 +1,19 @@
 package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.Message;
+import edu.ntnu.stud.service.JWTService;
 import edu.ntnu.stud.service.MessageService;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +28,10 @@ public class MessageController {
 
   @Autowired
   private MessageService messageService;
+  @Autowired
+  private JWTService jwtService;
+
+  Logger logger = LoggerFactory.getLogger(MessageController.class);
 
   /**
    * Initializes the MessageController with a MessageService instance.
@@ -38,8 +48,21 @@ public class MessageController {
    * @param message the message to be added
    */
   @PostMapping
-  public void addMessage(@RequestBody Message message) {
+  public ResponseEntity<String> addMessage(
+      @RequestBody Message message, @RequestHeader("Authorization") String token) {
+    long senderFromToken = jwtService.extractUserId(token);
+
+    try {
+      messageService.validateMessage(message);
+      messageService.verifySender(message, senderFromToken);
+    } catch (Exception e) {
+      logger.error("Validation or verification failed: {}", e.getMessage());
+      return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+    }
+
+    logger.info("Adding message: {}", message);
     messageService.addMessage(message);
+    return ResponseEntity.ok("Message added successfully.");
   }
 
   /**

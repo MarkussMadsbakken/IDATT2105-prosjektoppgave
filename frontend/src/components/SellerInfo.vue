@@ -3,15 +3,17 @@ import { UserIcon } from 'lucide-vue-next'
 import type { User } from '@/types/user.ts'
 import Button from '@/components/Button.vue';
 import { useRouter } from "vue-router";
+import UserImage from './UserImage.vue';
 
 const router = useRouter();
 const props = defineProps<{
-    userEntity: User;
+  userEntity: User;
+  canContactSeller?: boolean;
 }>();
 
 
 const fullName = `${props.userEntity.firstName} ${props.userEntity.lastName}`;
-const joinedYear ="Medlem siden " +new Date(props.userEntity.createdAt).getFullYear();
+const joinedYear = "Medlem siden " + new Date(props.userEntity.createdAt).getFullYear();
 const userName = `(${props.userEntity.username})`
 
 const handleContactClick = () => {
@@ -23,75 +25,86 @@ const handleContactClick = () => {
 
 <template>
 
-  <div class="sellerContainer">
-      <div class="sellerLeft">
-        <div class="avatar">
-            <img v-if="props.userEntity.profileImage" :src="props.userEntity.profileImage" alt="Profilbilde"/>
-            <UserIcon v-else :size="60" stroke-width="1.5" />
+  <div class="seller-container">
+    <div class="seller-left">
+      <UserImage :src="props.userEntity.imageUrl" />
+      <div class="seller-info" :class="{ centered: !props.canContactSeller }">
+        <div class="seller-names">
+          <div class="seller-name">{{ fullName }}</div>
+          <div class="username">{{ userName }}</div>
         </div>
-            <div class="sellerInfo">
-                <div class="sellerAllNames">
-                    <div class="sellerName">{{fullName}}</div>
-                    <div class="username">{{userName}}</div>
-                </div>
-                <div class="sellerMeta">
-                    <span class="joinedSite">{{joinedYear}}</span>
-                </div>
-            </div>
+        <div class="seller-meta">
+          <span class="joined-site">{{ joinedYear }}</span>
+        </div>
       </div>
-    <Button variant="outline" class="contactButton" @click="handleContactClick">Kontakt selger</Button>
+    </div>
+    <Button variant="outline" class="contact-button" @click="handleContactClick" v-if="props.canContactSeller">{{
+      $t("contactSeller") }}</Button>
   </div>
 
 </template>
 
-<style>
-.sellerContainer{
+<style scoped>
+.seller-container {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  gap: 4rem;
   outline: black;
   border: 1px solid black;
   border-radius: 5px;
+  width: 40rem;
+  height: 8rem;
 }
-.sellerLeft{
+
+.seller-container.centered {
+  justify-content: center;
+}
+
+.seller-left {
+  position: relative;
+  flex: 1;
+  margin-left: 1rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 1rem;
 }
-.avatar{
-  width:100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.seller-info.centered {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
-.sellerInfo{
-  display:flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  justify-content: center;
-  align-items: center;
-}
-.sellerName{
+
+.seller-name {
   margin-top: -0.2rem;
   font-weight: bold;
   font-size: 2rem;
+  line-clamp: 1;
 }
-.sellerAllNames{
+
+.seller-names {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0rem;
 }
-.joinedSite{
+
+.joined-site {
   font-size: 1rem;
+  text-align: center;
 }
-.contactButton{
-  margin-right: 2rem;
+
+.seller-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.contact-button {
+  margin-right: 1rem;
 }
 </style>

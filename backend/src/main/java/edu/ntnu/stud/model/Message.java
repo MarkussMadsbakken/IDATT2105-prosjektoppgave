@@ -1,5 +1,7 @@
 package edu.ntnu.stud.model;
 
+import java.sql.Timestamp;
+
 /**
  * Represents a message in the system.
  */
@@ -9,7 +11,7 @@ public class Message {
   private Long sellerId;
   private Long byerId;
   private String message;
-  private String createdAt;
+  private Timestamp createdAt;
   private boolean sentByBuyer;
 
   /**
@@ -28,7 +30,7 @@ public class Message {
    * @param sentByBuyer indicates if the message was sent by the buyer
    */
   public Message(
-        String listingId, Long byerId, String message, String createdAt, boolean sentByBuyer) {
+        String listingId, Long byerId, String message, Timestamp createdAt, boolean sentByBuyer) {
     this.listingId = listingId;
     this.byerId = byerId;
     this.message = message;
@@ -131,7 +133,7 @@ public class Message {
    *
    * @return the creation date as a String.
    */
-  public String getCreatedAt() {
+  public Timestamp getCreatedAt() {
     return createdAt;
   }
 
@@ -140,7 +142,7 @@ public class Message {
    *
    * @param createdAt the creation date to set.
    */
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
