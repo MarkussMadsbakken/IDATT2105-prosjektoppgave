@@ -1,9 +1,24 @@
 import type { Listing } from "./listing";
 
 export type Page<T> = {
-    listings: T[];
-    cursor: number;
+    content: T[];
+    empty: boolean;
+    first: boolean;
+    last: boolean;
+    number: number;
+    numberOfElements: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    pageable: {
+        offset: number;
+        pageNumber: number;
+        pageSize: number;
+        paged: boolean;
+    }
 }
+
+export const PAGE_SIZE = 12;
 
 /**
  * Login response returned from the API
@@ -32,9 +47,7 @@ export type CreateListingResponse = {
 /**
  * Response from the API when getting listings
  */
-export type GetListingsResponse = {
-    listings: Listing[];
-}
+export type GetListingsResponse = Page<Listing>;
 
 /**
  * Error response returned from the API

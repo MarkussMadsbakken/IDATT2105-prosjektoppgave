@@ -1,7 +1,7 @@
 import type { User } from "./user";
 
 export type Listing = {
-    id: string,
+    uuid: string,
     title: string;
     description?: string;
     seller: User;

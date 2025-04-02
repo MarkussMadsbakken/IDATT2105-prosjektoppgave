@@ -7,12 +7,15 @@ import { ApiError } from "@/types";
 export default async function Fetch(input: string | URL | globalThis.Request, init?: RequestInit) {
     const auth = useAuth();
 
+    const headers = new Headers(init?.headers);
+
+    if (auth.loggedIn) {
+        headers.set("Authorization", `Bearer ${auth.rawToken}`);
+    }
+
     let res = await fetch(input, {
         ...(init || {}),
-        headers: {
-            ...(init?.headers || {}),
-            Authorization: `Bearer ${auth.rawToken}`
-        }
+        headers: headers
     });
 
     if (res.status === 403) {
