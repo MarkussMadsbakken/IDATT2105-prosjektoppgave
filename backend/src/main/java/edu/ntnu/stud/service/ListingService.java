@@ -1,8 +1,14 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.ListingRequest;
+import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.ListingRepo;
+
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +26,9 @@ public class ListingService {
   @Autowired
   private ListingRepo listingRepo;
 
+  @Autowired
+  private JWTService jwtService;
+
   /**
    * Retrieves all listings from the database.
    *
@@ -33,10 +42,10 @@ public class ListingService {
    * Retrieves a listing by its uuid.
    *
    * @param uuid the uuid of the listing to retrieve
-   * @return the listing with the specified uuid
+   * @return the listingResponse of the listing with the specified uuid
    */
-  public Listing getListingByUuid(String uuid) {
-    return listingRepo.getListingByUuid(uuid);
+  public ListingResponse getListingByUuid(String uuid) {
+    return convertToResponse(listingRepo.getListingByUuid(uuid));
   }
 
   /**
@@ -53,11 +62,18 @@ public class ListingService {
   /**
    * Saves a new listing to the database.
    *
-   * @param listing the listing to save
-   * @return the number of rows affected
+   * @param listingRequest the listingRequest to save as listing
+   * @return the ListingResponse of the listing
    */
-  public int saveListing(Listing listing) {
-    return listingRepo.saveListing(listing);
+  public ListingResponse saveListing(ListingRequest listingRequest, String token) {
+    long ownerId = jwtService.extractUserId(token);
+    Listing listing = convertToListing(listingRequest);
+    listing.setOwnerId(ownerId);
+    listingRepo.saveListing(listing);
+
+    System.out.println("saving listing with ownerid: " + ownerId);
+
+    return convertToResponse(listing);
   }
 
   /**
@@ -76,7 +92,44 @@ public class ListingService {
    * @param pageable the pagination information, including page number, page size, and sorting
    * @return a page of listings
    */
-  public Page<Listing> getListingsPage(Pageable pageable) {
-    return listingRepo.getListingsPage(pageable);
+  public Page<ListingResponse> getListingsPage(Pageable pageable) {
+    Page<Listing> listingsPage = listingRepo.getListingsPage(pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  private Listing convertToListing(ListingRequest listingRequest) {
+    Listing listing = new Listing();
+    listing.setName(listingRequest.getName());
+    listing.setPrice(listingRequest.getPrice());
+    listing.setDescription(listingRequest.getDescription());
+    // TODO: fix setting pictures on listing from request
+//    listing.setPictures(listingRequest.getPictures().stream()
+//        .map(Base64::getDecoder)
+//        .map(decoder -> decoder.decode(picture))
+//        .collect(Collectors.toList()));
+    listing.setCategory(listingRequest.getCategory());
+    listing.setSubcategories(listingRequest.getSubcategories());
+    listing.setPostalCode(listingRequest.getPostalCode());
+    listing.setActive(listingRequest.isActive());
+    listing.setDeleted(listingRequest.isDeleted());
+    listing.setSold(listingRequest.isSold());
+    return listing;
+  }
+
+  private ListingResponse convertToResponse(Listing listing) {
+    ListingResponse response = new ListingResponse();
+    response.setUuid(listing.getUuid());
+    response.setName(listing.getName());
+    response.setPrice(listing.getPrice());
+    response.setDescription(listing.getDescription());
+    //TODO: fix setting pictures on response from listing
+//    response.setPictures(listing.getPictures());
+    response.setCategory(listing.getCategory());
+    response.setSubcategories(listing.getSubcategories());
+    response.setPostalCode(listing.getPostalCode());
+    response.setActive(listing.isActive());
+    response.setDeleted(listing.isDeleted());
+    response.setSold(listing.isSold());
+    return response;
   }
 }
