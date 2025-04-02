@@ -12,8 +12,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubCategoryService {
 
+  private final CategoryService categoryService;
+
   @Autowired
   private SubCategoryRepo subCategoryRepo;
+
+  SubCategoryService(CategoryService categoryService) {
+    this.categoryService = categoryService;
+  }
+
+  /**
+   * Validates the subcategory object.
+   *
+   * @param subCategory the subcategory to be validated
+   */
+  private void validateSubCategory(SubCategory subCategory) {
+    // TODO: field validation e.i. name, description, parrentId
+
+    // Validate parrent
+    if (categoryService.getCategoryById(subCategory.getParrentId()) == null) {
+      throw new IllegalArgumentException("Parent category does not exist.");
+    }
+  }
 
   /**
    * Adds a new subcategory to the database.
@@ -21,8 +41,7 @@ public class SubCategoryService {
    * @param subCategory the subcategory to be added
    */
   public void addSubCategory(SubCategory subCategory) {
-    // Validate the subcategory object before adding it to the database
-    // Validate the parrentId to ensure it exists in the categories table
+    validateSubCategory(subCategory);
     subCategoryRepo.addCategory(subCategory);
   }
 
@@ -32,8 +51,7 @@ public class SubCategoryService {
    * @param subCategory the subcategory to be updated
    */
   public void updateSubCategory(SubCategory subCategory) {
-    // Validate the subcategory object before updating it in the database
-    // Validate the parrentId to ensure it exists in the categories table
+    validateSubCategory(subCategory);
     subCategoryRepo.updateCategory(subCategory);
   }
 
