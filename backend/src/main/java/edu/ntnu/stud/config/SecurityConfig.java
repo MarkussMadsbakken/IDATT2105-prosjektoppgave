@@ -48,7 +48,7 @@ public class SecurityConfig {
       .requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN") // Restrict POST to ADMIN
       .requestMatchers(HttpMethod.PUT, "/categories/**").hasRole("ADMIN") // Restrict PUT to ADMIN
       .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN") // Restrict DELETE to ADMIN
-      .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/api/listing/").permitAll()
+      .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/api/listing").permitAll()
       .anyRequest().authenticated())
       .httpBasic(Customizer.withDefaults())
       .sessionManagement(session 
