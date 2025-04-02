@@ -1,6 +1,7 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.SubCategory;
+import edu.ntnu.stud.model.SubCategoryRequest;
 import edu.ntnu.stud.repo.SubCategoryRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,25 @@ public class SubCategoryService {
   }
 
   /**
+   * Validates the subcategory request object.
+   *
+   * @param subCategoryRequest the subcategory request to be validated
+   */
+  public void validateSubCategoryRequest(SubCategoryRequest subCategoryRequest) {
+    // TODO: field validation e.i. name, description, parrentId
+
+    if (categoryService.getCategoryById(subCategoryRequest.getParrentId()) == null) {
+      throw new IllegalArgumentException("Parent category does not exist.");
+    }
+  }
+
+  /**
    * Adds a new subcategory to the database.
    *
    * @param subCategory the subcategory to be added
    */
-  public void addSubCategory(SubCategory subCategory) {
-    validateSubCategory(subCategory);
+  public void addSubCategory(SubCategoryRequest subCategory) {
+    validateSubCategoryRequest(subCategory);
     subCategoryRepo.addCategory(subCategory);
   }
 
