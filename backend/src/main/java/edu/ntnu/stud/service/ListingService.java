@@ -66,7 +66,7 @@ public class ListingService {
    * @return the ListingResponse of the listing
    */
   public ListingResponse saveListing(ListingRequest listingRequest, String token) {
-    long ownerId = jwtService.extractUserId(token);
+    long ownerId = jwtService.extractUserId(token.substring(7));
     Listing listing = convertToListing(listingRequest);
     listing.setOwnerId(ownerId);
     listingRepo.saveListing(listing);
