@@ -104,4 +104,9 @@ public class JWTService {
   private Date extractExpiration(String token) {
     return extractClaim(token, Claims::getExpiration);
   }
+
+  public boolean extractIsAdmin(String token) {
+    return extractClaim(token, claims -> claims.get("isAdmin", Boolean.class));
+  }
+  
 }
