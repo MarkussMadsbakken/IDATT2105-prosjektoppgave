@@ -1,12 +1,20 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.User;
+import edu.ntnu.stud.model.UserImageResponse;
 import edu.ntnu.stud.model.UserResponse;
 import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.repo.UserRepo;
+
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
+import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
 
 /**
  * Service class for managing user-related operations.
@@ -25,7 +33,11 @@ public class UserService {
    * @return the User object if found, null otherwise
    */
   public UserResponse getUserById(long id) {
-    return new UserResponse(userRepo.getUserById(id));
+    User user = userRepo.getUserById(id);
+    if (user == null) {
+      return null;
+    }
+    return new UserResponse(user);
   }
 
   /**
@@ -35,7 +47,11 @@ public class UserService {
    * @return the User object if found, null otherwise
    */
   public UserResponse getUserByUsername(String username) {
-    return new UserResponse(userRepo.getUserByUsername(username));
+    User user = userRepo.getUserByUsername(username);
+    if (user == null) {
+      return null;
+    }
+    return new UserResponse(user);
   }
 
   /**
@@ -53,14 +69,46 @@ public class UserService {
    *
    * @param userUpdate the User object containing updated information
    * @param token the JWT token of the user making the request
+   * @param image the MultipartFile image representing the users profile image
    */
-  public void updateUser(UserUpdate userUpdate, String token) {
-    long userId = jwtService.extractUserId(token);
+  public boolean updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
+    long userId = jwtService.extractUserId(token.substring(7));
     User user = new User();
     user.setId(userId);
     user.setUsername(userUpdate.getUsername());
     user.setFirstName(userUpdate.getFirstName());
     user.setLastName(userUpdate.getLastName());
-    userRepo.updateUser(user);
+    if (image != null) {
+      try {
+        user.setImageFileType(image.getContentType());
+        user.setImageBlob(convertMultipartFileToBlob(image));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+
+    return userRepo.updateUser(user);
+  }
+
+  /**
+   * Retrieves the image of a user by their ID.
+   *
+   * @param id the ID of the user whose image is to be retrieved
+   * @return a UserImageResponse containing the Base64 encoded image and file type, or null if the user or image is not found
+   * @throws RuntimeException if there is an error converting the image blob to Base64
+   */
+  public UserImageResponse getImageByUserId(long id) {
+    User user = userRepo.getUserById(id);
+    if (user != null && user.getImageBlob() != null) {
+      try {
+        return new UserImageResponse(convertBlobToBase64(user.getImageBlob()), user.getImageFileType());
+      } catch (SQLException e) {
+        throw new RuntimeException("Error converting image blob to Base64", e);
+      }
+    }
+    return null;
   }
 }
