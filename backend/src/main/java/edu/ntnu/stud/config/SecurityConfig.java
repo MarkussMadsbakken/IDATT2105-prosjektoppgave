@@ -44,15 +44,26 @@ public class SecurityConfig {
       .cors(Customizer.withDefaults())
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(request -> request
-      .requestMatchers(HttpMethod.GET, "/api/category/**", "api/listing/**", "api/user/**").permitAll() // Allow GET requests to /categories/**
-      .requestMatchers(HttpMethod.POST, "/api/category/**").hasRole("ADMIN") // Restrict POST to ADMIN
-      .requestMatchers(HttpMethod.PUT, "/api/category/**").hasRole("ADMIN") // Restrict PUT to ADMIN
-      .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN") // Restrict DELETE to ADMIN
-      .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/api/listing").permitAll()
+      .requestMatchers(
+        "/api/auth/login", 
+        "/api/auth/register"
+      ).permitAll()
+      .requestMatchers(
+        HttpMethod.GET, 
+        "/api/notifications", 
+        "/api/notifications/**",
+        "api/bookmark/**",
+        "/api/categories",
+        "/api/categories/**",
+        "/api/listing",
+        "/api/listing/**",
+        "/api/user",
+        "/api/user/**"
+      ).permitAll()
       .anyRequest().authenticated())
       .httpBasic(Customizer.withDefaults())
       .sessionManagement(session 
-      -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
       .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
       .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
