@@ -1,4 +1,4 @@
-import type { Category } from "./category";
+import type { Category, SubCategory } from "./category";
 import type { Listing } from "./listing";
 import type { User } from "./user.ts";
 
@@ -41,9 +41,7 @@ export type RegisterResponse = {
 /**
  * Response from the API when creating a listing
  */
-export type CreateListingResponse = {
-    listing: Listing;
-}
+export type CreateListingResponse = Listing;
 
 
 /**
@@ -52,6 +50,7 @@ export type CreateListingResponse = {
 export type GetListingsResponse = Page<Listing>;
 
 export type GetCategoriesResponse = Category[];
+export type getSubCategoriesResponse = SubCategory[];
 
 export type CreateCategoryResponse = Category;
 

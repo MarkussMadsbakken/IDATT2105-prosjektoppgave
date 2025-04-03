@@ -11,7 +11,7 @@ const user1: User = {
     isAdmin: false,
     firstName: "User",
     lastName: "One",
-    createdAt: new Date(),
+    createdAt: new Date().getTime(),
     imageUrl: "https://img.freepik.com/free-photo/view-3d-cool-modern-bird_23-2150946449.jpg?t=st=1743520776~exp=1743524376~hmac=9ab3de77ebede1d2d2b2a1386b20b6e8de2a01346565e73528927450aa6bd821&w=2000"
 }
 
@@ -21,7 +21,7 @@ const user2: User = {
     isAdmin: false,
     firstName: "User",
     lastName: "Two",
-    createdAt: new Date(),
+    createdAt: new Date().getTime(),
 }
 
 const chat1: Chat = {
@@ -29,11 +29,17 @@ const chat1: Chat = {
     seller: user1,
     buyer: user2,
     listing: {
-        id: "1",
-        title: "kult kjøleskap",
+        uuid: "1",
+        name: "kult kjøleskap",
         description: "Veldig kult kjøleskap jeg fant! Bare å komme med et tilbud, jeg hadde satt stor pris på det. I tillegg skal jeg bare si noe langt her slik at teksten overflower!!",
         price: 6000,
-        seller: user1
+        ownerId: user1.id,
+        postalCode: 1234,
+        active: true,
+        category: '',
+        subCategories: [],
+        delteted: false,
+        sold: false
     },
     messages: [
         {
@@ -57,11 +63,17 @@ const chat2: Chat = {
     seller: user2,
     buyer: user1,
     listing: {
-        id: "2",
-        title: "sjarmerende sofa",
+        uuid: "2",
+        name: "sjarmerende sofa",
         description: "Sofaen er veldig sjarmerende, og jeg har hatt den i mange år. Den er veldig god å sitte i, og jeg har tatt godt vare på den. Håper noen vil ta godt vare på den videre!",
         price: 3000,
-        seller: user2
+        ownerId: user2.id,
+        postalCode: 4321,
+        category: '',
+        subCategories: [],
+        active: false,
+        delteted: false,
+        sold: false
     },
     yourRole: "seller",
     messages: [
