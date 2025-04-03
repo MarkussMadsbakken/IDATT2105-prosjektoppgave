@@ -14,7 +14,7 @@ export const useGetListings = () => {
     return useInfiniteQuery({
         queryKey: ['listings'],
         queryFn: async ({ pageParam = 0 }) => {
-            return getListings({ page: pageParam, offset: pageParam + PAGE_SIZE });
+            return getListings({ page: pageParam, offset: PAGE_SIZE });
         },
         getNextPageParam: (lastPage: Page<Listing>) => {
             if (lastPage.last) {
