@@ -47,20 +47,32 @@ public class MessageController {
       return ResponseEntity.badRequest().body("Error: " + e.getMessage());
     }
 
-    logger.info("Adding message: {}", message);
-    messageService.addMessage(message);
-    return ResponseEntity.ok("Message added successfully.");
+    try {
+      messageService.addMessage(message);
+      logger.info("Adding message: {}", message);
+      return ResponseEntity.ok("Message added successfully.");
+    } catch (Exception e) {
+      logger.error("Error adding message: {}", e.getMessage());
+      return ResponseEntity.status(500).body("Error adding message: " + e.getMessage());
+    }    
   }
 
   /**
    * Retrieves all messages associated with a specific user.
    *
    * @param token the JWT token containing user claims
-   * @return a list of messages associated with the user ID
+   * @return a ResponseEntity containing a list of messages associated with the user ID
    */
   @GetMapping
-  public List<Message> getMessagesByUserId(@RequestHeader("Authorization") String token) {
-    return messageService.getMessagesByUserId(token);
+  public ResponseEntity<List<Message>> getMessagesByUserId(@RequestHeader("Authorization") String token) {
+    try {
+      List<Message> messages = messageService.getMessagesByUserId(token);
+      logger.info("Retrieved messages for user: {}", messages);
+      return ResponseEntity.ok(messages);
+    } catch (Exception e) {
+      logger.error("Error retrieving messages for user: {}", e.getMessage());
+      return ResponseEntity.status(500).body(null);
+    }
   }
 
   /**
@@ -68,12 +80,19 @@ public class MessageController {
    *
    * @param listingId the ID of the listing
    * @param token the JWT token containing user claims
-   * @return a list of messages associated with the listing ID and user ID
+   * @return a ResponseEntity containing a list of messages associated with the listing ID and user ID
    */
   @GetMapping("/{listingId}")
-  public List<Message> getMessagesByListingIdAndUserId(
+  public ResponseEntity<List<Message>> getMessagesByListingIdAndUserId(
       @PathVariable String listingId, @RequestHeader("Authorization") String token) {
-    return messageService.getMessagesByListingIdAndUserId(listingId, token);
+    try {
+      List<Message> messages = messageService.getMessagesByListingIdAndUserId(listingId, token);
+      logger.info("Retrieved messages for listing ID {}: {}", listingId, messages);
+      return ResponseEntity.ok(messages);
+    } catch (Exception e) {
+      logger.error("Error retrieving messages for listing ID {}: {}", listingId, e.getMessage());
+      return ResponseEntity.status(500).body(null);
+    }
   }
 
   /**
@@ -90,8 +109,14 @@ public class MessageController {
       @RequestParam int page, 
       @RequestParam int offset
   ) {
-    List<Message> messages = messageService.getMessagesByUserIdPaginated(token, page, offset);
-    return ResponseEntity.ok(messages);
+    try {
+      List<Message> messages = messageService.getMessagesByUserIdPaginated(token, page, offset);
+      logger.info("Retrieved paginated messages: {}", messages);
+      return ResponseEntity.ok(messages);
+    } catch (Exception e) {
+      logger.error("Error retrieving paginated messages: {}", e.getMessage());
+      return ResponseEntity.status(500).body(null);
+    }
   }
 
   /**
@@ -110,9 +135,15 @@ public class MessageController {
       @RequestParam int page,
       @RequestParam int offset
   ) {
+    try {
     List<Message> messages = messageService.getMessagesByListingIdAndUserIdPaginated(
         listingId, token, page, offset);
+    logger.info("Retrieved paginated messages for listing ID {}: {}", listingId, messages);
     return ResponseEntity.ok(messages);
+    } catch (Exception e) {
+      logger.error("Error retrieving paginated messages for listing ID {}: {}", listingId, e.getMessage());
+      return ResponseEntity.status(500).body(null);
+    }
   }
 
 }
