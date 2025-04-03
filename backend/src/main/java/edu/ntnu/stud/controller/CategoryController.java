@@ -165,14 +165,16 @@ public class CategoryController {
    * @param subCategory the subcategory to add
    */
   @PostMapping("/subcategories")
-  public ResponseEntity<String> addSubCategory(@RequestBody SubCategoryRequest subCategory,
+  public ResponseEntity<DefaultResponse> addSubCategory(@RequestBody SubCategoryRequest subCategory,
       @RequestHeader("Authorization") String token) {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
-      return ResponseEntity.status(403).body("Error: You are not authorized to add subcategories.");
+      return ResponseEntity.status(403).body(
+          new DefaultResponse("Error: You are not authorized to add subcategories.", "SubCategoryAddFailed"));
     }
     subCategoryService.addSubCategory(subCategory);
-    return ResponseEntity.ok("Subcategory added successfully.");
+    return ResponseEntity.ok()
+        .body(new DefaultResponse("Subcategory added successfully.", "SubCategoryAddSuccessfull"));
   }
 
   /**
@@ -197,16 +199,18 @@ public class CategoryController {
    *
    * @param id the ID of the subcategory to delete
    */
-  @PostMapping("/subcategories/delete/{id}")
-  public ResponseEntity<String> deleteSubCategory(@PathVariable int id,
+  @DeleteMapping("/subcategories/{id}")
+  public ResponseEntity<DefaultResponse> deleteSubCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     if (!isAdmin) {
       return ResponseEntity.status(403)
-          .body("Error: You are not authorized to delete subcategories.");
+          .body(
+              new DefaultResponse("Error: You are not authorized to delete subcategories.", "SubCategoryDeleteFailed"));
     }
     subCategoryService.deleteSubCategory(id);
-    return ResponseEntity.ok("Subcategory deleted successfully.");
+    return ResponseEntity.ok()
+        .body(new DefaultResponse("Subcategory deleted successfully.", "SubCategoryDeleteSuccessfull"));
   }
 
 }
