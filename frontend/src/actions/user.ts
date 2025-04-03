@@ -10,19 +10,19 @@ export const updateUser = async (req: EditUserInfo & {profileImage?: File}): Pro
   const body = new FormData();
 
   if (req.profileImage) {
-    body.append("profileImage", req.profileImage)
+    body.append("userImage", req.profileImage)
   }
 
   const userInfoBlob = new Blob(
     [JSON.stringify(objectOmit(req, ["profileImage"]))],
     {type: "application/json"}
   );
-  body.append("userInfo", userInfoBlob)
+  body.append("userUpdate", userInfoBlob)
 
   console.log(body.get("EditUserInfo"))
 
   return await Fetch(`${API_BASE_URL}/api/user/update`, {
-    method: "PUT",
+    method: "POST",
     body: body,
   });
 };

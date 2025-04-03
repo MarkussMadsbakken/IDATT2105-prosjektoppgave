@@ -4,7 +4,7 @@ import useUpdateUser from '@/actions/user.ts';
 import Button from '@/components/Button.vue';
 import ImageSelector from '@/components/ImageSelector.vue';
 import TextInput from '@/components/TextInput.vue';
-import {onMounted, ref, watch} from 'vue';
+import {onMounted, ref} from 'vue';
 import {useAuth} from "@/stores/auth.ts";
 import { useGetUser } from '@/actions/user';
 import {computed} from "vue";
@@ -47,13 +47,6 @@ const onImageSelected = (files: File[]) => {
     profileImage.value=files[0];
   }
 };
-watch(data, (user) =>{
-  if(user) {
-    firstName.value =user.firstName;
-    lastName.value = user.lastName;
-    userName.value = user.username;
-  }
-  })
 const onSubmit = () => {
   updateUser({
     username: userName.value,
@@ -80,16 +73,16 @@ const onSubmit = () => {
       </div>
       <div class="form-group">
         <label for="firstName">Fornavn</label>
-        <TextInput v-model="firstName" type="text" id="firstName" />
+        <TextInput v-model="firstName" type="text" id="firstName" :placeholder="data?.firstName ?? ''"/>
       </div>
 
       <div class="form-group">
         <label for="lastName">Etternavn</label>
-        <TextInput v-model="lastName" type="text" id="lastName" />
+        <TextInput v-model="lastName" type="text" id="lastName" :placeholder="data?.lastName ?? ''"/>
       </div>
       <div class="form-group">
         <label for="userName">Brukernavn</label>
-        <TextInput v-model="userName" type="text" id="userName" />
+        <TextInput v-model="userName" type="text" id="userName" :placeholder="data?.username ?? ''"/>
       </div>
 
 
