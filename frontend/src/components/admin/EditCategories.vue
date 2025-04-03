@@ -75,7 +75,7 @@ const handleDeleteCategory = (id: number) => {
 </script>
 
 <template>
-    <div class="outer-wrapper">
+    <div class="edit-categories-outer-wrapper">
         <div v-if="isPending">Loading...</div>
         <div v-else-if="isError">Error: {{ error?.message }}</div>
         <div class="edit-categories-content" v-else>
@@ -147,11 +147,9 @@ const handleDeleteCategory = (id: number) => {
     gap: 1rem;
 }
 
-.outer-wrapper {
+.edit-categories-outer-wrapper {
     position: relative;
     width: 100%;
-    height: 100%;
-    height: fit-content;
     padding: 1rem;
     display: flex;
     flex-direction: column;

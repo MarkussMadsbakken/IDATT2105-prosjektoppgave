@@ -86,6 +86,8 @@ const selectedPage = ref(0);
     height: 100%;
     padding: 1rem;
     flex: 1;
+    overflow-y: scroll;
+    padding-bottom: 5rem;
 }
 
 .outer-wrapper {
