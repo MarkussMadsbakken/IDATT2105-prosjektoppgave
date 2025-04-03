@@ -15,7 +15,7 @@ const router = useRouter();
 
 const handleClick = (e: any) => {
     e.stopPropagation();
-    router.push(`/listing/${props.listing.id}`);
+    router.push(`/listing/${props.listing.uuid}`);
 }
 </script>
 

@@ -49,7 +49,7 @@ public class JWTService {
    */
   public String generateToken(String username, long userId, boolean isAdmin) {
     Map<String, Object> claims = new HashMap<>();
-    claims.put("refreshToken", "placeholder: refreshtoken");
+    claims.put("refreshToken", "placeholder");
     claims.put("userId", userId);
     claims.put("isAdmin", isAdmin);
 
@@ -58,7 +58,7 @@ public class JWTService {
         .add(claims)
         .subject(username)
         .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + 1000 * 5 * 60))
+        .expiration(new Date(System.currentTimeMillis() + 1000 * 5 * 60 * 60))
         .and()
         .signWith(getKey())
         .compact();
@@ -73,6 +73,10 @@ public class JWTService {
   public String extractUserName(String token) {
     // extract the username from jwt token
     return extractClaim(token, Claims::getSubject);
+  }
+
+  public Long extractUserId(String token) {
+    return extractClaim(token, claims -> claims.get("userId", Long.class));
   }
 
   private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
@@ -100,4 +104,9 @@ public class JWTService {
   private Date extractExpiration(String token) {
     return extractClaim(token, Claims::getExpiration);
   }
+
+  public boolean extractIsAdmin(String token) {
+    return extractClaim(token, claims -> claims.get("isAdmin", Boolean.class));
+  }
+  
 }

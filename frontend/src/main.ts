@@ -4,12 +4,12 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
-
 import App from './App.vue'
 import router from './router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
 import { useAuth } from './stores/auth';
+import DialogService from 'primevue/dialogservice';
 
 const app = createApp(App)
 
@@ -20,19 +20,25 @@ const auth = useAuth();
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!auth.isLoggedIn()) {
-            next({ name: 'login' })
+            next({ name: 'login' });
+        } else if (to.matched.some(record => record.meta.requiresAdmin)) {
+            if (!auth.isAdmin) {
+                next({ name: 'me' });
+            } else {
+                next();
+            }
         } else {
-            next()
+            next();
         }
 
     } else if (to.matched.some(record => record.meta.requiresUnauthorized)) {
         if (auth.isLoggedIn()) {
-            next({ name: 'me' })
+            next({ name: 'me' });
         } else {
-            next()
+            next();
         }
     } else {
-        next()
+        next();
     }
 });
 
@@ -79,6 +85,20 @@ const i18n = createI18n({
             contactSeller: "Kontakt selger",
             buy: "Kjøp",
             reserve: "Reserver",
+            createListing: "Opprett en ny annonse",
+            title: "Tittel",
+            description: "Beskrivelse",
+            price: "Pris",
+            postalCode: "Postnummer",
+            image: "Bilde",
+            create: "Opprett",
+            category: "Kategori",
+            uploadedImages: "Opplastede bilder",
+            releaseToUpload: "Slipp for å velge bilde",
+            chooseImage: "Velg bilde",
+            imageSelected: "Bilde valgt!",
+            name: "Navn",
+            thisFieldIsRequired: "Dette feltet er påkrevd",
         },
         en: {
             recommended: "Recommended for you",
@@ -110,6 +130,20 @@ const i18n = createI18n({
             contactSeller: "Contact seller",
             buy: "Buy",
             reserve: "Reserve",
+            createListing: "Create a new listing",
+            title: "Title",
+            description: "Description",
+            price: "Price",
+            postalCode: "Postal code",
+            image: "Image",
+            create: "Create",
+            category: "Category",
+            uploadedImages: "Uploaded images",
+            releaseToUpload: "Release to upload",
+            chooseImage: "Choose image",
+            imageSelected: "Image selected!",
+            name: "Name",
+            thisFieldIsRequired: "This field is required",
         }
     },
 });
@@ -126,8 +160,9 @@ app.directive('click-outside', {
     unmounted: el => {
         document.removeEventListener("click", el.clickOutsideEvent);
     },
-})
+});
 
 app.use(i18n);
+app.use(DialogService)
 
 app.mount('#app')
