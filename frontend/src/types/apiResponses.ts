@@ -19,7 +19,7 @@ export type Page<T> = {
     }
 }
 
-export const PAGE_SIZE = 12;
+export const PAGE_SIZE = 6;
 
 /**
  * Login response returned from the API

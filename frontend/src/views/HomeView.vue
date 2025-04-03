@@ -4,14 +4,18 @@ import type { Category, GetListingsResponse, Listing, Page, User } from "@/types
 import { useRouter } from "vue-router";
 import SearchOptions from "@/components/SearchOptions.vue";
 import Divider from "@/components/Divider.vue";
-import { getListings, useGetListings } from "@/actions/getListing";
-import { computed } from "vue";
+import { useGetListings } from "@/actions/getListing";
+import { computed, ref } from "vue";
+import { useInfiniteScroll } from "@vueuse/core";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const {
   data,
   isError,
   error,
-  isPending
+  isPending,
+  hasNextPage,
+  fetchNextPage,
 } = useGetListings();
 
 const listings = computed<Page<Listing>[]>(
@@ -34,6 +38,19 @@ const handleCategoryClick = (newCategory: string) => {
   })
 }
 
+const scrollWrapper = ref<HTMLElement | null>(null);
+useInfiniteScroll(
+  scrollWrapper,
+  () => {
+    if (isPending.value) return;
+    fetchNextPage()
+  },
+  {
+    canLoadMore: () => hasNextPage.value,
+    distance: 0,
+  }
+);
+
 </script>
 
 <template>
@@ -52,10 +69,26 @@ const handleCategoryClick = (newCategory: string) => {
         </div>
       </template>
     </div>
+    <div ref="scrollWrapper">
+      <div v-if="isPending" class="loading-spinner">
+        <LoadingSpinner />
+      </div>
+      <div v-else-if="!hasNextPage" class="no-more-listings">
+        {{ $t('noMoreListings') }}
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.no-more-listings {
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
 .search {
   width: 63rem;
   display: flex;

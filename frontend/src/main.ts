@@ -103,6 +103,7 @@ const i18n = createI18n({
             subCategory: "Underkategori",
             noSubCategoriesFound: "Ingen underkategorier funnet",
             createNewSubCategory: "Opprett ny underkategori",
+            noMoreListings: "Ingen flere annonser funnet",
         },
         en: {
             recommended: "Recommended for you",
@@ -152,6 +153,7 @@ const i18n = createI18n({
             subCategory: "Sub category",
             noSubCategoriesFound: "No sub categories found",
             createNewSubCategory: "Create new sub category",
+            noMoreListings: "No more listings found",
         }
     },
 });
