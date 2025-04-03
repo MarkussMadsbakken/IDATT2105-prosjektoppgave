@@ -17,6 +17,8 @@ public class MessageService {
 
   @Autowired
   private MessageRepo messageRepo;
+  @Autowired
+  private JWTService jwtService;
 
   /**
    * Adds a new message to the system.
@@ -47,9 +49,10 @@ public class MessageService {
    * Verifies the sender of the message.
    *
    * @param message         the message to be verified
-   * @param senderFromToken the sender ID from the token
+   * @param token           the JWT token containing user claims
    */
-  public void verifySender(Message message, long senderFromToken) {
+  public void verifySender(Message message, String token) {
+    long senderFromToken = jwtService.extractUserId(token.substring(7));
     if (!((senderFromToken == message.getByerId() && message.isSentByBuyer())
         || (senderFromToken == message.getSellerId() && !message.isSentByBuyer()))) {
       throw new IllegalArgumentException("Sender ID does not match the message sender.");
@@ -57,24 +60,53 @@ public class MessageService {
   }
 
   /**
+   * Retrieves all messages associated with a specific user ID.
+   *
+   * @param token the JWT token containing user claims
+   * @return a list of messages associated with the user ID
+   */
+  public List<Message> getMessagesByUserId(String token) {
+    long userId = jwtService.extractUserId(token.substring(7));
+    return messageRepo.getMessagesByUserId(userId);
+  }
+
+  /**
    * Retrieves all messages associated with a specific listing ID and user ID.
    *
    * @param listingId the ID of the listing
-   * @param userId    the ID of the user
+   * @param token     the JWT token containing user claims
    * @return a list of messages associated with the listing ID and user ID
    */
-  public List<Message> getMessagesByListingIdAndUserId(String listingId, long userId) {
+  public List<Message> getMessagesByListingIdAndUserId(String listingId, String token) {
+    long userId = jwtService.extractUserId(token.substring(7));
     return messageRepo.getMessagesByListingIdAndUserId(listingId, userId);
   }
 
   /**
-   * Retrieves all messages associated with a specific user ID.
+   * Retrieves a paginated list of messages associated with a specific user ID.
    *
-   * @param userId the ID of the user
-   * @return a list of messages associated with the user ID
+   * @param token  the JWT token containing user claims
+   * @param page   the page number to retrieve
+   * @param offset the number of items per page
+   * @return a paginated list of messages associated with the user ID
    */
-  public List<Message> getMessagesByUserId(long userId) {
-    return messageRepo.getMessagesByUserId(userId);
+  public List<Message> getMessagesByUserIdPaginated(String token, int page, int offset) {
+    long userId = jwtService.extractUserId(token.substring(7));
+    return messageRepo.getMessagesByUserIdPaginated(userId, page, offset);
+  }
+
+  /**
+   * Retrieves a paginated list of messages associated with a specific listing ID and user ID.
+   *
+   * @param listingId the ID of the listing
+   * @param token     the JWT token containing user claims
+   * @param page      the page number to retrieve
+   * @param offset    the number of items per page
+   */
+  public List<Message> getMessagesByListingIdAndUserIdPaginated(
+      String listingId, String token, int page, int offset) {
+    long userId = jwtService.extractUserId(token.substring(7));
+    return messageRepo.getMessagesByListingIdAndUserIdPaginated(listingId, userId, page, offset);
   }
 
 
