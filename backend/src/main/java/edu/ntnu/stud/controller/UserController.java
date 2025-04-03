@@ -5,17 +5,25 @@ import edu.ntnu.stud.model.UserResponse;
 import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.service.UserService;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+
 
 /**
  * Controller class for managing user-related operations.
@@ -31,6 +39,9 @@ public class UserController {
 
   /**
    * Retrieves a user by their ID.
+   *
+   * @param id the ID of the user to retrieve
+   * @return the ResponseEntity containing the UserResponse if found, or a 404 status if not found
    */
   @GetMapping("/{id}")
   public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
@@ -44,6 +55,13 @@ public class UserController {
     }
   }
 
+  /**
+   * Retrieves the image of a user by their ID.
+   *
+   * @param id the ID of the user whose image is to be retrieved
+   * @return the ResponseEntity containing the UserImageResponse if found,
+   *         or a 404 status if not found
+   */
   @GetMapping("/{id}/image")
   public ResponseEntity<UserImageResponse> getUserImage(@PathVariable long id) {
     UserImageResponse userImageResponse = userService.getImageByUserId(id);
@@ -58,6 +76,9 @@ public class UserController {
 
   /**
    * Retrieves a user by their username.
+   *
+   * @param username the username of the user to retrieve
+   * @return the ResponseEntity containing the UserResponse if found, or a 404 status if not found
    */
   @GetMapping("/username/{username}")
   public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
@@ -73,6 +94,9 @@ public class UserController {
 
   /**
    * Retrieves all users.
+   *
+   * @return the ResponseEntity containing the list of UserResponse if found,
+   *         or a 204 status if not found
    */
   @GetMapping
   public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -107,21 +131,48 @@ public class UserController {
     return ResponseEntity.internalServerError().build();
   }
 
+  /**
+   * Handles MissingServletRequestPartException.
+   *
+   * @param ex the MissingServletRequestPartException
+   * @return the ResponseEntity with a 400 status and error message
+   */
   @ExceptionHandler(MissingServletRequestPartException.class)
-  public ResponseEntity<String> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
+  public ResponseEntity<String> handleMissingServletRequestPartException(
+      MissingServletRequestPartException ex
+  ) {
     logger.error("Missing request part: {}", ex.getRequestPartName(), ex);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required part is missing: " + ex.getRequestPartName());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body("Required part is missing: " + ex.getRequestPartName());
   }
 
+  /**
+   * Handles MethodArgumentTypeMismatchException.
+   *
+   * @param ex the MethodArgumentTypeMismatchException
+   * @return the ResponseEntity with a 400 status and error message
+   */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+  public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
+      MethodArgumentTypeMismatchException ex
+  ) {
     logger.error("Method argument type mismatch: {}", ex.getMessage(), ex);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid parameter type: " + ex.getName());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body("Invalid parameter type: " + ex.getName());
   }
 
+  /**
+   * Handles NoHandlerFoundException.
+   *
+   * @param ex the NoHandlerFoundException
+   * @return the ResponseEntity with a 404 status and error message
+   */
   @ExceptionHandler(NoHandlerFoundException.class)
-  public ResponseEntity<String> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+  public ResponseEntity<String> handleNoHandlerFoundException(
+      NoHandlerFoundException ex
+  ) {
     logger.error("No handler found for request: {}", ex.getRequestURL(), ex);
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found: " + ex.getRequestURL());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body("Endpoint not found: " + ex.getRequestURL());
   }
 }

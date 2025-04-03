@@ -1,12 +1,12 @@
 package edu.ntnu.stud.util;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import javax.sql.rowset.serial.SerialBlob;
+import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  * Utility class for image-related operations.
@@ -33,7 +33,8 @@ public class ImageUtil {
    * @throws IOException if an I/O error occurs
    * @throws SQLException if a database access error occurs
    */
-  public static Blob convertMultipartFileToBlob(MultipartFile file) throws IOException, SQLException {
+  public static Blob convertMultipartFileToBlob(MultipartFile file)
+      throws IOException, SQLException {
     byte[] fileBytes = file.getBytes();
     return new SerialBlob(fileBytes);
   }

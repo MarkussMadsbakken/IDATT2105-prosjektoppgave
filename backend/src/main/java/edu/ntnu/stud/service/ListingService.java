@@ -1,5 +1,7 @@
 package edu.ntnu.stud.service;
 
+import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
+import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
 
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingImage;
@@ -8,20 +10,16 @@ import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.ListingRepo;
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.sql.rowset.serial.SerialBlob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
-import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
+
 
 
 /**

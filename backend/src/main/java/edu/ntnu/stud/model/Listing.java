@@ -26,6 +26,13 @@ public class Listing {
   private Long ownerId;
 
   /**
+   * Constructs a new Listing with default values.
+   */
+  public Listing() {
+    this.uuid = UUID.randomUUID().toString();
+  }
+
+  /**
    * Constructs a new Listing with the specified details.
    *
    * @param name the name of the listing
@@ -50,10 +57,6 @@ public class Listing {
     this.category = category;
     this.postalCode = postalCode;
     this.ownerId = ownerId;
-  }
-
-  public Listing() {
-    this.uuid = UUID.randomUUID().toString();
   }
 
   /**
