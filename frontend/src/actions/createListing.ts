@@ -9,10 +9,10 @@ import { objectOmit } from "@vueuse/core";
 export const createListing = async (req: CreateListingRequest): Promise<CreateListingResponse> => {
     const body = new FormData();
     if (req.images.length === 0) {
-        body.append("pictures", " 2");
+        body.append("images", "");
     }
     req.images.forEach((image) => {
-        body.append("pictures", image);
+        body.append("images", image);
     });
 
     const listingRequestBlob = new Blob(
@@ -21,10 +21,7 @@ export const createListing = async (req: CreateListingRequest): Promise<CreateLi
     );
     body.append("listingRequest", listingRequestBlob);
 
-    console.log(body.get("listingRequest"));
-    console.log(body.get("pictures"));
-
-    return await Fetch(`${API_BASE_URL}/api/listing/`, {
+    return await Fetch(`${API_BASE_URL}/api/listing`, {
         method: "POST",
         body: body
     });

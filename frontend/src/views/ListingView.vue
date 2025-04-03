@@ -9,6 +9,7 @@ import { Trash2, Pencil, Bookmark, BookmarkCheck } from 'lucide-vue-next'
 import { useAuth } from "@/stores/auth.ts";
 import { computed, ref } from 'vue'
 import { useGetListing } from '@/actions/getListing';
+import ListingImages from '@/components/ListingImages.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -17,32 +18,16 @@ const auth = useAuth();
 const listingId = route.params.id as string
 
 const {
-  data,
+  data: listing,
   isError,
   error,
   isPending
 } = useGetListing(listingId);
 
-const listing = computed<Listing>(() => {
-  if (!data.value) { return {} as Listing };
-  let temp = { ...data.value };
-  temp.seller = {
-    id: 1,
-    username: "username",
-    firstName: "firstName",
-    lastName: "lastName",
-    imageUrl: "https://via.placeholder.com/150",
-    createdAt: new Date(),
-    isAdmin: false
-  }
-  return temp;
-});
-
-
 const parsedDescription = marked(listing.value?.description ?? '')
 const handleContactClick = () => {
   // TODO
-  router.push(`/buy/${listing.value.uuid}`);
+  router.push(`/buy/${listing.value?.uuid}`);
 };
 
 const handleReserve = () => {
@@ -66,13 +51,11 @@ const toggleBookmark = () => {
   <div class="listing" v-else>
     <div class="titlePicture">
       <h3 class="listingTitle">
-        {{ listing.title }}
+        {{ listing?.name }}
       </h3>
-      <PhotoGallery :images="Array.isArray(listing.image)
-        ? listing.image
-        : listing.image ? [listing.image] : []" />
+      <ListingImages :listing-id="listingId" />
       <div class="pictureFooting">
-        <div class="listingPrice">{{ listing.price }},-</div>
+        <div class="listingPrice">{{ listing?.price }},-</div>
         <div v-if="auth.isLoggedIn()" class="footingButtons">
           <div class="editDelete">
             <Button variant="outline">
@@ -93,7 +76,7 @@ const toggleBookmark = () => {
       <div class="listingDescription" v-html="parsedDescription"></div>
     </div>
     <div class="buyBox">
-      <SellerInfo :user-entity="listing.seller" :can-contact-seller="auth.isLoggedIn()" />
+      <SellerInfo :user-entity="listing" :can-contact-seller="auth.isLoggedIn()" />
       <div v-if="auth.isLoggedIn()" class="buttonBox">
         <Button variant="primary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("buy")
         }}</Button>
