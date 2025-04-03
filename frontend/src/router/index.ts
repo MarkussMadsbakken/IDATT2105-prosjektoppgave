@@ -51,14 +51,7 @@ const router = createRouter({
         requiresAuth: true
       }
     },
-    {
-      path: "/profile/listings",
-      name: "mylistings",
-      component: () => import("../views/UserListingsView.vue"),
-      meta: {
-        requiresAuth: true
-      }
-    },
+
     {
       path: "/profile/:userid",
       name: "profile",
