@@ -109,7 +109,9 @@ public class UserRepo {
    * @param user the User object to be updated
    */
   public boolean updateUser(User user) {
-    String query = "UPDATE users SET username = ?, first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?"
+    String query =
+        "UPDATE users SET "
+        + "username = ?, first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?"
         + " WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(query,
         user.getUsername(),
