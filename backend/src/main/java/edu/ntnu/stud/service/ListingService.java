@@ -5,21 +5,19 @@ import edu.ntnu.stud.model.ListingImage;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.ListingRepo;
-
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import javax.sql.rowset.serial.SerialBlob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sql.rowset.serial.SerialBlob;
 
 
 /**
@@ -78,15 +76,8 @@ public class ListingService {
     long ownerId = jwtService.extractUserId(token.substring(7));
     Listing listing = convertToListing(listingRequest);
     listing.setOwnerId(ownerId);
-
-    System.out.println("saving listing with ownerid: " + ownerId);
-
     listingRepo.saveListing(listing);
-
-    System.out.println("saving listing images with listingId: " + listing.getUuid());
-
-    saveListingImages(listingRequest,listing.getUuid());
-
+    saveListingImages(listingRequest, listing.getUuid());
     return convertToResponse(listing);
   }
 
@@ -111,16 +102,17 @@ public class ListingService {
     return listingsPage.map(this::convertToResponse);
   }
 
+  /**
+   * Converts a ListingRequest object to a Listing entity.
+   *
+   * @param listingRequest the ListingRequest object to convert
+   * @return the converted Listing entity
+   */
   private Listing convertToListing(ListingRequest listingRequest) {
     Listing listing = new Listing();
     listing.setName(listingRequest.getName());
     listing.setPrice(listingRequest.getPrice());
     listing.setDescription(listingRequest.getDescription());
-    // TODO: fix setting pictures on listing from request
-//    listing.setPictures(listingRequest.getPictures().stream()
-//        .map(Base64::getDecoder)
-//        .map(decoder -> decoder.decode(picture))
-//        .collect(Collectors.toList()));
     listing.setCategory(listingRequest.getCategory());
     listing.setSubcategories(listingRequest.getSubcategories());
     listing.setPostalCode(listingRequest.getPostalCode());
@@ -131,14 +123,18 @@ public class ListingService {
     return listing;
   }
 
+  /**
+   * Converts a Listing entity to a ListingResponse object.
+   *
+   * @param listing the Listing entity to convert
+   * @return the converted ListingResponse object
+   */
   private ListingResponse convertToResponse(Listing listing) {
     ListingResponse response = new ListingResponse();
     response.setUuid(listing.getUuid());
     response.setName(listing.getName());
     response.setPrice(listing.getPrice());
     response.setDescription(listing.getDescription());
-    //TODO: fix setting pictures on response from listing
-    //    response.setPictures(listing.getPictures());
     response.setCategory(listing.getCategory());
     response.setSubcategories(listing.getSubcategories());
     response.setPostalCode(listing.getPostalCode());
@@ -162,16 +158,37 @@ public class ListingService {
     return response;
   }
 
+  /**
+   * Converts a Blob object to a Base64 encoded string.
+   *
+   * @param blob the Blob object to convert
+   * @return the Base64 encoded string representation of the Blob
+   * @throws SQLException if a database access error occurs
+   */
   private String convertBlobToBase64(Blob blob) throws SQLException {
     byte[] bytes = blob.getBytes(1, (int) blob.length());
     return Base64.getEncoder().encodeToString(bytes);
   }
 
+  /**
+   * Converts a MultipartFile object to a Blob.
+   *
+   * @param file the MultipartFile object to convert
+   * @return the converted Blob object
+   * @throws IOException if an I/O error occurs
+   * @throws SQLException if a database access error occurs
+   */
   private Blob convertMultipartFileToBlob(MultipartFile file) throws IOException, SQLException {
     byte[] fileBytes = file.getBytes();
     return new SerialBlob(fileBytes);
   }
 
+  /**
+   * Saves the images associated with a listing.
+   *
+   * @param listingRequest the ListingRequest object containing the images
+   * @param listingUuid the UUID of the listing to associate the images with
+   */
   private void saveListingImages(ListingRequest listingRequest, String listingUuid) {
     listingRequest.getPictures().forEach(image -> {
       ListingImage listingImage = new ListingImage();
