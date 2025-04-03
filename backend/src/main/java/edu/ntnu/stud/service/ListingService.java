@@ -130,6 +130,7 @@ public class ListingService {
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
+    response.setOwnerId(listing.getOwnerId());
     return response;
   }
 }
