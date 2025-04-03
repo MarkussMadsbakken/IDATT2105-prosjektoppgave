@@ -42,8 +42,7 @@ public class SubCategoryRepo {
    * @param category the category to be added
    */
   public void addCategory(SubCategoryRequest category) {
-    String query = 
-        "INSERT INTO categories (name, description, parrent_id) VALUES (?, ?, ?)";
+    String query = "INSERT INTO categories (name, description, parrent_id) VALUES (?, ?, ?)";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setString(1, category.getName());
@@ -77,14 +76,13 @@ public class SubCategoryRepo {
    * @param category the category to be updated
    */
   public void updateCategory(SubCategory category) {
-    String query =
-        "UPDATE categories SET name = ?, description = ?, parrent_id = ? WHERE id = ?";
+    String query = "UPDATE categories SET name = ?, description = ?, parrent_id = ? WHERE id = ?";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setString(1, category.getName());
       statement.setString(2, category.getDescription());
       statement.setInt(4, category.getId());
-      statement.setInt(5, category.getParrentId());
+      statement.setInt(5, category.getParentId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();

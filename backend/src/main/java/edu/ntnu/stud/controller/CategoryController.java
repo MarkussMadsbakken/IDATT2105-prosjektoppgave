@@ -85,7 +85,7 @@ public class CategoryController {
    * @param id the ID of the category
    * @return a list of subcategories associated with the specified category ID
    */
-  @GetMapping("/subcategories/under/{id}")
+  @GetMapping("/{id}/subcategories")
   public ResponseEntity<List<SubCategory>> getSubCategoriesByCategoryId(@PathVariable int id) {
     List<SubCategory> subCategories = subCategoryService.getSubCategoriesByCategoryId(id);
     if (subCategories != null && !subCategories.isEmpty()) {

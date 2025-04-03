@@ -7,7 +7,7 @@ public class SubCategory {
   private int id;
   private String name;
   private String description;
-  private int parrentId;
+  private int parentId;
 
   /**
    * Constructor for SubCategory.
@@ -15,13 +15,13 @@ public class SubCategory {
    * @param id          the ID of the subcategory
    * @param name        the name of the subcategory
    * @param description a description of the subcategory
-   * @param parrentId  the ID of the parent category
+   * @param parrentId   the ID of the parent category
    */
-  public SubCategory(int id, String name, String description, int parrentId) {
+  public SubCategory(int id, String name, String description, int parentId) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.parrentId = parrentId;
+    this.parentId = parentId;
   }
 
   public int getId() {
@@ -48,11 +48,11 @@ public class SubCategory {
     this.description = description;
   }
 
-  public int getParrentId() {
-    return parrentId;
+  public int getParentId() {
+    return parentId;
   }
 
-  public void setParrentId(int categoryId) {
-    this.parrentId = categoryId;
+  public void setParentId(int categoryId) {
+    this.parentId = categoryId;
   }
 }

@@ -36,7 +36,7 @@ public class SubCategoryService {
     // TODO: field validation e.i. name, description, parrentId
 
     // Validate parrent
-    if (categoryService.getCategoryById(subCategory.getParrentId()) == null) {
+    if (categoryService.getCategoryById(subCategory.getParentId()) == null) {
       throw new IllegalArgumentException("Parent category does not exist.");
     }
   }
