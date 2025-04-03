@@ -32,5 +32,11 @@ export type GetListingsRequest = {
     page: number;
     offset: number;
 }
+export type EditUserInfo = {
+  username: string;
+  firstName: string;
+  lastName: string;
+  imageURL?: string;
+}
 
 export type CreateCategoryRequest = Omit<Category, 'id'>;
