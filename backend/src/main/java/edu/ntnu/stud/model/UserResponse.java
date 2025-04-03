@@ -80,7 +80,7 @@ public class UserResponse {
    *
    * @return the username of the UserResponse
    */
-  public String getusername() {
+  public String getUsername() {
     return username;
   }
 
