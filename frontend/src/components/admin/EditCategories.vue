@@ -7,11 +7,14 @@ import { useDialog } from 'primevue/usedialog';
 import CreateCategory from './CreateCategory.vue';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
+import type { Category } from '@/types';
+import EditCategoryModal from './EditCategoryModal.vue';
 
 const { data, isError, error, isPending, } = useCategories();
 
 const categories = computed(() => {
     if (!data.value) { return [] };
+    console.log(data.value);
     return data.value;
 });
 
@@ -51,6 +54,28 @@ const openCreateCategoryModal = () => {
     })
 }
 
+const openEditCategoryModal = (category: Category) => {
+    let d = dialog.open(EditCategoryModal, {
+        props: {
+            modal: true,
+            dismissableMask: true,
+            draggable: false,
+            header: `Edit '${category.name}' `,
+        },
+        data: {
+            category: category,
+        },
+        emits: {
+            onCategoryModified: () => {
+                queryClient.invalidateQueries({
+                    queryKey: ['categories']
+                });
+                d.close();
+            }
+        }
+    })
+}
+
 const handleDeleteCategory = (id: number) => {
     const d = dialog.open(ConfirmDialog, {
         props: {
@@ -72,6 +97,8 @@ const handleDeleteCategory = (id: number) => {
     })
 }
 
+
+
 </script>
 
 <template>
@@ -80,8 +107,9 @@ const handleDeleteCategory = (id: number) => {
         <div v-else-if="isError">Error: {{ error?.message }}</div>
         <div class="edit-categories-content" v-else>
             <div class="categories">
-                <div v-for="category in categories" v-if="categories.length > 0" class="category-inner-wrapper">
-                    <CategoryCard :icon="category.icon">
+                <div v-for="category in categories" :key="category.id + category.icon" v-if="categories.length > 0"
+                    class="category-inner-wrapper">
+                    <CategoryCard :icon="category.icon" @click="openEditCategoryModal(category)">
                         {{ category.name }}
                     </CategoryCard>
                     <Button @click="handleDeleteCategory(category.id)" variant="destructive"
