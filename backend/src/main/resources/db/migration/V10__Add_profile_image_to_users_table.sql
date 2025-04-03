@@ -1,0 +1,3 @@
+ALTER TABLE users
+ADD COLUMN image_blob LONGBLOB,
+ADD COLUMN image_file_type VARCHAR(16);

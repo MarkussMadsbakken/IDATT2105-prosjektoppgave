@@ -1,5 +1,7 @@
 package edu.ntnu.stud.model;
 
+import java.sql.Blob;
+
 /**
  * Represents a user in the system.
  * This class contains user details such as username, password, first name, last
@@ -21,9 +23,9 @@ public class User {
 
   private boolean isAdmin;
 
-  // TODO: add functionality for profilepicture, either bytearray, url
-  // or hybrid: link to another profilePicture class with a byteArray bound to
-  // each userId OneToOne
+  private Blob imageBlob;
+
+  private String imageFileType;
 
   /**
    * Default constructor.
@@ -166,5 +168,41 @@ public class User {
    */
   public void setAdmin(boolean admin) {
     isAdmin = admin;
+  }
+
+  /**
+   * Returns the image blob of the user.
+   *
+   * @return the image blob of the user
+   */
+  public Blob getImageBlob() {
+    return imageBlob;
+  }
+
+  /**
+   * Sets the image blob of the user.
+   *
+   * @param imageBlob the image blob to set
+   */
+  public void setImageBlob(Blob imageBlob) {
+    this.imageBlob = imageBlob;
+  }
+
+  /**
+   * Returns the image file type of the user.
+   *
+   * @return the image file type of the user
+   */
+  public String getImageFileType() {
+    return imageFileType;
+  }
+
+  /**
+   * Sets the image file type of the user.
+   *
+   * @param imageFileType the image file type to set
+   */
+  public void setImageFileType(String imageFileType) {
+    this.imageFileType = imageFileType;
   }
 }

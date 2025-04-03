@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
+import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
 
 
 /**
@@ -144,31 +146,6 @@ public class ListingService {
     response.setSold(listing.isSold());
     response.setOwnerId(listing.getOwnerId());
     return response;
-  }
-
-  /**
-   * Converts a Blob object to a Base64 encoded string.
-   *
-   * @param blob the Blob object to convert
-   * @return the Base64 encoded string representation of the Blob
-   * @throws SQLException if a database access error occurs
-   */
-  private String convertBlobToBase64(Blob blob) throws SQLException {
-    byte[] bytes = blob.getBytes(1, (int) blob.length());
-    return Base64.getEncoder().encodeToString(bytes);
-  }
-
-  /**
-   * Converts a MultipartFile object to a Blob.
-   *
-   * @param file the MultipartFile object to convert
-   * @return the converted Blob object
-   * @throws IOException if an I/O error occurs
-   * @throws SQLException if a database access error occurs
-   */
-  private Blob convertMultipartFileToBlob(MultipartFile file) throws IOException, SQLException {
-    byte[] fileBytes = file.getBytes();
-    return new SerialBlob(fileBytes);
   }
 
   /**
