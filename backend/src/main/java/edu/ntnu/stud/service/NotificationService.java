@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class NotificationService {
-  
+
   @Autowired
   private NotificationRepo notificationRepo;
   @Autowired
@@ -39,7 +39,7 @@ public class NotificationService {
   /**
    * Retrieves a notification by its ID.
    *
-   * @param id the ID of the notification to be retrieved
+   * @param id    the ID of the notification to be retrieved
    * @param token the token of the user who is retrieving the notification
    * @return the Notification object with the specified ID, or null if not found
    * @throws IllegalArgumentException if the notification is not found or if the
@@ -52,7 +52,7 @@ public class NotificationService {
     }
     if (notification.getUserId() != userId) {
       throw new IllegalArgumentException(
-        "You do not have permission to view this notification");
+          "You do not have permission to view this notification");
     }
     return notificationRepo.getNotificationById(id);
   }
@@ -60,8 +60,7 @@ public class NotificationService {
   /**
    * Retrieves all notifications for a specific user.
    *
-   * @param userId the ID of the user whose notifications are to be retrieved
-   * @param token the token of the user who is retrieving the notifications
+   * @param token  the token of the user who is retrieving the notifications
    * @return a list of Notification objects for the specified user
    */
   public List<Notification> getNotificationsByUserId(String token) {
@@ -84,7 +83,7 @@ public class NotificationService {
   /**
    * Marks a notification as read.
    *
-   * @param id the ID of the notification to be marked as read
+   * @param id    the ID of the notification to be marked as read
    * @param token the token of the user who is marking the notification as read
    */
   public void markNotificationAsRead(long id, String token) {
@@ -95,7 +94,7 @@ public class NotificationService {
     }
     if (notification.getUserId() != userId) {
       throw new IllegalArgumentException(
-        "You do not have permission to mark this notification as read");
+          "You do not have permission to mark this notification as read");
     }
     notificationRepo.markNotificationAsRead(id);
   }
