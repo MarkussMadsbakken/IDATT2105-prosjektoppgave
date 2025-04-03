@@ -9,7 +9,7 @@ public class Message {
   private long id;
   private String listingId;
   private Long sellerId;
-  private Long byerId;
+  private Long buyerId;
   private String message;
   private Timestamp createdAt;
   private boolean sentByBuyer;
@@ -23,16 +23,16 @@ public class Message {
   /**
    * Constructs a new Message with the specified details.
    *
-   * @param listingId the ID of the listing
-   * @param byerId    the ID of the buyer
-   * @param message   the message content
-   * @param createdAt the creation date of the message
+   * @param listingId   the ID of the listing
+   * @param buyerId     the ID of the buyer
+   * @param message     the message content
+   * @param createdAt   the creation date of the message
    * @param sentByBuyer indicates if the message was sent by the buyer
    */
   public Message(
-        String listingId, Long byerId, String message, Timestamp createdAt, boolean sentByBuyer) {
+      String listingId, Long buyerId, String message, Timestamp createdAt, boolean sentByBuyer) {
     this.listingId = listingId;
-    this.byerId = byerId;
+    this.buyerId = buyerId;
     this.message = message;
     this.createdAt = createdAt;
     this.sentByBuyer = sentByBuyer;
@@ -97,17 +97,17 @@ public class Message {
    *
    * @return the buyer ID as a Long.
    */
-  public Long getByerId() {
-    return byerId;
+  public Long getbuyerId() {
+    return buyerId;
   }
 
   /**
    * Sets the ID of the buyer associated with the message.
    *
-   * @param byerId the buyer ID to set.
+   * @param buyerId the buyer ID to set.
    */
-  public void setByerId(Long byerId) {
-    this.byerId = byerId;
+  public void setbuyerId(Long buyerId) {
+    this.buyerId = buyerId;
   }
 
   /**
@@ -158,7 +158,8 @@ public class Message {
   /**
    * Sets whether the message was sent by the buyer.
    *
-   * @param sentByBuyer true if the message was sent by the buyer, false otherwise.
+   * @param sentByBuyer true if the message was sent by the buyer, false
+   *                    otherwise.
    */
   public void setSentByBuyer(boolean sentByBuyer) {
     this.sentByBuyer = sentByBuyer;

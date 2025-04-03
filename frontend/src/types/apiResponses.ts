@@ -1,5 +1,6 @@
 import type { Category } from "./category";
 import type { Listing } from "./listing";
+import type { Message } from "./message";
 
 export type Page<T> = {
     content: T[];
@@ -51,8 +52,9 @@ export type CreateListingResponse = {
 export type GetListingsResponse = Page<Listing>;
 
 export type GetCategoriesResponse = Category[];
-
 export type CreateCategoryResponse = Category;
+
+export type GetMessagesResponse = Message[];
 
 /**
  * Default response returned from the API

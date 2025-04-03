@@ -1,5 +1,6 @@
 package edu.ntnu.stud.controller;
 
+import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.service.MessageService;
 import java.util.List;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 
 /**
  * Controller class for managing messages in the system.
@@ -36,7 +36,7 @@ public class MessageController {
    * @param message the message to be added
    */
   @PostMapping
-  public ResponseEntity<String> addMessage(
+  public ResponseEntity<DefaultResponse> addMessage(
       @RequestBody Message message, @RequestHeader("Authorization") String token) {
 
     try {
@@ -44,26 +44,28 @@ public class MessageController {
       messageService.verifySender(message, token);
     } catch (Exception e) {
       logger.error("Validation or verification failed: {}", e.getMessage());
-      return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+      return ResponseEntity.badRequest().body(new DefaultResponse(e.getMessage(), "somethingWentWrong"));
     }
 
     try {
       messageService.addMessage(message);
       logger.info("Adding message: {}", message);
-      return ResponseEntity.ok("Message added successfully.");
+      return ResponseEntity.ok().body(new DefaultResponse("Message added successfully", "messageAdded"));
     } catch (Exception e) {
       logger.error("Error adding message: {}", e.getMessage());
-      return ResponseEntity.status(500).body("Error adding message: " + e.getMessage());
-    }    
+      return ResponseEntity.status(500)
+          .body(new DefaultResponse("Error adding message: " + e.getMessage(), "errorAddingMessage"));
+    }
   }
 
   /**
    * Retrieves all messages associated with a specific user.
    *
    * @param token the JWT token containing user claims
-   * @return a ResponseEntity containing a list of messages associated with the user ID
+   * @return a ResponseEntity containing a list of messages associated with the
+   *         user ID
    */
-  @GetMapping
+  @GetMapping("/all")
   public ResponseEntity<List<Message>> getMessagesByUserId(@RequestHeader("Authorization") String token) {
     try {
       List<Message> messages = messageService.getMessagesByUserId(token);
@@ -79,10 +81,11 @@ public class MessageController {
    * Retrieves all messages associated with a specific listing ID for a user.
    *
    * @param listingId the ID of the listing
-   * @param token the JWT token containing user claims
-   * @return a ResponseEntity containing a list of messages associated with the listing ID and user ID
+   * @param token     the JWT token containing user claims
+   * @return a ResponseEntity containing a list of messages associated with the
+   *         listing ID and user ID
    */
-  @GetMapping("/{listingId}")
+  @GetMapping("/{listingId}/all")
   public ResponseEntity<List<Message>> getMessagesByListingIdAndUserId(
       @PathVariable String listingId, @RequestHeader("Authorization") String token) {
     try {
@@ -98,17 +101,16 @@ public class MessageController {
   /**
    * Recives a paginated list of messages associated with a specific user.
    *
-   * @param token the JWT token containing user claims
-   * @param page the page number to retrieve
+   * @param token  the JWT token containing user claims
+   * @param page   the page number to retrieve
    * @param offset the number of items per page
    * @return a paginated list of messages associated with the user ID
    */
-  @GetMapping("/page")
+  @GetMapping
   public ResponseEntity<List<Message>> getMessagesByUserIdPaginated(
-      @RequestHeader("Authorization") String token, 
-      @RequestParam int page, 
-      @RequestParam int offset
-  ) {
+      @RequestHeader("Authorization") String token,
+      @RequestParam int page,
+      @RequestParam int offset) {
     try {
       List<Message> messages = messageService.getMessagesByUserIdPaginated(token, page, offset);
       logger.info("Retrieved paginated messages: {}", messages);
@@ -120,26 +122,27 @@ public class MessageController {
   }
 
   /**
-   * Recives a paginated list of messages associated with a specific listing ID for a user.
+   * Recives a paginated list of messages associated with a specific listing ID
+   * for a user.
    *
    * @param listingId the ID of the listing
-   * @param token the JWT token containing user claims
-   * @param page the page number to retrieve
-   * @param offset the number of items per page
-   * @return a paginated list of messages associated with the listing ID and user ID
+   * @param token     the JWT token containing user claims
+   * @param page      the page number to retrieve
+   * @param offset    the number of items per page
+   * @return a paginated list of messages associated with the listing ID and user
+   *         ID
    */
-  @GetMapping("/page/{listingId}")
+  @GetMapping("/{listingId}")
   public ResponseEntity<List<Message>> getMessagesByListingIdAndUserIdPaginated(
       @PathVariable String listingId,
       @RequestHeader("Authorization") String token,
       @RequestParam int page,
-      @RequestParam int offset
-  ) {
+      @RequestParam int offset) {
     try {
-    List<Message> messages = messageService.getMessagesByListingIdAndUserIdPaginated(
-        listingId, token, page, offset);
-    logger.info("Retrieved paginated messages for listing ID {}: {}", listingId, messages);
-    return ResponseEntity.ok(messages);
+      List<Message> messages = messageService.getMessagesByListingIdAndUserIdPaginated(
+          listingId, token, page, offset);
+      logger.info("Retrieved paginated messages for listing ID {}: {}", listingId, messages);
+      return ResponseEntity.ok(messages);
     } catch (Exception e) {
       logger.error("Error retrieving paginated messages for listing ID {}: {}", listingId, e.getMessage());
       return ResponseEntity.status(500).body(null);

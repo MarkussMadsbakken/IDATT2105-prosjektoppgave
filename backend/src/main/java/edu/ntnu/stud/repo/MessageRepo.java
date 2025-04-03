@@ -29,7 +29,7 @@ public class MessageRepo {
     Message message = new Message();
     message.setId(rs.getLong("id"));
     message.setListingId(rs.getString("listing_id"));
-    message.setByerId(rs.getLong("byer_id"));
+    message.setbuyerId(rs.getLong("buyer_id"));
     message.setMessage(rs.getString("message"));
     message.setCreatedAt(rs.getTimestamp("created_at"));
     message.setSentByBuyer(rs.getBoolean("sent_by_buyer"));
@@ -54,11 +54,11 @@ public class MessageRepo {
    */
   public void addMessage(Message message) {
     String query = "INSERT INTO messages "
-        + "(listing_id, seller_id, byer_id, message, created_at, sent_by_buyer)"
+        + "(listing_id, seller_id, buyer_id, message, created_at, sent_by_buyer)"
         + " VALUES (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(query,
         message.getListingId(),
-        message.getByerId(),
+        message.getbuyerId(),
         message.getSellerId(),
         message.getMessage(),
         message.getCreatedAt(),
@@ -73,7 +73,7 @@ public class MessageRepo {
    * @return a list of Message objects associated with the listing
    */
   public List<Message> getMessagesByListingIdAndUserId(String listingId, long userId) {
-    String query = "SELECT * FROM messages WHERE listing_id = ? AND (seller_id = ? OR byer_id = ?)";
+    String query = "SELECT * FROM messages WHERE listing_id = ? AND (seller_id = ? OR buyer_id = ?)";
     return jdbcTemplate.query(query, messageRowMapper, listingId, userId, userId);
   }
 
@@ -83,7 +83,7 @@ public class MessageRepo {
    * @param userId the ID of the user
    */
   public List<Message> getMessagesByUserId(long userId) {
-    String query = "SELECT * FROM messages WHERE seller_id = ? OR byer_id = ?";
+    String query = "SELECT * FROM messages WHERE seller_id = ? OR buyer_id = ?";
     return jdbcTemplate.query(query, messageRowMapper, userId, userId);
   }
 
@@ -96,7 +96,7 @@ public class MessageRepo {
    * @return a list of Message objects associated with the user
    */
   public List<Message> getMessagesByUserIdPaginated(long userId, int page, int offset) {
-    String query = "SELECT * FROM messages WHERE seller_id = ? OR byer_id = ? LIMIT ? OFFSET ?";
+    String query = "SELECT * FROM messages WHERE seller_id = ? OR buyer_id = ? LIMIT ? OFFSET ?";
     return jdbcTemplate.query(query, messageRowMapper, userId, userId, page * offset, offset);
   }
 
@@ -112,9 +112,9 @@ public class MessageRepo {
    */
   public List<Message> getMessagesByListingIdAndUserIdPaginated(
       String listingId, long userId, int page, int offset) {
-    String query = "SELECT * FROM messages " 
-        + "WHERE listing_id = ? AND (seller_id = ? OR byer_id = ?) LIMIT ? OFFSET ?";
+    String query = "SELECT * FROM messages "
+        + "WHERE listing_id = ? AND (seller_id = ? OR buyer_id = ?) LIMIT ? OFFSET ?";
     return jdbcTemplate.query(
-      query, messageRowMapper, listingId, userId, userId, page * offset, offset);
+        query, messageRowMapper, listingId, userId, userId, page * offset, offset);
   }
 }

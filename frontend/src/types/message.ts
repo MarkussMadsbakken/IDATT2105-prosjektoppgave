@@ -3,10 +3,14 @@ import type { User } from "./user";
 
 export type Message = {
     id: number;
-    content: string;
-    sender: "buyer" | "seller";
-    createdAt: Date;
+    listingId: number;
+    buyerId: number;
+    sellerId: number;
+    message: string;
+    createdAt: string;
+    sentByBuyer: boolean;
 }
+
 
 export type Chat = {
     id: number;

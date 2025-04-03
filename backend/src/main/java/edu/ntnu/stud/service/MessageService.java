@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 /**
  * Service class for managing messages in the system.
  * This class provides methods to add and retrieve messages.
@@ -35,7 +34,7 @@ public class MessageService {
    * @param message the message to be validated
    */
   public void validateMessage(Message message) {
-    Validate.that(message.getByerId(), Validate.isPositive(), "Buyer ID cannot be zero.");
+    Validate.that(message.getbuyerId(), Validate.isPositive(), "Buyer ID cannot be zero.");
     Validate.that(message.getSellerId(), Validate.isPositive(), "Seller ID cannot be zero.");
     Validate.that(message.getListingId(), Validate.isNotEmptyOrBlankOrNull(),
         "Listing ID cannot be empty or blank or null.");
@@ -48,12 +47,12 @@ public class MessageService {
   /**
    * Verifies the sender of the message.
    *
-   * @param message         the message to be verified
-   * @param token           the JWT token containing user claims
+   * @param message the message to be verified
+   * @param token   the JWT token containing user claims
    */
   public void verifySender(Message message, String token) {
     long senderFromToken = jwtService.extractUserId(token.substring(7));
-    if (!((senderFromToken == message.getByerId() && message.isSentByBuyer())
+    if (!((senderFromToken == message.getbuyerId() && message.isSentByBuyer())
         || (senderFromToken == message.getSellerId() && !message.isSentByBuyer()))) {
       throw new IllegalArgumentException("Sender ID does not match the message sender.");
     }
@@ -96,7 +95,8 @@ public class MessageService {
   }
 
   /**
-   * Retrieves a paginated list of messages associated with a specific listing ID and user ID.
+   * Retrieves a paginated list of messages associated with a specific listing ID
+   * and user ID.
    *
    * @param listingId the ID of the listing
    * @param token     the JWT token containing user claims
@@ -108,6 +108,5 @@ public class MessageService {
     long userId = jwtService.extractUserId(token.substring(7));
     return messageRepo.getMessagesByListingIdAndUserIdPaginated(listingId, userId, page, offset);
   }
-
 
 }
