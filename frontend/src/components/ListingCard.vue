@@ -2,6 +2,7 @@
 import type { Listing } from '@/types';
 import ImageNotFound from './ImageNotFound.vue';
 import { useRouter } from 'vue-router';
+import ListingHeaderImage from './ListingHeaderImage.vue';
 
 const props = withDefaults(defineProps<{
     size?: "small" | "medium";
@@ -10,7 +11,6 @@ const props = withDefaults(defineProps<{
     size: "medium",
 });
 
-const headerImage = Array.isArray(props.listing.image) ? props.listing.image[0] : props.listing.image;
 const router = useRouter();
 
 const handleClick = (e: any) => {
@@ -23,19 +23,14 @@ const handleClick = (e: any) => {
     <div @click="handleClick" class="link">
         <div class="outer-wrapper" :class="props.size">
             <div class="image-wrapper" :class="props.size">
-                <div v-if="listing.image">
-                    <img :src="headerImage" alt="listing" />
-                </div>
-                <div v-else>
-                    <ImageNotFound :size="props.size === 'medium' ? 80 : 40" strokewidth="0.5px" />
-                </div>
+                <ListingHeaderImage :listing-id="props.listing.uuid" :size="props.size" />
                 <div class="price" v-if="props.size !== 'small'" :class="props.size">
                     {{ listing.price }} kr
                 </div>
             </div>
             <div class="content-wrapper" :class="props.size">
                 <div class="title" :class="props.size">
-                    {{ listing.title }}
+                    {{ listing.name }}
                 </div>
                 <div class="price" v-if="props.size === 'small'" :class="props.size">
                     {{ listing.price }} kr
@@ -103,6 +98,13 @@ const handleClick = (e: any) => {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+}
+
+.image-wrapper>img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .image-wrapper.medium {

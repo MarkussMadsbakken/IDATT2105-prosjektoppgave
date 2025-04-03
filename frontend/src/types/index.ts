@@ -5,3 +5,4 @@ export * from "./apiResponses";
 export * from "./constants";
 export * from "./category";
 export * from "./message"
+export * from "./image";

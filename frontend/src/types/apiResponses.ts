@@ -20,7 +20,7 @@ export type Page<T> = {
     }
 }
 
-export const PAGE_SIZE = 12;
+export const PAGE_SIZE = 6;
 
 /**
  * Login response returned from the API
@@ -56,6 +56,14 @@ export type GetCategoriesResponse = Category[];
 export type CreateCategoryResponse = Category;
 
 export type GetUserResponse = User;
+/**
+ * Default response returned from the API
+ */
+export type DefaultResponse = {
+    message: string;
+    shortMessage: string;
+};
+
 /**
  * Error response returned from the API
  */

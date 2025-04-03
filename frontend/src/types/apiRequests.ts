@@ -1,4 +1,4 @@
-import type { Category } from "./category";
+import type { Category, SubCategory } from "./category";
 
 /**
  * Type for sending a login request to the server
@@ -40,3 +40,7 @@ export type EditUserInfo = {
 }
 
 export type CreateCategoryRequest = Omit<Category, 'id'>;
+
+export type EditCategoryRequest = Category;
+
+export type CreateSubCategoryRequest = Omit<SubCategory, 'id'>;
