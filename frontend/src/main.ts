@@ -4,12 +4,12 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
-
 import App from './App.vue'
 import router from './router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createI18n } from 'vue-i18n'
 import { useAuth } from './stores/auth';
+import DialogService from 'primevue/dialogservice';
 
 const app = createApp(App)
 
@@ -20,19 +20,25 @@ const auth = useAuth();
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!auth.isLoggedIn()) {
-            next({ name: 'login' })
+            next({ name: 'login' });
+        } else if (to.matched.some(record => record.meta.requiresAdmin)) {
+            if (!auth.isAdmin) {
+                next({ name: 'me' });
+            } else {
+                next();
+            }
         } else {
-            next()
+            next();
         }
 
     } else if (to.matched.some(record => record.meta.requiresUnauthorized)) {
         if (auth.isLoggedIn()) {
-            next({ name: 'me' })
+            next({ name: 'me' });
         } else {
-            next()
+            next();
         }
     } else {
-        next()
+        next();
     }
 });
 
@@ -91,6 +97,8 @@ const i18n = createI18n({
             releaseToUpload: "Slipp for å velge bilde",
             chooseImage: "Velg bilde",
             imageSelected: "Bilde valgt!",
+            name: "Navn",
+            thisFieldIsRequired: "Dette feltet er påkrevd",
         },
         en: {
             recommended: "Recommended for you",
@@ -134,6 +142,8 @@ const i18n = createI18n({
             releaseToUpload: "Release to upload",
             chooseImage: "Choose image",
             imageSelected: "Image selected!",
+            name: "Name",
+            thisFieldIsRequired: "This field is required",
         }
     },
 });
@@ -150,8 +160,9 @@ app.directive('click-outside', {
     unmounted: el => {
         document.removeEventListener("click", el.clickOutsideEvent);
     },
-})
+});
 
 app.use(i18n);
+app.use(DialogService)
 
 app.mount('#app')

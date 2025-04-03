@@ -30,7 +30,7 @@ const chat: Chat = {
     seller: user1,
     buyer: user2,
     listing: {
-        id: "1",
+        uuid: "1",
         title: "kult kjøleskap",
         description: "Veldig kult kjøleskap jeg fant! Bare å komme med et tilbud, jeg hadde satt stor pris på det. I tillegg skal jeg bare si noe langt her slik at teksten overflower!!",
         price: 6000,

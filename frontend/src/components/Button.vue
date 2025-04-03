@@ -6,11 +6,13 @@ const props = withDefaults(defineProps<{
   variant: 'primary',
 });
 
-defineEmits(['click']);
+defineEmits<{
+  (e: "click", value: MouseEvent): void
+}>();
 
 </script>
 <template>
-  <button @click="$emit('click')" :class="['base-button', props.variant]">
+  <button @click="$emit('click', $event)" :class="['base-button', props.variant]">
     <slot />
   </button>
 </template>

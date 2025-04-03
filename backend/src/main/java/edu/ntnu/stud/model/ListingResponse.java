@@ -16,6 +16,7 @@ public class ListingResponse {
   private boolean active;
   private boolean deleted;
   private boolean sold;
+  private long ownerId;
 
   // Getters and setters
   public String getUuid() {
@@ -96,5 +97,13 @@ public class ListingResponse {
 
   public void setSold(boolean sold) {
     this.sold = sold;
+  }
+
+  public long getOwnerId() {
+    return ownerId;
+  }
+
+  public void setOwnerId(long ownerId) {
+    this.ownerId = ownerId;
   }
 }

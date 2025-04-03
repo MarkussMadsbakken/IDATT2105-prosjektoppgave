@@ -1,13 +1,11 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Message;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,13 +14,27 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class MessageRepo {
-  
+
   @Value("${spring.datasource.url}")
   private String url;
   @Value("${spring.datasource.username}")
   private String user;
   @Value("${spring.datasource.password}")
   private String password;
+
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
+
+  private final RowMapper<Message> messageRowMapper = (rs, rowNum) -> {
+    Message message = new Message();
+    message.setId(rs.getLong("id"));
+    message.setListingId(rs.getString("listing_id"));
+    message.setByerId(rs.getLong("byer_id"));
+    message.setMessage(rs.getString("message"));
+    message.setCreatedAt(rs.getTimestamp("created_at"));
+    message.setSentByBuyer(rs.getBoolean("sent_by_buyer"));
+    return message;
+  };
 
   /**
    * Initializes the MessageRepo and loads the MySQL JDBC driver.
@@ -41,55 +53,28 @@ public class MessageRepo {
    * @param message the Message object to be added
    */
   public void addMessage(Message message) {
-    String query = "INSERT INTO messages " 
-        + "(listing_id, seller_id, byer_id, message, created_at, sent_by_buyer)" 
+    String query = "INSERT INTO messages "
+        + "(listing_id, seller_id, byer_id, message, created_at, sent_by_buyer)"
         + " VALUES (?, ?, ?, ?, ?, ?)";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-         PreparedStatement statement = connection.prepareStatement(query)) {
-
-      statement.setString(1, message.getListingId());
-      statement.setLong(2, message.getByerId());
-      statement.setString(3, message.getMessage());
-      statement.setTimestamp(4, message.getCreatedAt());
-      statement.setBoolean(6, message.isSentByBuyer());
-
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    jdbcTemplate.update(query,
+        message.getListingId(),
+        message.getByerId(),
+        message.getSellerId(),
+        message.getMessage(),
+        message.getCreatedAt(),
+        message.isSentByBuyer());
   }
 
   /**
-   * Retrieves all messages for a specific listing with a spesific user involved from the database.
+   * Retrieves all messages for a specific listing with a spesific user involved
+   * from the database.
    *
    * @param listingId the ID of the listing
    * @return a list of Message objects associated with the listing
    */
   public List<Message> getMessagesByListingIdAndUserId(String listingId, long userId) {
-    List<Message> messages = new ArrayList<>();
     String query = "SELECT * FROM messages WHERE listing_id = ? AND (seller_id = ? OR byer_id = ?)";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-         PreparedStatement statement = connection.prepareStatement(query)) {
-
-      statement.setString(1, listingId);
-      statement.setLong(2, userId);
-      statement.setLong(3, userId);
-      var resultSet = statement.executeQuery();
-
-      while (resultSet.next()) {
-        Message message = new Message();
-        message.setId(resultSet.getLong("id"));
-        message.setListingId(resultSet.getString("listing_id"));
-        message.setByerId(resultSet.getLong("byer_id"));
-        message.setMessage(resultSet.getString("message"));
-        message.setCreatedAt(resultSet.getTimestamp("created_at"));
-        message.setSentByBuyer(resultSet.getBoolean("sent_by_buyer"));
-        messages.add(message);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return messages;
+    return jdbcTemplate.query(query, messageRowMapper, listingId, userId, userId);
   }
 
   /**
@@ -98,28 +83,38 @@ public class MessageRepo {
    * @param userId the ID of the user
    */
   public List<Message> getMessagesByUserId(long userId) {
-    List<Message> messages = new ArrayList<>();
     String query = "SELECT * FROM messages WHERE seller_id = ? OR byer_id = ?";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-         PreparedStatement statement = connection.prepareStatement(query)) {
+    return jdbcTemplate.query(query, messageRowMapper, userId, userId);
+  }
 
-      statement.setLong(1, userId);
-      statement.setLong(2, userId);
-      var resultSet = statement.executeQuery();
+  /**
+   * Retrieves a paginated list of messages for a specific user from the database.
+   *
+   * @param userId the ID of the user
+   * @param page   the page number to retrieve
+   * @param offset the number of items per page
+   * @return a list of Message objects associated with the user
+   */
+  public List<Message> getMessagesByUserIdPaginated(long userId, int page, int offset) {
+    String query = "SELECT * FROM messages WHERE seller_id = ? OR byer_id = ? LIMIT ? OFFSET ?";
+    return jdbcTemplate.query(query, messageRowMapper, userId, userId, page * offset, offset);
+  }
 
-      while (resultSet.next()) {
-        Message message = new Message();
-        message.setId(resultSet.getLong("id"));
-        message.setListingId(resultSet.getString("listing_id"));
-        message.setByerId(resultSet.getLong("byer_id"));
-        message.setMessage(resultSet.getString("message"));
-        message.setCreatedAt(resultSet.getTimestamp("created_at"));
-        message.setSentByBuyer(resultSet.getBoolean("sent_by_buyer"));
-        messages.add(message);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return messages;
+  /**
+   * Retrieves a paginated list of messages for a specific listing with a spesific
+   * user involved from the database.
+   *
+   * @param listingId the ID of the listing
+   * @param userId    the ID of the user
+   * @param page      the page number to retrieve
+   * @param offset    the number of items per page
+   * @return a list of Message objects associated with the listing
+   */
+  public List<Message> getMessagesByListingIdAndUserIdPaginated(
+      String listingId, long userId, int page, int offset) {
+    String query = "SELECT * FROM messages " 
+        + "WHERE listing_id = ? AND (seller_id = ? OR byer_id = ?) LIMIT ? OFFSET ?";
+    return jdbcTemplate.query(
+      query, messageRowMapper, listingId, userId, userId, page * offset, offset);
   }
 }

@@ -110,6 +110,15 @@ const router = createRouter({
         requiresUnauthorized: true
       }
     },
+    {
+      path: "/admin",
+      name: "admin",
+      component: () => import("../views/AdminView.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+      }
+    },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import("../views/NotFoundView.vue") },
   ],
 })

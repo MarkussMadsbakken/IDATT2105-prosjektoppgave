@@ -4,7 +4,7 @@ import edu.ntnu.stud.model.LoginRequest;
 import edu.ntnu.stud.model.LoginResponse;
 import edu.ntnu.stud.model.RegisterRequest;
 import edu.ntnu.stud.model.RegisterResponse;
-import edu.ntnu.stud.service.UserService;
+import edu.ntnu.stud.service.AuthService;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   @Autowired
-  private UserService service;
+  private AuthService service;
 
   Logger logger = LoggerFactory.getLogger(AuthController.class);
 
