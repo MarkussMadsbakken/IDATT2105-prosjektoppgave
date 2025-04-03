@@ -15,6 +15,8 @@ public class NotificationService {
   
   @Autowired
   private NotificationRepo notificationRepo;
+  @Autowired
+  private JWTService jwtService;
 
   /**
    * Initializes the NotificationService with a NotificationRepo instance.
@@ -67,8 +69,18 @@ public class NotificationService {
    * Marks a notification as read.
    *
    * @param id the ID of the notification to be marked as read
+   * @param token the token of the user who is marking the notification as read
    */
-  public void markNotificationAsRead(long id) {
+  public void markNotificationAsRead(long id, String token) {
+    long userId = jwtService.extractUserId(token);
+    Notification notification = notificationRepo.getNotificationById(id);
+    if (notification == null) {
+      throw new IllegalArgumentException("Notification not found");
+    }
+    if (notification.getUserId() != userId) {
+      throw new IllegalArgumentException(
+        "You do not have permission to mark this notification as read");
+    }
     notificationRepo.markNotificationAsRead(id);
   }
 }

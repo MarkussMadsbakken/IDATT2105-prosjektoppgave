@@ -1,6 +1,6 @@
 package edu.ntnu.stud.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * Represents a notification in the system.
@@ -12,7 +12,7 @@ public class Notification {
   private long id;
   private long userId;
   private boolean isRead;
-  private Date time;
+  private Timestamp time;
   private String link;
   private String message;
 
@@ -25,12 +25,12 @@ public class Notification {
   /**
    * Constructs a new Notification with the specified details.
    */
-  public Notification(long userId, String message, String link) {
+  public Notification(long userId, String message, String link, boolean isRead, Timestamp time) {
     this.userId = userId;
     this.message = message;
     this.link = link;
-    this.isRead = false;
-    this.time = new Date();
+    this.isRead = isRead;
+    this.time = time;
   }
 
   /**
@@ -92,7 +92,7 @@ public class Notification {
    *
    * @return the creation time
    */
-  public Date getTime() {
+  public Timestamp getTime() {
     return time;
   }
 
@@ -101,7 +101,7 @@ public class Notification {
    *
    * @param time the creation time to set
    */
-  public void setTime(Date time) {
+  public void setTime(Timestamp time) {
     this.time = time;
   }
 
