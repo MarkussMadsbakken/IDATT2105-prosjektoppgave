@@ -40,9 +40,20 @@ public class NotificationService {
    * Retrieves a notification by its ID.
    *
    * @param id the ID of the notification to be retrieved
+   * @param token the token of the user who is retrieving the notification
    * @return the Notification object with the specified ID, or null if not found
+   * @throws IllegalArgumentException if the notification is not found or if the
    */
-  public Notification getNotificationById(long id) {
+  public Notification getNotificationById(long id, String token) {
+    long userId = jwtService.extractUserId(token.substring(7));
+    Notification notification = notificationRepo.getNotificationById(id);
+    if (notification == null) {
+      throw new IllegalArgumentException("Notification not found");
+    }
+    if (notification.getUserId() != userId) {
+      throw new IllegalArgumentException(
+        "You do not have permission to view this notification");
+    }
     return notificationRepo.getNotificationById(id);
   }
 
@@ -50,10 +61,15 @@ public class NotificationService {
    * Retrieves all notifications for a specific user.
    *
    * @param userId the ID of the user whose notifications are to be retrieved
+   * @param token the token of the user who is retrieving the notifications
    * @return a list of Notification objects for the specified user
    */
-  public List<Notification> getNotificationsByUserId(long userId) {
-    return notificationRepo.getNotificationsByUserId(userId);
+  public List<Notification> getNotificationsByUserId(String token) {
+    long tokenUserId = jwtService.extractUserId(token.substring(7));
+    if (notificationRepo.getNotificationsByUserId(tokenUserId) == null) {
+      throw new IllegalArgumentException("No notifications found for this user");
+    }
+    return notificationRepo.getNotificationsByUserId(tokenUserId);
   }
 
   /**

@@ -27,26 +27,16 @@ public class NotificationController {
   private NotificationService notificationService;
 
   /**
-   * Retrieves all notifications in the system.
-   *
-   * @return a ResponseEntity containing a list of all Notification objects
-   */
-  @GetMapping
-  public ResponseEntity<List<Notification>> getAllNotifications() {
-    List<Notification> notifications = notificationService.getAllNotifications();
-    return ResponseEntity.ok(notifications);
-  }
-
-  /**
    * Retrieves all notifications for a specific user.
    *
-   * @param userId the ID of the user whose notifications are to be retrieved
+   * @param token the JWT token of the user
    * @return a ResponseEntity containing a list of Notification objects for the
    *         specified user
    */
   @GetMapping("/user")
-  public ResponseEntity<List<Notification>> getNotificationsByUserId(long userId) {
-    List<Notification> notifications = notificationService.getNotificationsByUserId(userId);
+  public ResponseEntity<List<Notification>> getNotificationsByUserId(
+      @RequestHeader("Authorization") String token) {
+    List<Notification> notifications = notificationService.getNotificationsByUserId(token);
     return ResponseEntity.ok(notifications);
   }
 
@@ -58,8 +48,9 @@ public class NotificationController {
    *         specified ID, or a not found status
    */
   @GetMapping("/{id}")
-  public ResponseEntity<Notification> getNotificationById(@PathVariable long id) {
-    Notification notification = notificationService.getNotificationById(id);
+  public ResponseEntity<Notification> getNotificationById(@PathVariable long id, 
+      @RequestHeader("Authorization") String token) {
+    Notification notification = notificationService.getNotificationById(id, token);
     if (notification != null) {
       return ResponseEntity.ok(notification);
     } else {
