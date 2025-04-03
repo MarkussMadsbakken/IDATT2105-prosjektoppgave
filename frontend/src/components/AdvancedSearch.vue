@@ -9,6 +9,7 @@ import FormGroup from './FormGroup.vue';
 import Checkbox from 'primevue/checkbox';
 import { useDebounceFn } from '@vueuse/core';
 import type { Category } from '@/types';
+import SubCategorySelector from './SubCategorySelector.vue';
 
 const props = withDefaults(defineProps<{
     selectedCategoryId: number
@@ -41,21 +42,6 @@ watch(selectedRange, () => {
     emitRangeDebounced();
 }, { deep: true });
 
-
-const handleSubCategoryChanged = (id: number) => {
-    emit("subCategoryChanged", id);
-}
-
-const selectedCategories = ref<Category[]>([]);
-
-// When we get new data, check which subcategories are selected
-watch(subCategories, (newData) => {
-    if (!newData) return;
-    selectedCategories.value = newData?.filter((subcategory) => {
-        return props.selectedSubcategories?.includes(subcategory.id);
-    }) ?? [];
-}, { immediate: true });
-
 </script>
 
 <template>
@@ -73,14 +59,9 @@ watch(subCategories, (newData) => {
                     :max="props.allowedSearchRange[1]" />
                 <NumberInput v-model="selectedRange[1]" class="price-input" />
             </div>
-            <div class="sub-category-selector">
-                <div v-for="subcategory in subCategories" :key="subcategory.name" class="sub-category">
-                    <Checkbox @value-change="() => handleSubCategoryChanged(subcategory.id)"
-                        v-model="selectedCategories" :value="subcategory" :name="subcategory.name"
-                        :input-id="subcategory.name" />
-                    <label :for="subcategory.name"> {{ $t(subcategory.name) }} </label>
-                </div>
-            </div>
+            <SubCategorySelector :selected-category-id="props.selectedCategoryId"
+                :selected-subcategories="props.selectedSubcategories"
+                @subCategoryChanged="$emit('subCategoryChanged', $event)" />
         </div>
     </div>
 </template>

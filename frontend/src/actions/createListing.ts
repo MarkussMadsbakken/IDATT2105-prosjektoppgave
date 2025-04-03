@@ -26,15 +26,3 @@ export const createListing = async (req: CreateListingRequest): Promise<CreateLi
         body: body
     });
 }
-
-/**
- * Hook for logging in via a mutation
- */
-const useCreateListing = (params?: { onSuccess: () => void }) => {
-    return useMutation({
-        mutationFn: createListing,
-        onSuccess: params?.onSuccess
-    });
-}
-
-export default useCreateListing;

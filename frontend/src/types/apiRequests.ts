@@ -23,7 +23,7 @@ export type CreateListingRequest = {
     name: string,
     price: number,
     description: string,
-    category: string,
+    category: number,
     postalCode: number,
     images: File[];
 }
@@ -33,10 +33,10 @@ export type GetListingsRequest = {
     offset: number;
 }
 export type EditUserInfo = {
-  username: string;
-  firstName: string;
-  lastName: string;
-  imageURL?: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    imageURL?: string;
 }
 
 export type CreateCategoryRequest = Omit<Category, 'id'>;

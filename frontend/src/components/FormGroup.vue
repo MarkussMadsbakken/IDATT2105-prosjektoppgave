@@ -1,9 +1,11 @@
 <script setup lang="ts">
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     name: string
     label: string
-    isNotFilledIn: boolean
-}>();
+    isNotFilledIn?: boolean
+}>(), {
+    isNotFilledIn: false
+});
 </script>
 
 <template>

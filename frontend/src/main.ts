@@ -106,6 +106,9 @@ const i18n = createI18n({
             noMoreListings: "Ingen flere annonser funnet",
             listingsByUser: "{name} sine annonser",
             ownListings: "Mine annonser",
+            noSubCategories: "Ingen underkategorier",
+            selectCategory: "Velg kategori",
+            selectSubCategory: "Velg underkategori",
         },
         en: {
             recommended: "Recommended for you",
@@ -158,6 +161,9 @@ const i18n = createI18n({
             noMoreListings: "No more listings found",
             listingsByUser: "Listings by {name}",
             ownListings: "My listings",
+            noSubCategories: "No sub categories",
+            selectCategory: "Select category",
+            selectSubCategory: "Select sub category",
         }
     },
 });
