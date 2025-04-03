@@ -14,6 +14,8 @@ public class ListingImage {
 
   private String listingUuid;
 
+  private String imageFormat;
+
   /**
    * Constructs a new ListingImage with the specified image blob and listing UUID.
    * Generates a new UUID for the ListingImage.
@@ -21,10 +23,11 @@ public class ListingImage {
    * @param imageBlob the image blob associated with the listing image
    * @param listingUuid the UUID of the listing associated with the image
    */
-  public ListingImage(Blob imageBlob, String listingUuid) {
+  public ListingImage(Blob imageBlob, String listingUuid, String imageFormat) {
     this.uuid = UUID.randomUUID().toString();
     this.imageBlob = imageBlob;
     this.listingUuid = listingUuid;
+    this.imageFormat = imageFormat;
   }
 
   /**
@@ -56,5 +59,13 @@ public class ListingImage {
 
   public void setListingUuid(String listingUuid) {
     this.listingUuid = listingUuid;
+  }
+
+  public String getImageFormat() {
+    return imageFormat;
+  }
+
+  public void setImageFormat(String imageFormat) {
+    this.imageFormat = imageFormat;
   }
 }

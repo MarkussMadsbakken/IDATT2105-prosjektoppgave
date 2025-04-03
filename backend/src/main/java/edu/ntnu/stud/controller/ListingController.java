@@ -1,5 +1,6 @@
 package edu.ntnu.stud.controller;
 
+import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.service.ListingService;
@@ -57,6 +58,28 @@ public class ListingController {
   }
 
   /**
+   * Retrieves the images of a listing by its UUID.
+   *
+   * @param uuid the UUID of the listing to retrieve images for
+   * @return the images of the listing with the specified UUID,
+   *         or a 404 Not Found status if not found
+   */
+  @GetMapping("/{uuid}/images")
+  public ResponseEntity<List<ListingImageResponse>> getListingImagesByUuid(
+      @PathVariable String uuid
+  ) {
+    logger.info("Fetching listing with UUID: {}", uuid);
+    List<ListingImageResponse> images = listingService.getImagesByUuid(uuid);
+    if (images != null) {
+      logger.info("Listing found with UUID: {}", uuid);
+      return ResponseEntity.ok(images);
+    } else {
+      logger.warn("Listing not found with UUID: {}", uuid);
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  /**
    * Retrieves a paginated list of listings.
    *
    * @param page the page number to retrieve
@@ -79,18 +102,26 @@ public class ListingController {
    *
    * @param listingRequest the ListingRequest to save as a Listing
    * @param token the JWT token for authorization
-   * @param images the list of MultipartFile objects representing the pictures
+   * @param images the list of MultipartFile objects representing the images
    * @return the created listings corresponding response object
    */
   @PostMapping
   public ResponseEntity<ListingResponse> createListing(
       @RequestPart("listingRequest") ListingRequest listingRequest,
-      @RequestPart("pictures") List<MultipartFile> images,
+      @RequestPart("images") List<MultipartFile> images,
       @RequestHeader("Authorization") String token) {
     logger.info("Creating new listing with name: {}", listingRequest.getName());
-    listingRequest.setPictures(images);
     ListingResponse listingResponse = listingService.saveListing(listingRequest, token);
+
+    logger.info("Saving images for listing with name: {}", listingRequest.getName());
     logger.info("Listing created successfully with UUID: {}", listingResponse.getUuid());
+
+
+    if (images == null || listingResponse.getUuid() == null) {
+      logger.error("cant save listingimages");
+    }
+    listingService.saveListingImages(images, listingResponse.getUuid());
+    logger.info("Images saved successfully for listing with UUID: {}", listingResponse.getUuid());
     return ResponseEntity.ok(listingResponse);
   }
 }

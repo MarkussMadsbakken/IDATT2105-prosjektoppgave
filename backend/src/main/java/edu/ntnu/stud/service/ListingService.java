@@ -1,7 +1,9 @@
 package edu.ntnu.stud.service;
 
+
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingImage;
+import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.ListingRepo;
@@ -77,7 +79,6 @@ public class ListingService {
     Listing listing = convertToListing(listingRequest);
     listing.setOwnerId(ownerId);
     listingRepo.saveListing(listing);
-    saveListingImages(listingRequest, listing.getUuid());
     return convertToResponse(listing);
   }
 
@@ -141,20 +142,6 @@ public class ListingService {
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
-
-    // get images
-    List<ListingImage> images = listingImageService.getImagesByListingUuid(listing.getUuid());
-    List<String> base64Images = images.stream()
-        .map(image -> {
-          try {
-            return convertBlobToBase64(image.getImageBlob());
-          } catch (SQLException e) {
-            throw new RuntimeException(e);
-          }
-        })
-        .collect(Collectors.toList());
-    response.setPictures(base64Images);
-
     return response;
   }
 
@@ -186,13 +173,14 @@ public class ListingService {
   /**
    * Saves the images associated with a listing.
    *
-   * @param listingRequest the ListingRequest object containing the images
+   * @param images the images for the listing
    * @param listingUuid the UUID of the listing to associate the images with
    */
-  private void saveListingImages(ListingRequest listingRequest, String listingUuid) {
-    listingRequest.getPictures().forEach(image -> {
+  public void saveListingImages(List<MultipartFile> images, String listingUuid) {
+    images.forEach(image -> {
       ListingImage listingImage = new ListingImage();
       listingImage.setListingUuid(listingUuid);
+      listingImage.setImageFormat(image.getContentType());
       try {
         listingImage.setImageBlob(convertMultipartFileToBlob(image));
       } catch (IOException e) {
@@ -202,5 +190,31 @@ public class ListingService {
       }
       listingImageService.saveListingImage(listingImage);
     });
+  }
+
+  /**
+   * Retrieves a list of ListingImageResponse objects by the listing UUID.
+   * This method fetches the ListingImage entities associated with the given UUID,
+   * converts each image to a Base64 encoded string along with its file type,
+   * and returns a list of ListingImageResponse objects.
+   *
+   * @param uuid the UUID of the listing to retrieve images for
+   * @return a list of ListingImageResponse objects
+   *         containing the Base64 encoded images and their file types
+   */
+  public List<ListingImageResponse> getImagesByUuid(String uuid) {
+    List<ListingImage> images = listingImageService.getImagesByListingUuid(uuid);
+
+    return images.stream()
+        .map(image -> {
+          try {
+            String base64Image = convertBlobToBase64(image.getImageBlob());
+            String fileType = image.getImageFormat();
+            return new ListingImageResponse(base64Image, fileType);
+          } catch (SQLException e) {
+            throw new RuntimeException(e);
+          }
+        })
+        .collect(Collectors.toList());
   }
 }

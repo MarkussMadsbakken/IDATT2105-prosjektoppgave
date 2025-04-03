@@ -44,7 +44,7 @@ public class SecurityConfig {
       .cors(Customizer.withDefaults())
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(request -> request
-      .requestMatchers(HttpMethod.GET, "/api/category/**").permitAll() // Allow GET requests to /categories/**
+      .requestMatchers(HttpMethod.GET, "/api/category/**", "api/listing/**").permitAll() // Allow GET requests to /categories/**
       .requestMatchers(HttpMethod.POST, "/api/category/**").hasRole("ADMIN") // Restrict POST to ADMIN
       .requestMatchers(HttpMethod.PUT, "/api/category/**").hasRole("ADMIN") // Restrict PUT to ADMIN
       .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN") // Restrict DELETE to ADMIN

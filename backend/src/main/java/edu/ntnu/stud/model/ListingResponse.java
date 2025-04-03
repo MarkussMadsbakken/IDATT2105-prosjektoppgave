@@ -10,7 +10,6 @@ public class ListingResponse {
   private String name;
   private double price;
   private String description;
-  private List<String> pictures; // Base64 encoded strings
   private String category;
   private List<String> subcategories;
   private int postalCode;
@@ -49,14 +48,6 @@ public class ListingResponse {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public List<String> getPictures() {
-    return pictures;
-  }
-
-  public void setPictures(List<String> pictures) {
-    this.pictures = pictures;
   }
 
   public String getCategory() {

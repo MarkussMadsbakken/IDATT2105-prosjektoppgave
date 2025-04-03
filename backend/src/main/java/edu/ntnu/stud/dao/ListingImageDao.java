@@ -22,6 +22,7 @@ public class ListingImageDao {
     listingImage.setUuid(rs.getString("uuid"));
     listingImage.setImageBlob(rs.getBlob("image_blob"));
     listingImage.setListingUuid(rs.getString("listing_uuid"));
+    listingImage.setImageFormat(rs.getString("image_format"));
 
     return listingImage;
 
@@ -47,13 +48,14 @@ public class ListingImageDao {
    */
   public int save(ListingImage listingImage) {
     String sql = "INSERT INTO listing_images "
-        + "(uuid, listing_uuid, image_blob)"
-        + " VALUES (?, ?, ?)";
+        + "(uuid, listing_uuid, image_blob, image_format)"
+        + " VALUES (?, ?, ?, ?)";
     return jdbcTemplate.update(
         sql,
         listingImage.getUuid(),
         listingImage.getListingUuid(),
-        listingImage.getImageBlob()
+        listingImage.getImageBlob(),
+        listingImage.getImageFormat()
     );
   }
 
