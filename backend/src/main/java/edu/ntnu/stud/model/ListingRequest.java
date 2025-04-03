@@ -6,14 +6,13 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Represents a request to create or update a listing.
  * This class contains the necessary information for a listing, including
- * name, price, description, pictures, category, subcategories, postal code,
+ * name, price, description, category, subcategories, postal code,
  * and status flags (active, deleted, sold).
  */
 public class ListingRequest {
   private String name;
   private double price;
   private String description;
-  private List<MultipartFile> pictures;
   private String category;
   private List<String> subcategories;
   private int postalCode;
@@ -28,7 +27,6 @@ public class ListingRequest {
    * @param name the name of the listing
    * @param price the price of the listing
    * @param description the description of the listing
-   * @param pictures a list of MultipartFiles representing the pictures of the listing
    * @param category the category of the listing
    * @param subcategories a list of subcategories of the listing
    * @param postalCode the postal code of the listing
@@ -40,7 +38,6 @@ public class ListingRequest {
       String name,
       double price,
       String description,
-      List<MultipartFile> pictures,
       String category,
       List<String> subcategories,
       int postalCode,
@@ -51,7 +48,6 @@ public class ListingRequest {
     this.name = name;
     this.price = price;
     this.description = description;
-    this.pictures = pictures;
     this.category = category;
     this.subcategories = subcategories;
     this.postalCode = postalCode;
@@ -82,14 +78,6 @@ public class ListingRequest {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public List<MultipartFile> getPictures() {
-    return pictures;
-  }
-
-  public void setPictures(List<MultipartFile> pictures) {
-    // this.pictures = pictures;
   }
 
   public String getCategory() {
