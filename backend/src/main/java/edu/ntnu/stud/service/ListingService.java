@@ -1,19 +1,27 @@
 package edu.ntnu.stud.service;
 
+
 import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.ListingImage;
+import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.ListingRepo;
-
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import javax.sql.rowset.serial.SerialBlob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
+import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
 
 
 /**
@@ -28,6 +36,9 @@ public class ListingService {
 
   @Autowired
   private JWTService jwtService;
+
+  @Autowired
+  private ListingImageService listingImageService;
 
   /**
    * Retrieves all listings from the database.
@@ -70,9 +81,6 @@ public class ListingService {
     Listing listing = convertToListing(listingRequest);
     listing.setOwnerId(ownerId);
     listingRepo.saveListing(listing);
-
-    System.out.println("saving listing with ownerid: " + ownerId);
-
     return convertToResponse(listing);
   }
 
@@ -97,33 +105,39 @@ public class ListingService {
     return listingsPage.map(this::convertToResponse);
   }
 
+  /**
+   * Converts a ListingRequest object to a Listing entity.
+   *
+   * @param listingRequest the ListingRequest object to convert
+   * @return the converted Listing entity
+   */
   private Listing convertToListing(ListingRequest listingRequest) {
     Listing listing = new Listing();
     listing.setName(listingRequest.getName());
     listing.setPrice(listingRequest.getPrice());
     listing.setDescription(listingRequest.getDescription());
-    // TODO: fix setting pictures on listing from request
-//    listing.setPictures(listingRequest.getPictures().stream()
-//        .map(Base64::getDecoder)
-//        .map(decoder -> decoder.decode(picture))
-//        .collect(Collectors.toList()));
     listing.setCategory(listingRequest.getCategory());
     listing.setSubcategories(listingRequest.getSubcategories());
     listing.setPostalCode(listingRequest.getPostalCode());
     listing.setActive(listingRequest.isActive());
     listing.setDeleted(listingRequest.isDeleted());
     listing.setSold(listingRequest.isSold());
+
     return listing;
   }
 
+  /**
+   * Converts a Listing entity to a ListingResponse object.
+   *
+   * @param listing the Listing entity to convert
+   * @return the converted ListingResponse object
+   */
   private ListingResponse convertToResponse(Listing listing) {
     ListingResponse response = new ListingResponse();
     response.setUuid(listing.getUuid());
     response.setName(listing.getName());
     response.setPrice(listing.getPrice());
     response.setDescription(listing.getDescription());
-    //TODO: fix setting pictures on response from listing
-//    response.setPictures(listing.getPictures());
     response.setCategory(listing.getCategory());
     response.setSubcategories(listing.getSubcategories());
     response.setPostalCode(listing.getPostalCode());
@@ -132,5 +146,53 @@ public class ListingService {
     response.setSold(listing.isSold());
     response.setOwnerId(listing.getOwnerId());
     return response;
+  }
+
+  /**
+   * Saves the images associated with a listing.
+   *
+   * @param images the images for the listing
+   * @param listingUuid the UUID of the listing to associate the images with
+   */
+  public void saveListingImages(List<MultipartFile> images, String listingUuid) {
+    images.forEach(image -> {
+      ListingImage listingImage = new ListingImage();
+      listingImage.setListingUuid(listingUuid);
+      listingImage.setImageFormat(image.getContentType());
+      try {
+        listingImage.setImageBlob(convertMultipartFileToBlob(image));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+      listingImageService.saveListingImage(listingImage);
+    });
+  }
+
+  /**
+   * Retrieves a list of ListingImageResponse objects by the listing UUID.
+   * This method fetches the ListingImage entities associated with the given UUID,
+   * converts each image to a Base64 encoded string along with its file type,
+   * and returns a list of ListingImageResponse objects.
+   *
+   * @param uuid the UUID of the listing to retrieve images for
+   * @return a list of ListingImageResponse objects
+   *         containing the Base64 encoded images and their file types
+   */
+  public List<ListingImageResponse> getImagesByUuid(String uuid) {
+    List<ListingImage> images = listingImageService.getImagesByListingUuid(uuid);
+
+    return images.stream()
+        .map(image -> {
+          try {
+            String base64Image = convertBlobToBase64(image.getImageBlob());
+            String fileType = image.getImageFormat();
+            return new ListingImageResponse(base64Image, fileType);
+          } catch (SQLException e) {
+            throw new RuntimeException(e);
+          }
+        })
+        .collect(Collectors.toList());
   }
 }

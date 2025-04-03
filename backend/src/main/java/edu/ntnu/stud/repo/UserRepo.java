@@ -37,6 +37,8 @@ public class UserRepo {
     user.setLastName(rs.getString("last_name"));
     user.setCreatedAt(rs.getString("created_at"));
     user.setAdmin(rs.getBoolean("is_admin"));
+    user.setImageBlob(rs.getBlob("image_blob"));
+    user.setImageFileType(rs.getString("image_file_type"));
     return user;
   };
 
@@ -106,13 +108,16 @@ public class UserRepo {
    *
    * @param user the User object to be updated
    */
-  public void updateUser(User user) {
-    String query = "UPDATE users SET username = ?, first_name = ?, last_name = ?,"
+  public boolean updateUser(User user) {
+    String query = "UPDATE users SET username = ?, first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?"
         + " WHERE id = ?";
-    jdbcTemplate.update(query,
+    int rowsAffected = jdbcTemplate.update(query,
         user.getUsername(),
         user.getFirstName(),
         user.getLastName(),
+        user.getImageBlob(),
+        user.getImageFileType(),
         user.getId());
+    return rowsAffected > 0;
   }
 }
