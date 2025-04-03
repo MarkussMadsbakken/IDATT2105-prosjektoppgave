@@ -1,78 +1,66 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.LoginRequest;
-import edu.ntnu.stud.model.LoginResponse;
-import edu.ntnu.stud.model.RegisterRequest;
-import edu.ntnu.stud.model.RegisterResponse;
 import edu.ntnu.stud.model.User;
+import edu.ntnu.stud.model.UserResponse;
+import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.repo.UserRepo;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * Service class for handling user-related operations such as registration and login.
+ * Service class for managing user-related operations.
  */
 @Service
 public class UserService {
-
+  @Autowired
+  private UserRepo userRepo;
   @Autowired
   private JWTService jwtService;
 
-  @Autowired
-  AuthenticationManager authManager;
-
-  @Autowired
-  private UserRepo repo;
-
-  private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-
   /**
-   * Constructor that initializes the UserService with a UserRepo instance.
+   * Retrieves a user by their ID.
+   *
+   * @param id the ID of the user to retrieve
+   * @return the User object if found, null otherwise
    */
-  public RegisterResponse register(RegisterRequest registerRequest) throws Exception {
-    if (repo.getUserByUsername(registerRequest.getUsername()) != null) {
-      throw new Exception("User with username " 
-        + registerRequest.getUsername() 
-        + " already exists"
-      );
-    }
-
-    User user = new User();
-
-    user.setUsername(registerRequest.getUsername());
-    user.setPassword(encoder.encode(registerRequest.getPassword()));
-    repo.addUser(user);
-
-    String message = "Registration successful!";
-    String token = jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
-
-    return new RegisterResponse(message, token);
+  public UserResponse getUserById(long id) {
+    return new UserResponse(userRepo.getUserById(id));
   }
 
   /**
-   * Verifies the login credentials of a user.
+   * Retrieves a user by their username.
+   *
+   * @param username the username of the user to retrieve
+   * @return the User object if found, null otherwise
    */
-  public LoginResponse verify(LoginRequest loginRequest) {
-    Authentication authentication = authManager
-        .authenticate(new UsernamePasswordAuthenticationToken(
-          loginRequest.getUsername(), 
-          loginRequest.getPassword()
-        ));
+  public UserResponse getUserByUsername(String username) {
+    return new UserResponse(userRepo.getUserByUsername(username));
+  }
 
-    User user = repo.getUserByUsername(loginRequest.getUsername());
-    if (authentication.isAuthenticated()) {
+  /**
+   * Retrives all users from the database.
+   *
+   * @return a list of all users
+   */
+  public List<UserResponse> getAllUsers() {
+    List<User> users = userRepo.getAllUsers();
+    return users.stream().map(UserResponse::new).toList();
+  }
 
-      String message = "Login successful!";
-      String token = jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
-
-      return new LoginResponse(message, token);
-
-    } else {
-      return new LoginResponse("Invalid username or password", null);
-    }
+  /**
+   * Updates the information of a user in the database.
+   *
+   * @param userUpdate the User object containing updated information
+   * @param token the JWT token of the user making the request
+   */
+  public void updateUser(UserUpdate userUpdate, String token) {
+    long userId = jwtService.extractUserId(token);
+    User user = new User();
+    user.setId(userId);
+    user.setUsername(userUpdate.getUsername());
+    user.setFirstName(userUpdate.getFirstName());
+    user.setLastName(userUpdate.getLastName());
+    userRepo.updateUser(user);
   }
 }
