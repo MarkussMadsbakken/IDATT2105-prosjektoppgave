@@ -1,5 +1,6 @@
 import type { Category } from "./category";
 import type { Listing } from "./listing";
+import type { User } from "./user.ts";
 
 export type Page<T> = {
     content: T[];
@@ -54,6 +55,7 @@ export type GetCategoriesResponse = Category[];
 
 export type CreateCategoryResponse = Category;
 
+export type GetUserResponse = User;
 /**
  * Error response returned from the API
  */
