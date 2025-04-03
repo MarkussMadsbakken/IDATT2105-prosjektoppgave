@@ -4,34 +4,40 @@ import type { User } from '@/types/user.ts'
 import Button from '@/components/Button.vue';
 import { useRouter } from "vue-router";
 import UserImage from './UserImage.vue';
+import { useGetUser } from '@/actions/user';
+import { computed } from 'vue';
 
 const router = useRouter();
 const props = defineProps<{
-  userEntity: User;
+  userId: number;
   canContactSeller?: boolean;
 }>();
 
+console.log(props.userId)
+const { data: user, isPending, isError, error } = useGetUser(props.userId);
 
-const fullName = `${props.userEntity.firstName} ${props.userEntity.lastName}`;
-const joinedYear = "Medlem siden " + new Date(props.userEntity.createdAt).getFullYear();
-const userName = `(${props.userEntity.username})`
-
+const joinedYear = computed(() => user.value && user.value.createdAt ? "Medlem siden " + new Date(user.value.createdAt).getFullYear() : '');
 const handleContactClick = () => {
   // TODO
-  router.push(`/message/${props.userEntity.id}`);
+  router.push(`/message/${user.value?.id}`);
 };
 
 </script>
 
 <template>
-
-  <div class="seller-container">
+  <div v-if="isPending">
+    <p>Laster inn...</p>
+  </div>
+  <div v-else-if="isError">
+    <p>Feil: {{ error?.message }}</p>
+  </div>
+  <div class="seller-container" v-else>
     <div class="seller-left">
-      <UserImage :src="props.userEntity.imageUrl" />
+      <UserImage :src="user?.imageUrl" />
       <div class="seller-info" :class="{ centered: !props.canContactSeller }">
         <div class="seller-names">
-          <div class="seller-name">{{ fullName }}</div>
-          <div class="username">{{ userName }}</div>
+          <div class="seller-name">{{ user?.firstName }} {{ user?.lastName }}</div>
+          <div class="username">{{ user?.username }}</div>
         </div>
         <div class="seller-meta">
           <span class="joined-site">{{ joinedYear }}</span>

@@ -76,12 +76,12 @@ const toggleBookmark = () => {
       <div class="listingDescription" v-html="parsedDescription"></div>
     </div>
     <div class="buyBox">
-      <SellerInfo :user-entity="listing" :can-contact-seller="auth.isLoggedIn()" />
+      <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" />
       <div v-if="auth.isLoggedIn()" class="buttonBox">
         <Button variant="primary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("buy")
-        }}</Button>
+          }}</Button>
         <Button variant="secondary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("reserve")
-        }}</Button>
+          }}</Button>
       </div>
     </div>
   </div>
