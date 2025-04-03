@@ -90,6 +90,8 @@ public class CategoryController {
     List<SubCategory> subCategories = subCategoryService.getSubCategoriesByCategoryId(id);
     if (subCategories != null && !subCategories.isEmpty()) {
       return ResponseEntity.ok(subCategories);
+    } else if (subCategories != null) {
+      return ResponseEntity.ok(subCategories);
     } else {
       return ResponseEntity.notFound().build();
     }
