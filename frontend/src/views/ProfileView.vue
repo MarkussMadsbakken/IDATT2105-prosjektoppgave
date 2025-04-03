@@ -11,11 +11,6 @@ const handleLogout = () => {
     router.push('/login');
 }
 
-const handleSettings = () => {
-  // TODO
-  console.log("Redirect Settings")
-}
-
 import type { Listing, User } from '@/types'
 import {Settings} from "lucide-vue-next";
 import UserImage from "@/components/UserImage.vue";
@@ -56,7 +51,7 @@ const auth = useAuth();
         <div class="member-since">{{createdAtText}}</div>
     </div>
     <div class="settings-container">
-        <Settings class="settings-button" :size="35"  @click="handleSettings" :stroke-width="2.2"></Settings>
+        <Settings class="settings-button" :size="35" @click="router.push('/profile/edit')"  :stroke-width="2.2"></Settings>
         <Button class="logout-button" variant="primary" @click="handleLogout">{{ $t("logout") }}</Button>
     </div>
 
