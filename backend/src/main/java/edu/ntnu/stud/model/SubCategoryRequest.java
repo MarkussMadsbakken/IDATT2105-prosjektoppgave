@@ -7,7 +7,7 @@ public class SubCategoryRequest {
   private String name;
   private String description;
   private String icon;
-  private int parrentId;
+  private int parentId;
 
   /**
    * Constructor for SubCategoryRequest.
@@ -15,13 +15,13 @@ public class SubCategoryRequest {
    * @param name        the name of the subcategory
    * @param description a description of the subcategory
    * @param icon        an icon representing the subcategory
-   * @param parrentId  the ID of the parent category
+   * @param parrentId   the ID of the parent category
    */
   public SubCategoryRequest(String name, String description, String icon, int parrentId) {
     this.name = name;
     this.description = description;
     this.icon = icon;
-    this.parrentId = parrentId;
+    this.parentId = parrentId;
   }
 
   public String getName() {
@@ -48,11 +48,11 @@ public class SubCategoryRequest {
     this.icon = icon;
   }
 
-  public int getParrentId() {
-    return parrentId;
+  public int getParentId() {
+    return parentId;
   }
 
-  public void setParrentId(int categoryId) {
-    this.parrentId = categoryId;
+  public void setParentId(int categoryId) {
+    this.parentId = categoryId;
   }
 }
