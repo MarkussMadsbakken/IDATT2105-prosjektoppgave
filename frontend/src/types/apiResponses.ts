@@ -55,6 +55,14 @@ export type GetCategoriesResponse = Category[];
 export type CreateCategoryResponse = Category;
 
 /**
+ * Default response returned from the API
+ */
+export type DefaultResponse = {
+    message: string;
+    shortMessage: string;
+};
+
+/**
  * Error response returned from the API
  */
 export class ApiError extends Error {

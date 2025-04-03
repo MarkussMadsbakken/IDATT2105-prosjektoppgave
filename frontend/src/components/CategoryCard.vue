@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Category } from '@/types';
 import { CategoryIcons } from '@/util/categoryIcons';
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -13,7 +12,6 @@ const props = withDefaults(defineProps<{
 });
 
 defineEmits<(e: "click") => void>();
-
 const Icon = CategoryIcons[props.icon];
 
 </script>

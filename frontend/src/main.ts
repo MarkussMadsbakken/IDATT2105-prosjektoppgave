@@ -99,6 +99,10 @@ const i18n = createI18n({
             imageSelected: "Bilde valgt!",
             name: "Navn",
             thisFieldIsRequired: "Dette feltet er påkrevd",
+            subCategories: "Underkategorier",
+            subCategory: "Underkategori",
+            noSubCategoriesFound: "Ingen underkategorier funnet",
+            createNewSubCategory: "Opprett ny underkategori",
         },
         en: {
             recommended: "Recommended for you",
@@ -144,6 +148,10 @@ const i18n = createI18n({
             imageSelected: "Image selected!",
             name: "Name",
             thisFieldIsRequired: "This field is required",
+            subCategories: "Sub categories",
+            subCategory: "Sub category",
+            noSubCategoriesFound: "No sub categories found",
+            createNewSubCategory: "Create new sub category",
         }
     },
 });
