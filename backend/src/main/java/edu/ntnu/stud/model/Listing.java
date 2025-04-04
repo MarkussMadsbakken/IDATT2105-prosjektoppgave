@@ -1,6 +1,7 @@
 package edu.ntnu.stud.model;
 
 import java.sql.Blob;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,8 +15,8 @@ public class Listing {
   private String name;
   private double price;
   private String description;
-  private String createdAt;
-  private String updatedAt;
+  private Timestamp createdAt;
+  private Timestamp updatedAt;
   private List<Blob> pictures;
   private String category;
   private List<String> subcategories;
@@ -133,38 +134,38 @@ public class Listing {
   }
 
   /**
-   * Returns the creation date of the listing.
+   * Returns the creation timestamp of the listing.
    *
-   * @return the creation date of the listing
+   * @return the creation timestamp of the listing
    */
-  public String getCreatedAt() {
+  public Timestamp getCreatedAt() {
     return createdAt;
   }
 
   /**
-   * Sets the creation date of the listing.
+   * Sets the creation timestamp of the listing.
    *
-   * @param createdAt the creation date to set
+   * @param createdAt the creation timestamp to set
    */
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
   /**
-   * Returns the last updated date of the listing.
+   * Returns the last updated timestamp of the listing.
    *
-   * @return the last updated date of the listing
+   * @return the last updated timestamp of the listing
    */
-  public String getUpdatedAt() {
+  public Timestamp getUpdatedAt() {
     return updatedAt;
   }
 
   /**
-   * Sets the last updated date of the listing.
+   * Sets the last updated timestamp of the listing.
    *
-   * @param updatedAt the last updated date to set
+   * @param updatedAt the last updated timestamp to set
    */
-  public void setUpdatedAt(String updatedAt) {
+  public void setUpdatedAt(Timestamp updatedAt) {
     this.updatedAt = updatedAt;
   }
 

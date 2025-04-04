@@ -1,6 +1,7 @@
 package edu.ntnu.stud.model;
 
 import java.sql.Blob;
+import java.sql.Timestamp;
 
 /**
  * Represents a user in the system.
@@ -19,7 +20,7 @@ public class User {
 
   private String lastName;
 
-  private String createdAt;
+  private Timestamp createdAt;
 
   private boolean isAdmin;
 
@@ -42,6 +43,8 @@ public class User {
   public User(String username, String password, String firstName, String lastName) {
     this.username = username;
     this.password = password;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
 
   /**
@@ -135,20 +138,20 @@ public class User {
   }
 
   /**
-   * Returns the creation date of the user.
+   * Returns the creation timestamp of the user.
    *
-   * @return the creation date of the user
+   * @return the creation timestamp of the user
    */
-  public String getCreatedAt() {
+  public Timestamp getCreatedAt() {
     return createdAt;
   }
 
   /**
-   * Sets the creation date of the user.
+   * Sets the creation timestamp of the user.
    *
-   * @param createdAt the creation date to set
+   * @param createdAt the creation timestamp to set
    */
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 

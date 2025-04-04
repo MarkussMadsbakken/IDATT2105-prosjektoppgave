@@ -173,6 +173,8 @@ public class ListingService {
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
     response.setOwnerId(listing.getOwnerId());
+    response.setCreatedAt(listing.getCreatedAt());
+    response.setUpdatedAt(listing.getUpdatedAt());
     return response;
   }
 
