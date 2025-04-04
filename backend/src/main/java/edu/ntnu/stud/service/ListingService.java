@@ -1,31 +1,29 @@
 package edu.ntnu.stud.service;
 
+import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
+import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
 
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingImage;
 import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
+import edu.ntnu.stud.model.ListingUpdate;
 import edu.ntnu.stud.repo.ListingRepo;
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.sql.rowset.serial.SerialBlob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
 /**
-* Service class for managing Listing entities.
-* This class provides methods to add, retrieve, update, and delete listings.
-*/
+ * Service class for managing Listing entities.
+ * This class provides methods to add, retrieve, update, and delete listings.
+ */
 @Service
 public class ListingService {
 
@@ -61,7 +59,7 @@ public class ListingService {
    * Retrieves listings from the database within a specified range.
    *
    * @param start the starting index of the range (inclusive)
-   * @param end the ending index of the range (inclusive)
+   * @param end   the ending index of the range (inclusive)
    * @return a list of listings within the specified range
    */
   public List<Listing> getListingsInRange(int start, int end) {
@@ -86,20 +84,66 @@ public class ListingService {
    * Updates an existing listing in the database.
    *
    * @param listing the listing to update
+   * @param token   the JWT token of the user making the request
    * @return the number of rows affected
    */
-  public int updateListing(Listing listing) {
+  public int updateListing(ListingUpdate listing, String token) {
+    long ownerId = jwtService.extractUserId(token.substring(7));
+    Listing existingListing = listingRepo.getListingByUuid(listing.getUuid());
+    if (existingListing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + listing.getUuid());
+    }
+    if (existingListing.getOwnerId() != ownerId) {
+      throw new IllegalArgumentException(
+          "User does not own the listing with UUID: " + listing.getUuid());
+    }
     return listingRepo.updateListing(listing);
+  }
+
+  /**
+   * Deletes a listing.
+   *
+   * @param uuid  the uuid of the listing to delete
+   * @param token the JWT token of the user making the request
+   */
+  public void deleteListing(String uuid, String token) {
+    long ownerId = jwtService.extractUserId(token.substring(7));
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
+    Listing existingListing = listingRepo.getListingByUuid(uuid);
+    if (existingListing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
+    }
+    if (existingListing.getOwnerId() != ownerId && !isAdmin) {
+      throw new IllegalArgumentException(
+          "User does not own the listing with UUID: " + uuid);
+    }
+    ListingUpdate listingUpdate = convertToListingUpdate(existingListing);
+    listingUpdate.setDeleted(true);
+    listingRepo.updateListing(listingUpdate);
   }
 
   /**
    * Retrieves a paginated list of listings from the database.
    *
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings
    */
   public Page<ListingResponse> getListingsPage(Pageable pageable) {
     Page<Listing> listingsPage = listingRepo.getListingsPage(pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
+   * Retrieves a paginated list of listings owned by a specific user.
+   *
+   * @param userId   the ID of the user whose listings to retrieve
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
+   * @return a page of listings owned by the specified user
+   */
+  public Page<ListingResponse> getListingsByUserIdPage(long userId, Pageable pageable) {
+    Page<Listing> listingsPage = listingRepo.getListingsByUserIdPage(userId, pageable);
     return listingsPage.map(this::convertToResponse);
   }
 
@@ -115,7 +159,7 @@ public class ListingService {
     listing.setPrice(listingRequest.getPrice());
     listing.setDescription(listingRequest.getDescription());
     listing.setCategory(listingRequest.getCategory());
-    listing.setSubcategories(listingRequest.getSubcategories());
+    listing.setSubcategory(listingRequest.getSubcategory());
     listing.setPostalCode(listingRequest.getPostalCode());
     listing.setActive(listingRequest.isActive());
     listing.setDeleted(listingRequest.isDeleted());
@@ -130,51 +174,50 @@ public class ListingService {
    * @param listing the Listing entity to convert
    * @return the converted ListingResponse object
    */
-  private ListingResponse convertToResponse(Listing listing) {
+  public ListingResponse convertToResponse(Listing listing) {
     ListingResponse response = new ListingResponse();
     response.setUuid(listing.getUuid());
     response.setName(listing.getName());
     response.setPrice(listing.getPrice());
     response.setDescription(listing.getDescription());
     response.setCategory(listing.getCategory());
-    response.setSubcategories(listing.getSubcategories());
+    response.setSubcategory(listing.getSubcategory());
     response.setPostalCode(listing.getPostalCode());
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
     response.setOwnerId(listing.getOwnerId());
+    response.setCreatedAt(listing.getCreatedAt());
+    response.setUpdatedAt(listing.getUpdatedAt());
     return response;
   }
 
   /**
-   * Converts a Blob object to a Base64 encoded string.
+   * Converts a listing to a listing update object.
    *
-   * @param blob the Blob object to convert
-   * @return the Base64 encoded string representation of the Blob
-   * @throws SQLException if a database access error occurs
+   * @param listing the listing to convert
+   * @return the converted listing update object
    */
-  private String convertBlobToBase64(Blob blob) throws SQLException {
-    byte[] bytes = blob.getBytes(1, (int) blob.length());
-    return Base64.getEncoder().encodeToString(bytes);
-  }
+  private ListingUpdate convertToListingUpdate(Listing listing) {
+    ListingUpdate listingUpdate = new ListingUpdate();
+    listingUpdate.setUuid(listing.getUuid());
+    listingUpdate.setName(listing.getName());
+    listingUpdate.setPrice(listing.getPrice());
+    listingUpdate.setDescription(listing.getDescription());
+    listingUpdate.setCategory(listing.getCategory());
+    listingUpdate.setSubcategory(listing.getSubcategory());
+    listingUpdate.setPostalCode(listing.getPostalCode());
+    listingUpdate.setActive(listing.isActive());
+    listingUpdate.setDeleted(listing.isDeleted());
+    listingUpdate.setSold(listing.isSold());
 
-  /**
-   * Converts a MultipartFile object to a Blob.
-   *
-   * @param file the MultipartFile object to convert
-   * @return the converted Blob object
-   * @throws IOException if an I/O error occurs
-   * @throws SQLException if a database access error occurs
-   */
-  private Blob convertMultipartFileToBlob(MultipartFile file) throws IOException, SQLException {
-    byte[] fileBytes = file.getBytes();
-    return new SerialBlob(fileBytes);
+    return listingUpdate;
   }
 
   /**
    * Saves the images associated with a listing.
    *
-   * @param images the images for the listing
+   * @param images      the images for the listing
    * @param listingUuid the UUID of the listing to associate the images with
    */
   public void saveListingImages(List<MultipartFile> images, String listingUuid) {

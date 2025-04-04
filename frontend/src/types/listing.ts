@@ -1,10 +1,13 @@
-import type { User } from "./user";
-
 export type Listing = {
     uuid: string,
-    title: string;
+    name: string;
     description?: string;
-    seller: User;
+    category: number;
+    subCategory?: number;
+    active: boolean;
+    postalCode: number;
+    deleted: boolean;
+    sold: false;
+    ownerId: number,
     price: number;
-    image?: string | string[];
 }

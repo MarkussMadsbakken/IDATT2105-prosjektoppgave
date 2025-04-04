@@ -26,7 +26,7 @@ public class BookmarkService {
   public void addBookmark(BookmarkUserRequest bookmark, String token) {
     // Add notification to listing owner
     bookmarkRepo.addBookmark(
-      new Bookmark(jwtService.extractUserId(token.substring(7)), bookmark.getListingId()));
+        new Bookmark(jwtService.extractUserId(token.substring(7)), bookmark.getListingId()));
   }
 
   /**
@@ -37,7 +37,7 @@ public class BookmarkService {
   public void removeBookmark(BookmarkUserRequest bookmark, String token) {
     // Extract userId from the JWT token
     bookmarkRepo.removeBookmark(
-      new Bookmark(jwtService.extractUserId(token.substring(7)), bookmark.getListingId()));
+        new Bookmark(jwtService.extractUserId(token.substring(7)), bookmark.getListingId()));
   }
 
   /**
@@ -46,10 +46,10 @@ public class BookmarkService {
    * @param bookmark the bookmark to be checked
    * @return true if the bookmark exists, false otherwise
    */
-  public boolean bookmarkExists(BookmarkUserRequest bookmark, String token) {
+  public boolean bookmarkExists(String listingId, String token) {
     // Extract userId from the JWT token
     return bookmarkRepo.bookmarkExists(
-      new Bookmark(jwtService.extractUserId(token.substring(7)), bookmark.getListingId()));
+        new Bookmark(jwtService.extractUserId(token.substring(7)), listingId));
   }
 
   /**

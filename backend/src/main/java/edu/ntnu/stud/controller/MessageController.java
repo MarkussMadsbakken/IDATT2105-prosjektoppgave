@@ -2,6 +2,7 @@ package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.model.Message;
+import edu.ntnu.stud.model.MessageRequest;
 import edu.ntnu.stud.service.MessageService;
 import java.util.List;
 import org.slf4j.Logger;
@@ -36,11 +37,11 @@ public class MessageController {
    * @param message the message to be added
    */
   @PostMapping
-  public ResponseEntity<DefaultResponse> addMessage(
-      @RequestBody Message message, @RequestHeader("Authorization") String token) {
+  public ResponseEntity<String> addMessage(
+      @RequestBody MessageRequest message, @RequestHeader("Authorization") String token) {
 
     try {
-      messageService.validateMessage(message);
+      messageService.validateMessageRequest(message);
       messageService.verifySender(message, token);
     } catch (Exception e) {
       logger.error("Validation or verification failed: {}", e.getMessage());
@@ -53,20 +54,21 @@ public class MessageController {
       return ResponseEntity.ok().body(new DefaultResponse("Message added successfully", "messageAdded"));
     } catch (Exception e) {
       logger.error("Error adding message: {}", e.getMessage());
-      return ResponseEntity.status(500)
-          .body(new DefaultResponse("Error adding message: " + e.getMessage(), "errorAddingMessage"));
+      return ResponseEntity.status(500).body("Error adding message: " + e.getMessage());
     }
   }
 
   /**
-   * Retrieves all messages associated with a specific user.
+   * Retrieves a list of the latest messages in each converation associated with a
+   * specific user.
    *
    * @param token the JWT token containing user claims
    * @return a ResponseEntity containing a list of messages associated with the
    *         user ID
    */
-  @GetMapping("/all")
-  public ResponseEntity<List<Message>> getMessagesByUserId(@RequestHeader("Authorization") String token) {
+  @GetMapping
+  public ResponseEntity<List<Message>> getMessagesByUserId(
+      @RequestHeader("Authorization") String token) {
     try {
       List<Message> messages = messageService.getMessagesByUserId(token);
       logger.info("Retrieved messages for user: {}", messages);
@@ -99,7 +101,8 @@ public class MessageController {
   }
 
   /**
-   * Recives a paginated list of messages associated with a specific user.
+   * Retrieves a paginated lis of the latest messages in each converation
+   * associated with a specific user.
    *
    * @param token  the JWT token containing user claims
    * @param page   the page number to retrieve
@@ -144,7 +147,8 @@ public class MessageController {
       logger.info("Retrieved paginated messages for listing ID {}: {}", listingId, messages);
       return ResponseEntity.ok(messages);
     } catch (Exception e) {
-      logger.error("Error retrieving paginated messages for listing ID {}: {}", listingId, e.getMessage());
+      logger.error(
+          "Error retrieving paginated messages for listing ID {}: {}", listingId, e.getMessage());
       return ResponseEntity.status(500).body(null);
     }
   }

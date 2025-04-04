@@ -1,5 +1,8 @@
 package edu.ntnu.stud.model;
 
+import java.sql.Blob;
+import java.sql.Timestamp;
+
 /**
  * Represents a user in the system.
  * This class contains user details such as username, password, first name, last
@@ -17,13 +20,13 @@ public class User {
 
   private String lastName;
 
-  private String createdAt;
+  private Timestamp createdAt;
 
   private boolean isAdmin;
 
-  // TODO: add functionality for profilepicture, either bytearray, url
-  // or hybrid: link to another profilePicture class with a byteArray bound to
-  // each userId OneToOne
+  private Blob imageBlob;
+
+  private String imageFileType;
 
   /**
    * Default constructor.
@@ -40,6 +43,8 @@ public class User {
   public User(String username, String password, String firstName, String lastName) {
     this.username = username;
     this.password = password;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
 
   /**
@@ -133,20 +138,20 @@ public class User {
   }
 
   /**
-   * Returns the creation date of the user.
+   * Returns the creation timestamp of the user.
    *
-   * @return the creation date of the user
+   * @return the creation timestamp of the user
    */
-  public String getCreatedAt() {
+  public Timestamp getCreatedAt() {
     return createdAt;
   }
 
   /**
-   * Sets the creation date of the user.
+   * Sets the creation timestamp of the user.
    *
-   * @param createdAt the creation date to set
+   * @param createdAt the creation timestamp to set
    */
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
@@ -166,5 +171,41 @@ public class User {
    */
   public void setAdmin(boolean admin) {
     isAdmin = admin;
+  }
+
+  /**
+   * Returns the image blob of the user.
+   *
+   * @return the image blob of the user
+   */
+  public Blob getImageBlob() {
+    return imageBlob;
+  }
+
+  /**
+   * Sets the image blob of the user.
+   *
+   * @param imageBlob the image blob to set
+   */
+  public void setImageBlob(Blob imageBlob) {
+    this.imageBlob = imageBlob;
+  }
+
+  /**
+   * Returns the image file type of the user.
+   *
+   * @return the image file type of the user
+   */
+  public String getImageFileType() {
+    return imageFileType;
+  }
+
+  /**
+   * Sets the image file type of the user.
+   *
+   * @param imageFileType the image file type to set
+   */
+  public void setImageFileType(String imageFileType) {
+    this.imageFileType = imageFileType;
   }
 }

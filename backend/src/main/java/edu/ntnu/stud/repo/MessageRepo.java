@@ -1,6 +1,8 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Message;
+import edu.ntnu.stud.model.MessageRequest;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,17 +54,31 @@ public class MessageRepo {
    *
    * @param message the Message object to be added
    */
-  public void addMessage(Message message) {
+  public void addMessage(MessageRequest message) {
     String query = "INSERT INTO messages "
-        + "(listing_id, seller_id, buyer_id, message, created_at, sent_by_buyer)"
+        + "(listing_id, seller_id, byer_id, message, sent_by_buyer)"
         + " VALUES (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(query,
         message.getListingId(),
-        message.getbuyerId(),
         message.getSellerId(),
+        message.getByerId(),
         message.getMessage(),
-        message.getCreatedAt(),
         message.isSentByBuyer());
+  }
+
+  /**
+   * Retrieves a list of the latest messages in each conversation associated with
+   * a
+   * specific user from the database.
+   *
+   * @param userId the ID of the user
+   */
+  public List<Message> getMessagesByUserId(long userId) {
+    String query = "SELECT * FROM ("
+        + "SELECT *, ROW_NUMBER() OVER "
+        + "(PARTITION BY seller_id, byer_id, listing_id ORDER BY created_at DESC) AS rn "
+        + "FROM messages WHERE seller_id = ? OR byer_id = ?) subquery WHERE rn = 1";
+    return jdbcTemplate.query(query, messageRowMapper, userId, userId);
   }
 
   /**
@@ -78,17 +94,8 @@ public class MessageRepo {
   }
 
   /**
-   * Retrieves all messages for a specific user from the database.
-   *
-   * @param userId the ID of the user
-   */
-  public List<Message> getMessagesByUserId(long userId) {
-    String query = "SELECT * FROM messages WHERE seller_id = ? OR buyer_id = ?";
-    return jdbcTemplate.query(query, messageRowMapper, userId, userId);
-  }
-
-  /**
-   * Retrieves a paginated list of messages for a specific user from the database.
+   * Retrieves a paginated list of the latest messages in each conversation
+   * associated with a specific user.
    *
    * @param userId the ID of the user
    * @param page   the page number to retrieve
@@ -96,8 +103,12 @@ public class MessageRepo {
    * @return a list of Message objects associated with the user
    */
   public List<Message> getMessagesByUserIdPaginated(long userId, int page, int offset) {
-    String query = "SELECT * FROM messages WHERE seller_id = ? OR buyer_id = ? LIMIT ? OFFSET ?";
-    return jdbcTemplate.query(query, messageRowMapper, userId, userId, page * offset, offset);
+    String query = "SELECT * FROM ("
+        + "SELECT *, ROW_NUMBER() OVER "
+        + "(PARTITION BY seller_id, byer_id, listing_id ORDER BY created_at DESC) AS rn "
+        + "FROM messages WHERE seller_id = ? OR byer_id = ?) subquery "
+        + "WHERE rn = 1 LIMIT ? OFFSET ?";
+    return jdbcTemplate.query(query, messageRowMapper, userId, userId, offset, page * offset);
   }
 
   /**
@@ -113,7 +124,7 @@ public class MessageRepo {
   public List<Message> getMessagesByListingIdAndUserIdPaginated(
       String listingId, long userId, int page, int offset) {
     String query = "SELECT * FROM messages "
-        + "WHERE listing_id = ? AND (seller_id = ? OR buyer_id = ?) LIMIT ? OFFSET ?";
+        + "WHERE listing_id = ? AND (seller_id = ? OR byer_id = ?) LIMIT ? OFFSET ?";
     return jdbcTemplate.query(
         query, messageRowMapper, listingId, userId, userId, page * offset, offset);
   }

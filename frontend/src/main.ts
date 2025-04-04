@@ -57,6 +57,8 @@ const i18n = createI18n({
     messages: {
         no: {
             recommended: "Anbefalt for deg",
+            listing: "annonse",
+            thisListing: "annonsen",
             interior: "Interiør",
             electronics: "Elektronikk",
             appliances: "Hvitevarer",
@@ -103,6 +105,18 @@ const i18n = createI18n({
             subCategory: "Underkategori",
             noSubCategoriesFound: "Ingen underkategorier funnet",
             createNewSubCategory: "Opprett ny underkategori",
+            noMoreListings: "Ingen flere annonser funnet",
+            listingsByUser: "{name} sine annonser",
+            ownListings: "Mine annonser",
+            noSubCategories: "Ingen underkategorier",
+            selectCategory: "Velg kategori",
+            selectSubCategory: "Velg underkategori",
+            listingHasNoDescriptionLong: "Annonsen har ingen beskrivelse. Legg til en beskrivelse via \"Rediger\"-knappen.",
+            areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?",
+            edit: "Rediger",
+            delete: "Slett",
+            listingIsDeleted: "Denne annonsen er slettet",
+            listingIsInactive: "Denne annonsen er inaktiv"
         },
         en: {
             recommended: "Recommended for you",
@@ -152,6 +166,20 @@ const i18n = createI18n({
             subCategory: "Sub category",
             noSubCategoriesFound: "No sub categories found",
             createNewSubCategory: "Create new sub category",
+            noMoreListings: "No more listings found",
+            listingsByUser: "Listings by {name}",
+            ownListings: "My listings",
+            noSubCategories: "No sub categories",
+            selectCategory: "Select category",
+            selectSubCategory: "Select sub category",
+            listingHasNoDescriptionLong: "This listing has no description. Add a description via the \"Edit\" button.",
+            areYouSureYouWantToDelete: "Are you sure you want to delete {content}?",
+            listing: "listing",
+            thisListing: "this listing",
+            edit: "Edit",
+            delete: "Delete",
+            listingIsDeleted: "This listing is deleted",
+            listingIsInactive: "This listing is inacitve"
         }
     },
 });

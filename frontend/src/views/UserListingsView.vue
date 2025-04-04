@@ -1,4 +1,19 @@
+<script setup lang="ts">
+import UserListing from '@/components/UserListing.vue'
+import {useAuth} from "@/stores/auth.ts";
+import {useRoute} from "vue-router";
+import {computed} from "vue";
+
+  const route = useRoute();
+  const userId = computed(() => Number(route.params.userid));
+
+
+</script>
+
 <template>
-    Listings by user
-    222
+  <UserListing :userId="userId"></UserListing>
 </template>
+
+<style scoped>
+
+</style>

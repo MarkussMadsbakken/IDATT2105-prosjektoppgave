@@ -1,4 +1,5 @@
 import type { Category, SubCategory } from "./category";
+import type { Listing } from "./listing";
 
 /**
  * Type for sending a login request to the server
@@ -23,17 +24,26 @@ export type CreateListingRequest = {
     name: string,
     price: number,
     description: string,
-    category: string,
+    category: number,
     postalCode: number,
     images: File[];
 }
+
+export type EditListingRequest = Omit<Listing, "ownerId">
 
 export type GetListingsRequest = {
     page: number;
     offset: number;
 }
+export type EditUserInfo = {
+    username: string;
+    firstName: string;
+    lastName: string;
+    imageURL?: string;
+}
 
 export type CreateCategoryRequest = Omit<Category, 'id'>;
+
 export type EditCategoryRequest = Category;
 
 export type CreateSubCategoryRequest = Omit<SubCategory, 'id'>;

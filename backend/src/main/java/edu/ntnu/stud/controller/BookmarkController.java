@@ -5,10 +5,14 @@ import edu.ntnu.stud.service.BookmarkService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -35,7 +39,7 @@ public class BookmarkController {
    */
   @PostMapping
   public ResponseEntity<Void> addBookmark(
-      BookmarkUserRequest bookmark, @RequestHeader("Authorization") String token) {
+      @RequestBody BookmarkUserRequest bookmark, @RequestHeader("Authorization") String token) {
     bookmarkService.addBookmark(bookmark, token);
     return ResponseEntity.ok().build();
   }
@@ -43,9 +47,9 @@ public class BookmarkController {
   /**
    * Removes a bookmark from the database.
    */
-  @PostMapping("/remove")
+  @DeleteMapping
   public ResponseEntity<Void> removeBookmark(
-      BookmarkUserRequest bookmark, @RequestHeader("Authorization") String token) {
+      @RequestBody BookmarkUserRequest bookmark, @RequestHeader("Authorization") String token) {
     bookmarkService.removeBookmark(bookmark, token);
     return ResponseEntity.ok().build();
   }
@@ -53,10 +57,18 @@ public class BookmarkController {
   /**
    * Checks if a bookmark exists in the database.
    */
-  @PostMapping("/exists")
+  @GetMapping("/{listingId}/exists")
   public ResponseEntity<Boolean> bookmarkExists(
-      BookmarkUserRequest bookmark, @RequestHeader("Authorization") String token) {
-    boolean exists = bookmarkService.bookmarkExists(bookmark, token);
+      @PathVariable String listingId, @RequestHeader("Authorization") String token) {
+    boolean exists = bookmarkService.bookmarkExists(listingId, token);
     return ResponseEntity.ok(exists);
   }
+
+  @GetMapping("/{listingId}/count")
+  public ResponseEntity<Long> getNumberOfBookmarks(
+      @RequestHeader("Authorization") String token, @PathVariable String listingId) {
+    long numberOfBookmarks = bookmarkService.getBookmarksFromListing(listingId).size();
+    return ResponseEntity.ok(numberOfBookmarks);
+  }
+
 }

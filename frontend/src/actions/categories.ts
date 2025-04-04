@@ -1,4 +1,4 @@
-import { API_BASE_URL, type Category, type CreateCategoryRequest, type CreateCategoryResponse, type CreateSubCategoryRequest, type DefaultResponse, type GetCategoriesResponse } from "@/types"
+import { API_BASE_URL, type Category, type CreateCategoryRequest, type CreateCategoryResponse, type CreateSubCategoryRequest, type DefaultResponse, type GetCategoriesResponse, type getSubCategoriesResponse } from "@/types"
 import Fetch from "@/util/fetch"
 import { useMutation, useQuery } from "@tanstack/vue-query";
 
@@ -39,7 +39,7 @@ export const editCategory = async (req: Category): Promise<DefaultResponse> => {
     });
 }
 
-export const getSubCategories = async (id: number): Promise<GetCategoriesResponse> => {
+export const getSubCategories = async (id: number): Promise<getSubCategoriesResponse> => {
     return await Fetch(`${API_BASE_URL}/api/categories/${id}/subcategories`);
 }
 

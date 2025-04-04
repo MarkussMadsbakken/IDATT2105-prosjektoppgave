@@ -12,7 +12,7 @@ const user1: User = {
     isAdmin: false,
     firstName: "User",
     lastName: "One",
-    createdAt: new Date(),
+    createdAt: new Date().getTime(),
     imageUrl: "https://img.freepik.com/free-photo/view-3d-cool-modern-bird_23-2150946449.jpg?t=st=1743520776~exp=1743524376~hmac=9ab3de77ebede1d2d2b2a1386b20b6e8de2a01346565e73528927450aa6bd821&w=2000"
 }
 
@@ -22,7 +22,7 @@ const user2: User = {
     isAdmin: false,
     firstName: "User",
     lastName: "Two",
-    createdAt: new Date(),
+    createdAt: new Date().getTime(),
 }
 
 const chat: Chat = {
@@ -31,10 +31,16 @@ const chat: Chat = {
     buyer: user2,
     listing: {
         uuid: "1",
-        title: "kult kjøleskap",
+        name: "kult kjøleskap",
         description: "Veldig kult kjøleskap jeg fant! Bare å komme med et tilbud, jeg hadde satt stor pris på det. I tillegg skal jeg bare si noe langt her slik at teksten overflower!!",
         price: 6000,
-        seller: user1
+        ownerId: user1.id,
+        category: 1,
+        subCategory: undefined,
+        active: false,
+        postalCode: 0,
+        deleted: false,
+        sold: false
     },
     messages: [
         {
@@ -102,7 +108,7 @@ onMounted(() => {
 <template>
     <div class="outer-wrapper">
         <div class="seller-info-wrapper">
-            <SellerInfo :userEntity="chat.seller" />
+            <SellerInfo :userId="chat.seller.id" />
         </div>
         <div class="messages-wrapper">
             <div v-for="(message) in chat.messages" :key="message.id">

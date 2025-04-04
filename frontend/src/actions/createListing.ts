@@ -1,6 +1,5 @@
-import { API_BASE_URL, ApiError, type CreateListingRequest, type CreateListingResponse, type LoginRequest, type LoginResponse } from "@/types";
+import { API_BASE_URL, ApiError, type CreateListingRequest, type CreateListingResponse, type LoginRequest, type LoginResponse, type DefaultResponse, type EditListingRequest } from "@/types";
 import Fetch from "@/util/fetch";
-import { useMutation } from "@tanstack/vue-query";
 import { objectOmit } from "@vueuse/core";
 
 /**
@@ -9,10 +8,10 @@ import { objectOmit } from "@vueuse/core";
 export const createListing = async (req: CreateListingRequest): Promise<CreateListingResponse> => {
     const body = new FormData();
     if (req.images.length === 0) {
-        body.append("pictures", " 2");
+        body.append("images", "");
     }
     req.images.forEach((image) => {
-        body.append("pictures", image);
+        body.append("images", image);
     });
 
     const listingRequestBlob = new Blob(
@@ -21,23 +20,24 @@ export const createListing = async (req: CreateListingRequest): Promise<CreateLi
     );
     body.append("listingRequest", listingRequestBlob);
 
-    console.log(body.get("listingRequest"));
-    console.log(body.get("pictures"));
-
-    return await Fetch(`${API_BASE_URL}/api/listing/`, {
+    return await Fetch(`${API_BASE_URL}/api/listing`, {
         method: "POST",
         body: body
     });
 }
 
-/**
- * Hook for logging in via a mutation
- */
-const useCreateListing = (params?: { onSuccess: () => void }) => {
-    return useMutation({
-        mutationFn: createListing,
-        onSuccess: params?.onSuccess
+export const editListing = async (req: EditListingRequest): Promise<DefaultResponse> => {
+    return await Fetch(`${API_BASE_URL}/api/listing`, {
+        method: "PUT",
+        body: JSON.stringify(req),
+        headers: {
+            "Content-Type": "application/json"
+        }
     });
 }
 
-export default useCreateListing;
+export const deleteListing = async (listingId: string): Promise<void> => {
+    return await Fetch(`${API_BASE_URL}/api/listing/${listingId}`, {
+        method: "DELETE"
+    });
+}
