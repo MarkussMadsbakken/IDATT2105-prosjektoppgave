@@ -133,4 +133,21 @@ public class ListingDao {
     int total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM listings", Integer.class);
     return new PageImpl<>(listings, pageable, total);
   }
+
+  /**
+   * Retrieves a paginated list of listings owned by a specific user from the database.
+   *
+   * @param userId the ID of the user whose listings to retrieve
+   * @param pageable the pagination information, including page number, page size, and sorting
+   * @return a page of listings owned by the specified user
+   */
+  public Page<Listing> findPageByOwnerId(long userId, Pageable pageable) {
+    int limit = pageable.getPageSize();
+    long offset = pageable.getOffset();
+    String sql = "SELECT * FROM listings WHERE owner_id = ? LIMIT ? OFFSET ?";
+    List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, userId, limit, offset);
+    int total = jdbcTemplate.queryForObject(
+        "SELECT COUNT(*) FROM listings WHERE owner_id = ?", Integer.class, userId);
+    return new PageImpl<>(listings, pageable, total);
+  }
 }
