@@ -57,6 +57,8 @@ const i18n = createI18n({
     messages: {
         no: {
             recommended: "Anbefalt for deg",
+            listing: "annonse",
+            thisListing: "annonsen",
             interior: "Interiør",
             electronics: "Elektronikk",
             appliances: "Hvitevarer",
@@ -110,6 +112,9 @@ const i18n = createI18n({
             selectCategory: "Velg kategori",
             selectSubCategory: "Velg underkategori",
             listingHasNoDescriptionLong: "Annonsen har ingen beskrivelse. Legg til en beskrivelse via \"Rediger\"-knappen.",
+            areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?",
+            edit: "Rediger",
+            delete: "Slett",
         },
         en: {
             recommended: "Recommended for you",
@@ -166,6 +171,11 @@ const i18n = createI18n({
             selectCategory: "Select category",
             selectSubCategory: "Select sub category",
             listingHasNoDescriptionLong: "This listing has no description. Add a description via the \"Edit\" button.",
+            areYouSureYouWantToDelete: "Are you sure you want to delete {content}?",
+            listing: "listing",
+            thisListing: "this listing",
+            edit: "Edit",
+            delete: "Delete",
         }
     },
 });

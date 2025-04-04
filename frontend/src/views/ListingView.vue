@@ -16,12 +16,14 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { deleteListing } from '@/actions/createListing';
 import Alert from '@/components/Alert.vue';
 import { addBookmark, removeBookmark, useListingBookmarks } from '@/actions/bookmarks';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const route = useRoute();
 const auth = useAuth();
 const dialog = useDialog();
 const queryClient = useQueryClient();
+const i18n = useI18n();
 
 const listingId = route.params.id as string
 
@@ -34,7 +36,7 @@ const {
 
 const { data: bookmarks } = useListingBookmarks(listingId);
 
-const bookmarked = ref(bookmarks.value?.hasBookmarked);
+const bookmarked = ref(bookmarks.value?.hasBookmarked ?? false);
 
 const parsedDescription = computed(() => marked(listing.value?.description ?? ''));
 const isOwnListing = computed(() => {
@@ -60,7 +62,7 @@ const bookmarkCountLocal = ref(bookmarks.value?.bookMarkCount || 0);
 watch(bookmarks, (newval) => {
   bookmarkCountLocal.value = newval ? newval.bookMarkCount : 0;
   bookmarked.value = newval ? newval.hasBookmarked : false;
-}, { deep: true });
+});
 
 watch(bookmarked, () => {
   console.log(bookmarked.value);
@@ -93,13 +95,13 @@ const bookmarkMutation = useMutation({
 const handleDelete = () => {
   const d = dialog.open(ConfirmDialog, {
     props: {
-      header: 'Delete listing',
+      header: i18n.t("delete", i18n.t("listing")),
       modal: true,
       draggable: false,
       dismissableMask: true,
     },
     data: {
-      message: 'Are you sure you want to delete this listing?',
+      message: i18n.t("areYouSureYouWantToDelete", { content: i18n.t("thisListing") }),
       variant: 'Caution',
       confirmLoading: deleteMutation.isPending,
     },
@@ -135,11 +137,11 @@ const handleDelete = () => {
         <div class="listing-price">{{ listing?.price }},-</div>
         <div class="listing-actions">
           <Button variant="outline" v-if="isOwnListing">
-            Rediger
+            {{ $t("edit") }}
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
           <Button variant="destructive" v-if="isOwnListing || auth.isAdmin" @click="handleDelete">
-            Slett
+            {{ $t("delete") }}
             <Trash2 :size="18" style="margin-left: 0.5rem;" />
           </Button>
           <div @click="() => bookmarkMutation.mutate(bookmarked)" style="cursor: pointer" v-if="auth.isLoggedIn()"
@@ -163,9 +165,9 @@ const handleDelete = () => {
       <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" />
       <div v-if="auth.isLoggedIn()" class="button-box">
         <Button variant="primary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("buy")
-          }}</Button>
+        }}</Button>
         <Button variant="secondary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("reserve")
-          }}</Button>
+        }}</Button>
       </div>
     </div>
   </div>
