@@ -2,9 +2,10 @@
 import UserListing from '@/components/UserListing.vue'
 import {useAuth} from "@/stores/auth.ts";
 import {useRoute} from "vue-router";
+import {computed} from "vue";
 
   const route = useRoute();
-  const userId = Number(route.params.userid as string);
+  const userId = computed(() => Number(route.params.userid));
 
 
 </script>
