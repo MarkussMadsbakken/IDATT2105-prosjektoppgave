@@ -25,18 +25,24 @@ public class ChatService {
   @Autowired
   private MessageService messageService;
 
+  @Autowired
+  private ListingService listingService;
+
   /**
    * Creates a new chat with a buyer, seller, and listing.
    * If the chat already exists, it returns the existing chat ID.
    * If the chat does not exist, it creates a new chat and returns the new chat
    * ID.
    *
-   * @param buyerId   The ID of the buyer
-   * @param sellerId  The ID of the seller
-   * @param listingId The ID of the listing
+   * @param request the request object containing buyerId, sellerId, and
+   *                listingId
    * @return the ID of the chat created or the existing chat ID
    */
-  public Long createChat(CreateChatRequest request) {
+  public Long createChat(CreateChatRequest request, String token) {
+    // Get seller and buyer
+    // Potentially a bad way to check for buyer but it works
+    request.setBuyerId(jwtService.extractUserId(token.substring(7)));
+    request.setSellerId(listingService.getListingByUuid(request.getListingId()).getOwnerId());
 
     // If the chat already exists, return false
     Optional<Long> chatId = chatRepo.chatAlreadyExists(
@@ -98,10 +104,23 @@ public class ChatService {
    */
   public List<Chat> getAllChatsByToken(String token) {
     // Extract the user ID from the token
-    long userId = jwtService.extractUserId(token);
+    long userId = jwtService.extractUserId(token.substring(7));
 
     // Get all chats for the user
     return chatRepo.getAllUserChats(userId);
+  }
+
+  public Chat getChatById(long chatId, String token) {
+    // Extract the user ID from the token
+    long userId = jwtService.extractUserId(token.substring(7));
+
+    // Check if the user is authorized to view this chat
+    if (!chatRepo.userIsParticipant(userId, chatId)) {
+      return null;
+    }
+
+    // The user is authorized to view the chat, so we can return it
+    return chatRepo.getChatById(chatId);
   }
 
   /**
@@ -113,7 +132,7 @@ public class ChatService {
    */
   public List<Message> getAllMessagesByChatId(long chatId, String token) {
     // Extract the user ID from the token
-    long userId = jwtService.extractUserId(token);
+    long userId = jwtService.extractUserId(token.substring(7));
 
     // Check if the user is authorized to view this chat
     if (!chatRepo.userIsParticipant(userId, chatId)) {

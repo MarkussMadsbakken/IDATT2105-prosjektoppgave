@@ -52,7 +52,7 @@ public class MessageRepo {
   }
 
   public boolean addMessage(MessageRequest message) {
-    String query = "INSERT INTO messages (sender_id, chat_id, message) VALUES (?, ?, ?)";
+    String query = "INSERT INTO message (sender_id, chat_id, message) VALUES (?, ?, ?)";
     int rowsAffected = jdbcTemplate.update(query, message.getSenderId(), message.getChatId(),
         message.getMessage());
     return rowsAffected > 0;
@@ -65,7 +65,7 @@ public class MessageRepo {
    * @return a list of messages associated with the chat ID
    */
   public List<Message> getMessagesByChatId(long chatId) {
-    String query = "SELECT * FROM messages WHERE chat_id = ?";
+    String query = "SELECT * FROM message WHERE chat_id = ?";
     return jdbcTemplate.query(query, messageRowMapper, chatId);
   }
 }

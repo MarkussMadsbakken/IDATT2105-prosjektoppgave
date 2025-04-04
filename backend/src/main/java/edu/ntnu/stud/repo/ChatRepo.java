@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -26,7 +27,7 @@ public class ChatRepo {
 
   private final RowMapper<Chat> chatRowMapper = (rs, rowNum) -> {
     Chat chat = new Chat();
-    chat.setId(rs.getLong("chat_id"));
+    chat.setId(rs.getLong("id"));
     chat.setBuyerId(rs.getLong("buyer_id"));
     chat.setSellerId(rs.getLong("seller_id"));
     chat.setListingId(rs.getString("listing_id"));
@@ -54,10 +55,10 @@ public class ChatRepo {
    * @return the ID of the chat created, or -1 if the chat could not be created
    */
   public long createChat(long buyerId, long sellerId, String listingId) {
-    String query = "INSERT INTO chats (buyer_id, seller_id, listing_id) VALUES (?, ?, ?)";
+    String query = "INSERT INTO chat (buyer_id, seller_id, listing_id) VALUES (?, ?, ?)";
     int rowsAffected = jdbcTemplate.update(query, buyerId, sellerId, listingId);
     if (rowsAffected > 0) {
-      String selectQuery = "SELECT chat_id FROM chats"
+      String selectQuery = "SELECT id FROM chat "
           + "WHERE buyer_id = ? AND seller_id = ? AND listing_id = ?";
       return jdbcTemplate.queryForObject(selectQuery, Long.class, buyerId, sellerId, listingId);
     }
@@ -71,7 +72,7 @@ public class ChatRepo {
    * @return true if the chat exists, false otherwise
    */
   public boolean chatExists(long chatId) {
-    String query = "SELECT * FROM chats WHERE chat_id = ?";
+    String query = "SELECT * FROM chat WHERE id = ?";
     List<Chat> chats = jdbcTemplate.query(query, chatRowMapper, chatId);
     return !chats.isEmpty();
   }
@@ -87,14 +88,14 @@ public class ChatRepo {
    *         otherwise
    */
   public Optional<Long> chatAlreadyExists(long buyerId, long sellerId, String listingId) {
-    String query = "SELECT chat_id FROM chats"
+    String query = "SELECT id FROM chat "
         + "WHERE buyer_id = ? AND seller_id = ? AND listing_id = ?";
 
-    List<Chat> chats = jdbcTemplate.query(query, chatRowMapper, buyerId, sellerId, listingId);
-    if (chats.isEmpty()) {
+    try {
+      Long chatId = jdbcTemplate.queryForObject(query, Long.class, buyerId, sellerId, listingId);
+      return Optional.ofNullable(chatId);
+    } catch (EmptyResultDataAccessException e) {
       return Optional.empty();
-    } else {
-      return Optional.of(chats.get(0).getChatId());
     }
   }
 
@@ -105,7 +106,7 @@ public class ChatRepo {
    * @return true if the chat was deleted successfully, false otherwise
    */
   public boolean deleteChat(String chatId) {
-    String query = "DELETE FROM chats WHERE chat_id = ?";
+    String query = "DELETE FROM chat WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(query, chatId);
     return rowsAffected > 0;
   }
@@ -117,7 +118,7 @@ public class ChatRepo {
    * @return a list of chats associated with the user
    */
   public List<Chat> getAllUserChats(long userId) {
-    String query = "SELECT * FROM chats WHERE buyer_id = ? OR seller_id = ?";
+    String query = "SELECT * FROM chat WHERE buyer_id = ? OR seller_id = ?";
     return jdbcTemplate.query(query, chatRowMapper, userId, userId);
   }
 
@@ -127,8 +128,8 @@ public class ChatRepo {
    * @param chatId The ID of the chat to retrieve
    * @return the chat object if found, null otherwise
    */
-  public Chat getChatById(String chatId) {
-    String query = "SELECT * FROM chats WHERE chat_id = ?";
+  public Chat getChatById(Long chatId) {
+    String query = "SELECT * FROM chat WHERE id = ?";
     return jdbcTemplate.queryForObject(query, chatRowMapper, chatId);
   }
 
@@ -140,7 +141,7 @@ public class ChatRepo {
    * @return true if the user is a participant, false otherwise
    */
   public boolean userIsParticipant(long userId, long chatId) {
-    String query = "SELECT * FROM chats WHERE chat_id = ? AND (buyer_id = ? OR seller_id = ?)";
+    String query = "SELECT * FROM chat WHERE id = ? AND (buyer_id = ? OR seller_id = ?)";
     List<Chat> chats = jdbcTemplate.query(query, chatRowMapper, chatId, userId, userId);
     return !chats.isEmpty();
   }

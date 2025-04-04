@@ -46,6 +46,15 @@ public class ChatController {
     return ResponseEntity.ok(chats);
   }
 
+  @GetMapping("/{chatId}")
+  public ResponseEntity<Chat> getChat(@PathVariable long chatId,
+      @RequestHeader("Authorization") String token) {
+
+    // Get the chat by ID and return it
+    Chat chat = chatService.getChatById(chatId, token);
+    return ResponseEntity.ok(chat);
+  }
+
   /**
    * Get all messages for a specific chat.
    *
@@ -53,7 +62,7 @@ public class ChatController {
    * @param token  the JWT token of the user
    * @return a list of messages for the chat
    */
-  @GetMapping("/{chatId}")
+  @GetMapping("/{chatId}/messages")
   public ResponseEntity<List<Message>> getChatMessages(@PathVariable long chatId,
       @RequestHeader("Authorization") String token) {
 
@@ -65,7 +74,8 @@ public class ChatController {
   /**
    * Create a new chat.
    *
-   * @param token the JWT token of the user
+   * @param token the JWT token of the usera
+   * 
    * @param req   the request body containing the details of the chat to be
    *              created
    * @return a response entity containing the ID of the created chat
@@ -75,7 +85,7 @@ public class ChatController {
       @RequestBody CreateChatRequest req) {
 
     // Create a new chat and return the chat ID
-    Long chatId = chatService.createChat(req);
+    Long chatId = chatService.createChat(req, token);
     return ResponseEntity.ok(new CreateChatResponse(chatId));
   }
 
@@ -87,7 +97,7 @@ public class ChatController {
    * @param message the message to be added to the chat
    * @return a response entity indicating the success or failure of the operation
    */
-  @PostMapping("/{chatId}")
+  @PostMapping("/{chatId}/messages")
   public ResponseEntity<DefaultResponse> addMessageToChat(@PathVariable long chatId,
       @RequestHeader("Authorization") String token, @RequestBody MessageRequest message) {
     message.setChatId(chatId);
