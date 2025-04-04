@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useChats } from '@/actions/messages';
+import { useChats } from '@/actions/chat';
 import ChatCard from '@/components/ChatCard.vue';
 
-const { data: chats } = useChats();
+const { data: chats, isPending, isError, error } = useChats();
 
 </script>
 
@@ -11,8 +11,16 @@ const { data: chats } = useChats();
         <div class="page-title">
             {{ $t("messages") }}
         </div>
-
-        <div v-for="chat in chats">
+        <div v-if="isPending">
+            <p>{{ $t("loading") }}</p>
+        </div>
+        <div v-else-if="isError">
+            <p>{{ $t("error") }}</p>
+        </div>
+        <div v-else-if="!chats || chats.length === 0">
+            <p>{{ $t("noMessages") }}</p>
+        </div>
+        <div v-for="chat in chats" v-else>
             <ChatCard :chat="chat" />
         </div>
 
@@ -29,7 +37,7 @@ const { data: chats } = useChats();
 }
 
 .outer-wrapper {
-    margin-top: 1rem;
+    padding-top: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;

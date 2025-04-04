@@ -1,21 +1,28 @@
 <script setup lang="ts">
+import { useUserImage } from '@/actions/user';
 import { UserRound } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 const props = defineProps<{
-    src?: string;
-    size? : number;
+    userId: number;
+    size?: number;
 }>();
+
+const { data: image, isPending, isError } = useUserImage(props.userId);
+
+const src = computed(() => {
+    return `data:${image.value?.fileType};base64,${image.value?.base64Image}`;
+});
 
 const size = props.size ?? 60;
 
 </script>
 
 <template>
-    <div class="image-wrapper" v-if="src" :style="{ width: `${size}px`, height: `${size}px` }">
+    <div class="image-wrapper" v-if="!isError && !isPending" :style="{ width: `${size}px`, height: `${size}px` }">
         <img :src="src" alt="user" />
     </div>
-  <div
-      class="image-wrapper" v-else :style="{ width: `${size}px`, height: `${size}px` }">
+    <div class="image-wrapper" v-else :style="{ width: `${size}px`, height: `${size}px` }">
         <div class="no-image">
             <UserRound :size="size * 0.7" stroke-width="1.5" />
         </div>

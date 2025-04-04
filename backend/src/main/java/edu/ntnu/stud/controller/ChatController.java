@@ -72,6 +72,22 @@ public class ChatController {
   }
 
   /**
+   * Get the latest message for a specific chat.
+   *
+   * @param chatId the ID of the chat
+   * @param token  the JWT token of the user
+   * @return the latest message for the chat
+   */
+  @GetMapping("/{chatId}/messages/latest")
+  public ResponseEntity<Message> getLatestMessage(@PathVariable long chatId,
+      @RequestHeader("Authorization") String token) {
+
+    // Get the latest message for the chat and return it
+    Message message = chatService.getLatestMessage(chatId, token);
+    return ResponseEntity.ok(message);
+  }
+
+  /**
    * Create a new chat.
    *
    * @param token the JWT token of the usera

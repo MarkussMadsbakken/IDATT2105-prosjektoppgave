@@ -44,6 +44,11 @@ public class ChatService {
     request.setBuyerId(jwtService.extractUserId(token.substring(7)));
     request.setSellerId(listingService.getListingByUuid(request.getListingId()).getOwnerId());
 
+    // Check if the buyer and seller are the same
+    if (request.getBuyerId() == request.getSellerId()) {
+      return -1L;
+    }
+
     // If the chat already exists, return false
     Optional<Long> chatId = chatRepo.chatAlreadyExists(
         request.getBuyerId(),
@@ -67,11 +72,10 @@ public class ChatService {
    */
   public boolean addMessageToChat(MessageRequest message, String token) {
     // Extract the user ID from the token
-    message.setSenderId(jwtService.extractUserId(token));
+    message.setSenderId(jwtService.extractUserId(token.substring(7)));
 
     if (!chatRepo.chatExists(message.getChatId())) {
       return false;
-
     }
 
     // Check if the user is authorized to send a message in this chat
@@ -141,6 +145,19 @@ public class ChatService {
 
     // The user is authorized to view the chat, so we can return the messages
     return messageService.getAllMessagesByChatId(chatId);
+  }
+
+  public Message getLatestMessage(long chatId, String token) {
+    // Extract the user ID from the token
+    long userId = jwtService.extractUserId(token.substring(7));
+
+    // Check if the user is authorized to view this chat
+    if (!chatRepo.userIsParticipant(userId, chatId)) {
+      return null;
+    }
+
+    // The user is authorized to view the chat, so we can return the latest message
+    return messageService.getAllMessagesByChatId(chatId).getLast();
   }
 
 }

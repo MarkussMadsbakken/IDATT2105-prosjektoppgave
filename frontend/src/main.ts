@@ -116,7 +116,11 @@ const i18n = createI18n({
             edit: "Rediger",
             delete: "Slett",
             listingIsDeleted: "Denne annonsen er slettet",
-            listingIsInactive: "Denne annonsen er inaktiv"
+            listingIsInactive: "Denne annonsen er inaktiv",
+            noMessages: "Ingen meldinger funnet. Vær den første til å sende en melding!",
+            noChats: "Ingen chatter funnet. Kontakt en selger for å starte en chat.",
+            youHaveNotSentMessage: "Du har ikke sendt en melding enda",
+            youHaveNotReceivedMessage: "Du har ikke mottatt en melding enda",
         },
         en: {
             recommended: "Recommended for you",
@@ -179,7 +183,11 @@ const i18n = createI18n({
             edit: "Edit",
             delete: "Delete",
             listingIsDeleted: "This listing is deleted",
-            listingIsInactive: "This listing is inacitve"
+            listingIsInactive: "This listing is inacitve",
+            noMessages: "No messages found. Be the first to send a message!",
+            noChats: "No chats found. Contact a seller to start a chat.",
+            youHaveNotSentMessage: "You have not sent a message yet",
+            youHaveNotReceivedMessage: "You have not received a message yet",
         }
     },
 });

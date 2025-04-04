@@ -3,20 +3,22 @@ import type { User } from "./user";
 
 export type Message = {
     id: number;
-    listingId: number;
-    buyerId: number;
-    sellerId: number;
+    chatId: number;
+    senderId: number;
     message: string;
     createdAt: string;
-    sentByBuyer: boolean;
 }
 
-
-export type Chat = {
+export type ChatWithUser = {
     id: number;
-    listing: Listing;
     buyer: User;
     seller: User;
-    messages: Message[];
-    yourRole: "buyer" | "seller";
+    listing: Listing;
+}
+
+export type Chat = {
+    chatId: number;
+    buyerId: number;
+    sellerId: number;
+    listingId: string;
 }
