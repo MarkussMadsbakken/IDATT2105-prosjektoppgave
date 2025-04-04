@@ -101,4 +101,26 @@ public class ListingRepo {
   public int deleteListingByUuid(String uuid) {
     return listingDao.deleteByUuid(uuid);
   }
+
+  /**
+   * Retrieves a paginated list of listings based on search criteria.
+   *
+   * @param query the search query
+   * @param category the category to filter by
+   * @param subCategory the subcategory to filter by
+   * @param minPrice the minimum price to filter by
+   * @param maxPrice the maximum price to filter by
+   * @param pageable the pagination information, including page number, page size, and sorting
+   * @return a page of listings matching the search criteria
+   */
+  public Page<Listing> search(
+      String query,
+      Integer category,
+      Integer subCategory,
+      double minPrice,
+      double maxPrice,
+      Pageable pageable
+  ) {
+    return listingDao.search(query, category, subCategory, minPrice, maxPrice, pageable);
+  }
 }
