@@ -1,6 +1,8 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Message;
+import edu.ntnu.stud.model.MessageRequest;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,16 +54,15 @@ public class MessageRepo {
    *
    * @param message the Message object to be added
    */
-  public void addMessage(Message message) {
+  public void addMessage(MessageRequest message) {
     String query = "INSERT INTO messages "
-        + "(listing_id, seller_id, byer_id, message, created_at, sent_by_buyer)"
+        + "(listing_id, seller_id, byer_id, message, sent_by_buyer)"
         + " VALUES (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(query,
         message.getListingId(),
-        message.getByerId(),
         message.getSellerId(),
+        message.getByerId(),
         message.getMessage(),
-        message.getCreatedAt(),
         message.isSentByBuyer());
   }
 

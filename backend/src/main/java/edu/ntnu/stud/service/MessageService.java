@@ -1,6 +1,7 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Message;
+import edu.ntnu.stud.model.MessageRequest;
 import edu.ntnu.stud.repo.MessageRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;
@@ -24,7 +25,7 @@ public class MessageService {
    *
    * @param message the message to be added
    */
-  public void addMessage(Message message) {
+  public void addMessage(MessageRequest message) {
     messageRepo.addMessage(message);
   }
 
@@ -33,15 +34,13 @@ public class MessageService {
    *
    * @param message the message to be validated
    */
-  public void validateMessage(Message message) {
+  public void validateMessageRequest(MessageRequest message) {
     Validate.that(message.getByerId(), Validate.isPositive(), "Buyer ID cannot be zero.");
     Validate.that(message.getSellerId(), Validate.isPositive(), "Seller ID cannot be zero.");
     Validate.that(message.getListingId(), Validate.isNotEmptyOrBlankOrNull(),
         "Listing ID cannot be empty or blank or null.");
     Validate.that(message.getMessage(), Validate.isNotEmptyOrBlankOrNull(),
         "Message cannot be empty or blank or null.");
-    Validate.that(message.getCreatedAt(), Validate.isNotNull(),
-        "CreatedAt cannot be null.");
   }
 
   /**
@@ -50,7 +49,7 @@ public class MessageService {
    * @param message the message to be verified
    * @param token   the JWT token containing user claims
    */
-  public void verifySender(Message message, String token) {
+  public void verifySender(MessageRequest message, String token) {
     long senderFromToken = jwtService.extractUserId(token.substring(7));
     if (!((senderFromToken == message.getByerId() && message.isSentByBuyer())
         || (senderFromToken == message.getSellerId() && !message.isSentByBuyer()))) {

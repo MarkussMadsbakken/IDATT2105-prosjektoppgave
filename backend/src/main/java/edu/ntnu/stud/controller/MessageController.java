@@ -1,6 +1,7 @@
 package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.Message;
+import edu.ntnu.stud.model.MessageRequest;
 import edu.ntnu.stud.service.MessageService;
 import java.util.List;
 import org.slf4j.Logger;
@@ -36,10 +37,10 @@ public class MessageController {
    */
   @PostMapping
   public ResponseEntity<String> addMessage(
-      @RequestBody Message message, @RequestHeader("Authorization") String token) {
+      @RequestBody MessageRequest message, @RequestHeader("Authorization") String token) {
 
     try {
-      messageService.validateMessage(message);
+      messageService.validateMessageRequest(message);
       messageService.verifySender(message, token);
     } catch (Exception e) {
       logger.error("Validation or verification failed: {}", e.getMessage());
