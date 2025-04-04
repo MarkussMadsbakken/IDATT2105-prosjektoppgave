@@ -8,6 +8,7 @@ import {onMounted, ref} from 'vue';
 import {useAuth} from "@/stores/auth.ts";
 import { useGetUser } from '@/actions/user';
 import {computed} from "vue";
+import router from "@/router";
 
 
 const firstName = ref("");
@@ -15,6 +16,8 @@ const lastName = ref("");
 const userName = ref("");
 const profileImage = ref<File | null>(null);
 const userId = useAuth().userId
+const  usernameError=ref("");
+const updateResult =ref("");
 
 if (!userId) {
   throw new Error("Bruker-ID mangler");
@@ -34,6 +37,11 @@ const {
 } = useUpdateUser({
   onSuccess: () => {
     console.log("Brukerprofil oppdatert!");
+    router.push('/profile').then(()=>{
+      console.log("Route fungerte")
+    }).catch((err) => {
+      console.error("Feilet: ", err)
+    });
   },
 });
 
@@ -48,6 +56,14 @@ const onImageSelected = (files: File[]) => {
   }
 };
 const onSubmit = () => {
+
+  usernameError.value="";
+
+  if (!userName.value.trim()){
+    usernameError.value="Brukernavn må fylles ut";
+    return;
+  }
+
   updateUser({
     username: userName.value,
     firstName: firstName.value,
@@ -82,11 +98,12 @@ const onSubmit = () => {
       </div>
       <div class="form-group">
         <label for="userName">Brukernavn</label>
-        <TextInput v-model="userName" type="text" id="userName" :placeholder="data?.username ?? ''"/>
+        <TextInput v-model="userName" type="text" id="userName" :placeholder="data?.username ?? '' " :class="{ invalid: usernameError }"/>
+        <p v-if="usernameError" class="error-text">{{ usernameError }}</p>
       </div>
 
 
-      <Button :label="'Lagre endringer'" variant="primary" @click="onSubmit" :disabled="isUpdatingUser">
+      <Button :label="'Lagre endringer'" variant="primary" @click="onSubmit" :disabled="isUpdatingUser || !!usernameError" >
         Lagre endringer
       </Button>
     </div>
@@ -128,5 +145,13 @@ const onSubmit = () => {
   max-height: 200px;
   object-fit: contain;
   border-radius: 6px;
+}
+.error-text {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+.invalid {
+  border: 1px solid red;
 }
 </style>
