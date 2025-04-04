@@ -165,4 +165,37 @@ public class ListingDao {
         "SELECT COUNT(*) FROM listings WHERE owner_id = ?", Integer.class, userId);
     return new PageImpl<>(listings, pageable, total);
   }
+
+  /**
+   * Retrieves a paginated list of listings based on search criteria.
+   *
+   * @param query the search query
+   * @param category the category to filter by
+   * @param subCategory the subcategory to filter by
+   * @param minPrice the minimum price to filter by
+   * @param maxPrice the maximum price to filter by
+   * @param pageable the pagination information, including page number, page size, and sorting
+   * @return a page of listings matching the search criteria
+   */
+  public Page<Listing> search(
+      String query,
+      Integer category,
+      Integer subCategory,
+      double minPrice,
+      double maxPrice,
+      Pageable pageable) {
+    int limit = pageable.getPageSize();
+    long offset = pageable.getOffset();
+    String sql = "SELECT * FROM listings WHERE deleted = false AND "
+        + "(name ILIKE ? OR description ILIKE ?) AND "
+        + "(category = ? OR ? IS NULL) AND "
+        + "(subcategory = ? OR ? IS NULL) AND "
+        + "(price BETWEEN ? AND ?) "
+        + "LIMIT ? OFFSET ?";
+    List<Listing> listings = jdbcTemplate.query(
+        sql, listingRowMapper, "%" + query + "%", "%" + query + "%",
+        category, category, subCategory, subCategory, minPrice, maxPrice, limit, offset);
+    int total = listings.size();
+    return new PageImpl<>(listings, pageable, total);
+  }
 }
