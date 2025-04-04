@@ -1,7 +1,6 @@
 package edu.ntnu.stud.model;
 
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Represents a request to create or update a listing.

@@ -3,6 +3,7 @@ package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.dao.ListingDao;
 import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.ListingUpdate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -76,7 +77,7 @@ public class ListingRepo {
    * @param listing the listing to update
    * @return the number of rows affected
    */
-  public int updateListing(Listing listing) {
+  public int updateListing(ListingUpdate listing) {
     return listingDao.update(listing);
   }
 
