@@ -25,18 +25,18 @@ const handleClick = (e: any) => {
             <div class="image-wrapper" :class="props.size">
                 <ListingHeaderImage :listing-id="props.listing.uuid" :size="props.size" />
                 <div class="price" v-if="props.size !== 'small'" :class="props.size">
-                    {{ listing.price }} kr
+                    {{ props.listing.price }} kr
                 </div>
             </div>
             <div class="content-wrapper" :class="props.size">
                 <div class="title" :class="props.size">
-                    {{ listing.name }}
+                    {{ props.listing.name }}
                 </div>
                 <div class="price" v-if="props.size === 'small'" :class="props.size">
-                    {{ listing.price }} kr
+                    {{ props.listing.price }} kr
                 </div>
                 <div class="description" v-if="props.size !== 'small'">
-                    {{ listing.description }}
+                    {{ props.listing.description }}
                 </div>
             </div>
         </div>
