@@ -100,6 +100,27 @@ public class ListingController {
   }
 
   /**
+   * Retrives a paginated of listing owned by a specific owner.
+   *
+   * @param userId the ID of the user whose listings to retrieve
+   * @param page the page number to retrieve
+   * @param offset the number of items per page
+   * @return a page of listings owned by the specified user
+   */
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<Page<ListingResponse>> getListingsByUserId(
+      @PathVariable long userId,
+      @RequestParam int page,
+      @RequestParam int offset) {
+    logger.info(
+        "Fetching listings for user with ID: {}, page: {}, offset: {}", userId, page, offset);
+    Pageable pageable = PageRequest.of(page, offset);
+    Page<ListingResponse> listingsPage = listingService.getListingsByUserIdPage(userId, pageable);
+    logger.info("Listings for user fetched successfully");
+    return ResponseEntity.ok(listingsPage);
+  }
+
+  /**
    * Creates a new listing.
    *
    * @param listingRequest the ListingRequest to save as a Listing
