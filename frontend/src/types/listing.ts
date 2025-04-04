@@ -3,7 +3,7 @@ export type Listing = {
     name: string;
     description?: string;
     category: number;
-    subCategories: string[];
+    subCategory?: number;
     active: boolean;
     postalCode: number;
     deleted: boolean;

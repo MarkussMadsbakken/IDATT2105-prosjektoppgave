@@ -6,12 +6,17 @@ import { CategoryIcons } from '@/util/categoryIcons';
 import { ref, watch } from 'vue';
 import SubCategorySelector from './SubCategorySelector.vue';
 import type { Category } from '@/types';
+import { watchOnce } from '@vueuse/core';
 
 
 const props = defineProps<{
     isError?: boolean
     name?: string
+    initialCategory?: number
+    initialSubCategories?: number[]
 }>();
+
+console.log(props.initialSubCategories);
 
 const emit = defineEmits<{
     (e: 'categorySelected', category: number): void
@@ -19,8 +24,16 @@ const emit = defineEmits<{
 }>();
 
 const { data: categories, isPending, isError, error } = useCategories();
-const selectedCategory = ref<Category | null>(null);
+const selectedCategory = ref<Category | null>(props.initialCategory ? (categories.value?.find(c => c.id === props.initialCategory) ?? null) : null);
 const selectedSubCategories = ref<number[]>([]);
+
+watchOnce(categories, (categories) => {
+    if (!props.initialCategory) return;
+    const category = categories?.find(c => c.id === props.initialCategory);
+    if (!category) return;
+    selectedCategory.value = category;
+    selectedSubCategories.value = props.initialSubCategories ?? [];
+});
 
 watch(selectedCategory, (newCategory) => {
     if (!newCategory) return;
@@ -40,7 +53,6 @@ const handleSubCategoryToggle = (id: number) => {
     } else {
         selectedSubCategories.value.splice(index, 1);
     }
-    console.log('Selected subcategories:', selectedSubCategories.value);
     emit('subcategoriesUpdated', selectedSubCategories.value);
 }
 

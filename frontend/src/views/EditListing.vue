@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createListing } from '@/actions/createListing';
+import { createListing, editListing } from '@/actions/createListing';
 import { useGetListingWithImages } from '@/actions/getListing';
 import Button from '@/components/Button.vue';
 import CategorySelector from '@/components/CategorySelector.vue';
@@ -20,9 +20,9 @@ const listingId = route.params.id as string
 
 const {
     data: listingWithImages,
-    isError: isError2,
-    error: error2,
-    isPending: isPending2,
+    isError: listingWithImagesIsError,
+    error: listingWithImagesError,
+    isPending: listingWithImagesIsPending,
 } = useGetListingWithImages(listingId);
 
 const title = ref(listingWithImages?.value?.listing?.name ?? "");
@@ -53,10 +53,10 @@ let errors = ref<{
     isError: boolean;
 }[]>([])
 
-const { isPending, isError, error, mutate: createListingMutation } = useMutation({
+const { isPending, isError, error, mutate: editListingMutation } = useMutation({
     mutationFn: editListing,
-    onSuccess: (data) => {
-        router.push(`/listing/${data.uuid}`);
+    onSuccess: () => {
+        router.push(`/listing/${listingId}`);
     }
 })
 
@@ -83,27 +83,27 @@ const onSubmit = () => {
         return;
     }
 
-    // TODO: when backend stores sub categories with listing, add them here!
-    /*
-    createListingMutation({
+    editListingMutation({
         name: title.value,
         description: description.value,
         price: Number(price.value),
         postalCode: Number(postalCode.value),
         category: category.value!,
-        images: selectedImages.value
+        subCategory: subCategories?.value?.[0] ?? undefined,
+        uuid: listingId,
+        active: listingWithImages.value?.listing.active!,
+        deleted: listingWithImages.value?.listing.deleted!,
+        sold: listingWithImages.value?.listing.sold!,
     });
-    */
 }
-
 </script>
 
 <template>
     <div class="outer-create-listing-wrapper">
         <div class="page-title">
-            {{ $t("createListing") }}
+            {{ $t("editListing") }}
         </div>
-        <div class="listing-form">
+        <div class="listing-form" v-if="!listingWithImagesIsPending">
             <FormGroup :label="$t('image')" name="image" v-if="images && images?.length! > 0">
                 <PhotoGallery :images="images!" id="uploadedImages" />
             </FormGroup>
@@ -124,15 +124,17 @@ const onSubmit = () => {
             </FormGroup>
             <FormGroup :label="$t('category')" name="category"
                 :isNotFilledIn="errors.find(e => e.field === 'category')?.isError">
-                <CategorySelector name="category" @category-selected="category = $event"
-                    @subcategories-updated="subCategories = $event" />
+                <CategorySelector
+                    :initial-sub-categories="listingWithImages?.listing.subCategory ? [listingWithImages.listing.subCategory] : undefined"
+                    :initial-category="listingWithImages?.listing.category" name="category"
+                    @category-selected="category = $event" @subcategories-updated="subCategories = $event" />
             </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">
                 <template v-if="isPending">
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t('create') }}
+                    {{ $t('save') }}
                 </template>
             </Button>
             <template v-if="isError">
@@ -166,5 +168,6 @@ const onSubmit = () => {
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    padding-bottom: 3rem;
 }
 </style>

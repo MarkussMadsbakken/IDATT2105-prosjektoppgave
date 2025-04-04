@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -152,9 +154,9 @@ public class ListingController {
    * @param listingRequest the ListingRequest to update the Listing
    * @param token          the JWT token for authorization
    */
-  @PostMapping("/{uuid}")
+  @PutMapping
   public ResponseEntity<DefaultResponse> updateListing(
-      @RequestPart("listingRequest") ListingUpdate listingRequest,
+      @RequestBody ListingUpdate listingRequest,
       @RequestHeader("Authorization") String token) {
     logger.info("Updating listing with UUID: {}", listingRequest.getUuid());
     listingService.updateListing(listingRequest, token);
