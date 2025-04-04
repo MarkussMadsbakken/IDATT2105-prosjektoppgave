@@ -173,7 +173,7 @@ public class ListingService {
    * @param listing the Listing entity to convert
    * @return the converted ListingResponse object
    */
-  private ListingResponse convertToResponse(Listing listing) {
+  public ListingResponse convertToResponse(Listing listing) {
     ListingResponse response = new ListingResponse();
     response.setUuid(listing.getUuid());
     response.setName(listing.getName());
