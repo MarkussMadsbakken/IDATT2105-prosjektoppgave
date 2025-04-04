@@ -1,5 +1,6 @@
 package edu.ntnu.stud.model;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -17,6 +18,8 @@ public class ListingResponse {
   private boolean deleted;
   private boolean sold;
   private long ownerId;
+  private Timestamp createdAt;
+  private Timestamp updatedAt;
 
   // Getters and setters
   public String getUuid() {
@@ -105,5 +108,21 @@ public class ListingResponse {
 
   public void setOwnerId(long ownerId) {
     this.ownerId = ownerId;
+  }
+
+  public Timestamp getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Timestamp getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Timestamp updatedAt) {
+    this.updatedAt = updatedAt;
   }
 }

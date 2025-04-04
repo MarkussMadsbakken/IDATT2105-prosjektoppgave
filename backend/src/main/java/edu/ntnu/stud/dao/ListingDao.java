@@ -26,9 +26,9 @@ public class ListingDao {
     listing.setName(rs.getString("name"));
     listing.setPrice(rs.getDouble("price"));
     listing.setDescription(rs.getString("description"));
-    listing.setCreatedAt(rs.getString("created_at"));
-    listing.setUpdatedAt(rs.getString("updated_at"));
-    // TODO: Handle Blob and List<String> conversion as needed
+    listing.setCreatedAt(rs.getTimestamp("created_at"));
+    listing.setUpdatedAt(rs.getTimestamp("updated_at"));
+    // TODO: Handle subcategories List<String>
     listing.setCategory(rs.getString("category"));
     listing.setPostalCode(rs.getInt("postal_code"));
     listing.setActive(rs.getBoolean("active"));

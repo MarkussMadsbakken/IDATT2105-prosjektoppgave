@@ -31,7 +31,7 @@ public class UserService {
    * Retrieves a user by their ID.
    *
    * @param id the ID of the user to retrieve
-   * @return the User object if found, null otherwise
+   * @return the UserResoponse object if found, null otherwise
    */
   public UserResponse getUserById(long id) {
     User user = userRepo.getUserById(id);
@@ -45,7 +45,7 @@ public class UserService {
    * Retrieves a user by their username.
    *
    * @param username the username of the user to retrieve
-   * @return the User object if found, null otherwise
+   * @return the UserResponse object if found, null otherwise
    */
   public UserResponse getUserByUsername(String username) {
     User user = userRepo.getUserByUsername(username);
@@ -71,8 +71,9 @@ public class UserService {
    * @param userUpdate the User object containing updated information
    * @param token the JWT token of the user making the request
    * @param image the MultipartFile image representing the users profile image
+   * @return the corresponding response object for the
    */
-  public boolean updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
+  public UserResponse updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
     long userId = jwtService.extractUserId(token.substring(7));
     User user = new User();
     user.setId(userId);
@@ -91,7 +92,10 @@ public class UserService {
     }
 
 
-    return userRepo.updateUser(user);
+    if (userRepo.updateUser(user)) {
+      return new UserResponse(user);
+    }
+    return null;
   }
 
   /**
