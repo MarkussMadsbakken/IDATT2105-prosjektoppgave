@@ -66,6 +66,34 @@ public class UserService {
   }
 
   /**
+   * Verifies if a user exists in the database by their username.
+   *
+   * @param token the JWT token of the user making the request
+   * @return true if the user exists, false otherwise
+   */
+  public boolean userExists(String token) {
+    String username = jwtService.extractUserName(token.substring(7));
+    return userRepo.getUserByUsername(username) != null;
+  }
+
+  /**
+   * Verfies the username og a user update request.
+   *
+   * @param userUpdate the UserUpdate object containing the username to verify
+   * @param token the JWT token of the user making the request
+   * @return true if the username is valid, false otherwise
+   */
+  public boolean verifyUsername(UserUpdate userUpdate, String token) {
+    long userId = jwtService.extractUserId(token.substring(7));
+    User existingUserByUsername = userRepo.getUserByUsername(userUpdate.getUsername());
+    if (existingUserByUsername != null && existingUserByUsername.getId() != userId) {
+      // User with the same username already exists
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * Updates the information of a user in the database.
    *
    * @param userUpdate the User object containing updated information
