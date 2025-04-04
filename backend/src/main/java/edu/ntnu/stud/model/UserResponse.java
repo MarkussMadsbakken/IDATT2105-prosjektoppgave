@@ -1,5 +1,7 @@
 package edu.ntnu.stud.model;
 
+import java.sql.Timestamp;
+
 /**
  * Represents a UserResponse in the system.
  * This class contains UserResponse details such as username, first name, last
@@ -15,7 +17,7 @@ public class UserResponse {
 
   private String lastName;
 
-  private String createdAt;
+  private Timestamp createdAt;
 
   private boolean isAdmin;
 
@@ -34,7 +36,7 @@ public class UserResponse {
    * @param createdAt the creation date of the UserResponse
    * @param isAdmin the admin status of the UserResponse
    */
-  public UserResponse(String username, String firstName, String lastName, String createdAt,
+  public UserResponse(String username, String firstName, String lastName, Timestamp createdAt,
       boolean isAdmin) {
     this.username = username;
     this.firstName = firstName;
@@ -134,7 +136,7 @@ public class UserResponse {
    *
    * @return the creation date of the UserResponse
    */
-  public String getCreatedAt() {
+  public Timestamp getCreatedAt() {
     return createdAt;
   }
 
@@ -143,7 +145,7 @@ public class UserResponse {
    *
    * @param createdAt the creation date to set
    */
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 

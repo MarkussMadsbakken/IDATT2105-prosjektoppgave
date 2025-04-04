@@ -3,7 +3,6 @@ package edu.ntnu.stud.repo;
 import edu.ntnu.stud.model.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,15 +15,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepo {
 
-  @Value("${spring.datasource.url}")
-  private String url;
-
-  @Value("${spring.datasource.username}")
-  private String user;
-
-  @Value("${spring.datasource.password}")
-  private String password;
-
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
@@ -35,23 +25,12 @@ public class UserRepo {
     user.setPassword(rs.getString("password"));
     user.setFirstName(rs.getString("first_name"));
     user.setLastName(rs.getString("last_name"));
-    user.setCreatedAt(rs.getString("created_at"));
+    user.setCreatedAt(rs.getTimestamp("created_at"));
     user.setAdmin(rs.getBoolean("is_admin"));
     user.setImageBlob(rs.getBlob("image_blob"));
     user.setImageFileType(rs.getString("image_file_type"));
     return user;
   };
-
-  /**
-   * Initializes the UserRepo and loads the MySQL JDBC driver.
-   */
-  public UserRepo() {
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
 
   /**
    * Adds a new user to the database.
@@ -78,7 +57,7 @@ public class UserRepo {
   public User getUserById(long id) {
     String query = "SELECT * FROM users WHERE id = ?";
     List<User> users = jdbcTemplate.query(query, userRowMapper, id);
-    return users.isEmpty() ? null : users.get(0);
+    return users.isEmpty() ? null : users.getFirst();
   }
 
   /**
@@ -90,7 +69,7 @@ public class UserRepo {
   public User getUserByUsername(String username) {
     String query = "SELECT * FROM users WHERE username = ?";
     List<User> users = jdbcTemplate.query(query, userRowMapper, username);
-    return users.isEmpty() ? null : users.get(0);
+    return users.isEmpty() ? null : users.getFirst();
   }
 
   /**

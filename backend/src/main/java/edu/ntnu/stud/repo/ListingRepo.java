@@ -3,6 +3,7 @@ package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.dao.ListingDao;
 import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.ListingUpdate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,6 +62,17 @@ public class ListingRepo {
   }
 
   /**
+   * Retrives a paginated list of listings owned by a specific user from the database.
+   *
+   * @param userId the ID of the user whose listings to retrieve
+   * @param pageable the pagination information, including page number, page size, and sorting
+   * @return a page of listings owned by the specified user
+   */
+  public Page<Listing> getListingsByUserIdPage(long userId, Pageable pageable) {
+    return listingDao.findPageByOwnerId(userId, pageable);
+  }
+
+  /**
    * Saves a new listing to the database.
    *
    * @param listing the listing to save
@@ -76,7 +88,7 @@ public class ListingRepo {
    * @param listing the listing to update
    * @return the number of rows affected
    */
-  public int updateListing(Listing listing) {
+  public int updateListing(ListingUpdate listing) {
     return listingDao.update(listing);
   }
 

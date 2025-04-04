@@ -31,7 +31,7 @@ public class UserService {
    * Retrieves a user by their ID.
    *
    * @param id the ID of the user to retrieve
-   * @return the User object if found, null otherwise
+   * @return the UserResoponse object if found, null otherwise
    */
   public UserResponse getUserById(long id) {
     User user = userRepo.getUserById(id);
@@ -45,7 +45,7 @@ public class UserService {
    * Retrieves a user by their username.
    *
    * @param username the username of the user to retrieve
-   * @return the User object if found, null otherwise
+   * @return the UserResponse object if found, null otherwise
    */
   public UserResponse getUserByUsername(String username) {
     User user = userRepo.getUserByUsername(username);
@@ -66,13 +66,42 @@ public class UserService {
   }
 
   /**
+   * Verifies if a user exists in the database by their username.
+   *
+   * @param token the JWT token of the user making the request
+   * @return true if the user exists, false otherwise
+   */
+  public boolean userExists(String token) {
+    String username = jwtService.extractUserName(token.substring(7));
+    return userRepo.getUserByUsername(username) != null;
+  }
+
+  /**
+   * Verfies the username og a user update request.
+   *
+   * @param userUpdate the UserUpdate object containing the username to verify
+   * @param token the JWT token of the user making the request
+   * @return true if the username is valid, false otherwise
+   */
+  public boolean verifyUsername(UserUpdate userUpdate, String token) {
+    long userId = jwtService.extractUserId(token.substring(7));
+    User existingUserByUsername = userRepo.getUserByUsername(userUpdate.getUsername());
+    if (existingUserByUsername != null && existingUserByUsername.getId() != userId) {
+      // User with the same username already exists
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * Updates the information of a user in the database.
    *
    * @param userUpdate the User object containing updated information
    * @param token the JWT token of the user making the request
    * @param image the MultipartFile image representing the users profile image
+   * @return the corresponding response object for the
    */
-  public boolean updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
+  public UserResponse updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
     long userId = jwtService.extractUserId(token.substring(7));
     User user = new User();
     user.setId(userId);
@@ -91,7 +120,10 @@ public class UserService {
     }
 
 
-    return userRepo.updateUser(user);
+    if (userRepo.updateUser(user)) {
+      return new UserResponse(user);
+    }
+    return null;
   }
 
   /**
