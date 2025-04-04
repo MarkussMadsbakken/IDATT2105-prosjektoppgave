@@ -134,6 +134,19 @@ public class ListingService {
   }
 
   /**
+   * Retrieves a paginated list of listings owned by a specific user.
+   *
+   * @param userId  the ID of the user whose listings to retrieve
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
+   * @return a page of listings owned by the specified user
+   */
+  public Page<ListingResponse> getListingsByUserIdPage(long userId, Pageable pageable) {
+    Page<Listing> listingsPage = listingRepo.getListingsByUserIdPage(userId, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
    * Converts a ListingRequest object to a Listing entity.
    *
    * @param listingRequest the ListingRequest object to convert

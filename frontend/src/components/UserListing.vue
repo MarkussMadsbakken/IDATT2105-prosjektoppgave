@@ -5,12 +5,10 @@
     userId: number;
   }>();
 
-  const userID =useAuth().userId;
-
 </script>
 
 <template>
-
+<div>{{props.userId}}</div>
 
 </template>
 
