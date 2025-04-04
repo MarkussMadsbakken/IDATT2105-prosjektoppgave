@@ -8,6 +8,7 @@ import edu.ntnu.stud.model.ListingImage;
 import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
+import edu.ntnu.stud.model.ListingUpdate;
 import edu.ntnu.stud.repo.ListingRepo;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,13 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
-
 /**
-* Service class for managing Listing entities.
-* This class provides methods to add, retrieve, update, and delete listings.
-*/
+ * Service class for managing Listing entities.
+ * This class provides methods to add, retrieve, update, and delete listings.
+ */
 @Service
 public class ListingService {
 
@@ -61,7 +59,7 @@ public class ListingService {
    * Retrieves listings from the database within a specified range.
    *
    * @param start the starting index of the range (inclusive)
-   * @param end the ending index of the range (inclusive)
+   * @param end   the ending index of the range (inclusive)
    * @return a list of listings within the specified range
    */
   public List<Listing> getListingsInRange(int start, int end) {
@@ -86,16 +84,48 @@ public class ListingService {
    * Updates an existing listing in the database.
    *
    * @param listing the listing to update
+   * @param token   the JWT token of the user making the request
    * @return the number of rows affected
    */
-  public int updateListing(Listing listing) {
+  public int updateListing(ListingUpdate listing, String token) {
+    long ownerId = jwtService.extractUserId(token.substring(7));
+    Listing existingListing = listingRepo.getListingByUuid(listing.getUuid());
+    if (existingListing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + listing.getUuid());
+    }
+    if (existingListing.getOwnerId() != ownerId) {
+      throw new IllegalArgumentException(
+        "User does not own the listing with UUID: " + listing.getUuid());
+    }
     return listingRepo.updateListing(listing);
+  }
+
+  /**
+   * Deletes a listing.
+   *
+   * @param uuid the uuid of the listing to delete
+   * @param token the JWT token of the user making the request
+   */
+  public void deleteListing(String uuid, String token) {
+    long ownerId = jwtService.extractUserId(token.substring(7));
+    Listing existingListing = listingRepo.getListingByUuid(uuid);
+    if (existingListing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
+    }
+    if (existingListing.getOwnerId() != ownerId) {
+      throw new IllegalArgumentException(
+        "User does not own the listing with UUID: " + uuid);
+    }
+    ListingUpdate listingUpdate = convertToListingUpdate(existingListing);
+    listingUpdate.setDeleted(true);
+    listingRepo.updateListing(listingUpdate);
   }
 
   /**
    * Retrieves a paginated list of listings from the database.
    *
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings
    */
   public Page<ListingResponse> getListingsPage(Pageable pageable) {
@@ -143,13 +173,37 @@ public class ListingService {
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
     response.setOwnerId(listing.getOwnerId());
+    response.setCreatedAt(listing.getCreatedAt());
+    response.setUpdatedAt(listing.getUpdatedAt());
     return response;
+  }
+
+  /**
+   * Converts a listing to a listing update object.
+   *
+   * @param listing the listing to convert
+   * @return the converted listing update object
+   */
+  private ListingUpdate convertToListingUpdate(Listing listing) {
+    ListingUpdate listingUpdate = new ListingUpdate();
+    listingUpdate.setUuid(listing.getUuid());
+    listingUpdate.setName(listing.getName());
+    listingUpdate.setPrice(listing.getPrice());
+    listingUpdate.setDescription(listing.getDescription());
+    listingUpdate.setCategory(listing.getCategory());
+    listingUpdate.setSubcategories(listing.getSubcategories());
+    listingUpdate.setPostalCode(listing.getPostalCode());
+    listingUpdate.setActive(listing.isActive());
+    listingUpdate.setDeleted(listing.isDeleted());
+    listingUpdate.setSold(listing.isSold());
+
+    return listingUpdate;
   }
 
   /**
    * Saves the images associated with a listing.
    *
-   * @param images the images for the listing
+   * @param images      the images for the listing
    * @param listingUuid the UUID of the listing to associate the images with
    */
   public void saveListingImages(List<MultipartFile> images, String listingUuid) {

@@ -3,12 +3,13 @@ package edu.ntnu.stud.model;
 import java.util.List;
 
 /**
- * Represents a request to create or update a listing.
+ * Represents a request to update a listing.
  * This class contains the necessary information for a listing, including
  * name, price, description, category, subcategories, postal code,
  * and status flags (active, deleted, sold).
  */
-public class ListingRequest {
+public class ListingUpdate {
+  private String uuid;
   private String name;
   private double price;
   private String description;
@@ -19,10 +20,16 @@ public class ListingRequest {
   private boolean deleted;
   private boolean sold;
 
+  /**
+   * Default constructor for ListingUpdate.
+   */
+  public ListingUpdate() {
+  }
 
   /**
    * Constructs a new ListingRequest with the specified details.
    *
+   * @param uuid the UUID of the listing
    * @param name the name of the listing
    * @param price the price of the listing
    * @param description the description of the listing
@@ -33,7 +40,8 @@ public class ListingRequest {
    * @param deleted the deleted status of the listing
    * @param sold the sold status of the listing
    */
-  public ListingRequest(
+  public ListingUpdate(
+      String uuid,
       String name,
       double price,
       String description,
@@ -44,6 +52,7 @@ public class ListingRequest {
       boolean deleted,
       boolean sold
   ) {
+    this.uuid = uuid;
     this.name = name;
     this.price = price;
     this.description = description;
@@ -53,6 +62,14 @@ public class ListingRequest {
     this.active = active;
     this.deleted = deleted;
     this.sold = sold;
+  }
+
+  public String getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
   }
 
   public String getName() {

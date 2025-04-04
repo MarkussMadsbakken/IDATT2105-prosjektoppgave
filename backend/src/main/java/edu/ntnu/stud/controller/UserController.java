@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -118,14 +118,16 @@ public class UserController {
    * @param userImage the users profile image (optional)
    * @return a ResponseEntity indicating the result of the update operation
    */
-  @PostMapping("/update")
-  public ResponseEntity<Void> updateUser(
+  @PutMapping("/update")
+  public ResponseEntity<UserResponse> updateUser(
       @RequestPart("userUpdate") UserUpdate user,
       @RequestPart(name = "userImage", required = false) MultipartFile userImage,
       @RequestHeader("Authorization") String token) {
-    if (userService.updateUser(user, token, userImage)) {
+
+    UserResponse updatedUser = userService.updateUser(user, token, userImage);
+    if (updatedUser != null) {
       logger.info("user updated successfully");
-      return ResponseEntity.ok().build();
+      return ResponseEntity.ok(updatedUser);
     }
     logger.error("failed updating user");
     return ResponseEntity.internalServerError().build();

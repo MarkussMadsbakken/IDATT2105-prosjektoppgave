@@ -1,6 +1,7 @@
 package edu.ntnu.stud.dao;
 
 import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.ListingUpdate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,9 +27,9 @@ public class ListingDao {
     listing.setName(rs.getString("name"));
     listing.setPrice(rs.getDouble("price"));
     listing.setDescription(rs.getString("description"));
-    listing.setCreatedAt(rs.getString("created_at"));
-    listing.setUpdatedAt(rs.getString("updated_at"));
-    // TODO: Handle Blob and List<String> conversion as needed
+    listing.setCreatedAt(rs.getTimestamp("created_at"));
+    listing.setUpdatedAt(rs.getTimestamp("updated_at"));
+    // TODO: Handle subcategories List<String>
     listing.setCategory(rs.getString("category"));
     listing.setPostalCode(rs.getInt("postal_code"));
     listing.setActive(rs.getBoolean("active"));
@@ -98,13 +99,13 @@ public class ListingDao {
    * @param listing the listing to update
    * @return the number of rows affected
    */
-  public int update(Listing listing) {
+  public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
         + "category = ?, postal_code = ?, active = ?, deleted = ?, sold = ?, "
         + "owner_id = ? WHERE uuid = ?";
     return jdbcTemplate.update(sql, listing.getName(), listing.getPrice(), listing.getDescription(),
         listing.getCategory(), listing.getPostalCode(), listing.isActive(), listing.isDeleted(),
-        listing.isSold(), listing.getOwnerId(), listing.getUuid());
+        listing.isSold(), listing.getUuid());
   }
 
   /**
