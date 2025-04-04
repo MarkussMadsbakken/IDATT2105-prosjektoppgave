@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * Service class for handling user-related operations such as registration and login.
+ * Service class for handling auth-related operations such as registration and login.
  */
 @Service
 public class AuthService {
@@ -35,9 +35,9 @@ public class AuthService {
    */
   public RegisterResponse register(RegisterRequest registerRequest) throws Exception {
     if (repo.getUserByUsername(registerRequest.getUsername()) != null) {
-      throw new Exception("User with username " 
-        + registerRequest.getUsername() 
-        + " already exists"
+      throw new Exception("User with username "
+          + registerRequest.getUsername()
+          + " already exists"
       );
     }
 
@@ -47,30 +47,30 @@ public class AuthService {
     user.setPassword(encoder.encode(registerRequest.getPassword()));
     repo.addUser(user);
 
-    String message = "Registration successful!";
-    String token = jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
+    // Log the user in after registration
+    LoginResponse loginResponse = authenticateUser(user.getUsername(), registerRequest.getPassword());
 
-    return new RegisterResponse(message, token);
+    return new RegisterResponse("Registration successful!", loginResponse.getToken());
   }
 
   /**
    * Verifies the login credentials of a user.
    */
-  public LoginResponse verify(LoginRequest loginRequest) {
+  public LoginResponse login(LoginRequest loginRequest) {
+    return authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+  }
+
+  /**
+   * Authenticates the user and generates a token.
+   */
+  private LoginResponse authenticateUser(String username, String password) {
     Authentication authentication = authManager
-        .authenticate(new UsernamePasswordAuthenticationToken(
-          loginRequest.getUsername(), 
-          loginRequest.getPassword()
-        ));
+        .authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-    User user = repo.getUserByUsername(loginRequest.getUsername());
+    User user = repo.getUserByUsername(username);
     if (authentication.isAuthenticated()) {
-
-      String message = "Login successful!";
       String token = jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
-
-      return new LoginResponse(message, token);
-
+      return new LoginResponse("Login successful!", token);
     } else {
       return new LoginResponse("Invalid username or password", null);
     }
