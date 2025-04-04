@@ -66,6 +66,21 @@ public class MessageRepo {
   }
 
   /**
+   * Retrieves a list of the latest messages in each conversation associated with
+   * a
+   * specific user from the database.
+   *
+   * @param userId the ID of the user
+   */
+  public List<Message> getMessagesByUserId(long userId) {
+    String query = "SELECT * FROM ("
+        + "SELECT *, ROW_NUMBER() OVER " 
+        + "(PARTITION BY seller_id, byer_id, listing_id ORDER BY created_at DESC) AS rn "
+        + "FROM messages WHERE seller_id = ? OR byer_id = ?) subquery WHERE rn = 1";
+    return jdbcTemplate.query(query, messageRowMapper, userId, userId);
+  }
+
+  /**
    * Retrieves all messages for a specific listing with a spesific user involved
    * from the database.
    *
@@ -78,17 +93,8 @@ public class MessageRepo {
   }
 
   /**
-   * Retrieves all messages for a specific user from the database.
-   *
-   * @param userId the ID of the user
-   */
-  public List<Message> getMessagesByUserId(long userId) {
-    String query = "SELECT * FROM messages WHERE seller_id = ? OR byer_id = ?";
-    return jdbcTemplate.query(query, messageRowMapper, userId, userId);
-  }
-
-  /**
-   * Retrieves a paginated list of messages for a specific user from the database.
+   * Retrieves a paginated list of the latest messages in each conversation
+   * associated with a specific user.
    *
    * @param userId the ID of the user
    * @param page   the page number to retrieve
@@ -96,8 +102,12 @@ public class MessageRepo {
    * @return a list of Message objects associated with the user
    */
   public List<Message> getMessagesByUserIdPaginated(long userId, int page, int offset) {
-    String query = "SELECT * FROM messages WHERE seller_id = ? OR byer_id = ? LIMIT ? OFFSET ?";
-    return jdbcTemplate.query(query, messageRowMapper, userId, userId, page * offset, offset);
+    String query = "SELECT * FROM ("
+        + "SELECT *, ROW_NUMBER() OVER "
+        + "(PARTITION BY seller_id, byer_id, listing_id ORDER BY created_at DESC) AS rn "
+        + "FROM messages WHERE seller_id = ? OR byer_id = ?) subquery "
+        + "WHERE rn = 1 LIMIT ? OFFSET ?";
+    return jdbcTemplate.query(query, messageRowMapper, userId, userId, offset, page * offset);
   }
 
   /**
@@ -112,9 +122,9 @@ public class MessageRepo {
    */
   public List<Message> getMessagesByListingIdAndUserIdPaginated(
       String listingId, long userId, int page, int offset) {
-    String query = "SELECT * FROM messages " 
+    String query = "SELECT * FROM messages "
         + "WHERE listing_id = ? AND (seller_id = ? OR byer_id = ?) LIMIT ? OFFSET ?";
     return jdbcTemplate.query(
-      query, messageRowMapper, listingId, userId, userId, page * offset, offset);
+        query, messageRowMapper, listingId, userId, userId, page * offset, offset);
   }
 }

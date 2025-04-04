@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 /**
  * Service class for managing messages in the system.
  * This class provides methods to add and retrieve messages.
@@ -48,8 +47,8 @@ public class MessageService {
   /**
    * Verifies the sender of the message.
    *
-   * @param message         the message to be verified
-   * @param token           the JWT token containing user claims
+   * @param message the message to be verified
+   * @param token   the JWT token containing user claims
    */
   public void verifySender(Message message, String token) {
     long senderFromToken = jwtService.extractUserId(token.substring(7));
@@ -60,7 +59,8 @@ public class MessageService {
   }
 
   /**
-   * Retrieves all messages associated with a specific user ID.
+   * Retrieves a list of the latest messages in each conversation associated with
+   * a specific user.
    *
    * @param token the JWT token containing user claims
    * @return a list of messages associated with the user ID
@@ -83,7 +83,8 @@ public class MessageService {
   }
 
   /**
-   * Retrieves a paginated list of messages associated with a specific user ID.
+   * Retrieves a paginated list of the latest messages in each conversation
+   * associated with a specific user.
    *
    * @param token  the JWT token containing user claims
    * @param page   the page number to retrieve
@@ -96,7 +97,8 @@ public class MessageService {
   }
 
   /**
-   * Retrieves a paginated list of messages associated with a specific listing ID and user ID.
+   * Retrieves a paginated list of messages associated with a specific listing ID
+   * and user ID.
    *
    * @param listingId the ID of the listing
    * @param token     the JWT token containing user claims
@@ -108,6 +110,5 @@ public class MessageService {
     long userId = jwtService.extractUserId(token.substring(7));
     return messageRepo.getMessagesByListingIdAndUserIdPaginated(listingId, userId, page, offset);
   }
-
 
 }
