@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /**
  * Controller class for managing messages in the system.
  * This class provides endpoints for adding and retrieving messages.
@@ -54,17 +53,20 @@ public class MessageController {
     } catch (Exception e) {
       logger.error("Error adding message: {}", e.getMessage());
       return ResponseEntity.status(500).body("Error adding message: " + e.getMessage());
-    }    
+    }
   }
 
   /**
-   * Retrieves all messages associated with a specific user.
+   * Retrieves a list of the latest messages in each converation associated with a
+   * specific user.
    *
    * @param token the JWT token containing user claims
-   * @return a ResponseEntity containing a list of messages associated with the user ID
+   * @return a ResponseEntity containing a list of messages associated with the
+   *         user ID
    */
   @GetMapping
-  public ResponseEntity<List<Message>> getMessagesByUserId(@RequestHeader("Authorization") String token) {
+  public ResponseEntity<List<Message>> getMessagesByUserId(
+      @RequestHeader("Authorization") String token) {
     try {
       List<Message> messages = messageService.getMessagesByUserId(token);
       logger.info("Retrieved messages for user: {}", messages);
@@ -79,8 +81,9 @@ public class MessageController {
    * Retrieves all messages associated with a specific listing ID for a user.
    *
    * @param listingId the ID of the listing
-   * @param token the JWT token containing user claims
-   * @return a ResponseEntity containing a list of messages associated with the listing ID and user ID
+   * @param token     the JWT token containing user claims
+   * @return a ResponseEntity containing a list of messages associated with the
+   *         listing ID and user ID
    */
   @GetMapping("/{listingId}")
   public ResponseEntity<List<Message>> getMessagesByListingIdAndUserId(
@@ -96,19 +99,19 @@ public class MessageController {
   }
 
   /**
-   * Recives a paginated list of messages associated with a specific user.
+   * Retrieves a paginated lis of the latest messages in each converation
+   * associated with a specific user.
    *
-   * @param token the JWT token containing user claims
-   * @param page the page number to retrieve
+   * @param token  the JWT token containing user claims
+   * @param page   the page number to retrieve
    * @param offset the number of items per page
    * @return a paginated list of messages associated with the user ID
    */
   @GetMapping("/page")
   public ResponseEntity<List<Message>> getMessagesByUserIdPaginated(
-      @RequestHeader("Authorization") String token, 
-      @RequestParam int page, 
-      @RequestParam int offset
-  ) {
+      @RequestHeader("Authorization") String token,
+      @RequestParam int page,
+      @RequestParam int offset) {
     try {
       List<Message> messages = messageService.getMessagesByUserIdPaginated(token, page, offset);
       logger.info("Retrieved paginated messages: {}", messages);
@@ -120,28 +123,30 @@ public class MessageController {
   }
 
   /**
-   * Recives a paginated list of messages associated with a specific listing ID for a user.
+   * Recives a paginated list of messages associated with a specific listing ID
+   * for a user.
    *
    * @param listingId the ID of the listing
-   * @param token the JWT token containing user claims
-   * @param page the page number to retrieve
-   * @param offset the number of items per page
-   * @return a paginated list of messages associated with the listing ID and user ID
+   * @param token     the JWT token containing user claims
+   * @param page      the page number to retrieve
+   * @param offset    the number of items per page
+   * @return a paginated list of messages associated with the listing ID and user
+   *         ID
    */
   @GetMapping("/page/{listingId}")
   public ResponseEntity<List<Message>> getMessagesByListingIdAndUserIdPaginated(
       @PathVariable String listingId,
       @RequestHeader("Authorization") String token,
       @RequestParam int page,
-      @RequestParam int offset
-  ) {
+      @RequestParam int offset) {
     try {
-    List<Message> messages = messageService.getMessagesByListingIdAndUserIdPaginated(
-        listingId, token, page, offset);
-    logger.info("Retrieved paginated messages for listing ID {}: {}", listingId, messages);
-    return ResponseEntity.ok(messages);
+      List<Message> messages = messageService.getMessagesByListingIdAndUserIdPaginated(
+          listingId, token, page, offset);
+      logger.info("Retrieved paginated messages for listing ID {}: {}", listingId, messages);
+      return ResponseEntity.ok(messages);
     } catch (Exception e) {
-      logger.error("Error retrieving paginated messages for listing ID {}: {}", listingId, e.getMessage());
+      logger.error(
+          "Error retrieving paginated messages for listing ID {}: {}", listingId, e.getMessage());
       return ResponseEntity.status(500).body(null);
     }
   }
