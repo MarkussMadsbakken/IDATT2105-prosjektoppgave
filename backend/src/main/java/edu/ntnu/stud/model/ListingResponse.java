@@ -1,7 +1,6 @@
 package edu.ntnu.stud.model;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 /**
  * Data Transfer Object (DTO) for Listing responses.
@@ -11,8 +10,8 @@ public class ListingResponse {
   private String name;
   private double price;
   private String description;
-  private String category;
-  private List<String> subcategories;
+  private int category;
+  private int subcategory;
   private int postalCode;
   private boolean active;
   private boolean deleted;
@@ -54,20 +53,20 @@ public class ListingResponse {
     this.description = description;
   }
 
-  public String getCategory() {
+  public int getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
+  public void setCategory(int category) {
     this.category = category;
   }
 
-  public List<String> getSubcategories() {
-    return subcategories;
+  public int getSubcategory() {
+    return subcategory;
   }
 
-  public void setSubcategories(List<String> subcategories) {
-    this.subcategories = subcategories;
+  public void setSubcategory(int subcategory) {
+    this.subcategory = subcategory;
   }
 
   public int getPostalCode() {
