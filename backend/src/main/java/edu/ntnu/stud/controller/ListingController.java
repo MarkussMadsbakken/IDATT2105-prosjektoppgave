@@ -1,5 +1,6 @@
 package edu.ntnu.stud.controller;
 
+import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
@@ -24,9 +25,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
-
 /**
  * Controller class for managing Listing entities.
  * This class provides endpoints to add, retrieve, and paginate listings.
@@ -44,7 +42,8 @@ public class ListingController {
    * Retrieves a listing by its UUID.
    *
    * @param uuid the UUID of the listing to retrieve
-   * @return the listing with the specified UUID, or a 404 Not Found status if not found
+   * @return the listing with the specified UUID, or a 404 Not Found status if not
+   *         found
    */
   @GetMapping("/{uuid}")
   public ResponseEntity<ListingResponse> getListingByUuid(@PathVariable String uuid) {
@@ -68,8 +67,7 @@ public class ListingController {
    */
   @GetMapping("/{uuid}/images")
   public ResponseEntity<List<ListingImageResponse>> getListingImagesByUuid(
-      @PathVariable String uuid
-  ) {
+      @PathVariable String uuid) {
     logger.info("Fetching listing with UUID: {}", uuid);
     List<ListingImageResponse> images = listingService.getImagesByUuid(uuid);
     if (images != null) {
@@ -84,7 +82,7 @@ public class ListingController {
   /**
    * Retrieves a paginated list of listings.
    *
-   * @param page the page number to retrieve
+   * @param page   the page number to retrieve
    * @param offset the number of items per page
    * @return a page of listings
    */
@@ -103,7 +101,7 @@ public class ListingController {
    * Retrives a paginated of listing owned by a specific owner.
    *
    * @param userId the ID of the user whose listings to retrieve
-   * @param page the page number to retrieve
+   * @param page   the page number to retrieve
    * @param offset the number of items per page
    * @return a page of listings owned by the specified user
    */
@@ -124,8 +122,9 @@ public class ListingController {
    * Creates a new listing.
    *
    * @param listingRequest the ListingRequest to save as a Listing
-   * @param token the JWT token for authorization
-   * @param images the list of MultipartFile objects representing the images
+   * @param token          the JWT token for authorization
+   * @param images         the list of MultipartFile objects representing the
+   *                       images
    * @return the created listings corresponding response object
    */
   @PostMapping
@@ -139,7 +138,6 @@ public class ListingController {
     logger.info("Saving images for listing with name: {}", listingRequest.getName());
     logger.info("Listing created successfully with UUID: {}", listingResponse.getUuid());
 
-
     if (images == null || listingResponse.getUuid() == null) {
       logger.error("cant save listingimages");
     }
@@ -152,29 +150,31 @@ public class ListingController {
    * Updates an existing listing.
    *
    * @param listingRequest the ListingRequest to update the Listing
-   * @param token the JWT token for authorization
+   * @param token          the JWT token for authorization
    */
   @PostMapping("/{uuid}")
-  public void updateListing(
+  public ResponseEntity<DefaultResponse> updateListing(
       @RequestPart("listingRequest") ListingUpdate listingRequest,
       @RequestHeader("Authorization") String token) {
     logger.info("Updating listing with UUID: {}", listingRequest.getUuid());
     listingService.updateListing(listingRequest, token);
     logger.info("Listing updated successfully with UUID: {}", listingRequest.getUuid());
+    return ResponseEntity.ok().body(new DefaultResponse("Listing updated successfully", "listingUpdated"));
   }
 
   /**
    * Deletes a listing by its UUID.
    *
-   * @param uuid the UUID of the listing to delete
+   * @param uuid  the UUID of the listing to delete
    * @param token the JWT token for authorization
    */
   @DeleteMapping("/{uuid}")
-  public void deleteListing(
+  public ResponseEntity<DefaultResponse> deleteListing(
       @PathVariable String uuid,
       @RequestHeader("Authorization") String token) {
     logger.info("Deleting listing with UUID: {}", uuid);
     listingService.deleteListing(uuid, token);
     logger.info("Listing deleted successfully with UUID: {}", uuid);
+    return ResponseEntity.ok().body(new DefaultResponse("Listing deleted successfully", "listingDeleted"));
   }
 }

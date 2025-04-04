@@ -115,6 +115,8 @@ const i18n = createI18n({
             areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?",
             edit: "Rediger",
             delete: "Slett",
+            listingIsDeleted: "Denne annonsen er slettet",
+            listingIsInactive: "Denne annonsen er inaktiv"
         },
         en: {
             recommended: "Recommended for you",
@@ -176,6 +178,8 @@ const i18n = createI18n({
             thisListing: "this listing",
             edit: "Edit",
             delete: "Delete",
+            listingIsDeleted: "This listing is deleted",
+            listingIsInactive: "This listing is inacitve"
         }
     },
 });

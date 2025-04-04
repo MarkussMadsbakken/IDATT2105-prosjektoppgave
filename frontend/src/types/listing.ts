@@ -6,7 +6,7 @@ export type Listing = {
     subCategories: string[];
     active: boolean;
     postalCode: number;
-    delteted: boolean;
+    deleted: boolean;
     sold: false;
     ownerId: number,
     price: number;

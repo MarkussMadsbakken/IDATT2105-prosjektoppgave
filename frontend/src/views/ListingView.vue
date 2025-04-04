@@ -64,10 +64,6 @@ watch(bookmarks, (newval) => {
   bookmarked.value = newval ? newval.hasBookmarked : false;
 });
 
-watch(bookmarked, () => {
-  console.log(bookmarked.value);
-})
-
 const bookmarkMutation = useMutation({
   mutationFn: async (removingBookmark: boolean) => {
     if (!listing.value) return;
@@ -108,10 +104,15 @@ const handleDelete = () => {
     emits: {
       onAccept: () => {
         deleteMutation.mutate(listingId, {
-          onSuccess: () => {
+          onSuccess: (a) => {
+            console.log(a);
+            console.log("Successed!")
             d.close();
             router.push('/');
           },
+          onError: (e) => {
+            console.log(error.value)
+          }
         });
       }
     }
@@ -132,6 +133,12 @@ const handleDelete = () => {
       <h3 class="listing-title">
         {{ listing?.name }}
       </h3>
+      <Alert variant="Warning" v-if="listing?.deleted">
+        {{ $t("listingIsDeleted") }}
+      </Alert>
+      <Alert variant="Info" v-else-if="!listing?.active">
+        {{ $t("listingIsInactive") }}
+      </Alert>
       <ListingImages :listing-id="listingId" />
       <div class="picture-footing">
         <div class="listing-price">{{ listing?.price }},-</div>
@@ -165,9 +172,9 @@ const handleDelete = () => {
       <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" />
       <div v-if="auth.isLoggedIn()" class="button-box">
         <Button variant="primary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("buy")
-        }}</Button>
+          }}</Button>
         <Button variant="secondary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("reserve")
-        }}</Button>
+          }}</Button>
       </div>
     </div>
   </div>

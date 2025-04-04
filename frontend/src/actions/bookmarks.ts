@@ -3,8 +3,6 @@ import Fetch from "@/util/fetch";
 import { useMutation, useQuery } from "@tanstack/vue-query";
 
 export const getListingBookmarks = async (listingId: string): Promise<GetListingBookmarksResponse> => {
-    console.log("Fetching listing bookmarks", listingId);
-
     const bookMarkCount = await Fetch(`${API_BASE_URL}/api/bookmark/${listingId}/count`, {
         method: "GET",
     });

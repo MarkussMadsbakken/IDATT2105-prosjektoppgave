@@ -38,7 +38,7 @@ const icons = {
 }
 
 .Warning {
-    background-color: oklch(0.0 0.5 0.5 / 0.5);
+    background-color: oklch(0.879 0.169 91.605);
 }
 
 .Info {
