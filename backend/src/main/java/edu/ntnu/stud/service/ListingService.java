@@ -159,7 +159,7 @@ public class ListingService {
     listing.setPrice(listingRequest.getPrice());
     listing.setDescription(listingRequest.getDescription());
     listing.setCategory(listingRequest.getCategory());
-    listing.setSubcategories(listingRequest.getSubcategories());
+    listing.setSubcategory(listingRequest.getSubcategory());
     listing.setPostalCode(listingRequest.getPostalCode());
     listing.setActive(listingRequest.isActive());
     listing.setDeleted(listingRequest.isDeleted());
@@ -181,7 +181,7 @@ public class ListingService {
     response.setPrice(listing.getPrice());
     response.setDescription(listing.getDescription());
     response.setCategory(listing.getCategory());
-    response.setSubcategories(listing.getSubcategories());
+    response.setSubcategory(listing.getSubcategory());
     response.setPostalCode(listing.getPostalCode());
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
@@ -205,7 +205,7 @@ public class ListingService {
     listingUpdate.setPrice(listing.getPrice());
     listingUpdate.setDescription(listing.getDescription());
     listingUpdate.setCategory(listing.getCategory());
-    listingUpdate.setSubcategories(listing.getSubcategories());
+    listingUpdate.setSubcategory(listing.getSubcategory());
     listingUpdate.setPostalCode(listing.getPostalCode());
     listingUpdate.setActive(listing.isActive());
     listingUpdate.setDeleted(listing.isDeleted());

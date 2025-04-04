@@ -31,7 +31,8 @@ public class ListingDao {
     listing.setCreatedAt(rs.getTimestamp("created_at"));
     listing.setUpdatedAt(rs.getTimestamp("updated_at"));
     // TODO: Handle subcategories List<String>
-    listing.setCategory(rs.getString("category"));
+    listing.setCategory(rs.getInt("category"));
+    listing.setSubcategory(rs.getInt("subcategory"));
     listing.setPostalCode(rs.getInt("postal_code"));
     listing.setActive(rs.getBoolean("active"));
     listing.setDeleted(rs.getBoolean("deleted"));
@@ -58,7 +59,7 @@ public class ListingDao {
    * @return a list of listings within the specified range
    */
   public List<Listing> findInRange(int start, int end) {
-    String sql = "SELECT * FROM listings LIMIT ? OFFSET ?";
+    String sql = "SELECT * FROM listings WHERE deleted = false LIMIT ? OFFSET ?";
     return jdbcTemplate.query(sql, listingRowMapper, end - start + 1, start);
   }
 
@@ -81,8 +82,8 @@ public class ListingDao {
    */
   public int save(Listing listing) {
     String sql = "INSERT INTO listings "
-        + "(uuid, name, price, description, category, postal_code, owner_id)"
-        + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+        + "(uuid, name, price, description, category, subcategory, postal_code, owner_id)"
+        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     return jdbcTemplate.update(
         sql,
         listing.getUuid(),
@@ -90,6 +91,7 @@ public class ListingDao {
         listing.getPrice(),
         listing.getDescription(),
         listing.getCategory(),
+        listing.getSubcategory(),
         listing.getPostalCode(),
         listing.getOwnerId());
   }
@@ -102,11 +104,20 @@ public class ListingDao {
    */
   public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
-        + "category = ?, postal_code = ?, active = ?, deleted = ?, sold = ? "
+        + "category = ?, subcategory = ?, postal_code = ?, active = ?, deleted = ?, sold = ? "
         + "WHERE uuid = ?";
-    return jdbcTemplate.update(sql, listing.getName(), listing.getPrice(), listing.getDescription(),
-        listing.getCategory(), listing.getPostalCode(), listing.isActive(), listing.isDeleted(),
-        listing.isSold(), listing.getUuid());
+    return jdbcTemplate.update(
+        sql,
+        listing.getName(),
+        listing.getPrice(),
+        listing.getDescription(),
+        listing.getCategory(),
+        listing.getSubcategory(),
+        listing.getPostalCode(),
+        listing.isActive(),
+        listing.isDeleted(),
+        listing.isSold(),
+        listing.getUuid());
   }
 
   /**
@@ -130,7 +141,7 @@ public class ListingDao {
   public Page<Listing> findPage(Pageable pageable) {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
-    String sql = "SELECT * FROM listings LIMIT ? OFFSET ?";
+    String sql = "SELECT * FROM listings WHERE deleted = false LIMIT ? OFFSET ?";
     List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, limit, offset);
     int total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM listings", Integer.class);
     return new PageImpl<>(listings, pageable, total);
@@ -148,7 +159,7 @@ public class ListingDao {
   public Page<Listing> findPageByOwnerId(long userId, Pageable pageable) {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
-    String sql = "SELECT * FROM listings WHERE owner_id = ? LIMIT ? OFFSET ?";
+    String sql = "SELECT * FROM listings WHERE owner_id = ? AND deleted = false LIMIT ? OFFSET ?";
     List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, userId, limit, offset);
     int total = jdbcTemplate.queryForObject(
         "SELECT COUNT(*) FROM listings WHERE owner_id = ?", Integer.class, userId);
