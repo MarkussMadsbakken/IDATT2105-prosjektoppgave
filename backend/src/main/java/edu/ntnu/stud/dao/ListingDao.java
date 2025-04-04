@@ -13,7 +13,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Data Access Object (DAO) for the Listing entity.
- * This class provides methods to perform CRUD operations on the Listing table in the database.
+ * This class provides methods to perform CRUD operations on the Listing table
+ * in the database.
  */
 @Repository
 public class ListingDao {
@@ -50,12 +51,12 @@ public class ListingDao {
   }
 
   /**
- * Retrieves listings from the database within a specified range.
- *
- * @param start the starting index of the range (inclusive)
- * @param end the ending index of the range (inclusive)
- * @return a list of listings within the specified range
- */
+   * Retrieves listings from the database within a specified range.
+   *
+   * @param start the starting index of the range (inclusive)
+   * @param end   the ending index of the range (inclusive)
+   * @return a list of listings within the specified range
+   */
   public List<Listing> findInRange(int start, int end) {
     String sql = "SELECT * FROM listings LIMIT ? OFFSET ?";
     return jdbcTemplate.query(sql, listingRowMapper, end - start + 1, start);
@@ -102,7 +103,7 @@ public class ListingDao {
   public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
         + "category = ?, postal_code = ?, active = ?, deleted = ?, sold = ?, "
-        + "owner_id = ? WHERE uuid = ?";
+        + "WHERE uuid = ?";
     return jdbcTemplate.update(sql, listing.getName(), listing.getPrice(), listing.getDescription(),
         listing.getCategory(), listing.getPostalCode(), listing.isActive(), listing.isDeleted(),
         listing.isSold(), listing.getUuid());
@@ -122,7 +123,8 @@ public class ListingDao {
   /**
    * Retrieves a paginated list of listings from the database.
    *
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings
    */
   public Page<Listing> findPage(Pageable pageable) {
@@ -135,10 +137,12 @@ public class ListingDao {
   }
 
   /**
-   * Retrieves a paginated list of listings owned by a specific user from the database.
+   * Retrieves a paginated list of listings owned by a specific user from the
+   * database.
    *
-   * @param userId the ID of the user whose listings to retrieve
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param userId   the ID of the user whose listings to retrieve
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings owned by the specified user
    */
   public Page<Listing> findPageByOwnerId(long userId, Pageable pageable) {
