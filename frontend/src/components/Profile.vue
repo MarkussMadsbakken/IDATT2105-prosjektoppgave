@@ -10,6 +10,8 @@ import { useGetUser } from '@/actions/user';
 import type { Listing } from '@/types';
 import { computed } from 'vue';
 import Divider from '@/components/Divider.vue';
+import { useGetUserListings } from '@/actions/user';
+
 
 
 const emit = defineEmits<{
@@ -28,10 +30,10 @@ const handleLogout = () => {
 }
 
 const { data: user } = useGetUser(props.userId);
+const {data: listings, isPending, isError, error} = useGetUserListings(props.userId);
 
 const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.createdAt!).getFullYear());
 
-const ownListings = [] as Listing[];
 const favoriteListings = [] as Listing[];
 
 </script>
@@ -62,10 +64,17 @@ const favoriteListings = [] as Listing[];
             }) }} </div>
             <RouterLink class="router-link" :to="`/profile/${props.userId}/listings`">Vis alle</RouterLink>
         </div>
-        <div class="listing-grid">
-            <ListingCard v-for="listing in ownListings" :key="listing.uuid" :listing="listing" size="medium" />
+      <div v-if="isPending">Laster oppføringer...</div>
+      <div v-else-if="isError">Kunne ikke hente oppføringer.</div>
+      <div class="listing-grid" v-else>
+          <ListingCard
+            v-for="listing in listings!.slice(0,3)"
+            :key="listing.uuid!"
+            :listing="listing"
+            size="medium"
+          />
         </div>
-        <template v-if="isOwnProfile">
+      <template v-if="isOwnProfile">
             <Divider />
             <div class="title-wrapper">
                 <div class="title"> Mine favoritter </div>

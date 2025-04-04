@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "@/types";
-import type { EditUserInfo, GetUserResponse } from "@/types";
+import type { EditUserInfo, GetUserResponse, Listing } from "@/types";
 import Fetch from "@/util/fetch";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/vue-query";
 import { objectOmit } from "@vueuse/core";
@@ -57,4 +57,15 @@ export const useGetUser = (userId: number) => {
         }
     })
 }
+export const getUserListings = async (userId: number): Promise<Listing[]> => {
+  const res = await Fetch(`${API_BASE_URL}/api/listing/user/${userId}?page=0&offset=100`);
+  return res.content;
+}
+
+export const useGetUserListings = (userId: number) => {
+  return useQuery({
+    queryKey: ['userListings', userId],
+    queryFn: () => getUserListings(userId),
+  });
+};
 export default useUpdateUser;
