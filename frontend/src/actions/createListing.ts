@@ -26,3 +26,9 @@ export const createListing = async (req: CreateListingRequest): Promise<CreateLi
         body: body
     });
 }
+
+export const deleteListing = async (listingId: string): Promise<void> => {
+    return await Fetch(`${API_BASE_URL}/api/listing/${listingId}`, {
+        method: "DELETE"
+    });
+}

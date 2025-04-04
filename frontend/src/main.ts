@@ -109,6 +109,7 @@ const i18n = createI18n({
             noSubCategories: "Ingen underkategorier",
             selectCategory: "Velg kategori",
             selectSubCategory: "Velg underkategori",
+            listingHasNoDescriptionLong: "Annonsen har ingen beskrivelse. Legg til en beskrivelse via \"Rediger\"-knappen.",
         },
         en: {
             recommended: "Recommended for you",
@@ -164,6 +165,7 @@ const i18n = createI18n({
             noSubCategories: "No sub categories",
             selectCategory: "Select category",
             selectSubCategory: "Select sub category",
+            listingHasNoDescriptionLong: "This listing has no description. Add a description via the \"Edit\" button.",
         }
     },
 });

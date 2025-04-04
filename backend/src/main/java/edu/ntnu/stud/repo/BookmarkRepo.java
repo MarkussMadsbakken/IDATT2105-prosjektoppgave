@@ -82,7 +82,12 @@ public class BookmarkRepo {
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setLong(1, bookmark.getUserId());
       statement.setString(2, bookmark.getListingId());
-      return statement.executeQuery().next();
+
+      var resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        int count = resultSet.getInt(1);
+        return count > 0;
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }

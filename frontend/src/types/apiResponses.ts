@@ -51,10 +51,15 @@ export type GetListingsResponse = Page<Listing>;
 
 export type GetCategoriesResponse = Category[];
 export type getSubCategoriesResponse = SubCategory[];
-
 export type CreateCategoryResponse = Category;
 
 export type GetUserResponse = User;
+
+export type GetListingBookmarksResponse = {
+    bookMarkCount: number;
+    hasBookmarked: boolean;
+}
+
 /**
  * Default response returned from the API
  */
