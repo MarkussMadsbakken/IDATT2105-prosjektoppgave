@@ -5,40 +5,30 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/vue-query";
 import { objectOmit } from "@vueuse/core";
 import { useAuth } from "@/stores/auth.ts";
 
-export const updateUser = async (req: EditUserInfo & { profileImage?: File }): Promise<any> => {
-
+export const updateUser = async (req: EditUserInfo & { profileImage?: File }) => {
+  try {
     const body = new FormData();
 
     if (req.profileImage) {
-        body.append("userImage", req.profileImage)
+      body.append("userImage", req.profileImage);
     }
 
     const userInfoBlob = new Blob(
-        [JSON.stringify(objectOmit(req, ["profileImage"]))],
-        { type: "application/json" }
+      [JSON.stringify(objectOmit(req, ["profileImage"]))],
+      { type: "application/json" }
     );
-    body.append("userUpdate", userInfoBlob)
+    body.append("userUpdate", userInfoBlob);
 
-    console.log("Sender data med blob: "+ body.get("userUpdate"))
 
     const res = await Fetch(`${API_BASE_URL}/api/user/update`, {
-        method: "PUT",
-        body: body,
+      method: "PUT",
+      body: body,
     });
-    console.log("Response fra Fetch: ",res);
 
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("Feil fra server:", res.status, text);
-    throw new Error("Feil ved oppdatering av bruker");
-  }
-  try {
-    const json = await res.json();
-    console.log("JSON-respons:", json);
-    return json;
-  } catch {
-    console.warn("Kunne ikke parse JSON – returnerer raw response");
-    return true;
+    return res;
+  } catch (err) {
+    console.error("Feil i updateUser:", err);
+    throw err;
   }
 };
 
