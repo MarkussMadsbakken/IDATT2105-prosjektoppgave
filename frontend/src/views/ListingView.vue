@@ -143,7 +143,7 @@ const handleDelete = () => {
       <div class="picture-footing">
         <div class="listing-price">{{ listing?.price }},-</div>
         <div class="listing-actions">
-          <Button variant="outline" v-if="isOwnListing">
+          <Button variant="outline" v-if="isOwnListing" @click="router.push(`/listing/${listingId}/edit`)">
             {{ $t("edit") }}
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
@@ -172,9 +172,9 @@ const handleDelete = () => {
       <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" />
       <div v-if="auth.isLoggedIn()" class="button-box">
         <Button variant="primary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("buy")
-          }}</Button>
+        }}</Button>
         <Button variant="secondary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("reserve")
-          }}</Button>
+        }}</Button>
       </div>
     </div>
   </div>

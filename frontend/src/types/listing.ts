@@ -2,7 +2,7 @@ export type Listing = {
     uuid: string,
     name: string;
     description?: string;
-    category: string;
+    category: number;
     subCategories: string[];
     active: boolean;
     postalCode: number;
