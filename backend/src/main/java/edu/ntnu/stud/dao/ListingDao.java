@@ -51,6 +51,18 @@ public class ListingDao {
   }
 
   /**
+   * Retrieves listings from the database within a specified range.
+   *
+   * @param start the starting index of the range (inclusive)
+   * @param end   the ending index of the range (inclusive)
+   * @return a list of listings within the specified range
+   */
+  public List<Listing> findInRange(int start, int end) {
+    String sql = "SELECT * FROM listings WHERE deleted = false LIMIT ? OFFSET ?";
+    return jdbcTemplate.query(sql, listingRowMapper, end - start + 1, start);
+  }
+
+  /**
    * Retrieves a listing by its uuid.
    *
    * @param uuid the uuid of the listing to retrieve
