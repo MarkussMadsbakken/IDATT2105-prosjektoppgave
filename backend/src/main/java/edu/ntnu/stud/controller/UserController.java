@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -176,5 +177,13 @@ public class UserController {
     logger.error("No handler found for request: {}", ex.getRequestURL(), ex);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Endpoint not found: " + ex.getRequestURL());
+  }
+
+  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+  public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(
+      HttpRequestMethodNotSupportedException ex) {
+    logger.error("Request method not supported: {}", ex.getMethod(), ex);
+    return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+        .body("Request method " + ex.getMethod() + " not supported for this endpoint.");
   }
 }
