@@ -18,8 +18,8 @@ public class Listing {
   private Timestamp createdAt;
   private Timestamp updatedAt;
   private List<Blob> pictures;
-  private String category;
-  private List<String> subcategories;
+  private int category;
+  private int subcategory;
   private int postalCode;
   private boolean active;
   private boolean deleted;
@@ -40,6 +40,7 @@ public class Listing {
    * @param price the price of the listing
    * @param description the description of the listing
    * @param category the category of the listing
+   * @param subcategory the subcategory of the listing
    * @param postalCode the postal code of the listing
    * @param ownerId the ID of the owner of the listing
    */
@@ -47,7 +48,8 @@ public class Listing {
       String name,
       double price,
       String description,
-      String category,
+      int category,
+      int subcategory,
       int postalCode,
       Long ownerId
   ) {
@@ -56,6 +58,7 @@ public class Listing {
     this.price = price;
     this.description = description;
     this.category = category;
+    this.subcategory = subcategory;
     this.postalCode = postalCode;
     this.ownerId = ownerId;
   }
@@ -192,7 +195,7 @@ public class Listing {
    *
    * @return the category of the listing
    */
-  public String getCategory() {
+  public int getCategory() {
     return category;
   }
 
@@ -201,26 +204,26 @@ public class Listing {
    *
    * @param category the category to set
    */
-  public void setCategory(String category) {
+  public void setCategory(int category) {
     this.category = category;
   }
 
   /**
-   * Returns the subcategories of the listing.
+   * Returns the subcategory of the listing.
    *
-   * @return the subcategories of the listing
+   * @return the subcategory of the listing
    */
-  public List<String> getSubcategories() {
-    return subcategories;
+  public int getSubcategory() {
+    return subcategory;
   }
 
   /**
-   * Sets the subcategories of the listing.
+   * Sets the subcategory of the listing.
    *
-   * @param subcategories the subcategories to set
+   * @param subcategory the subcategory to set
    */
-  public void setSubcategories(List<String> subcategories) {
-    this.subcategories = subcategories;
+  public void setSubcategory(int subcategory) {
+    this.subcategory = subcategory;
   }
 
   /**

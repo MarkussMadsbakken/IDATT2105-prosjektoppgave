@@ -1,11 +1,9 @@
 package edu.ntnu.stud.model;
 
-import java.util.List;
-
 /**
  * Represents a request to update a listing.
  * This class contains the necessary information for a listing, including
- * name, price, description, category, subcategories, postal code,
+ * name, price, description, category, subcategory, postal code,
  * and status flags (active, deleted, sold).
  */
 public class ListingUpdate {
@@ -13,8 +11,8 @@ public class ListingUpdate {
   private String name;
   private double price;
   private String description;
-  private String category;
-  private List<String> subcategories;
+  private int category;
+  private int subcategory;
   private int postalCode;
   private boolean active;
   private boolean deleted;
@@ -34,7 +32,7 @@ public class ListingUpdate {
    * @param price the price of the listing
    * @param description the description of the listing
    * @param category the category of the listing
-   * @param subcategories a list of subcategories of the listing
+   * @param subcategory a list of subcategory of the listing
    * @param postalCode the postal code of the listing
    * @param active the active status of the listing
    * @param deleted the deleted status of the listing
@@ -45,8 +43,8 @@ public class ListingUpdate {
       String name,
       double price,
       String description,
-      String category,
-      List<String> subcategories,
+      int category,
+      int subcategory,
       int postalCode,
       boolean active,
       boolean deleted,
@@ -57,7 +55,7 @@ public class ListingUpdate {
     this.price = price;
     this.description = description;
     this.category = category;
-    this.subcategories = subcategories;
+    this.subcategory = subcategory;
     this.postalCode = postalCode;
     this.active = active;
     this.deleted = deleted;
@@ -96,20 +94,20 @@ public class ListingUpdate {
     this.description = description;
   }
 
-  public String getCategory() {
+  public int getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
+  public void setCategory(int category) {
     this.category = category;
   }
 
-  public List<String> getSubcategories() {
-    return subcategories;
+  public int getSubcategory() {
+    return subcategory;
   }
 
-  public void setSubcategories(List<String> subcategories) {
-    this.subcategories = subcategories;
+  public void setSubcategory(int subcategory) {
+    this.subcategory = subcategory;
   }
 
   public int getPostalCode() {

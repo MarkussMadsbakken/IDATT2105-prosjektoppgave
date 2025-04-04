@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * This is a controller class for managing user authentication and registration.
- * It provides endpoints for user registration and login, as well as a test
- * endpoint.
+ * It provides endpoints for user registration and login.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -62,7 +61,7 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
     try {
-      LoginResponse loginResponse = service.verify(loginRequest);
+      LoginResponse loginResponse = service.login(loginRequest);
       logger.info("User logged in successfully: {}", loginRequest.getUsername());
       return ResponseEntity.ok(loginResponse);
 

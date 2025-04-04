@@ -9,6 +9,7 @@ export default async function Fetch(input: string | URL | globalThis.Request, in
 
     const headers = new Headers(init?.headers);
 
+
     if (auth.loggedIn) {
         headers.set("Authorization", `Bearer ${auth.rawToken}`);
     }
