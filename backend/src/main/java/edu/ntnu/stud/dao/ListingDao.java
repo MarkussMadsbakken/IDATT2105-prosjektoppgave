@@ -102,7 +102,7 @@ public class ListingDao {
    */
   public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
-        + "category = ?, postal_code = ?, active = ?, deleted = ?, sold = ?, "
+        + "category = ?, postal_code = ?, active = ?, deleted = ?, sold = ? "
         + "WHERE uuid = ?";
     return jdbcTemplate.update(sql, listing.getName(), listing.getPrice(), listing.getDescription(),
         listing.getCategory(), listing.getPostalCode(), listing.isActive(), listing.isDeleted(),

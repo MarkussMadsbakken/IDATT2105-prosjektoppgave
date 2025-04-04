@@ -9,13 +9,9 @@ export const getListingBookmarks = async (listingId: string): Promise<GetListing
         method: "GET",
     });
 
-    console.log("Fetched listing bookmarks", bookMarkCount);
-
     const hasBookmarked = await Fetch(`${API_BASE_URL}/api/bookmark/${listingId}/exists`, {
         method: "GET",
     });
-
-    console.log("Fetched listing bookmarks", bookMarkCount, hasBookmarked);
 
     return {
         bookMarkCount,
