@@ -22,7 +22,7 @@ export const updateUser = async (req: EditUserInfo & { profileImage?: File }): P
     console.log("Sender data med blob: "+ body.get("userUpdate"))
 
     const res = await Fetch(`${API_BASE_URL}/api/user/update`, {
-        method: "POST",
+        method: "PUT",
         body: body,
     });
     console.log("Response fra Fetch: ",res);
