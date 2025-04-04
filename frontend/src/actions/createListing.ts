@@ -1,6 +1,5 @@
-import { API_BASE_URL, ApiError, type CreateListingRequest, type CreateListingResponse, type LoginRequest, type LoginResponse } from "@/types";
+import { API_BASE_URL, ApiError, type CreateListingRequest, type CreateListingResponse, type LoginRequest, type LoginResponse, type DefaultResponse, type EditListingRequest } from "@/types";
 import Fetch from "@/util/fetch";
-import { useMutation } from "@tanstack/vue-query";
 import { objectOmit } from "@vueuse/core";
 
 /**
@@ -24,5 +23,21 @@ export const createListing = async (req: CreateListingRequest): Promise<CreateLi
     return await Fetch(`${API_BASE_URL}/api/listing`, {
         method: "POST",
         body: body
+    });
+}
+
+export const editListing = async (req: EditListingRequest): Promise<DefaultResponse> => {
+    return await Fetch(`${API_BASE_URL}/api/listing`, {
+        method: "PUT",
+        body: JSON.stringify(req),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
+
+export const deleteListing = async (listingId: string): Promise<void> => {
+    return await Fetch(`${API_BASE_URL}/api/listing/${listingId}`, {
+        method: "DELETE"
     });
 }

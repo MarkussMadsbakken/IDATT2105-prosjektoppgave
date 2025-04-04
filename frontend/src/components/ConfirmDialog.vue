@@ -2,6 +2,7 @@
 import { inject } from 'vue';
 import Button from './Button.vue';
 import Alert from './Alert.vue';
+import LoadingSpinner from './LoadingSpinner.vue';
 
 interface DialogRef {
     data: {
@@ -9,6 +10,7 @@ interface DialogRef {
         variant: "Caution" | "Warning" | "Info";
         confirmText?: string;
         cancelText?: string;
+        confirmLoading?: boolean;
     },
     close: () => void;
 }
@@ -32,7 +34,12 @@ defineEmits(["accept", "cancel"]);
                 {{ dialogRef?.data.cancelText ?? $t("cancel") }}
             </Button>
             <Button @click="$emit('accept')" variant="primary" class="confirm-dialog-button">
-                {{ dialogRef?.data.confirmText ?? $t("confirm") }}
+                <template v-if="dialogRef?.data.confirmLoading">
+                    <LoadingSpinner />
+                </template>
+                <template v-else>
+                    {{ dialogRef?.data.confirmText ?? $t("confirm") }}
+                </template>
             </Button>
         </div>
     </div>

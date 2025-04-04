@@ -95,7 +95,7 @@ public class ListingService {
     }
     if (existingListing.getOwnerId() != ownerId) {
       throw new IllegalArgumentException(
-        "User does not own the listing with UUID: " + listing.getUuid());
+          "User does not own the listing with UUID: " + listing.getUuid());
     }
     return listingRepo.updateListing(listing);
   }
@@ -103,18 +103,19 @@ public class ListingService {
   /**
    * Deletes a listing.
    *
-   * @param uuid the uuid of the listing to delete
+   * @param uuid  the uuid of the listing to delete
    * @param token the JWT token of the user making the request
    */
   public void deleteListing(String uuid, String token) {
     long ownerId = jwtService.extractUserId(token.substring(7));
+    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     Listing existingListing = listingRepo.getListingByUuid(uuid);
     if (existingListing == null) {
       throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
     }
-    if (existingListing.getOwnerId() != ownerId) {
+    if (existingListing.getOwnerId() != ownerId && !isAdmin) {
       throw new IllegalArgumentException(
-        "User does not own the listing with UUID: " + uuid);
+          "User does not own the listing with UUID: " + uuid);
     }
     ListingUpdate listingUpdate = convertToListingUpdate(existingListing);
     listingUpdate.setDeleted(true);
@@ -136,7 +137,7 @@ public class ListingService {
   /**
    * Retrieves a paginated list of listings owned by a specific user.
    *
-   * @param userId  the ID of the user whose listings to retrieve
+   * @param userId   the ID of the user whose listings to retrieve
    * @param pageable the pagination information, including page number, page size,
    *                 and sorting
    * @return a page of listings owned by the specified user

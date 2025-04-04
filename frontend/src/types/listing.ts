@@ -2,11 +2,11 @@ export type Listing = {
     uuid: string,
     name: string;
     description?: string;
-    category: string;
-    subCategories: string[];
+    category: number;
+    subCategory?: number;
     active: boolean;
     postalCode: number;
-    delteted: boolean;
+    deleted: boolean;
     sold: false;
     ownerId: number,
     price: number;

@@ -36,9 +36,9 @@ const chat1: Chat = {
         ownerId: user1.id,
         postalCode: 1234,
         active: true,
-        category: '',
-        subCategories: [],
-        delteted: false,
+        category: 0,
+        subCategory: undefined,
+        deleted: false,
         sold: false
     },
     messages: [
@@ -69,10 +69,10 @@ const chat2: Chat = {
         price: 3000,
         ownerId: user2.id,
         postalCode: 4321,
-        category: '',
-        subCategories: [],
+        category: 1,
+        subCategory: undefined,
         active: false,
-        delteted: false,
+        deleted: false,
         sold: false
     },
     yourRole: "seller",

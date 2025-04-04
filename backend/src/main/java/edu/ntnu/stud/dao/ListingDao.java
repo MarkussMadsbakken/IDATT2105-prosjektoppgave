@@ -13,7 +13,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Data Access Object (DAO) for the Listing entity.
- * This class provides methods to perform CRUD operations on the Listing table in the database.
+ * This class provides methods to perform CRUD operations on the Listing table
+ * in the database.
  */
 @Repository
 public class ListingDao {
@@ -106,17 +107,17 @@ public class ListingDao {
         + "category = ?, subcategory = ?, postal_code = ?, active = ?, deleted = ?, sold = ? "
         + "WHERE uuid = ?";
     return jdbcTemplate.update(
-      sql, 
-      listing.getName(), 
-      listing.getPrice(), 
-      listing.getDescription(),
-      listing.getCategory(), 
-      listing.getSubcategory(),
-      listing.getPostalCode(), 
-      listing.isActive(), 
-      listing.isDeleted(),
-      listing.isSold(), 
-      listing.getUuid());
+        sql,
+        listing.getName(),
+        listing.getPrice(),
+        listing.getDescription(),
+        listing.getCategory(),
+        listing.getSubcategory(),
+        listing.getPostalCode(),
+        listing.isActive(),
+        listing.isDeleted(),
+        listing.isSold(),
+        listing.getUuid());
   }
 
   /**
@@ -133,7 +134,8 @@ public class ListingDao {
   /**
    * Retrieves a paginated list of listings from the database.
    *
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings
    */
   public Page<Listing> findPage(Pageable pageable) {
@@ -146,10 +148,12 @@ public class ListingDao {
   }
 
   /**
-   * Retrieves a paginated list of listings owned by a specific user from the database.
+   * Retrieves a paginated list of listings owned by a specific user from the
+   * database.
    *
-   * @param userId the ID of the user whose listings to retrieve
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param userId   the ID of the user whose listings to retrieve
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings owned by the specified user
    */
   public Page<Listing> findPageByOwnerId(long userId, Pageable pageable) {
