@@ -52,7 +52,7 @@ public class SecurityConfig {
         HttpMethod.GET, 
         "/api/notifications", 
         "/api/notifications/**",
-        "api/bookmark/**",
+        "/api/bookmark/**",
         "/api/categories",
         "/api/categories/**",
         "/api/listing",
