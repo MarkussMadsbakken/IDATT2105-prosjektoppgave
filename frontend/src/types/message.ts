@@ -3,16 +3,22 @@ import type { User } from "./user";
 
 export type Message = {
     id: number;
-    content: string;
-    sender: "buyer" | "seller";
-    createdAt: Date;
+    chatId: number;
+    senderId: number;
+    message: string;
+    createdAt: string;
+}
+
+export type ChatWithUser = {
+    id: number;
+    buyer: User;
+    seller: User;
+    listing: Listing;
 }
 
 export type Chat = {
-    id: number;
-    listing: Listing;
-    buyer: User;
-    seller: User;
-    messages: Message[];
-    yourRole: "buyer" | "seller";
+    chatId: number;
+    buyerId: number;
+    sellerId: number;
+    listingId: string;
 }

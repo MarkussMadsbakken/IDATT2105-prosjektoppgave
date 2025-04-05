@@ -12,10 +12,10 @@ const { message, ownMessage } = defineProps<{
     <div class="message-wrapper" :class="{ 'own-message': ownMessage }">
         <div class="message-content-wrapper" :class="{ 'own-message': ownMessage }">
             <div class="message-content" :class="{ 'own-message': ownMessage }">
-                {{ message.content }}
+                {{ message.message }}
             </div>
             <div class="message-time">
-                {{ message.createdAt.toLocaleString("no-NO", {
+                {{ new Date(message.createdAt).toLocaleString("no-NO", {
                     day: "numeric",
                     month: "long",
                     hour: "numeric",

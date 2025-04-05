@@ -17,6 +17,7 @@ import { deleteListing } from '@/actions/createListing';
 import Alert from '@/components/Alert.vue';
 import { addBookmark, removeBookmark, useListingBookmarks } from '@/actions/bookmarks';
 import { useI18n } from 'vue-i18n';
+import { createChat } from '@/actions/chat';
 
 const router = useRouter();
 const route = useRoute();
@@ -44,10 +45,14 @@ const isOwnListing = computed(() => {
   return listing.value.ownerId === auth.userId;
 });
 
-const handleContactClick = () => {
-  // TODO
-  router.push(`/buy/${listing.value?.uuid}`);
-};
+const { mutate: createChatMutation } = useMutation({
+  mutationFn: createChat,
+  onSuccess: (data) => {
+    console.log(data);
+    router.push(`/chat/${data.chatId}`);
+  }
+})
+
 
 const handleReserve = () => {
   // TODO
@@ -169,11 +174,12 @@ const handleDelete = () => {
       </Alert>
     </div>
     <div class="buy-box">
-      <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" />
+      <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()"
+        @contact-seller="createChatMutation(listingId)" />
       <div v-if="auth.isLoggedIn()" class="button-box">
-        <Button variant="primary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("buy")
+        <Button variant="primary" style="width: 10rem; height: 3rem;">{{ $t("buy")
         }}</Button>
-        <Button variant="secondary" style="width: 10rem; height: 3rem;" @click="handleContactClick">{{ $t("reserve")
+        <Button variant="secondary" style="width: 10rem; height: 3rem;">{{ $t("reserve")
         }}</Button>
       </div>
     </div>

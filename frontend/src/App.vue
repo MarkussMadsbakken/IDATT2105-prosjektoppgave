@@ -5,6 +5,7 @@ import { useAuth } from './stores/auth';
 import NotificationDropdown from "@/components/NotificationDropdown.vue";
 import DynamicDialog from 'primevue/dynamicdialog';
 import { useI18n } from 'vue-i18n';
+import UserImage from './components/UserImage.vue';
 const auth = useAuth();
 const i18n = useI18n();
 
@@ -44,9 +45,7 @@ const changeLanguage = (lang: string) => {
           <MessageSquare />
         </RouterLink>
         <RouterLink :to="auth.isLoggedIn() ? '/profile' : '/login'" class="link profile">
-          <div class="profile-wrapper">
-            <UserRound :size="40" :stroke-width="1" />
-          </div>
+          <UserImage :user-id="auth.userId ?? 0" :size="60" />
         </RouterLink>
       </div>
     </nav>
@@ -113,14 +112,6 @@ const changeLanguage = (lang: string) => {
   height: 100%;
   opacity: 95%;
   background-color: #1E6676;
-}
-
-.profile-wrapper {
-  border: solid white;
-  height: min-content;
-  line-height: 0;
-  padding: 0.5rem;
-  border-radius: 999px;
 }
 
 .logo {

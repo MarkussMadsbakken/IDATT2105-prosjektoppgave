@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "@/types";
-import type { EditUserInfo, GetUserResponse, Listing } from "@/types";
+import type { EditUserInfo, GetUserResponse, Image, Listing } from "@/types";
 import Fetch from "@/util/fetch";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/vue-query";
 import { objectOmit } from "@vueuse/core";
@@ -41,21 +41,34 @@ const useUpdateUser = (params?: { onSuccess?: () => void }) => {
     },
     onError(error, variables, context) {
       console.log(error);
-},
+    },
   });
 };
 
 export const getUser = async (userId: number): Promise<GetUserResponse> => {
-    return await Fetch(`${API_BASE_URL}/api/user/${userId}`)
+  return await Fetch(`${API_BASE_URL}/api/user/${userId}`)
 }
 
+export const getUserImage = async (userId: number): Promise<Image> => {
+  return await Fetch(`${API_BASE_URL}/api/user/${userId}/image`)
+}
+
+export const useUserImage = (userId: number) => {
+  return useQuery({
+    queryKey: ["user", userId, "image"],
+    queryFn: () => getUserImage(userId),
+    retry: false
+  });
+};
+
+
 export const useGetUser = (userId: number) => {
-    return useQuery({
-        queryKey: ['profile', userId],
-        queryFn: async () => {
-            return getUser(userId);
-        }
-    })
+  return useQuery({
+    queryKey: ['profile', userId],
+    queryFn: async () => {
+      return getUser(userId);
+    }
+  })
 }
 export const getUserListings = async (userId: number): Promise<Listing[]> => {
   const res = await Fetch(`${API_BASE_URL}/api/listing/user/${userId}?page=0&offset=100`);

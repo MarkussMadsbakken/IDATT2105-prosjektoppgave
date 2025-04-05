@@ -1,5 +1,5 @@
 -- Migration script for creating the SubCategories table
-CREATE TABLE sub_categories (
+CREATE TABLE IF NOT EXISTS sub_categories (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   description VARCHAR(255),

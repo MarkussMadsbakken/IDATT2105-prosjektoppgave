@@ -1,5 +1,6 @@
 import type { Category, SubCategory } from "./category";
 import type { Listing } from "./listing";
+import type { Chat, Message } from "./message";
 import type { User } from "./user.ts";
 
 export type Page<T> = {
@@ -21,6 +22,12 @@ export type Page<T> = {
 }
 
 export const PAGE_SIZE = 6;
+
+export type GetChatsResponse = Chat[];
+
+export type CreateChatReponse = DefaultResponse & {
+    chatId: number;
+};
 
 /**
  * Login response returned from the API

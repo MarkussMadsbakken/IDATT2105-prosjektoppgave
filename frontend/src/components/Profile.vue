@@ -30,7 +30,7 @@ const handleLogout = () => {
 }
 
 const { data: user } = useGetUser(props.userId);
-const {data: listings, isPending, isError, error} = useGetUserListings(props.userId);
+const { data: listings, isPending, isError, error } = useGetUserListings(props.userId);
 
 const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.createdAt!).getFullYear());
 
@@ -42,8 +42,7 @@ const favoriteListings = [] as Listing[];
     <div class="page">
         <div class="user-box">
             <div class="user-info-box">
-                <img v-if="user?.imageUrl" :src="user.imageUrl" alt="Profilbilde" />
-                <UserImage v-else :size="120" stroke-width="1.5" />
+                <UserImage :user-id="props.userId" :size="120" stroke-width="1.5" />
                 <h3 class="username">{{ user?.username }}</h3>
             </div>
             <div class="text-field">
@@ -64,17 +63,13 @@ const favoriteListings = [] as Listing[];
             }) }} </div>
             <RouterLink class="router-link" :to="`/profile/${props.userId}/listings`">Vis alle</RouterLink>
         </div>
-      <div v-if="isPending">Laster oppføringer...</div>
-      <div v-else-if="isError">Kunne ikke hente oppføringer.</div>
-      <div class="listing-grid" v-else>
-          <ListingCard
-            v-for="listing in listings!.slice(0,3)"
-            :key="listing.uuid!"
-            :listing="listing"
-            size="medium"
-          />
+        <div v-if="isPending">Laster oppføringer...</div>
+        <div v-else-if="isError">Kunne ikke hente oppføringer.</div>
+        <div class="listing-grid" v-else>
+            <ListingCard v-for="listing in listings!.slice(0, 3)" :key="listing.uuid!" :listing="listing"
+                size="medium" />
         </div>
-      <template v-if="isOwnProfile">
+        <template v-if="isOwnProfile">
             <Divider />
             <div class="title-wrapper">
                 <div class="title"> Mine favoritter </div>

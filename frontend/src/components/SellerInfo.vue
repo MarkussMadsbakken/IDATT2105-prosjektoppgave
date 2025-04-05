@@ -13,13 +13,16 @@ const props = defineProps<{
   canContactSeller?: boolean;
 }>();
 
-console.log(props.userId)
+const emit = defineEmits<{
+  (e: 'contact-seller'): void;
+}>();
+
+
 const { data: user, isPending, isError, error } = useGetUser(props.userId);
 
 const joinedYear = computed(() => user.value && user.value.createdAt ? "Medlem siden " + new Date(user.value.createdAt).getFullYear() : '');
 const handleContactClick = () => {
-  // TODO
-  router.push(`/message/${user.value?.id}`);
+  emit('contact-seller');
 };
 
 </script>
@@ -33,7 +36,7 @@ const handleContactClick = () => {
   </div>
   <div class="seller-container" v-else>
     <div class="seller-left">
-      <UserImage :src="user?.imageUrl" />
+      <UserImage :user-id="user?.id!" />
       <div class="seller-info" :class="{ centered: !props.canContactSeller }">
         <div class="seller-names">
           <div class="seller-name">{{ user?.firstName }} {{ user?.lastName }}</div>

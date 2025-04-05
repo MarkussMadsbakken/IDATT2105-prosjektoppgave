@@ -1,99 +1,25 @@
 <script setup lang="ts">
+import { sendMessage, useChat, useChatMessages, useChats } from '@/actions/chat';
 import Button from '@/components/Button.vue';
 import ChatMessage from '@/components/ChatMessage.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SellerInfo from '@/components/SellerInfo.vue';
 import TextInput from '@/components/TextInput.vue';
+import { useAuth } from '@/stores/auth';
 import type { Chat, User } from '@/types';
+import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { computed, nextTick, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-const user1: User = {
-    id: 1,
-    username: "user1",
-    isAdmin: false,
-    firstName: "User",
-    lastName: "One",
-    createdAt: new Date().getTime(),
-    imageUrl: "https://img.freepik.com/free-photo/view-3d-cool-modern-bird_23-2150946449.jpg?t=st=1743520776~exp=1743524376~hmac=9ab3de77ebede1d2d2b2a1386b20b6e8de2a01346565e73528927450aa6bd821&w=2000"
-}
+const route = useRoute();
+const auth = useAuth();
+const queryClient = useQueryClient();
 
-const user2: User = {
-    id: 2,
-    username: "user2",
-    isAdmin: false,
-    firstName: "User",
-    lastName: "Two",
-    createdAt: new Date().getTime(),
-}
+const message = ref<string>("");
 
-const chat: Chat = {
-    id: 1,
-    seller: user1,
-    buyer: user2,
-    listing: {
-        uuid: "1",
-        name: "kult kjøleskap",
-        description: "Veldig kult kjøleskap jeg fant! Bare å komme med et tilbud, jeg hadde satt stor pris på det. I tillegg skal jeg bare si noe langt her slik at teksten overflower!!",
-        price: 6000,
-        ownerId: user1.id,
-        category: 1,
-        subCategory: undefined,
-        active: false,
-        postalCode: 0,
-        deleted: false,
-        sold: false
-    },
-    messages: [
-        {
-            id: 1,
-            sender: "buyer",
-            content: "Hei, jeg er interessert i kjøleskapet!",
-            createdAt: new Date(),
-        },
-        {
-            id: 2,
-            sender: "seller",
-            content: "Hei, det er bare å komme å hente det!",
-            createdAt: new Date(),
-        },
-        {
-            id: 3,
-            sender: "buyer",
-            content: "Takk for tilbudet, jeg kommer å henter det i morgen!",
-            createdAt: new Date(),
-        },
-        {
-            id: 4,
-            sender: "seller",
-            content: "Perfekt, vi sees i morgen!",
-            createdAt: new Date(),
-        },
-        {
-            id: 5,
-            sender: "buyer",
-            content: "Hei, jeg er interessert i kjøleskapet!",
-            createdAt: new Date(),
-        },
-        {
-            id: 6,
-            sender: "seller",
-            content: "Hei, det er bare å komme å hente det!",
-            createdAt: new Date(),
-        },
-        {
-            id: 7,
-            sender: "buyer",
-            content: "Takk for tilbudet, jeg kommer å henter det i morgen!",
-            createdAt: new Date(),
-        },
-        {
-            id: 8,
-            sender: "seller",
-            content: "Perfekt, vi sees i morgen!",
-            createdAt: new Date(),
-        }
-    ],
-    yourRole: "seller",
-}
+const chatId = Number(route.params.chatId);
+const { data: chat, isPending: chatIsPending, isError: chatIsError, error: chatError } = useChat(Number(chatId));
+const { data: messages, isPending: messagesIsPending, isError: messagesIsError, error: messagesError } = useChatMessages(Number(chatId));
 
 const lastMessageRef = ref<HTMLDivElement | null>(null);
 
@@ -103,22 +29,65 @@ onMounted(() => {
     });
 });
 
+const { mutate: sendMessageMutation, isPending: sendMessageIsPending } = useMutation({
+    mutationFn: sendMessage,
+    onMutate: (newMessage) => {
+        message.value = "";
+        messages.value?.push({
+            id: -1,
+            chatId: chatId,
+            senderId: auth.userId!,
+            message: newMessage.message,
+            createdAt: new Date().getTime().toString(),
+        });
+    },
+    onSuccess: () => {
+        queryClient.invalidateQueries({
+            queryKey: ["chat", chatId, "messages"]
+        });
+        messages.value?.filter((message) => message.id !== -1);
+        nextTick(() => {
+            lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+        });
+    },
+    onError: (error) => {
+        console.error("Error sending message:", error);
+        messages.value?.filter((message) => message.id !== -1);
+    },
+});
+
 </script>
 
 <template>
-    <div class="outer-wrapper">
+    <div class="outer-wrapper" v-if="!chatIsPending && !chatIsError">
         <div class="seller-info-wrapper">
-            <SellerInfo :userId="chat.seller.id" />
+            <SellerInfo :userId="chat?.sellerId!" />
+        </div>
+        <div v-if="messagesIsPending" class="loading">
+            <p>{{ $t("loading") }}</p>
+        </div>
+        <div v-else-if="messagesIsError" class="error">
+            <p>{{ $t("error") }}</p>
+        </div>
+        <div v-else-if="!messages || messages.length === 0" class="no-messages">
+            <p>{{ $t("noMessages") }}</p>
         </div>
         <div class="messages-wrapper">
-            <div v-for="(message) in chat.messages" :key="message.id">
-                <ChatMessage :message="message" :own-message="message.sender === chat.yourRole" />
+            <div v-for="(message) in messages" :key="message.id">
+                <ChatMessage :message="message" :own-message="message.senderId == auth.userId" />
             </div>
         </div>
-        <div class="chat-box-wrapper">
-            <TextInput class="input" />
-            <Button variant="primary">{{ $t("send") }}</Button>
-        </div>
+        <form class="chat-box-wrapper" @submit.prevent="sendMessageMutation({ chatId: chatId, message: message })">
+            <TextInput class="input" v-model="message" />
+            <Button variant="primary">
+                <template v-if="sendMessageIsPending">
+                    <LoadingSpinner />
+                </template>
+                <template v-else>
+                    {{ $t("send") }}
+                </template>
+            </Button>
+        </form>
         <div ref="lastMessageRef">
         </div>
     </div>
@@ -153,7 +122,7 @@ onMounted(() => {
 }
 
 .outer-wrapper {
-    margin-top: 1rem;
+    padding-top: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;

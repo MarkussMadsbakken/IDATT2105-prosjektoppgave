@@ -24,8 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-
-
 /**
  * Controller class for managing user-related operations.
  */
@@ -42,7 +40,8 @@ public class UserController {
    * Retrieves a user by their ID.
    *
    * @param id the ID of the user to retrieve
-   * @return the ResponseEntity containing the UserResponse if found, or a 404 status if not found
+   * @return the ResponseEntity containing the UserResponse if found, or a 404
+   *         status if not found
    */
   @GetMapping("/{id}")
   public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
@@ -79,7 +78,8 @@ public class UserController {
    * Retrieves a user by their username.
    *
    * @param username the username of the user to retrieve
-   * @return the ResponseEntity containing the UserResponse if found, or a 404 status if not found
+   * @return the ResponseEntity containing the UserResponse if found, or a 404
+   *         status if not found
    */
   @GetMapping("/username/{username}")
   public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
@@ -114,8 +114,8 @@ public class UserController {
   /**
    * Updates the information of a user in the database.
    *
-   * @param user the User object containing updated information
-   * @param token the JWT token of the user
+   * @param user      the User object containing updated information
+   * @param token     the JWT token of the user
    * @param userImage the users profile image (optional)
    * @return a ResponseEntity indicating the result of the update operation
    */
@@ -124,7 +124,7 @@ public class UserController {
       @RequestPart("userUpdate") UserUpdate user,
       @RequestPart(name = "userImage", required = false) MultipartFile userImage,
       @RequestHeader("Authorization") String token) {
-    if (!userService.userExists(token.substring(7))) {
+    if (!userService.userExists(token)) {
       logger.error("User does not exist");
       return ResponseEntity.notFound().build();
     }
@@ -149,8 +149,7 @@ public class UserController {
    */
   @ExceptionHandler(MissingServletRequestPartException.class)
   public ResponseEntity<String> handleMissingServletRequestPartException(
-      MissingServletRequestPartException ex
-  ) {
+      MissingServletRequestPartException ex) {
     logger.error("Missing request part: {}", ex.getRequestPartName(), ex);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body("Required part is missing: " + ex.getRequestPartName());
@@ -164,8 +163,7 @@ public class UserController {
    */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
-      MethodArgumentTypeMismatchException ex
-  ) {
+      MethodArgumentTypeMismatchException ex) {
     logger.error("Method argument type mismatch: {}", ex.getMessage(), ex);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body("Invalid parameter type: " + ex.getName());
@@ -179,8 +177,7 @@ public class UserController {
    */
   @ExceptionHandler(NoHandlerFoundException.class)
   public ResponseEntity<String> handleNoHandlerFoundException(
-      NoHandlerFoundException ex
-  ) {
+      NoHandlerFoundException ex) {
     logger.error("No handler found for request: {}", ex.getRequestURL(), ex);
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body("Endpoint not found: " + ex.getRequestURL());
