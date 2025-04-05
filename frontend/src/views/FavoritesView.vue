@@ -11,7 +11,7 @@ const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmark
 <template>
 
   <div class="title-wrapper">
-    <div class="title">Mitt arkiv:</div>
+    <div class="title">Mine favoritter: </div>
   </div>
   <div v-if="isBookmarkPending">Laster oppføringer...</div>
   <div v-else-if="isBookmarkError">Kunne ikke hente oppføringer.</div>
@@ -37,7 +37,7 @@ const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmark
 .title-wrapper{
   text-align: center;
 }
-.listing-grid {
+.listing-grid-favorites {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
