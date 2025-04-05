@@ -67,8 +67,8 @@ public class AuthService {
     Authentication authentication = authManager
         .authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-    User user = repo.getUserByUsername(username);
-    if (authentication.isAuthenticated()) {
+    if (authentication.isAuthenticated() && repo.getUserByUsername(username) != null) {
+      User user = repo.getUserByUsername(username);
       String token = jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
       return new LoginResponse("Login successful!", token);
     } else {
