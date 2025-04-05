@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import Fetch from "@/util/fetch";
-import useUpdateUser, { useUserImage } from '@/actions/user.ts';
+import { useUpdateUser, useUserImage } from '@/actions/user.ts';
 import Button from '@/components/Button.vue';
 import ImageSelector from '@/components/ImageSelector.vue';
 import TextInput from '@/components/TextInput.vue';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useAuth } from "@/stores/auth.ts";
 import { useGetUser } from '@/actions/user';
 import router from "@/router";

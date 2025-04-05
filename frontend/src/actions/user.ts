@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/types";
 import type { EditUserInfo, GetUserResponse, Image, Listing } from "@/types";
-import Fetch from "@/util/fetch";
+import Fetch, { FetchWithoutParse } from "@/util/fetch";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/vue-query";
 import { objectOmit } from "@vueuse/core";
 import { useAuth } from "@/stores/auth.ts";
@@ -32,7 +32,7 @@ export const updateUser = async (req: EditUserInfo & { profileImage?: File }) =>
   }
 };
 
-const useUpdateUser = (params?: { onSuccess?: () => void }) => {
+export const useUpdateUser = (params?: { onSuccess?: () => void }) => {
   return useMutation({
     mutationFn: updateUser,
     onSuccess: () => {
@@ -51,7 +51,7 @@ export const getUserImage = async (userId: number): Promise<Image> => {
 
 export const useUserImage = (userId: number) => {
   return useQuery({
-    queryKey: ["user", userId, "image"],
+    queryKey: ["user", "image", userId],
     queryFn: () => getUserImage(userId),
     retry: false
   });
@@ -60,7 +60,7 @@ export const useUserImage = (userId: number) => {
 
 export const useGetUser = (userId: number) => {
   return useQuery({
-    queryKey: ['profile', userId],
+    queryKey: ['user', userId],
     queryFn: async () => {
       return getUser(userId);
     }
@@ -77,4 +77,36 @@ export const useGetUserListings = (userId: number) => {
     queryFn: () => getUserListings(userId),
   });
 };
-export default useUpdateUser;
+
+export const getUserByUsername = async (username: string): Promise<GetUserResponse> => {
+  return await Fetch(`${API_BASE_URL}/api/user/username/${username}`);
+}
+
+export const useGetUserByUsername = (username: string) => {
+  return useQuery({
+    queryKey: ['user', username],
+    queryFn: () => getUserByUsername(username),
+  });
+}
+
+
+export const getUsernameIsAvaiable = async (username: string): Promise<boolean> => {
+  const res = await FetchWithoutParse(`${API_BASE_URL}/api/user/username/${username}`);
+
+  if (res.status === 404) {
+    return true;
+  }
+
+  if (!res.ok) {
+    const err = await res.json();
+    console.error(err);
+    throw new Error(err.error);
+  }
+
+  return false;
+}
+
+
+
+
+
