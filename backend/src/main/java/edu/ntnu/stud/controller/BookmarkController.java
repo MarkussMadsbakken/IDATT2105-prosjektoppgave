@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import edu.ntnu.stud.model.ListingResponse;
 
 /**
  * Controller class for managing bookmarks.
@@ -29,8 +30,8 @@ public class BookmarkController {
    * Retrieves a list of bookmarks for a user from the database.
    */
   @GetMapping("/user")
-  public ResponseEntity<List<String>> getBookmarks(@RequestHeader("Authorization") String token) {
-    List<String> bookmarks = bookmarkService.getBookmarksFromUser(token.substring(7));
+  public ResponseEntity<List<ListingResponse>> getBookmarks(@RequestHeader("Authorization") String token) {
+    List<ListingResponse> bookmarks = bookmarkService.getBookmarksFromUser(token);
     return ResponseEntity.ok(bookmarks);
   }
 

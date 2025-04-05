@@ -7,6 +7,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.ntnu.stud.model.ListingResponse;
+import java.util.ArrayList;
+
+
 /**
  * This class handles the business logic for bookmarks.
  */
@@ -17,6 +21,8 @@ public class BookmarkService {
   private BookmarkRepo bookmarkRepo;
   @Autowired
   private JWTService jwtService;
+  @Autowired
+  private ListingService listingService;
 
   /**
    * Adds a new bookmark to the database.
@@ -55,9 +61,26 @@ public class BookmarkService {
   /**
    * Gets a list of bookmarks for a user from the database.
    */
-  public List<String> getBookmarksFromUser(String token) {
+  public List<ListingResponse> getBookmarksFromUser(String token) {
     // Extract userId from the JWT token
-    return bookmarkRepo.getBookmarksFromUser(jwtService.extractUserId(token.substring(7)));
+
+    long userId = jwtService.extractUserId(token.substring(7));
+    List<String> listingIds =bookmarkRepo.getBookmarksFromUser(userId);
+
+    List<ListingResponse> listings = new ArrayList<>();
+
+
+    for (String listingId : listingIds) {
+      ListingResponse listing = listingService.getListingByUuid(listingId);
+
+      if (listing == null){
+        System.out.println("Feiling!!");
+      }
+      else {
+        listings.add(listing);
+      }
+    }
+    return listings;
   }
 
   /**
