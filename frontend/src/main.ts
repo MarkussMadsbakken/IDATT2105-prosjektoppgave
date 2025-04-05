@@ -121,6 +121,14 @@ const i18n = createI18n({
             noChats: "Ingen chatter funnet. Kontakt en selger for å starte en chat.",
             youHaveNotSentMessage: "Du har ikke sendt en melding enda",
             youHaveNotReceivedMessage: "Du har ikke mottatt en melding enda",
+            usernameTooShort: "Brukernavnet må være minst 3 tegn langt",
+            usernameAvailable: "Brukernavnet er tilgjengelig",
+            usernameNotAvailable: "Brukernavnet er ikke tilgjengelig",
+            previous: "Forrige",
+            next: "Neste",
+            finish: "Fullfør",
+            createAccount: "Opprett bruker",
+
         },
         en: {
             recommended: "Recommended for you",
@@ -188,6 +196,13 @@ const i18n = createI18n({
             noChats: "No chats found. Contact a seller to start a chat.",
             youHaveNotSentMessage: "You have not sent a message yet",
             youHaveNotReceivedMessage: "You have not received a message yet",
+            usernameTooShort: "Username must be at least 3 characters long",
+            usernameAvailable: "Username is available",
+            usernameNotAvailable: "Username is not available",
+            previous: "Previous",
+            next: "Next",
+            finish: "Finish",
+            createAccount: "Create account",
         }
     },
 });

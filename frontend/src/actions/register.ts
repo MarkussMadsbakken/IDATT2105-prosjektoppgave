@@ -29,12 +29,12 @@ export const register = async (req: RegisterRequest): Promise<RegisterResponse> 
 /**
  * Hook for registering in via a mutation
  */
-const useRegister = (params: { onSuccess: () => void }) => {
+const useRegister = (params?: { onSuccess: () => void }) => {
     return useMutation({
         mutationFn: async (data: RegisterRequest) => {
             return useAuth().register(async () => register(data));
         },
-        onSuccess: params.onSuccess,
+        onSuccess: params?.onSuccess,
     })
 }
 

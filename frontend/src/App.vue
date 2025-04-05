@@ -12,6 +12,7 @@ const i18n = useI18n();
 const changeLanguage = (lang: string) => {
   i18n.locale.value = lang;
 }
+
 </script>
 
 <template>
@@ -45,7 +46,7 @@ const changeLanguage = (lang: string) => {
           <MessageSquare />
         </RouterLink>
         <RouterLink :to="auth.isLoggedIn() ? '/profile' : '/login'" class="link profile">
-          <UserImage :user-id="auth.userId ?? 0" :size="60" />
+          <UserImage :user-id="auth.userId ?? 0" :size="60" :key="auth.userId" />
         </RouterLink>
       </div>
     </nav>

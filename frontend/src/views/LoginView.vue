@@ -3,6 +3,7 @@ import useLogin from '@/actions/login';
 import Button from '@/components/Button.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import TextInput from '@/components/TextInput.vue';
+import { useQueryClient } from '@tanstack/vue-query';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -10,9 +11,13 @@ const username = ref("");
 const password = ref("");
 
 const router = useRouter();
+const queryClient = useQueryClient();
 
 const { isError, error, isPending, mutate: login } = useLogin({
     onSuccess: () => {
+        queryClient.invalidateQueries({
+            queryKey: ["user", "image"]
+        });
         router.push("/");
     }
 });

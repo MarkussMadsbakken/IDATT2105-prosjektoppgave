@@ -1,6 +1,6 @@
 import { useAuth } from "@/stores/auth";
 import { API_BASE_URL, ApiError, type LoginRequest, type LoginResponse } from "@/types";
-import { useMutation } from "@tanstack/vue-query";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
 
 // IMPORTANT: Both login and register actions do not use the extended "Fetch" function
 // defned in /util/fetch.ts. This is because we do not yet have a token to send with the request.
@@ -33,7 +33,7 @@ const useLogin = (params: { onSuccess: () => void }) => {
         mutationFn: async (data: LoginRequest) => {
             await useAuth().login(async () => await login(data));
         },
-        onSuccess: params.onSuccess
+        onSuccess: params.onSuccess,
     })
 }
 
