@@ -56,12 +56,17 @@ const { mutate: sendMessageMutation, isPending: sendMessageIsPending } = useMuta
     },
 });
 
+const isSeller = computed(() => {
+    if (!chat.value) return false;
+    return chat.value.sellerId === auth.userId;
+});
+
 </script>
 
 <template>
     <div class="outer-wrapper" v-if="!chatIsPending && !chatIsError">
         <div class="seller-info-wrapper">
-            <SellerInfo :userId="chat?.sellerId!" />
+            <SellerInfo :userId="isSeller ? chat?.buyerId! : chat?.sellerId!" />
         </div>
         <div v-if="messagesIsPending" class="loading">
             <p>{{ $t("loading") }}</p>
