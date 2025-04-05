@@ -35,12 +35,8 @@ export const updateUser = async (req: EditUserInfo & { profileImage?: File }) =>
 const useUpdateUser = (params?: { onSuccess?: () => void }) => {
   return useMutation({
     mutationFn: updateUser,
-    onSuccess: (...args) => {
-      console.log("onSuccess i useUpdateUser!", args);
+    onSuccess: () => {
       params?.onSuccess?.();
-    },
-    onError(error, variables, context) {
-      console.log(error);
     },
   });
 };

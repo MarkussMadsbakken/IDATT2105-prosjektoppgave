@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
 /**
  * Service class for managing user-related operations.
  */
@@ -80,7 +78,7 @@ public class UserService {
    * Verfies the username og a user update request.
    *
    * @param userUpdate the UserUpdate object containing the username to verify
-   * @param token the JWT token of the user making the request
+   * @param token      the JWT token of the user making the request
    * @return true if the username is valid, false otherwise
    */
   public boolean verifyUsername(UserUpdate userUpdate, String token) {
@@ -97,8 +95,9 @@ public class UserService {
    * Updates the information of a user in the database.
    *
    * @param userUpdate the User object containing updated information
-   * @param token the JWT token of the user making the request
-   * @param image the MultipartFile image representing the users profile image
+   * @param token      the JWT token of the user making the request
+   * @param image      the MultipartFile image representing the users profile
+   *                   image
    * @return the corresponding response object for the
    */
   public UserResponse updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
@@ -108,6 +107,7 @@ public class UserService {
     user.setUsername(userUpdate.getUsername());
     user.setFirstName(userUpdate.getFirstName());
     user.setLastName(userUpdate.getLastName());
+
     if (image != null) {
       try {
         user.setImageFileType(image.getContentType());
@@ -117,12 +117,16 @@ public class UserService {
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
+
+      if (userRepo.updateUser(user)) {
+        return new UserResponse(user);
+      }
     }
 
-
-    if (userRepo.updateUser(user)) {
+    if (userRepo.updateUserWithoutImage(user)) {
       return new UserResponse(user);
     }
+
     return null;
   }
 
@@ -130,17 +134,18 @@ public class UserService {
    * Retrieves the image of a user by their ID.
    *
    * @param id the ID of the user whose image is to be retrieved
-   * @return a UserImageResponse containing the Base64 encoded image and file type,
+   * @return a UserImageResponse containing the Base64 encoded image and file
+   *         type,
    *         or null if the user or image is not found
-   * @throws RuntimeException if there is an error converting the image blob to Base64
+   * @throws RuntimeException if there is an error converting the image blob to
+   *                          Base64
    */
   public UserImageResponse getImageByUserId(long id) {
     User user = userRepo.getUserById(id);
     if (user != null && user.getImageBlob() != null) {
       try {
         return new UserImageResponse(
-            convertBlobToBase64(user.getImageBlob()), user.getImageFileType()
-        );
+            convertBlobToBase64(user.getImageBlob()), user.getImageFileType());
       } catch (SQLException e) {
         throw new RuntimeException("Error converting image blob to Base64", e);
       }
