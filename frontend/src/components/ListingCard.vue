@@ -160,7 +160,6 @@ const handleClick = (e: any) => {
   color: #333;
   margin-left: 0.5rem;
   margin-bottom: 0.5rem;
-  border-width: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 4, 10, 0.15);
   border: 1px solid black;
 }
