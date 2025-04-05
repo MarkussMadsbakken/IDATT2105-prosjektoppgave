@@ -1,33 +1,30 @@
 <script setup lang="ts">
 import Fetch from "@/util/fetch";
-import useUpdateUser from '@/actions/user.ts';
+import useUpdateUser, { useUserImage } from '@/actions/user.ts';
 import Button from '@/components/Button.vue';
 import ImageSelector from '@/components/ImageSelector.vue';
 import TextInput from '@/components/TextInput.vue';
-import {onMounted, ref} from 'vue';
-import {useAuth} from "@/stores/auth.ts";
+import { onMounted, ref, watch } from 'vue';
+import { useAuth } from "@/stores/auth.ts";
 import { useGetUser } from '@/actions/user';
-import {computed} from "vue";
 import router from "@/router";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import FormGroup from "@/components/FormGroup.vue";
+import { toImgString } from "@/util/imageToImgString";
+import { watchOnce } from "@vueuse/core";
 
-
-const firstName = ref("");
-const lastName = ref("");
-const userName = ref("");
 const profileImage = ref<File | null>(null);
-const userId = useAuth().userId
-const  usernameError=ref("");
-const updateResult =ref("");
+const auth = useAuth();
 
-if (!userId) {
+if (!auth.userId) {
   throw new Error("Bruker-ID mangler");
 }
 const {
-  data,
+  data: user,
   isError,
   error,
   isPending
-} = useGetUser(userId);
+} = useGetUser(auth.userId);
 
 const {
   mutate: updateUser,
@@ -36,31 +33,50 @@ const {
   error: updateError
 } = useUpdateUser({
   onSuccess: () => {
-    console.log("Brukerprofil oppdatert!");
-    router.push('/profile').then(()=>{
-      console.log("Route fungerte")
-    }).catch((err) => {
-      console.error("Feilet: ", err)
-    });
+    router.push('/profile').then(() => {
+    })
   },
 });
 
+const {
+  data: image,
+} = useUserImage(auth.userId);
 
-const profileImagePreview = computed(() => {
-  return profileImage.value ? URL.createObjectURL(profileImage.value) : null;
+const usernameIsError = ref(false);
+const profileImagePreview = ref<string | null>(image.value ? toImgString(image.value) : null);
+const firstName = ref(user.value?.firstName ?? "");
+const lastName = ref(user.value?.lastName ?? "");
+const userName = ref(user.value?.username ?? "");
+
+watch(profileImage, (newImage) => {
+  if (newImage) {
+    profileImagePreview.value = URL.createObjectURL(newImage);
+  }
+})
+
+watchOnce(user, (newuser) => {
+  if (newuser) {
+    firstName.value = newuser.firstName ?? "";
+    lastName.value = newuser.lastName ?? "";
+    userName.value = newuser.username!;
+  }
+});
+
+watchOnce(image, (newImage) => {
+  if (newImage) {
+    profileImagePreview.value = toImgString(newImage);
+  }
 });
 
 const onImageSelected = (files: File[]) => {
-  if (files.length>0){
-    profileImage.value=files[0];
+  if (files.length > 0) {
+    profileImage.value = files[0];
   }
 };
 const onSubmit = () => {
 
-  usernameError.value="";
-
-  if (!userName.value.trim()){
-    usernameError.value="Brukernavn må fylles ut";
+  if (!userName.value) {
+    usernameIsError.value = true;
     return;
   }
 
@@ -87,24 +103,22 @@ const onSubmit = () => {
           <img v-if="profileImagePreview" :src="profileImagePreview" alt="Forhåndsvisning" width="120" />
         </div>
       </div>
-      <div class="form-group">
-        <label for="firstName">Fornavn</label>
-        <TextInput v-model="firstName" type="text" id="firstName" :placeholder="data?.firstName ?? ''"/>
-      </div>
-
-      <div class="form-group">
-        <label for="lastName">Etternavn</label>
-        <TextInput v-model="lastName" type="text" id="lastName" :placeholder="data?.lastName ?? ''"/>
-      </div>
-      <div class="form-group">
-        <label for="userName">Brukernavn</label>
-        <TextInput v-model="userName" type="text" id="userName" :placeholder="data?.username ?? '' " :class="{ invalid: usernameError }"/>
-        <p v-if="usernameError" class="error-text">{{ usernameError }}</p>
-      </div>
-
-
-      <Button :label="'Lagre endringer'" variant="primary" @click="onSubmit" :disabled="isUpdatingUser || !!usernameError" >
-        Lagre endringer
+      <FormGroup name="firstName" :label="$t('firstName')">
+        <TextInput v-model="firstName" type="text" id="firstName" />
+      </FormGroup>
+      <FormGroup name="lastName" :label="$t('lastName')">
+        <TextInput v-model="lastName" type="text" id="lastName" />
+      </FormGroup>
+      <FormGroup name="userName" :label="$t('username')" :is-not-filled-in="usernameIsError">
+        <TextInput v-model="userName" type="text" id="userName" :class="{ invalid: usernameIsError }" />
+      </FormGroup>
+      <Button variant="primary" @click="onSubmit">
+        <template v-if="isUpdatingUser">
+          <LoadingSpinner />
+        </template>
+        <template v-else>
+          {{ $t("saveChanges") }}
+        </template>
       </Button>
     </div>
   </div>
@@ -135,22 +149,26 @@ const onSubmit = () => {
   justify-content: center;
   margin-top: 1rem;
 }
-.image-upload-preview{
-  display:flex;
+
+.image-upload-preview {
+  display: flex;
   flex-direction: row;
   gap: 2rem;
 }
-.image-upload-preview img{
+
+.image-upload-preview img {
   max-width: 200px;
   max-height: 200px;
   object-fit: contain;
   border-radius: 6px;
 }
+
 .error-text {
   color: red;
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
+
 .invalid {
   border: 1px solid red;
 }

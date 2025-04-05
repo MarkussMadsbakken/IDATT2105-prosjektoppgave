@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-
 /**
  * Repository class for managing User entities in the database.
  * This class provides methods to add, retrieve, and list users.
@@ -83,13 +82,12 @@ public class UserRepo {
   }
 
   /**
-   * Updates the user in the database. This may only update the username, first name, and last name.
+   * Updates the user in the database.
    *
    * @param user the User object to be updated
    */
   public boolean updateUser(User user) {
-    String query =
-        "UPDATE users SET "
+    String query = "UPDATE users SET "
         + "username = ?, first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?"
         + " WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(query,
@@ -98,6 +96,23 @@ public class UserRepo {
         user.getLastName(),
         user.getImageBlob(),
         user.getImageFileType(),
+        user.getId());
+    return rowsAffected > 0;
+  }
+
+  /**
+   * Updates the user in the database. Without affecting the user image.
+   *
+   * @param user the User object to be updated
+   */
+  public boolean updateUserWithoutImage(User user) {
+    String query = "UPDATE users SET "
+        + "username = ?, first_name = ?, last_name = ?"
+        + " WHERE id = ?";
+    int rowsAffected = jdbcTemplate.update(query,
+        user.getUsername(),
+        user.getFirstName(),
+        user.getLastName(),
         user.getId());
     return rowsAffected > 0;
   }

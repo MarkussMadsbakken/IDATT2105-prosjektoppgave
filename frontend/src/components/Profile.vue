@@ -111,6 +111,7 @@ const favoriteListings = [] as Listing[];
     gap: 3rem;
     align-items: center;
     justify-content: center;
+    padding-bottom: 3rem;
 }
 
 .username {
