@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import useRegister from '@/actions/register';
-import { updateUser, useUpdateUser } from '@/actions/user';
+import { useUpdateUser } from '@/actions/user';
 import Button from '@/components/Button.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import ChooseOptionals from '@/components/register/chooseOptionals.vue';
 import ChoosePassword from '@/components/register/choosePassword.vue';
 import ChooseUsername from '@/components/register/chooseUsername.vue';
-import TextInput from '@/components/TextInput.vue';
 import { useQueryClient } from '@tanstack/vue-query';
 import { AnimatePresence, motion } from 'motion-v';
-import { scale } from 'svelte/transition';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
