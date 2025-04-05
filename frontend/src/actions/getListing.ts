@@ -21,6 +21,7 @@ export const useGetListings = () => {
             if (lastPage.last) {
                 return undefined;
             }
+
             return lastPage.number + 1;
         },
         initialPageParam: 0

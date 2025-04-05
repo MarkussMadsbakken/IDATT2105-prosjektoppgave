@@ -8,6 +8,7 @@ import { useGetListings } from "@/actions/getListing";
 import { computed, ref } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import Button from "@/components/Button.vue";
 
 const {
   data,
@@ -15,6 +16,7 @@ const {
   error,
   isPending,
   hasNextPage,
+  isFetching,
   fetchNextPage,
 } = useGetListings();
 
@@ -42,12 +44,11 @@ const scrollWrapper = ref<HTMLElement | null>(null);
 useInfiniteScroll(
   scrollWrapper,
   () => {
-    if (isPending.value) return;
-    fetchNextPage()
+    fetchNextPage();
   },
   {
-    canLoadMore: () => hasNextPage.value,
-    distance: 0,
+    canLoadMore: () => { return hasNextPage.value && !isFetching.value },
+    distance: 10,
   }
 );
 
