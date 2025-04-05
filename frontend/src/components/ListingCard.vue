@@ -150,4 +150,17 @@ const handleClick = (e: any) => {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+.price.medium,
+.price.small{
+  background-color: #ffffff;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  display: inline-block;
+  color: #333;
+  margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 4, 10, 0.15);
+  border: 1px solid black;
+}
 </style>
