@@ -1,6 +1,6 @@
 package edu.ntnu.stud.model;
 
-import java.util.List;
+import java.sql.Timestamp;
 
 /**
  * Data Transfer Object (DTO) for Listing responses.
@@ -10,13 +10,15 @@ public class ListingResponse {
   private String name;
   private double price;
   private String description;
-  private List<String> pictures; // Base64 encoded strings
-  private String category;
-  private List<String> subcategories;
+  private int category;
+  private int subcategory;
   private int postalCode;
   private boolean active;
   private boolean deleted;
   private boolean sold;
+  private long ownerId;
+  private Timestamp createdAt;
+  private Timestamp updatedAt;
 
   // Getters and setters
   public String getUuid() {
@@ -51,28 +53,20 @@ public class ListingResponse {
     this.description = description;
   }
 
-  public List<String> getPictures() {
-    return pictures;
-  }
-
-  public void setPictures(List<String> pictures) {
-    this.pictures = pictures;
-  }
-
-  public String getCategory() {
+  public int getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
+  public void setCategory(int category) {
     this.category = category;
   }
 
-  public List<String> getSubcategories() {
-    return subcategories;
+  public int getSubcategory() {
+    return subcategory;
   }
 
-  public void setSubcategories(List<String> subcategories) {
-    this.subcategories = subcategories;
+  public void setSubcategory(int subcategory) {
+    this.subcategory = subcategory;
   }
 
   public int getPostalCode() {
@@ -105,5 +99,29 @@ public class ListingResponse {
 
   public void setSold(boolean sold) {
     this.sold = sold;
+  }
+
+  public long getOwnerId() {
+    return ownerId;
+  }
+
+  public void setOwnerId(long ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public Timestamp getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Timestamp getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Timestamp updatedAt) {
+    this.updatedAt = updatedAt;
   }
 }

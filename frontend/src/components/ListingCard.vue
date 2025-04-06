@@ -2,6 +2,7 @@
 import type { Listing } from '@/types';
 import ImageNotFound from './ImageNotFound.vue';
 import { useRouter } from 'vue-router';
+import ListingHeaderImage from './ListingHeaderImage.vue';
 
 const props = withDefaults(defineProps<{
     size?: "small" | "medium";
@@ -10,12 +11,11 @@ const props = withDefaults(defineProps<{
     size: "medium",
 });
 
-const headerImage = Array.isArray(props.listing.image) ? props.listing.image[0] : props.listing.image;
 const router = useRouter();
 
 const handleClick = (e: any) => {
     e.stopPropagation();
-    router.push(`/listing/${props.listing.id}`);
+    router.push(`/listing/${props.listing.uuid}`);
 }
 </script>
 
@@ -23,25 +23,20 @@ const handleClick = (e: any) => {
     <div @click="handleClick" class="link">
         <div class="outer-wrapper" :class="props.size">
             <div class="image-wrapper" :class="props.size">
-                <div v-if="listing.image">
-                    <img :src="headerImage" alt="listing" />
-                </div>
-                <div v-else>
-                    <ImageNotFound :size="props.size === 'medium' ? 80 : 40" strokewidth="0.5px" />
-                </div>
+                <ListingHeaderImage :listing-id="props.listing.uuid" :size="props.size" />
                 <div class="price" v-if="props.size !== 'small'" :class="props.size">
-                    {{ listing.price }} kr
+                    {{ props.listing.price }} kr
                 </div>
             </div>
             <div class="content-wrapper" :class="props.size">
                 <div class="title" :class="props.size">
-                    {{ listing.title }}
+                    {{ props.listing.name }}
                 </div>
                 <div class="price" v-if="props.size === 'small'" :class="props.size">
-                    {{ listing.price }} kr
+                    {{ props.listing.price }} kr
                 </div>
                 <div class="description" v-if="props.size !== 'small'">
-                    {{ listing.description }}
+                    {{ props.listing.description }}
                 </div>
             </div>
         </div>
@@ -103,6 +98,13 @@ const handleClick = (e: any) => {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+}
+
+.image-wrapper>img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .image-wrapper.medium {
@@ -147,5 +149,18 @@ const handleClick = (e: any) => {
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+.price.medium,
+.price.small{
+  background-color: #ffffff;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  display: inline-block;
+  color: #333;
+  margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 4, 10, 0.15);
+  border: 1px solid black;
 }
 </style>

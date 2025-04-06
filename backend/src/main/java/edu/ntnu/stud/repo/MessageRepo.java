@@ -1,13 +1,15 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Message;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import edu.ntnu.stud.model.MessageRequest;
+
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,13 +18,27 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class MessageRepo {
-  
+
   @Value("${spring.datasource.url}")
   private String url;
   @Value("${spring.datasource.username}")
   private String user;
   @Value("${spring.datasource.password}")
   private String password;
+
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
+
+  private final RowMapper<Message> messageRowMapper = (rs, rowNum) -> {
+    Message message = new Message();
+    message.setId(rs.getLong("id"));
+    message.setSenderId(rs.getLong("sender_id"));
+    message.setChatId(rs.getLong("chat_id"));
+    message.setMessage(rs.getString("message"));
+    message.setCreatedAt(rs.getTimestamp("created_at"));
+
+    return message;
+  };
 
   /**
    * Initializes the MessageRepo and loads the MySQL JDBC driver.
@@ -35,91 +51,21 @@ public class MessageRepo {
     }
   }
 
-  /**
-   * Adds a new message to the database.
-   *
-   * @param message the Message object to be added
-   */
-  public void addMessage(Message message) {
-    String query = "INSERT INTO messages " 
-        + "(listing_id, seller_id, byer_id, message, created_at, sent_by_buyer)" 
-        + " VALUES (?, ?, ?, ?, ?, ?)";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-         PreparedStatement statement = connection.prepareStatement(query)) {
-
-      statement.setString(1, message.getListingId());
-      statement.setLong(2, message.getByerId());
-      statement.setString(3, message.getMessage());
-      statement.setTimestamp(4, message.getCreatedAt());
-      statement.setBoolean(6, message.isSentByBuyer());
-
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+  public boolean addMessage(MessageRequest message) {
+    String query = "INSERT INTO message (sender_id, chat_id, message) VALUES (?, ?, ?)";
+    int rowsAffected = jdbcTemplate.update(query, message.getSenderId(), message.getChatId(),
+        message.getMessage());
+    return rowsAffected > 0;
   }
 
   /**
-   * Retrieves all messages for a specific listing with a spesific user involved from the database.
+   * Retrieves all messages of a specific chat.
    *
-   * @param listingId the ID of the listing
-   * @return a list of Message objects associated with the listing
+   * @param chatId the ID of the chat
+   * @return a list of messages associated with the chat ID
    */
-  public List<Message> getMessagesByListingIdAndUserId(String listingId, long userId) {
-    List<Message> messages = new ArrayList<>();
-    String query = "SELECT * FROM messages WHERE listing_id = ? AND (seller_id = ? OR byer_id = ?)";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-         PreparedStatement statement = connection.prepareStatement(query)) {
-
-      statement.setString(1, listingId);
-      statement.setLong(2, userId);
-      statement.setLong(3, userId);
-      var resultSet = statement.executeQuery();
-
-      while (resultSet.next()) {
-        Message message = new Message();
-        message.setId(resultSet.getLong("id"));
-        message.setListingId(resultSet.getString("listing_id"));
-        message.setByerId(resultSet.getLong("byer_id"));
-        message.setMessage(resultSet.getString("message"));
-        message.setCreatedAt(resultSet.getTimestamp("created_at"));
-        message.setSentByBuyer(resultSet.getBoolean("sent_by_buyer"));
-        messages.add(message);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return messages;
-  }
-
-  /**
-   * Retrieves all messages for a specific user from the database.
-   *
-   * @param userId the ID of the user
-   */
-  public List<Message> getMessagesByUserId(long userId) {
-    List<Message> messages = new ArrayList<>();
-    String query = "SELECT * FROM messages WHERE seller_id = ? OR byer_id = ?";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-         PreparedStatement statement = connection.prepareStatement(query)) {
-
-      statement.setLong(1, userId);
-      statement.setLong(2, userId);
-      var resultSet = statement.executeQuery();
-
-      while (resultSet.next()) {
-        Message message = new Message();
-        message.setId(resultSet.getLong("id"));
-        message.setListingId(resultSet.getString("listing_id"));
-        message.setByerId(resultSet.getLong("byer_id"));
-        message.setMessage(resultSet.getString("message"));
-        message.setCreatedAt(resultSet.getTimestamp("created_at"));
-        message.setSentByBuyer(resultSet.getBoolean("sent_by_buyer"));
-        messages.add(message);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return messages;
+  public List<Message> getMessagesByChatId(long chatId) {
+    String query = "SELECT * FROM message WHERE chat_id = ?";
+    return jdbcTemplate.query(query, messageRowMapper, chatId);
   }
 }

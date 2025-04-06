@@ -1,6 +1,7 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Category;
+import edu.ntnu.stud.model.CategoryRequest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,7 +41,7 @@ public class CategoryRepo {
    *
    * @param category the category to be added
    */
-  public void addCategory(Category category) {
+  public void addCategory(CategoryRequest category) {
     String query = "INSERT INTO categories (name, description, icon) VALUES (?, ?, ?)";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {

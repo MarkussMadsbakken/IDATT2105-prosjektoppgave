@@ -1,24 +1,38 @@
 <script setup lang="ts">
 import Searchbar from './Searchbar.vue';
 import CategoryCard from './CategoryCard.vue';
-import type { Category } from '@/types';
 import Collapsible from './Collapsible.vue';
+import { useCategories, useSubCategories } from '@/actions/categories';
+import AdvancedSearch from './AdvancedSearch.vue';
+import { computed } from 'vue';
 
 
 const props = withDefaults(defineProps<{
-  categories: Category[];
   selectedCategory?: string;
   searchValue?: string;
   open?: boolean;
+  selectedSubCategories?: string[];
+  showAdvancedSearch?: boolean;
+  selectedPriceRange?: [number, number];
 }>(), {
   open: false,
+  showAdvancedSearch: false,
 });
 
 defineEmits<{
   (e: "search", value: string): void
   (e: "selectCategory", index: string): void
   (e: "newSearchValue", value: string): void
+  (e: "toggleSubCategory", value: number): void
+  (e: "newPriceRange", value: [number, number]): void
 }>();
+
+const { data: categories, isError, error, isPending } = useCategories();
+
+const selectedCategoryId = computed(() => {
+  return categories.value?.find(c => c.name === props.selectedCategory)?.id ?? -1;
+});
+
 
 </script>
 
@@ -29,7 +43,7 @@ defineEmits<{
   </div>
   <Collapsible :openTitle="$t('showCategories')" :closedTitle="$t('hideCategories')" :open="props.open">
     <div class="categories">
-      <div v-for="category in props.categories">
+      <div v-for="category in categories" :key="category.name">
         <CategoryCard :icon="category.icon" :categoryname="category.name"
           :selected="category.name === props.selectedCategory" @click="$emit('selectCategory', category.name)">
           {{ $t(category.name) }}
@@ -37,6 +51,11 @@ defineEmits<{
       </div>
     </div>
   </Collapsible>
+  <AdvancedSearch v-if="props.showAdvancedSearch" :key="selectedCategoryId" :selectedCategoryId="selectedCategoryId"
+    :showLoadingState="isPending"
+    :selectedSubcategories="props.selectedSubCategories ? props.selectedSubCategories.map(Number) : undefined"
+    @subCategoryChanged="$emit('toggleSubCategory', $event)" @priceRangeChanged="$emit('newPriceRange', $event)"
+    :allowedSearchRange="[0, 100]" :selectedPriceRange="[0, 100]" />
 </template>
 
 

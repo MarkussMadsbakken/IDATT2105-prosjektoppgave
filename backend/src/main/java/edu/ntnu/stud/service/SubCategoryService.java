@@ -1,6 +1,7 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.SubCategory;
+import edu.ntnu.stud.model.SubCategoryRequest;
 import edu.ntnu.stud.repo.SubCategoryRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,20 @@ public class SubCategoryService {
     // TODO: field validation e.i. name, description, parrentId
 
     // Validate parrent
-    if (categoryService.getCategoryById(subCategory.getParrentId()) == null) {
+    if (categoryService.getCategoryById(subCategory.getParentId()) == null) {
+      throw new IllegalArgumentException("Parent category does not exist.");
+    }
+  }
+
+  /**
+   * Validates the subcategory request object.
+   *
+   * @param subCategoryRequest the subcategory request to be validated
+   */
+  public void validateSubCategoryRequest(SubCategoryRequest subCategoryRequest) {
+    // TODO: field validation e.i. name, description, parrentId
+
+    if (categoryService.getCategoryById(subCategoryRequest.getParentId()) == null) {
       throw new IllegalArgumentException("Parent category does not exist.");
     }
   }
@@ -45,9 +59,9 @@ public class SubCategoryService {
    *
    * @param subCategory the subcategory to be added
    */
-  public void addSubCategory(SubCategory subCategory) {
-    validateSubCategory(subCategory);
-    subCategoryRepo.addCategory(subCategory);
+  public void addSubCategory(SubCategoryRequest subCategory) {
+    validateSubCategoryRequest(subCategory);
+    subCategoryRepo.addSubCategory(subCategory);
   }
 
   /**
@@ -57,7 +71,7 @@ public class SubCategoryService {
    */
   public void updateSubCategory(SubCategory subCategory) {
     validateSubCategory(subCategory);
-    subCategoryRepo.updateCategory(subCategory);
+    subCategoryRepo.updateSubCategory(subCategory);
   }
 
   /**
@@ -66,7 +80,7 @@ public class SubCategoryService {
    * @param subCategoryId the ID of the subcategory to be deleted
    */
   public void deleteSubCategory(int subCategoryId) {
-    subCategoryRepo.deleteCategory(subCategoryId);
+    subCategoryRepo.deleteSubCategory(subCategoryId);
   }
 
   /**
@@ -85,7 +99,7 @@ public class SubCategoryService {
    * @return the subcategory with the specified ID, or null if not found
    */
   public SubCategory getSubCategoryById(int subCategoryId) {
-    return subCategoryRepo.getCategoryById(subCategoryId);
+    return subCategoryRepo.getSubCategoryById(subCategoryId);
   }
 
   /**

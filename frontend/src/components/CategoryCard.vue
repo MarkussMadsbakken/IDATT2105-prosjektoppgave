@@ -6,20 +6,18 @@ const router = useRouter();
 
 const props = withDefaults(defineProps<{
     icon: keyof typeof CategoryIcons;
-    categoryname: string;
     selected?: boolean;
 }>(), {
     selected: false,
 });
 
 defineEmits<(e: "click") => void>();
-
 const Icon = CategoryIcons[props.icon];
 
 </script>
 
 <template>
-    <div class=outer-wrapper :class="{ selected: props.selected }" @click="$emit('click')">
+    <div class="category-card-outer-wrapper" :class="{ selected: props.selected }" @click="$emit('click')">
         <div class="icon-wrapper">
             <Icon :size="30" :stroke-width="1.5" />
         </div>
@@ -44,7 +42,7 @@ const Icon = CategoryIcons[props.icon];
     align-items: center;
 }
 
-.outer-wrapper {
+.category-card-outer-wrapper {
     line-height: 0;
     display: flex;
     flex-direction: row;
@@ -60,7 +58,7 @@ const Icon = CategoryIcons[props.icon];
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.outer-wrapper:hover {
+.category-card-outer-wrapper:hover {
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     cursor: pointer;
 }

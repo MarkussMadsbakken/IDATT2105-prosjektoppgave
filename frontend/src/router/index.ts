@@ -38,19 +38,20 @@ const router = createRouter({
     {
       path: "/profile",
       name: "me",
-      component: () => import('../views/ProfileView.vue'),
+      component: () => import('../views/MyProfileView.vue'),
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: "/profile/listings",
-      name: "mylistings",
-      component: () => import("../views/UserListingsView.vue"),
+      path: "/profile/edit",
+      name: "editProfile",
+      component: () => import('../views/EditProfileView.vue'),
       meta: {
         requiresAuth: true
       }
     },
+
     {
       path: "/profile/:userid",
       name: "profile",
@@ -87,7 +88,7 @@ const router = createRouter({
       }
     },
     {
-      path: "/chat/:chatid",
+      path: "/chat/:chatId",
       name: "chat",
       component: () => import("../views/ChatView.vue"),
       meta: {
@@ -108,6 +109,15 @@ const router = createRouter({
       component: () => import("../views/RegisterView.vue"),
       meta: {
         requiresUnauthorized: true
+      }
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: () => import("../views/AdminView.vue"),
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
       }
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import("../views/NotFoundView.vue") },

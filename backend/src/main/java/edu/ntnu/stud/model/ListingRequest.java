@@ -1,21 +1,17 @@
 package edu.ntnu.stud.model;
 
-import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
-
 /**
  * Represents a request to create or update a listing.
  * This class contains the necessary information for a listing, including
- * name, price, description, pictures, category, subcategories, postal code,
+ * name, price, description, category, subcategory, postal code,
  * and status flags (active, deleted, sold).
  */
 public class ListingRequest {
   private String name;
   private double price;
   private String description;
-  private List<MultipartFile> pictures;
-  private String category;
-  private List<String> subcategories;
+  private int category;
+  private int subcategory;
   private int postalCode;
   private boolean active;
   private boolean deleted;
@@ -28,9 +24,8 @@ public class ListingRequest {
    * @param name the name of the listing
    * @param price the price of the listing
    * @param description the description of the listing
-   * @param pictures a list of MultipartFiles representing the pictures of the listing
    * @param category the category of the listing
-   * @param subcategories a list of subcategories of the listing
+   * @param subcategory a list of subcategory of the listing
    * @param postalCode the postal code of the listing
    * @param active the active status of the listing
    * @param deleted the deleted status of the listing
@@ -40,9 +35,8 @@ public class ListingRequest {
       String name,
       double price,
       String description,
-      List<MultipartFile> pictures,
-      String category,
-      List<String> subcategories,
+      int category,
+      int subcategory,
       int postalCode,
       boolean active,
       boolean deleted,
@@ -51,9 +45,8 @@ public class ListingRequest {
     this.name = name;
     this.price = price;
     this.description = description;
-    this.pictures = pictures;
     this.category = category;
-    this.subcategories = subcategories;
+    this.subcategory = subcategory;
     this.postalCode = postalCode;
     this.active = active;
     this.deleted = deleted;
@@ -84,28 +77,20 @@ public class ListingRequest {
     this.description = description;
   }
 
-  public List<MultipartFile> getPictures() {
-    return pictures;
-  }
-
-  public void setPictures(List<MultipartFile> pictures) {
-    // this.pictures = pictures;
-  }
-
-  public String getCategory() {
+  public int getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
+  public void setCategory(int category) {
     this.category = category;
   }
 
-  public List<String> getSubcategories() {
-    return subcategories;
+  public int getSubcategory() {
+    return subcategory;
   }
 
-  public void setSubcategories(List<String> subcategories) {
-    this.subcategories = subcategories;
+  public void setSubcategory(int subcategory) {
+    this.subcategory = subcategory;
   }
 
   public int getPostalCode() {

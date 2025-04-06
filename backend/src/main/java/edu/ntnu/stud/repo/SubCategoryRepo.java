@@ -1,6 +1,7 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.SubCategory;
+import edu.ntnu.stud.model.SubCategoryRequest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,14 +41,13 @@ public class SubCategoryRepo {
    *
    * @param category the category to be added
    */
-  public void addCategory(SubCategory category) {
-    String query = 
-        "INSERT INTO categories (name, description, parrent_id) VALUES (?, ?, ?)";
+  public void addSubCategory(SubCategoryRequest category) {
+    String query = "INSERT INTO sub_categories (name, description, category_id) VALUES (?, ?, ?)";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setString(1, category.getName());
       statement.setString(2, category.getDescription());
-      statement.setInt(4, category.getParrentId());
+      statement.setInt(3, category.getParentId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -59,8 +59,8 @@ public class SubCategoryRepo {
    *
    * @param categoryId the ID of the category to be deleted
    */
-  public void deleteCategory(int categoryId) {
-    String query = "DELETE FROM categories WHERE id = ?";
+  public void deleteSubCategory(int categoryId) {
+    String query = "DELETE FROM sub_categories WHERE id = ?";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setInt(1, categoryId);
@@ -75,15 +75,14 @@ public class SubCategoryRepo {
    *
    * @param category the category to be updated
    */
-  public void updateCategory(SubCategory category) {
-    String query =
-        "UPDATE categories SET name = ?, description = ?, parrent_id = ? WHERE id = ?";
+  public void updateSubCategory(SubCategory category) {
+    String query = "UPDATE sub_categories SET name = ?, description = ?, category_id = ? WHERE id = ?";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setString(1, category.getName());
       statement.setString(2, category.getDescription());
       statement.setInt(4, category.getId());
-      statement.setInt(5, category.getParrentId());
+      statement.setInt(5, category.getParentId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -96,8 +95,8 @@ public class SubCategoryRepo {
    * @param categoryId the ID of the category to be retrieved
    * @return the category object, or null if not found
    */
-  public SubCategory getCategoryById(int categoryId) {
-    String query = "SELECT * FROM categories WHERE id = ?";
+  public SubCategory getSubCategoryById(int categoryId) {
+    String query = "SELECT * FROM sub_categories WHERE id = ?";
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
       statement.setInt(1, categoryId);
@@ -107,7 +106,7 @@ public class SubCategoryRepo {
             resultSet.getInt("id"),
             resultSet.getString("name"),
             resultSet.getString("description"),
-            resultSet.getInt("parrent_id"));
+            resultSet.getInt("category_id"));
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -146,7 +145,7 @@ public class SubCategoryRepo {
    * @return a list of subcategories associated with the specified category ID
    */
   public List<SubCategory> getSubCategoriesByCategoryId(int categoryId) {
-    String query = "SELECT * FROM categories WHERE parrent_id = ?";
+    String query = "SELECT * FROM sub_categories WHERE category_id = ?";
     List<SubCategory> subCategories = new ArrayList<>();
     try (Connection connection = DriverManager.getConnection(url, user, password);
         PreparedStatement statement = connection.prepareStatement(query)) {
@@ -157,7 +156,7 @@ public class SubCategoryRepo {
             resultSet.getInt("id"),
             resultSet.getString("name"),
             resultSet.getString("description"),
-            resultSet.getInt("parrent_id")));
+            resultSet.getInt("category_id")));
       }
     } catch (SQLException e) {
       e.printStackTrace();

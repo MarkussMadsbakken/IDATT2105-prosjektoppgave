@@ -1,6 +1,7 @@
 package edu.ntnu.stud.model;
 
 import java.sql.Blob;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,16 +15,23 @@ public class Listing {
   private String name;
   private double price;
   private String description;
-  private String createdAt;
-  private String updatedAt;
+  private Timestamp createdAt;
+  private Timestamp updatedAt;
   private List<Blob> pictures;
-  private String category;
-  private List<String> subcategories;
+  private int category;
+  private int subcategory;
   private int postalCode;
   private boolean active;
   private boolean deleted;
   private boolean sold;
   private Long ownerId;
+
+  /**
+   * Constructs a new Listing with default values.
+   */
+  public Listing() {
+    this.uuid = UUID.randomUUID().toString();
+  }
 
   /**
    * Constructs a new Listing with the specified details.
@@ -32,6 +40,7 @@ public class Listing {
    * @param price the price of the listing
    * @param description the description of the listing
    * @param category the category of the listing
+   * @param subcategory the subcategory of the listing
    * @param postalCode the postal code of the listing
    * @param ownerId the ID of the owner of the listing
    */
@@ -39,7 +48,8 @@ public class Listing {
       String name,
       double price,
       String description,
-      String category,
+      int category,
+      int subcategory,
       int postalCode,
       Long ownerId
   ) {
@@ -48,12 +58,9 @@ public class Listing {
     this.price = price;
     this.description = description;
     this.category = category;
+    this.subcategory = subcategory;
     this.postalCode = postalCode;
     this.ownerId = ownerId;
-  }
-
-  public Listing() {
-    this.uuid = UUID.randomUUID().toString();
   }
 
   /**
@@ -130,38 +137,38 @@ public class Listing {
   }
 
   /**
-   * Returns the creation date of the listing.
+   * Returns the creation timestamp of the listing.
    *
-   * @return the creation date of the listing
+   * @return the creation timestamp of the listing
    */
-  public String getCreatedAt() {
+  public Timestamp getCreatedAt() {
     return createdAt;
   }
 
   /**
-   * Sets the creation date of the listing.
+   * Sets the creation timestamp of the listing.
    *
-   * @param createdAt the creation date to set
+   * @param createdAt the creation timestamp to set
    */
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(Timestamp createdAt) {
     this.createdAt = createdAt;
   }
 
   /**
-   * Returns the last updated date of the listing.
+   * Returns the last updated timestamp of the listing.
    *
-   * @return the last updated date of the listing
+   * @return the last updated timestamp of the listing
    */
-  public String getUpdatedAt() {
+  public Timestamp getUpdatedAt() {
     return updatedAt;
   }
 
   /**
-   * Sets the last updated date of the listing.
+   * Sets the last updated timestamp of the listing.
    *
-   * @param updatedAt the last updated date to set
+   * @param updatedAt the last updated timestamp to set
    */
-  public void setUpdatedAt(String updatedAt) {
+  public void setUpdatedAt(Timestamp updatedAt) {
     this.updatedAt = updatedAt;
   }
 
@@ -188,7 +195,7 @@ public class Listing {
    *
    * @return the category of the listing
    */
-  public String getCategory() {
+  public int getCategory() {
     return category;
   }
 
@@ -197,26 +204,26 @@ public class Listing {
    *
    * @param category the category to set
    */
-  public void setCategory(String category) {
+  public void setCategory(int category) {
     this.category = category;
   }
 
   /**
-   * Returns the subcategories of the listing.
+   * Returns the subcategory of the listing.
    *
-   * @return the subcategories of the listing
+   * @return the subcategory of the listing
    */
-  public List<String> getSubcategories() {
-    return subcategories;
+  public int getSubcategory() {
+    return subcategory;
   }
 
   /**
-   * Sets the subcategories of the listing.
+   * Sets the subcategory of the listing.
    *
-   * @param subcategories the subcategories to set
+   * @param subcategory the subcategory to set
    */
-  public void setSubcategories(List<String> subcategories) {
-    this.subcategories = subcategories;
+  public void setSubcategory(int subcategory) {
+    this.subcategory = subcategory;
   }
 
   /**

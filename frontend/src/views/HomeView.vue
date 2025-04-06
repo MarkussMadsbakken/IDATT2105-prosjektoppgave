@@ -1,76 +1,28 @@
 <script setup lang="ts">
 import ListingCard from "@/components/ListingCard.vue";
-import type { Category, Listing, User } from "@/types";
+import type { Category, GetListingsResponse, Listing, Page, User } from "@/types";
 import { useRouter } from "vue-router";
 import SearchOptions from "@/components/SearchOptions.vue";
 import Divider from "@/components/Divider.vue";
+import { useGetListings } from "@/actions/getListing";
+import { computed, ref } from "vue";
+import { useInfiniteScroll } from "@vueuse/core";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import Button from "@/components/Button.vue";
 
-const Categories: Category[] = [
-  {
-    icon: "armchair",
-    name: "interior",
-    id: 1,
-  },
-  {
-    icon: "monitorSmartphone",
-    name: "electronics",
-    id: 2,
-  },
-  {
-    icon: "washingMachine",
-    name: "appliances",
-    id: 3,
-  },
-  {
-    icon: "mountainSnow",
-    name: "leisure",
-    id: 4,
-  },
-  {
-    icon: "volleyball",
-    name: "sports",
-    id: 5,
-  },
-  {
-    icon: "shirt",
-    name: "clothing",
-    id: 6,
-  },
-  {
-    icon: "car",
-    name: "transport",
-    id: 7,
-  },
-  {
-    icon: "shrub",
-    name: "garden",
-    id: 8,
-  }
-]
+const {
+  data,
+  isError,
+  error,
+  isPending,
+  hasNextPage,
+  isFetching,
+  fetchNextPage,
+} = useGetListings();
 
-const listings: Listing[] = [
-  {
-    id: "1",
-    title: "kult kjøleskap",
-    description: "Veldig kult kjøleskap jeg fant! Bare å komme med et tilbud, jeg hadde satt stor pris på det. I tillegg skal jeg bare si noe langt her slik at teksten overflower!!",
-    price: 6000,
-    seller: {} as User,
-  },
-  {
-    id: "2",
-    title: "sjarmerende sofa",
-    description: "En utrolig komfortabel og sjarmerende sofa som passer perfekt i stuen din.",
-    price: 3500,
-    seller: {} as User,
-  },
-  {
-    id: "3",
-    title: "elegant lampe",
-    description: "En elegant lampe som sprer et varmt lys og skaper en koselig atmosfære.",
-    price: 1500,
-    seller: {} as User,
-  },
-]
+const listings = computed<Page<Listing>[]>(
+  () => data?.value?.pages ?? []
+);
 
 const router = useRouter();
 
@@ -88,25 +40,56 @@ const handleCategoryClick = (newCategory: string) => {
   })
 }
 
+const scrollWrapper = ref<HTMLElement | null>(null);
+useInfiniteScroll(
+  scrollWrapper,
+  () => {
+    fetchNextPage();
+  },
+  {
+    canLoadMore: () => { return hasNextPage.value && !isFetching.value },
+    distance: 10,
+  }
+);
+
 </script>
 
 <template>
-  <div class="page-wrapper">
-    <SearchOptions :categories="Categories" @search="handleSearch" @select-category="handleCategoryClick"
-      :open="true" />
+  <span v-if="isPending">Loading...</span>
+  <span v-else-if="isError">Error: {{ error?.message }}</span>
+  <div class="page-wrapper" v-else>
+    <SearchOptions @search="handleSearch" @select-category="handleCategoryClick" :open="true" />
     <Divider />
     <div class="header-title">
       {{ $t('recommended') }}
     </div>
     <div class="recommended-listings">
-      <div v-for="listing in listings">
-        <ListingCard :listing="listing" />
+      <template v-for="(page, index) in listings">
+        <div v-for="listing in page.content" :key="index">
+          <ListingCard :listing="listing" />
+        </div>
+      </template>
+    </div>
+    <div ref="scrollWrapper">
+      <div v-if="isPending" class="loading-spinner">
+        <LoadingSpinner />
+      </div>
+      <div v-else-if="!hasNextPage" class="no-more-listings">
+        {{ $t('noMoreListings') }}
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.no-more-listings {
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
 .search {
   width: 63rem;
   display: flex;

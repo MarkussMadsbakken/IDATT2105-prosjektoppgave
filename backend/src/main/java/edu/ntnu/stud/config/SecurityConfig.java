@@ -4,6 +4,7 @@ import edu.ntnu.stud.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,25 +34,40 @@ public class SecurityConfig {
   private JwtRequestFilter jwtRequestFilter;
 
   /**
-   * Configures the security filter chain for the application. 
+   * Configures the security filter chain for the application.
    * This method sets up CORS, CSRF, authorization rules, session management,
    * HTTP headers, and the JWT filter.
-  */
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
-        .cors(Customizer.withDefaults())
-        .csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(request -> request
-            .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**", "/api/listing/").permitAll()
-            .anyRequest().authenticated())
-        .httpBasic(Customizer.withDefaults())
-        .sessionManagement(session 
-            -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
-            .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-        .build();
+      .cors(Customizer.withDefaults())
+      .csrf(AbstractHttpConfigurer::disable)
+      .authorizeHttpRequests(request -> request
+      .requestMatchers(
+        "/api/auth/login", 
+        "/api/auth/register"
+      ).permitAll()
+      .requestMatchers(
+        HttpMethod.GET, 
+        "/api/notifications", 
+        "/api/notifications/**",
+        "api/bookmark/**",
+        "/api/categories",
+        "/api/categories/**",
+        "/api/listing",
+        "/api/listing/**",
+        "/api/user",
+        "/api/user/**"
+      ).permitAll()
+      .anyRequest().authenticated())
+      .httpBasic(Customizer.withDefaults())
+      .sessionManagement(session 
+          -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
+      .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+      .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+      .build();
   }
 
   /**
@@ -67,9 +83,8 @@ public class SecurityConfig {
     return provider;
   }
 
-  
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) 
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
 

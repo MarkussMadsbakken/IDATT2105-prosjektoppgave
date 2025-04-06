@@ -43,13 +43,13 @@ public class JWTService {
    * Generates a JWT token with the specified username, userId, and admin status.
    *
    * @param username the username to include in the token
-   * @param userId the user ID to include in the token
-   * @param isAdmin whether the user is an admin
+   * @param userId   the user ID to include in the token
+   * @param isAdmin  whether the user is an admin
    * @return the generated JWT token as a string
    */
   public String generateToken(String username, long userId, boolean isAdmin) {
     Map<String, Object> claims = new HashMap<>();
-    claims.put("refreshToken", "placeholder: refreshtoken");
+    claims.put("refreshToken", "placeholder");
     claims.put("userId", userId);
     claims.put("isAdmin", isAdmin);
 
@@ -58,7 +58,7 @@ public class JWTService {
         .add(claims)
         .subject(username)
         .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + 1000 * 5 * 60))
+        .expiration(new Date(System.currentTimeMillis() + 1000 * 5 * 60 * 60))
         .and()
         .signWith(getKey())
         .compact();
@@ -108,5 +108,5 @@ public class JWTService {
   public boolean extractIsAdmin(String token) {
     return extractClaim(token, claims -> claims.get("isAdmin", Boolean.class));
   }
-  
+
 }
