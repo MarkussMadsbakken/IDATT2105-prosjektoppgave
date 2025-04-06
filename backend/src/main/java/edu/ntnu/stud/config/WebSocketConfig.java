@@ -1,5 +1,7 @@
 package edu.ntnu.stud.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -14,22 +16,19 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+  @Autowired
+  private ApplicationContext applicationContext;
+
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    // The endpoint clients will use to connect to the WebSocket server
-    // withSockJS() enables SockJS fallback options
-    registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+    registry.addEndpoint("/ws")
+        .setAllowedOriginPatterns("*")
+        .setHandshakeHandler(new WebSocketHandshakeHandler())
+        .addInterceptors(applicationContext.getBean(WebSocketAuthHandshakeInterceptor.class));
   }
 
   @Override
   public void configureMessageBroker(MessageBrokerRegistry registry) {
-    // Prefix for messages bound for message-handling methods
-    registry.setApplicationDestinationPrefixes("/app");
-
-    // Prefix for messages bound for the broker (to be broadcast to subscribers)
-    registry.enableSimpleBroker("/topic", "/queue");
-
-    // For user-specific messages
     registry.setUserDestinationPrefix("/user");
   }
 }
