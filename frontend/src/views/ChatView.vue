@@ -10,7 +10,7 @@ import { useAuth } from '@/stores/auth';
 import type { Chat, Message, User } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { watchOnce } from '@vueuse/core';
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -25,11 +25,18 @@ const { data: messages, isPending: messagesIsPending, isError: messagesIsError, 
 
 const lastMessageRef = ref<HTMLDivElement | null>(null);
 
-onMounted(() => {
-    nextTick(() => {
-        lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
-    });
-});
+watch(
+    messages,
+    (newMessages) => {
+        if (!newMessages) return;
+        nextTick(() => {
+            setTimeout(() => {
+                lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+            }, 100);
+        });
+    }
+);
+
 
 const { mutate: sendMessageMutation, isPending: sendMessageIsPending } = useMutation({
     mutationFn: sendMessage,
@@ -38,9 +45,6 @@ const { mutate: sendMessageMutation, isPending: sendMessageIsPending } = useMuta
             queryKey: ["chat", chatId, "messages"]
         });
         message.value = "";
-        nextTick(() => {
-            lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
-        });
     },
 });
 
@@ -48,7 +52,6 @@ const isSeller = computed(() => {
     if (!chat.value) return false;
     return chat.value.sellerId === auth.userId;
 });
-
 
 const ws = useWebSocket();
 
@@ -58,9 +61,6 @@ ws.subscribe(
         if (message.chatId !== chatId) return;
         queryClient.setQueryData(["chat", chatId, "messages"], (oldMessages: Message[] | undefined) => {
             return [...(oldMessages || []), message];
-        });
-        nextTick(() => {
-            lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
         });
     }
 );
