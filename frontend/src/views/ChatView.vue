@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { sendMessage, useChat, useChatMessages, useChats } from '@/actions/chat';
+import { useWebSocket } from '@/actions/websocket';
 import Button from '@/components/Button.vue';
 import ChatMessage from '@/components/ChatMessage.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SellerInfo from '@/components/SellerInfo.vue';
 import TextInput from '@/components/TextInput.vue';
 import { useAuth } from '@/stores/auth';
-import type { Chat, User } from '@/types';
+import type { Chat, Message, User } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
+import { watchOnce } from '@vueuse/core';
 import { computed, nextTick, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -31,28 +33,14 @@ onMounted(() => {
 
 const { mutate: sendMessageMutation, isPending: sendMessageIsPending } = useMutation({
     mutationFn: sendMessage,
-    onMutate: (newMessage) => {
-        message.value = "";
-        messages.value?.push({
-            id: -1,
-            chatId: chatId,
-            senderId: auth.userId!,
-            message: newMessage.message,
-            createdAt: new Date().getTime().toString(),
-        });
-    },
     onSuccess: () => {
         queryClient.invalidateQueries({
             queryKey: ["chat", chatId, "messages"]
         });
-        messages.value?.filter((message) => message.id !== -1);
+        message.value = "";
         nextTick(() => {
             lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
         });
-    },
-    onError: (error) => {
-        console.error("Error sending message:", error);
-        messages.value?.filter((message) => message.id !== -1);
     },
 });
 
@@ -60,6 +48,22 @@ const isSeller = computed(() => {
     if (!chat.value) return false;
     return chat.value.sellerId === auth.userId;
 });
+
+
+const ws = useWebSocket();
+
+ws.subscribe(
+    "/user/queue/messages",
+    (message: Message) => {
+        if (message.chatId !== chatId) return;
+        queryClient.setQueryData(["chat", chatId, "messages"], (oldMessages: Message[] | undefined) => {
+            return [...(oldMessages || []), message];
+        });
+        nextTick(() => {
+            lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+        });
+    }
+);
 
 </script>
 
