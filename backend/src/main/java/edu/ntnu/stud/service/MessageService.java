@@ -30,7 +30,13 @@ public class MessageService {
     return messageRepo.getMessagesByChatId(chatId);
   }
 
-  public boolean addMessage(MessageRequest message) {
+  /**
+   * Adds a message to a chat, and returns the ID of the new message.
+   *
+   * @param message the message to add
+   * @return the ID of the new message
+   */
+  public Long addMessage(MessageRequest message) {
     return messageRepo.addMessage(message);
   }
 
