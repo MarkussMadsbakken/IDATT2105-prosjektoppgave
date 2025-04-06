@@ -25,6 +25,7 @@ export type CreateListingRequest = {
     price: number,
     description: string,
     category: number,
+    subcategory?: number,
     postalCode: number,
     images: File[];
 }

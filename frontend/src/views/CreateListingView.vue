@@ -72,6 +72,7 @@ const onSubmit = () => {
         price: Number(price.value),
         postalCode: Number(postalCode.value),
         category: category.value!,
+        subcategory: subCategories?.value?.[0] ?? undefined,
         images: selectedImages.value
     });
 }

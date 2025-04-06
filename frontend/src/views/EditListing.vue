@@ -89,7 +89,7 @@ const onSubmit = () => {
         price: Number(price.value),
         postalCode: Number(postalCode.value),
         category: category.value!,
-        subCategory: subCategories?.value?.[0] ?? undefined,
+        subcategory: subCategories?.value?.[0] ?? undefined,
         uuid: listingId,
         active: listingWithImages.value?.listing.active!,
         deleted: listingWithImages.value?.listing.deleted!,
@@ -125,7 +125,7 @@ const onSubmit = () => {
             <FormGroup :label="$t('category')" name="category"
                 :isNotFilledIn="errors.find(e => e.field === 'category')?.isError">
                 <CategorySelector
-                    :initial-sub-categories="listingWithImages?.listing.subCategory ? [listingWithImages.listing.subCategory] : undefined"
+                    :initial-sub-categories="listingWithImages?.listing.subcategory ? [listingWithImages.listing.subcategory] : undefined"
                     :initial-category="listingWithImages?.listing.category" name="category"
                     @category-selected="category = $event" @subcategories-updated="subCategories = $event" />
             </FormGroup>
