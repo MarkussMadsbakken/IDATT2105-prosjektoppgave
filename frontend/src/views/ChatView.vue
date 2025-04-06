@@ -65,6 +65,14 @@ ws.subscribe(
     }
 );
 
+if (messages.value) {
+    nextTick(() => {
+        setTimeout(() => {
+            lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+        }, 100);
+    });
+}
+
 </script>
 
 <template>
