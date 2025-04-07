@@ -27,7 +27,7 @@ public class RecomendedService {
       int page,
       int size,
       String token) {
-    long userId = jwtService.extractUserId(token);
+    long userId = jwtService.extractUserId(token.substring(7));
     return listingService.getRecomendedListingsPage(page, size, userId);
   }
 }
