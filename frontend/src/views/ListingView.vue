@@ -143,14 +143,14 @@ const handleDelete = () => {
       <Alert variant="Info" v-else-if="!listing?.active">
         {{ $t("listingIsInactive") }}
       </Alert>
-      <Alert variant="Info" v-else-if="listing?.sold">
+      <Alert class="sold-warning" variant="Info" v-else-if="listing?.sold">
         {{ $t("listingIsPurchased") }}
       </Alert>
       <ListingImages :listing-id="listingId" />
       <div class="picture-footing">
         <div class="listing-price">{{ listing?.price }}kr</div>
         <div class="listing-actions">
-          <Button variant="outline" v-if="isOwnListing" @click="router.push(`/listing/${listingId}/edit`)">
+          <Button variant="outline" v-if="isOwnListing && !listing?.sold" @click="router.push(`/listing/${listingId}/edit`)">
             {{ $t("edit") }}
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
@@ -214,6 +214,8 @@ const handleDelete = () => {
 .listing-title {
   font-size: 60px;
   font-weight: bold;
+  width: 45rem;
+  line-height: 4rem;
 }
 
 .button-box {
@@ -264,5 +266,8 @@ const handleDelete = () => {
 .listing-price {
   font-size: 3rem;
   font-weight: bold;
+}
+.sold-warning{
+  width: 45rem;
 }
 </style>
