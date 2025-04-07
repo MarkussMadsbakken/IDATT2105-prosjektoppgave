@@ -23,8 +23,8 @@ const handleClick = (e: any) => {
     <div @click="handleClick" class="link">
         <div class="outer-wrapper" :class="props.size">
             <div class="image-wrapper" :class="props.size">
-                <ListingHeaderImage :listing-id="props.listing.uuid" :size="props.size" />
-                <div class="price" v-if="props.size !== 'small'" :class="props.size">
+                <ListingHeaderImage :listing-id="props.listing.uuid" :size="props.size == 'small' ? 40 : 80" />
+                <div class=" price" v-if="props.size !== 'small'" :class="props.size">
                     {{ props.listing.price }} kr
                 </div>
             </div>
@@ -150,17 +150,18 @@ const handleClick = (e: any) => {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
 .price.medium,
-.price.small{
-  background-color: #ffffff;
-  padding: 0.5rem 0.5rem;
-  border-radius: 0.25rem;
-  font-weight: 600;
-  display: inline-block;
-  color: #333;
-  margin-left: 0.5rem;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 4, 10, 0.15);
-  border: 1px solid black;
+.price.small {
+    background-color: #ffffff;
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    display: inline-block;
+    color: #333;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 4, 10, 0.15);
+    border: 1px solid black;
 }
 </style>
