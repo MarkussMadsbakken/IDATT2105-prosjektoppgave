@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS reservations (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    listingId VARCHAR(36) NOT NULL,
+    buyerId BIGINT NOT NULL,
+    reservationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (listingId) REFERENCES listings(uuid),
+    FOREIGN KEY (buyerId) REFERENCES users(id)
+);
