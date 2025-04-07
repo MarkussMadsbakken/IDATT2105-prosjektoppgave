@@ -261,4 +261,43 @@ public class ListingService {
         })
         .collect(Collectors.toList());
   }
+
+  /**
+   * Searches for listings based on the provided criteria.
+   *
+   * @param query       the search query to match against listing names or
+   *                    descriptions
+   * @param category    the category to filter listings by
+   * @param subCategory the subcategory to filter listings by
+   * @param minPrice    the minimum price of listings to include
+   * @param maxPrice    the maximum price of listings to include
+   * @param pageable    the pagination information, including page number, page
+   *                    size, and sorting
+   * @return a page of listings matching the search criteria
+   */
+  public Page<ListingResponse> search(
+      String query, 
+      Integer category, 
+      Integer subCategory, 
+      Double minPrice,
+      Double maxPrice, 
+      Pageable pageable) {
+    Page<Listing> listingsPage = 
+        listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
+   * Retives a paginated list of recommended listings for a user.
+   *
+   * @param page the page number to retrieve
+   * @param size the number of listings per page
+   * @param userId the ID of the user to retrieve recommendations for
+   * @return a paginated list of recommended listings
+   */
+  public Page<ListingResponse> getRecomendedListingsPage(int page, int size, long userId) {
+    Pageable pageable = Pageable.ofSize(size).withPage(page);
+    Page<Listing> listingsPage = listingRepo.getRecomendedListingsPage(userId, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
 }

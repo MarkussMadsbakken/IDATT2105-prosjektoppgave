@@ -123,4 +123,15 @@ public class ListingRepo {
   ) {
     return listingDao.search(query, category, subCategory, minPrice, maxPrice, pageable);
   }
+
+  /**
+   * Retrieves a paginated list of recommended listings for a user.
+   *
+   * @param userId the ID of the user for whom to retrieve recommendations
+   * @param pageable the pagination information, including page number, page size, and sorting
+   * @return a page of recommended listings for the specified user
+   */
+  public Page<Listing> getRecomendedListingsPage(long userId, Pageable pageable) {
+    return listingDao.findRecomendedListingsPage(userId, pageable);
+  }
 }
