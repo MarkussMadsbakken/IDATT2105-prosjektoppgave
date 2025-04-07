@@ -199,4 +199,24 @@ public class ListingController {
     return ResponseEntity.ok().body(
       new DefaultResponse("Listing purchased successfully", "listingPurchased"));
   }
+
+  /**
+   * Archives a listing by its UUID.
+   *
+   * @param uuid  the UUID of the listing to archive
+   * @param state the state to set for the listing
+   * @param token the JWT token for authorization
+   * @return a response indicating the success or failure of the archiving
+   */
+  @PostMapping("/{uuid}/archive")
+  public ResponseEntity<DefaultResponse> archiveListing(
+      @PathVariable String uuid,
+      @RequestParam boolean state,
+      @RequestHeader("Authorization") String token) {
+    logger.info("Archiving listing with UUID: {}", uuid);
+    listingService.archiveListing(uuid, state, token);
+    logger.info("Listing aktive status set successfully with UUID: {}", uuid);
+    return ResponseEntity.ok().body(
+      new DefaultResponse("Listing archived successfully", "listingArchived"));
+  }
 }

@@ -329,6 +329,29 @@ public class ListingService {
   }
 
   /**
+   * Archives a listing by its UUID.
+   *
+   * @param uuid the UUID of the listing to archive
+   * @param state the state to set for the listing (active or inactive)
+   * @param token the JWT token of the user making the request
+   */
+  public void archiveListing(String uuid, boolean state, String token) {
+    // Fetch values
+    Listing listing = listingRepo.getListingByUuid(uuid);
+    if (listing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
+    }
+    long userId = jwtService.extractUserId(token.substring(7));
+    if (listing.getOwnerId() != userId) {
+      throw new IllegalArgumentException("User does not own the listing with UUID: " + uuid);
+    }
+
+    // Create and do the listing update
+    listing.setActive(state);
+    listingRepo.updateListing(convertToListingUpdate(listing));
+  }
+
+  /**
    * Retrieves a list of listings by their UUIDs.
    */
   public List<ListingResponse> getListingsByUuids(List<String> uuids) {
