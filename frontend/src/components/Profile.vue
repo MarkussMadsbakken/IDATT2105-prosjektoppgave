@@ -6,9 +6,9 @@ import { useRoute, useRouter } from 'vue-router';
 import ListingCard from "@/components/ListingCard.vue";
 import { Settings } from "lucide-vue-next";
 import UserImage from "@/components/UserImage.vue";
-import { useGetUser } from '@/actions/user';
+import {useGetUser, useGetUserBookmarks} from '@/actions/user';
 import type { Listing } from '@/types';
-import { computed } from 'vue';
+import {computed, watch} from 'vue';
 import Divider from '@/components/Divider.vue';
 import { useGetUserListings } from '@/actions/user';
 
@@ -30,11 +30,9 @@ const handleLogout = () => {
 }
 
 const { data: user } = useGetUser(props.userId);
-const {data: listings, isPending, isError, error} = useGetUserListings(props.userId);
-
+const { data: listings, isPending, isError, error } = useGetUserListings(props.userId);
+const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmarkError, error: bookmarkError} = useGetUserBookmarks();
 const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.createdAt!).getFullYear());
-
-const favoriteListings = [] as Listing[];
 
 </script>
 
@@ -42,8 +40,7 @@ const favoriteListings = [] as Listing[];
     <div class="page">
         <div class="user-box">
             <div class="user-info-box">
-                <img v-if="user?.imageUrl" :src="user.imageUrl" alt="Profilbilde" />
-                <UserImage v-else :size="120" stroke-width="1.5" />
+                <UserImage :user-id="props.userId" :size="120" stroke-width="1.5" />
                 <h3 class="username">{{ user?.username }}</h3>
             </div>
             <div class="text-field">
@@ -62,27 +59,45 @@ const favoriteListings = [] as Listing[];
             <div class="title"> {{ isOwnProfile ? $t("ownListings") : $t("listingsByUser", {
                 name: user?.firstName ?? user?.username
             }) }} </div>
-            <RouterLink class="router-link" :to="`/profile/${props.userId}/listings`">Vis alle</RouterLink>
+            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">Vis alle</RouterLink>
         </div>
       <div v-if="isPending">Laster oppføringer...</div>
       <div v-else-if="isError">Kunne ikke hente oppføringer.</div>
-      <div class="listing-grid" v-else>
+      <div v-else>
+        <div v-if="listings && listings.length > 0" class="listing-grid">
           <ListingCard
-            v-for="listing in listings!.slice(0,3)"
-            :key="listing.uuid!"
+            v-for="listing in listings.slice(0, 3)"
+            :key="listing.uuid"
             :listing="listing"
             size="medium"
           />
         </div>
-      <template v-if="isOwnProfile">
+        <div v-else class="no-listings">
+          Du har ingen annonser ennå.
+        </div>
+      </div>
+        <template v-if="isOwnProfile">
             <Divider />
             <div class="title-wrapper">
                 <div class="title"> Mine favoritter </div>
                 <RouterLink class="router-link" to="/favorites">Vis alle</RouterLink>
             </div>
-            <div class="listing-grid">
-                <ListingCard v-for="listing in favoriteListings" :key="listing.uuid" :listing="listing" size="medium" />
+
+          <div v-if="isBookmarkPending">Laster oppføringer...</div>
+          <div v-else-if="isBookmarkError">Kunne ikke hente oppføringer.</div>
+          <div v-else>
+            <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
+              <ListingCard
+                v-for="listing in favoriteListings.slice(0, 3)"
+                :key="listing.uuid"
+                :listing="listing"
+                size="medium"
+              />
             </div>
+            <div v-else class="no-listings">
+              Du har ingen favoritter ennå.
+            </div>
+          </div>
         </template>
 
     </div>
@@ -116,6 +131,7 @@ const favoriteListings = [] as Listing[];
     gap: 3rem;
     align-items: center;
     justify-content: center;
+    padding-bottom: 3rem;
 }
 
 .username {
@@ -150,6 +166,14 @@ const favoriteListings = [] as Listing[];
     justify-content: center;
     max-width: calc(3*25rem + 2*2rem);
     margin: 0 auto;
+}
+.listing-grid-favorites{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    max-width: calc(3*25rem + 2*2rem);
+    margin-bottom: 3rem;
 }
 
 .listing-grid>* {
@@ -189,5 +213,10 @@ const favoriteListings = [] as Listing[];
 .title-wrapper .title {
     font-size: 50px;
     font-weight: bold;
+}
+.no-listings{
+  font-size: 1rem;
+  padding-bottom: 1rem;
+  font-weight: bold;
 }
 </style>

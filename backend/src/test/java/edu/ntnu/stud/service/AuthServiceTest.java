@@ -65,7 +65,7 @@ public class AuthServiceTest {
 
     @Test
     void register() {
-        RegisterRequest registerRequest = new RegisterRequest("testuser1", "password");
+        RegisterRequest registerRequest = new RegisterRequest("testuser", "password");
 
         try {
           RegisterResponse registerResponse = authService.register(registerRequest);

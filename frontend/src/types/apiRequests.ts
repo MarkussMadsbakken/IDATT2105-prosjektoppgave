@@ -25,6 +25,7 @@ export type CreateListingRequest = {
     price: number,
     description: string,
     category: number,
+    subcategory?: number,
     postalCode: number,
     images: File[];
 }
@@ -47,3 +48,8 @@ export type CreateCategoryRequest = Omit<Category, 'id'>;
 export type EditCategoryRequest = Category;
 
 export type CreateSubCategoryRequest = Omit<SubCategory, 'id'>;
+
+export type SendMessageRequest = {
+    chatId: number;
+    message: string;
+}

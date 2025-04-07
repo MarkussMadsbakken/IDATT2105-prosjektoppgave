@@ -1,4 +1,4 @@
-CREATE TABLE listings (
+CREATE TABLE IF NOT EXISTS listings (
                           uuid CHAR(36) NOT NULL PRIMARY KEY,
                           name VARCHAR(255) NOT NULL,
                           price DOUBLE NOT NULL,

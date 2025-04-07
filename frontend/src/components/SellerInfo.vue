@@ -6,20 +6,33 @@ import { useRouter } from "vue-router";
 import UserImage from './UserImage.vue';
 import { useGetUser } from '@/actions/user';
 import { computed } from 'vue';
+import { useAuth } from '@/stores/auth';
 
-const router = useRouter();
 const props = defineProps<{
   userId: number;
   canContactSeller?: boolean;
 }>();
 
-console.log(props.userId)
+const emit = defineEmits<{
+  (e: 'contact-seller'): void;
+}>();
+
+const router = useRouter();
+const auth = useAuth();
 const { data: user, isPending, isError, error } = useGetUser(props.userId);
 
 const joinedYear = computed(() => user.value && user.value.createdAt ? "Medlem siden " + new Date(user.value.createdAt).getFullYear() : '');
 const handleContactClick = () => {
-  // TODO
-  router.push(`/message/${user.value?.id}`);
+  emit('contact-seller');
+};
+
+const handleProfileClick = () => {
+  if (user?.value?.id === auth.userId) {
+    router.push('/profile');
+    return;
+  }
+
+  router.push(`/profile/${user.value?.id}`);
 };
 
 </script>
@@ -33,19 +46,22 @@ const handleContactClick = () => {
   </div>
   <div class="seller-container" v-else>
     <div class="seller-left">
-      <UserImage :src="user?.imageUrl" />
-      <div class="seller-info" :class="{ centered: !props.canContactSeller }">
-        <div class="seller-names">
-          <div class="seller-name">{{ user?.firstName }} {{ user?.lastName }}</div>
-          <div class="username">{{ user?.username }}</div>
-        </div>
-        <div class="seller-meta">
-          <span class="joined-site">{{ joinedYear }}</span>
+      <div class="seller-wrapper" @click="handleProfileClick">
+        <UserImage :user-id="user?.id!" />
+        <div class="seller-info" :class="{ centered: !props.canContactSeller }">
+          <div class="seller-names">
+            <div class="seller-name">{{ user?.firstName }} {{ user?.lastName }}</div>
+            <div class="username">{{ user?.username }}</div>
+          </div>
+          <div class="seller-meta">
+            <span class="joined-site">{{ joinedYear }}</span>
+          </div>
         </div>
       </div>
     </div>
-    <Button variant="outline" class="contact-button" @click="handleContactClick" v-if="props.canContactSeller">{{
-      $t("contactSeller") }}</Button>
+    <Button variant="outline" class="contact-button" @click="handleContactClick"
+      v-if="props.canContactSeller && user?.id !== auth.userId">{{
+        $t("contactSeller") }}</Button>
   </div>
 
 </template>
@@ -64,6 +80,16 @@ const handleContactClick = () => {
 
 .seller-container.centered {
   justify-content: center;
+}
+
+.seller-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  ;
 }
 
 .seller-left {

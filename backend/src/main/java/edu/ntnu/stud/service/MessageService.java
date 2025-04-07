@@ -2,10 +2,12 @@ package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
+import edu.ntnu.stud.repo.ChatRepo;
 import edu.ntnu.stud.repo.MessageRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,97 +19,25 @@ public class MessageService {
 
   @Autowired
   private MessageRepo messageRepo;
-  @Autowired
-  private JWTService jwtService;
 
   /**
-   * Adds a new message to the system.
+   * Gets all messages from a given chat.
    *
-   * @param message the message to be added
+   * @param chatId the id of the chat
+   * @return a list of messages in the chat
    */
-  public void addMessage(MessageRequest message) {
-    messageRepo.addMessage(message);
+  public List<Message> getAllMessagesByChatId(Long chatId) {
+    return messageRepo.getMessagesByChatId(chatId);
   }
 
   /**
-   * Validates the message fields.
+   * Adds a message to a chat, and returns the ID of the new message.
    *
-   * @param message the message to be validated
+   * @param message the message to add
+   * @return the ID of the new message
    */
-  public void validateMessageRequest(MessageRequest message) {
-    Validate.that(message.getByerId(), Validate.isPositive(), "Buyer ID cannot be zero.");
-    Validate.that(message.getSellerId(), Validate.isPositive(), "Seller ID cannot be zero.");
-    Validate.that(message.getListingId(), Validate.isNotEmptyOrBlankOrNull(),
-        "Listing ID cannot be empty or blank or null.");
-    Validate.that(message.getMessage(), Validate.isNotEmptyOrBlankOrNull(),
-        "Message cannot be empty or blank or null.");
-  }
-
-  /**
-   * Verifies the sender of the message.
-   *
-   * @param message the message to be verified
-   * @param token   the JWT token containing user claims
-   */
-  public void verifySender(MessageRequest message, String token) {
-    long senderFromToken = jwtService.extractUserId(token.substring(7));
-    if (!((senderFromToken == message.getByerId() && message.isSentByBuyer())
-        || (senderFromToken == message.getSellerId() && !message.isSentByBuyer()))) {
-      throw new IllegalArgumentException("Sender ID does not match the message sender.");
-    }
-  }
-
-  /**
-   * Retrieves a list of the latest messages in each conversation associated with
-   * a specific user.
-   *
-   * @param token the JWT token containing user claims
-   * @return a list of messages associated with the user ID
-   */
-  public List<Message> getMessagesByUserId(String token) {
-    long userId = jwtService.extractUserId(token.substring(7));
-    return messageRepo.getMessagesByUserId(userId);
-  }
-
-  /**
-   * Retrieves all messages associated with a specific listing ID and user ID.
-   *
-   * @param listingId the ID of the listing
-   * @param token     the JWT token containing user claims
-   * @return a list of messages associated with the listing ID and user ID
-   */
-  public List<Message> getMessagesByListingIdAndUserId(String listingId, String token) {
-    long userId = jwtService.extractUserId(token.substring(7));
-    return messageRepo.getMessagesByListingIdAndUserId(listingId, userId);
-  }
-
-  /**
-   * Retrieves a paginated list of the latest messages in each conversation
-   * associated with a specific user.
-   *
-   * @param token  the JWT token containing user claims
-   * @param page   the page number to retrieve
-   * @param offset the number of items per page
-   * @return a paginated list of messages associated with the user ID
-   */
-  public List<Message> getMessagesByUserIdPaginated(String token, int page, int offset) {
-    long userId = jwtService.extractUserId(token.substring(7));
-    return messageRepo.getMessagesByUserIdPaginated(userId, page, offset);
-  }
-
-  /**
-   * Retrieves a paginated list of messages associated with a specific listing ID
-   * and user ID.
-   *
-   * @param listingId the ID of the listing
-   * @param token     the JWT token containing user claims
-   * @param page      the page number to retrieve
-   * @param offset    the number of items per page
-   */
-  public List<Message> getMessagesByListingIdAndUserIdPaginated(
-      String listingId, String token, int page, int offset) {
-    long userId = jwtService.extractUserId(token.substring(7));
-    return messageRepo.getMessagesByListingIdAndUserIdPaginated(listingId, userId, page, offset);
+  public Long addMessage(MessageRequest message) {
+    return messageRepo.addMessage(message);
   }
 
 }

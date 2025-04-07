@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/types";
-import type { EditUserInfo, GetUserResponse, Listing } from "@/types";
-import Fetch from "@/util/fetch";
+import type { EditUserInfo, GetUserResponse, Image, Listing } from "@/types";
+import Fetch, { FetchWithoutParse } from "@/util/fetch";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/vue-query";
 import { objectOmit } from "@vueuse/core";
 import { useAuth } from "@/stores/auth.ts";
@@ -32,30 +32,39 @@ export const updateUser = async (req: EditUserInfo & { profileImage?: File }) =>
   }
 };
 
-const useUpdateUser = (params?: { onSuccess?: () => void }) => {
+export const useUpdateUser = (params?: { onSuccess?: () => void }) => {
   return useMutation({
     mutationFn: updateUser,
-    onSuccess: (...args) => {
-      console.log("onSuccess i useUpdateUser!", args);
+    onSuccess: () => {
       params?.onSuccess?.();
     },
-    onError(error, variables, context) {
-      console.log(error);
-},
   });
 };
 
 export const getUser = async (userId: number): Promise<GetUserResponse> => {
-    return await Fetch(`${API_BASE_URL}/api/user/${userId}`)
+  return await Fetch(`${API_BASE_URL}/api/user/${userId}`)
 }
 
+export const getUserImage = async (userId: number): Promise<Image> => {
+  return await Fetch(`${API_BASE_URL}/api/user/${userId}/image`)
+}
+
+export const useUserImage = (userId: number) => {
+  return useQuery({
+    queryKey: ["user", "image", userId],
+    queryFn: () => getUserImage(userId),
+    retry: false
+  });
+};
+
+
 export const useGetUser = (userId: number) => {
-    return useQuery({
-        queryKey: ['profile', userId],
-        queryFn: async () => {
-            return getUser(userId);
-        }
-    })
+  return useQuery({
+    queryKey: ['user', userId],
+    queryFn: async () => {
+      return getUser(userId);
+    }
+  })
 }
 export const getUserListings = async (userId: number): Promise<Listing[]> => {
   const res = await Fetch(`${API_BASE_URL}/api/listing/user/${userId}?page=0&offset=100`);
@@ -66,6 +75,47 @@ export const useGetUserListings = (userId: number) => {
   return useQuery({
     queryKey: ['userListings', userId],
     queryFn: () => getUserListings(userId),
+  });
+};
+
+export const getUserByUsername = async (username: string): Promise<GetUserResponse> => {
+  return await Fetch(`${API_BASE_URL}/api/user/username/${username}`);
+}
+
+export const useGetUserByUsername = (username: string) => {
+  return useQuery({
+    queryKey: ['user', username],
+    queryFn: () => getUserByUsername(username),
+  });
+}
+
+
+export const getUsernameIsAvaiable = async (username: string): Promise<boolean> => {
+  const res = await FetchWithoutParse(`${API_BASE_URL}/api/user/username/${username}`);
+
+  if (res.status === 404) {
+    return true;
+  }
+
+  if (!res.ok) {
+    const err = await res.json();
+    console.error(err);
+    throw new Error(err.error);
+  }
+
+  return false;
+}
+
+
+
+
+export const getUserBookmarks = async (): Promise<Listing[]> => {
+  return await Fetch(`${API_BASE_URL}/api/bookmark/user`);
+}
+export const useGetUserBookmarks = () => {
+  return useQuery({
+    queryKey: ['userBookmarks'],
+    queryFn: getUserBookmarks,
   });
 };
 export default useUpdateUser;

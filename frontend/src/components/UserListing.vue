@@ -16,11 +16,11 @@
 
 <template>
   <div class="title-wrapper">
-    <div class="title">{{ user?.username }} sine artikler</div>
+    <div class="title">{{ user?.username }} sine artikler: </div>
   </div>
   <div v-if="isPending">Laster oppføringer...</div>
   <div v-else-if="isError">Kunne ikke hente oppføringer.</div>
-  <div class="listing-grid" v-else>
+  <div v-if="listings && listings.length > 0" class="listing-grid" >
     <ListingCard
       v-for="listing in listings!"
       :key="listing.uuid!"
@@ -28,24 +28,32 @@
       size="medium"
     />
   </div>
+  <div v-else class="no-listings">
+    Her er det tomt.
+  </div>
 </template>
 
 <style scoped>
 .title{
-  font-size: 60px;
+  font-size: 4.5rem;
   font-weight: bold;
 }
 .title-wrapper{
-  margin-top: 3rem;
+  padding-top: 3rem;
   text-align: center;
 }
-.listing-grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+.listing-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2rem;
   max-width: 80rem;
-  margin: 2rem auto;
+  margin: 2rem auto 5rem auto;
   padding: 0 2rem;
-  margin-bottom: 5rem;
+}
+.no-listings{
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
 }
 </style>

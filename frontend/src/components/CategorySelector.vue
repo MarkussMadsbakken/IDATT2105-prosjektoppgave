@@ -9,14 +9,15 @@ import type { Category } from '@/types';
 import { watchOnce } from '@vueuse/core';
 
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     isError?: boolean
     name?: string
     initialCategory?: number
     initialSubCategories?: number[]
-}>();
-
-console.log(props.initialSubCategories);
+    multiSelect?: boolean;
+}>(), {
+    multiSelect: true,
+});
 
 const emit = defineEmits<{
     (e: 'categorySelected', category: number): void
@@ -83,8 +84,9 @@ const handleSubCategoryToggle = (id: number) => {
         </Select>
         <template v-if="selectedCategory">
             <p> {{ $t('subCategories') }}</p>
-            <SubCategorySelector :selected-category-id="selectedCategory.id" :key="selectedCategory.id"
-                @subCategoryChanged="handleSubCategoryToggle" />
+            <SubCategorySelector :selected-subcategories="props.initialSubCategories"
+                :selected-category-id="selectedCategory.id" :key="selectedCategory.id"
+                @subCategoryChanged="handleSubCategoryToggle" :multi-select="props.multiSelect" />
         </template>
     </template>
 </template>
