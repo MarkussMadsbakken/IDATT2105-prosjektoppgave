@@ -241,7 +241,7 @@ public class ListingDao {
    * @return a list of listings with the specified IDs
    */
   public List<Listing> findByIds(List<String> ids) {
-    String sql = "SELECT * FROM listings WHERE id IN ("
+    String sql = "SELECT * FROM listings WHERE uuid IN ("
         + String.join(",", ids) + ")";
     return jdbcTemplate.query(sql, listingRowMapper);
   }
