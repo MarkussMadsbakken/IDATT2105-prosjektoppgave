@@ -2,6 +2,7 @@ import { API_BASE_URL, PAGE_SIZE, type GetListingsRequest, type GetListingsRespo
 import Fetch from "@/util/fetch";
 import { useInfiniteQuery, useQuery } from "@tanstack/vue-query";
 import { getListingImages } from "./images";
+import type { Ref } from "vue";
 
 export const getListings = async (req: GetListingsRequest): Promise<GetListingsResponse> => {
     const params = new URLSearchParams();
@@ -61,14 +62,14 @@ export const searchListings = async (queryString: string, page: number): Promise
     const pageParams = new URLSearchParams();
     pageParams.append("page", page.toString());
     pageParams.append("size", PAGE_SIZE.toString());
-    return await Fetch(`${API_BASE_URL}/api/search?${queryString.toString()}${pageParams.toString()}`);
+    return await Fetch(`${API_BASE_URL}/api/search?${queryString.toString()}&${pageParams.toString()}`);
 }
 
-export const useSearchListings = (queryString: string) => {
+export const useSearchListings = (queryString: Ref<string>) => {
     return useInfiniteQuery({
         queryKey: ['search', queryString],
         queryFn: async ({ pageParam = 0 }) => {
-            return searchListings(queryString, pageParam);
+            return searchListings(queryString.value, pageParam);
         },
         getNextPageParam: (lastPage: Page<Listing>) => {
             if (lastPage.last) {
