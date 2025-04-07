@@ -228,7 +228,7 @@ const i18n = createI18n({
             showAll: "Show all",
             cardNumber: "Card number (NOT real)",
             purchaseAccomplished: "Purchase accomplished!",
-            inSummary: "In summary"
+            inSummary: "In summary",
             userReservedYourListing: "A user has reserved your listing",
             userPurchasedYourListing: "A user has purchased your listing",
         }
