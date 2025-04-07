@@ -21,6 +21,7 @@ CREATE TABLE listings (
   deleted BOOLEAN DEFAULT FALSE,
   sold BOOLEAN DEFAULT FALSE,
   owner_id BIGINT NOT NULL,
+  buyer_id BIGINT,
   CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES users(id)
 );
 

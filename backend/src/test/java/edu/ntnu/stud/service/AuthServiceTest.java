@@ -79,7 +79,6 @@ public class AuthServiceTest {
 
         try {
           RegisterResponse registerResponse = authService.register(registerRequest);
-          System.out.println(registerResponse.getMessage());
         } catch (Exception e) {
           fail("Should not throw exception");
         }

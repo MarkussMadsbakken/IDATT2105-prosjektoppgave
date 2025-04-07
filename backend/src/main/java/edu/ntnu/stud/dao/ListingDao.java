@@ -37,7 +37,7 @@ public class ListingDao {
     listing.setActive(rs.getBoolean("active"));
     listing.setDeleted(rs.getBoolean("deleted"));
     listing.setSold(rs.getBoolean("sold"));
-    listing.setBuyerId(rs.getLong("buyerId"));
+    listing.setBuyerId(rs.getLong("buyer_id"));
     listing.setOwnerId(rs.getLong("owner_id"));
     return listing;
   };
@@ -110,7 +110,7 @@ public class ListingDao {
   public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
         + "category = ?, subcategory = ?, postal_code = ?, active = ?, deleted = ?, sold = ?, "
-        + "buyerId = ? WHERE uuid = ?";
+        + "buyer_id = ? WHERE uuid = ?";
     return jdbcTemplate.update(
         sql,
         listing.getName(),
