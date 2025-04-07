@@ -192,6 +192,7 @@ public class ListingService {
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
+    response.setBuyerId(listing.getBuyerId());
     response.setOwnerId(listing.getOwnerId());
     response.setCreatedAt(listing.getCreatedAt());
     response.setUpdatedAt(listing.getUpdatedAt());
@@ -216,6 +217,7 @@ public class ListingService {
     listingUpdate.setActive(listing.isActive());
     listingUpdate.setDeleted(listing.isDeleted());
     listingUpdate.setSold(listing.isSold());
+    listingUpdate.setBuyerId(listing.getBuyerId());
 
     return listingUpdate;
   }
