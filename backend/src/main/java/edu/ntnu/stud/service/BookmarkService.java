@@ -5,7 +5,6 @@ import edu.ntnu.stud.model.Bookmark;
 import edu.ntnu.stud.model.BookmarkUserRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.BookmarkRepo;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
