@@ -56,3 +56,29 @@ export const useGetListingWithImages = (uuid: string) => {
         queryFn: async () => { return await getListingWithImages(uuid) }
     })
 }
+
+export const searchListings = async (queryString: string, page: number): Promise<GetListingsResponse> => {
+    const pageParams = new URLSearchParams();
+    pageParams.append("page", page.toString());
+    pageParams.append("size", PAGE_SIZE.toString());
+    return await Fetch(`${API_BASE_URL}/api/search?${queryString.toString()}${pageParams.toString()}`);
+}
+
+export const useSearchListings = (queryString: string) => {
+    return useInfiniteQuery({
+        queryKey: ['search', queryString],
+        queryFn: async ({ pageParam = 0 }) => {
+            return searchListings(queryString, pageParam);
+        },
+        getNextPageParam: (lastPage: Page<Listing>) => {
+            if (lastPage.last) {
+                return undefined;
+            }
+
+            return lastPage.number + 1;
+        },
+        initialPageParam: 0,
+        retry: 1,
+    })
+
+}

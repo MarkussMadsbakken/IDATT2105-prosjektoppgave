@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<{
   showAdvancedSearch: false,
 });
 
+
 defineEmits<{
   (e: "search", value: string): void
   (e: "selectCategory", index: string): void
@@ -55,7 +56,7 @@ const selectedCategoryId = computed(() => {
     :showLoadingState="isPending"
     :selectedSubcategories="props.selectedSubCategories ? props.selectedSubCategories.map(Number) : undefined"
     @subCategoryChanged="$emit('toggleSubCategory', $event)" @priceRangeChanged="$emit('newPriceRange', $event)"
-    :allowedSearchRange="[0, 100]" :selectedPriceRange="[0, 100]" />
+    :allowedSearchRange="[0, 100]" :selectedPriceRange="props.selectedPriceRange" />
 </template>
 
 
