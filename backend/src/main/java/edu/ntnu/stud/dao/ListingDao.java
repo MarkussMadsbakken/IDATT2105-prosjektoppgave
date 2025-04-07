@@ -60,7 +60,7 @@ public class ListingDao {
    * @return a list of listings within the specified range
    */
   public List<Listing> findInRange(int start, int end) {
-    String sql = "SELECT * FROM listings WHERE deleted = false LIMIT ? OFFSET ?";
+    String sql = "SELECT * FROM listings WHERE deleted = false AND active = true LIMIT ? OFFSET ?";
     return jdbcTemplate.query(sql, listingRowMapper, end - start + 1, start);
   }
 
@@ -147,7 +147,7 @@ public class ListingDao {
   public Page<Listing> findPage(Pageable pageable) {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
-    String sql = "SELECT * FROM listings WHERE deleted = false LIMIT ? OFFSET ?";
+    String sql = "SELECT * FROM listings WHERE deleted = false AND active = true LIMIT ? OFFSET ?";
     List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, limit, offset);
     int total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM listings", Integer.class);
     return new PageImpl<>(listings, pageable, total);
@@ -165,10 +165,10 @@ public class ListingDao {
   public Page<Listing> findPageByOwnerId(long userId, Pageable pageable) {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
-    String sql = "SELECT * FROM listings WHERE owner_id = ? AND deleted = false LIMIT ? OFFSET ?";
+    String sql = "SELECT * FROM listings WHERE owner_id = ? AND deleted = false AND active = true "
+        + "LIMIT ? OFFSET ?";
     List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, userId, limit, offset);
-    int total = jdbcTemplate.queryForObject(
-        "SELECT COUNT(*) FROM listings WHERE owner_id = ?", Integer.class, userId);
+    int total = listings.size();
     return new PageImpl<>(listings, pageable, total);
   }
 
@@ -193,7 +193,7 @@ public class ListingDao {
       Pageable pageable) {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
-    String sql = "SELECT * FROM listings WHERE deleted = false AND "
+    String sql = "SELECT * FROM listings WHERE deleted = false AND active = true AND "
         + "(LOWER(name) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)) AND "
         + "(category = ? OR ? IS NULL) AND "
         + "(subcategory = ? OR ? IS NULL) AND "
@@ -221,7 +221,7 @@ public class ListingDao {
   public Page<Listing> findRecomendedListingsPage(long userId, Pageable pageable) {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
-    String sql = "SELECT * FROM listings l WHERE l.deleted = false AND "
+    String sql = "SELECT * FROM listings l WHERE l.deleted = false AND l.active = true AND "
         + "l.owner_id != ? AND "
         + "(l.category IN (SELECT ul.category FROM user_history uh "
         + "JOIN listings ul ON uh.listing_id = ul.id WHERE uh.user_id = ?) OR "
