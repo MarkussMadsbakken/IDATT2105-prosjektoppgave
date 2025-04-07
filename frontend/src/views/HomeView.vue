@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ListingCard from "@/components/ListingCard.vue";
-import type { Category, GetListingsResponse, Listing, Page, User } from "@/types";
+import { API_BASE_URL, WS_BASE_URL, type Category, type GetListingsResponse, type Listing, type Page, type User } from "@/types";
 import { useRouter } from "vue-router";
 import SearchOptions from "@/components/SearchOptions.vue";
 import Divider from "@/components/Divider.vue";
@@ -9,6 +9,8 @@ import { computed, ref } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import Button from "@/components/Button.vue";
+import { Client } from "@stomp/stompjs"
+import { useAuth } from "@/stores/auth";
 
 const {
   data,

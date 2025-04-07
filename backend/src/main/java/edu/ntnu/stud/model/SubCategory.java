@@ -15,7 +15,7 @@ public class SubCategory {
    * @param id          the ID of the subcategory
    * @param name        the name of the subcategory
    * @param description a description of the subcategory
-   * @param parrentId   the ID of the parent category
+   * @param parentId   the ID of the parent category
    */
   public SubCategory(int id, String name, String description, int parentId) {
     this.id = id;
