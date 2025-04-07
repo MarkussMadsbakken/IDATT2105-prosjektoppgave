@@ -19,12 +19,18 @@ const changeLanguage = (lang: string) => {
   <header>
     <div class="background" />
     <nav>
-      <div>
+      <div class="left-elements">
         <RouterLink to="/" class="link">
           <div class="logo">
             Logo
           </div>
         </RouterLink>
+        <div class="translation-selector">
+          <div class="translation-button" v-for="lang in i18n.availableLocales" :key="lang"
+            @click="changeLanguage(lang)" :style="{ textDecoration: i18n.locale.value === lang ? 'underline' : '' }">
+            {{ lang }}
+          </div>
+        </div>
       </div>
       <div class="right-elements">
         <RouterLink to="/admin" class="link" v-if="auth.isAdmin">
@@ -41,7 +47,7 @@ const changeLanguage = (lang: string) => {
         <div class="link" v-if="auth.isLoggedIn()">
           <NotificationDropdown></NotificationDropdown>
         </div>
-        <RouterLink to="/messages" class="link" v-if="auth.isLoggedIn()">
+        <RouterLink to="/chat" class="link" v-if="auth.isLoggedIn()">
           <MessageSquare />
         </RouterLink>
         <RouterLink :to="auth.isLoggedIn() ? '/profile' : '/login'" class="link profile">
@@ -56,17 +62,22 @@ const changeLanguage = (lang: string) => {
       <RouterView />
     </main>
   </div>
-  <footer class="footer">
-    <div class="translation-selector">
-      <div class="translation-button" v-for="lang in i18n.availableLocales" :key="lang" @click="changeLanguage(lang)"
-        :style="{ textDecoration: i18n.locale.value === lang ? 'underline' : '' }">
-        {{ lang }}
-      </div>
-    </div>
-  </footer>
 </template>
 
 <style>
+.translation-selector {
+  display: flex;
+  gap: 1rem;
+  color: white;
+}
+
+.left-elements {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: center;
+}
+
 .admin-link {
   display: flex;
   gap: 0.2rem;

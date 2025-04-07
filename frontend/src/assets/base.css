@@ -23,7 +23,7 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
+  --color-background: #F3FAFB;
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
   --color-primaryButton: rgba(30, 102, 118);
@@ -32,6 +32,7 @@
   --color-acceptButton: rgba(0, 201, 81);
   --color-secondaryGray: rgba(243 242 242);
   --color-accent: oklch(76.5% 0.177 163.223);
+  --color-skeleton: oklch(87% 0 0);
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
@@ -149,4 +150,10 @@ body {
   border: 2px solid black;
   border-radius: 50%;
   margin-top: -8px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
 }

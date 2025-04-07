@@ -2,6 +2,7 @@
 import { useUserImage } from '@/actions/user';
 import { UserRound } from 'lucide-vue-next';
 import { computed } from 'vue';
+import UserImageSkeleton from './skeleton/UserImageSkeleton.vue';
 
 const props = defineProps<{
     userId: number;
@@ -19,7 +20,10 @@ const size = props.size ?? 60;
 </script>
 
 <template>
-    <div class="image-wrapper" v-if="!isError && !isPending" :style="{ width: `${size}px`, height: `${size}px` }">
+    <template v-if="isPending">
+        <UserImageSkeleton :size="size" />
+    </template>
+    <div class="image-wrapper" v-else-if="!isError" :style="{ width: `${size}px`, height: `${size}px` }">
         <img :src="src" alt="user" />
     </div>
     <div class="image-wrapper" v-else :style="{ width: `${size}px`, height: `${size}px` }">
