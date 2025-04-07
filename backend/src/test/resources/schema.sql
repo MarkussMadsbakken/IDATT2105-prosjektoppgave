@@ -26,10 +26,3 @@ CREATE TABLE listings (
 
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('testuser', 'password');
-
--- Insert a listing
-INSERT INTO listings (
-    uuid, name, price, description, category, subcategory, postal_code, active, deleted, sold, owner_id
-) VALUES (
- '123e4567-e89b-12d3-a456-426614174000', 'Test Listing', 100.0, 'Test listing description', 1, 1, 1234, TRUE, FALSE, FALSE, 1
-);
