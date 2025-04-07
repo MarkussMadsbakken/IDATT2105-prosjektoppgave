@@ -30,7 +30,7 @@ const description = ref(listingWithImages?.value?.listing?.description ?? "");
 const price = ref(listingWithImages?.value?.listing?.price ?? 0);
 const postalCode = ref(listingWithImages?.value?.listing?.postalCode);
 const category = ref<number | null>(null);
-const subCategories = ref<number[] | null>(null);
+const subcategory = ref<number | null>(null);
 
 watch(listingWithImages, (newListing) => {
     if (!newListing) return;
@@ -39,7 +39,8 @@ watch(listingWithImages, (newListing) => {
     description.value = newListing?.listing.description ?? "";
     price.value = newListing?.listing.price ?? 0;
     postalCode.value = newListing?.listing.postalCode ?? 0;
-    category.value = newListing?.listing.category
+    category.value = newListing?.listing.category;
+    subcategory.value = newListing?.listing.subcategory ?? 0;
 }, { deep: true });
 
 const images = computed(() => {
@@ -89,7 +90,7 @@ const onSubmit = () => {
         price: Number(price.value),
         postalCode: Number(postalCode.value),
         category: category.value!,
-        subcategory: subCategories?.value?.[0] ?? undefined,
+        subcategory: subcategory.value ?? undefined,
         uuid: listingId,
         active: listingWithImages.value?.listing.active!,
         deleted: listingWithImages.value?.listing.deleted!,
@@ -126,8 +127,8 @@ const onSubmit = () => {
                 :isNotFilledIn="errors.find(e => e.field === 'category')?.isError">
                 <CategorySelector
                     :initial-sub-categories="listingWithImages?.listing.subcategory ? [listingWithImages.listing.subcategory] : undefined"
-                    :initial-category="listingWithImages?.listing.category" name="category"
-                    @category-selected="category = $event" @subcategories-updated="subCategories = $event" />
+                    :initial-category="listingWithImages?.listing.category" name="category" :multi-select="false"
+                    @category-selected="category = $event" @subcategories-updated="subcategory = $event[0]" />
             </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">
                 <template v-if="isPending">
