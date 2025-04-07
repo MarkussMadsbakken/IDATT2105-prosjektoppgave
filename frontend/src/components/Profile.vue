@@ -73,7 +73,7 @@ const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.cr
           />
         </div>
         <div v-else class="no-listings">
-          Du har ingen annonser ennå.
+          Ingen annonser her.
         </div>
       </div>
         <template v-if="isOwnProfile">
