@@ -143,6 +143,17 @@ public class ListingService {
   }
 
   /**
+   * Retrieves a paginated list of archived listings owned by a specific user.
+   *
+   * @param userId   the ID of the user whose archived listings to retrieve
+   * @return a page of archived listings owned by the specified user
+   */
+  public Page<ListingResponse> getArchivedListingsByUserIdPage(long userId, Pageable pageable) {
+    Page<Listing> listingsPage = listingRepo.getArchivedListingsByUserIdPage(userId, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
    * Converts a ListingRequest object to a Listing entity.
    *
    * @param listingRequest the ListingRequest object to convert
@@ -326,6 +337,29 @@ public class ListingService {
     notification.setMessage("userPurchasedYourListing");
     notification.setLink("/listing/" + uuid);
     notificationService.addNotification(notification);
+  }
+
+  /**
+   * Archives a listing by its UUID.
+   *
+   * @param uuid the UUID of the listing to archive
+   * @param state the state to set for the listing (active or inactive)
+   * @param token the JWT token of the user making the request
+   */
+  public void archiveListing(String uuid, boolean state, String token) {
+    // Fetch values
+    Listing listing = listingRepo.getListingByUuid(uuid);
+    if (listing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
+    }
+    long userId = jwtService.extractUserId(token.substring(7));
+    if (listing.getOwnerId() != userId) {
+      throw new IllegalArgumentException("User does not own the listing with UUID: " + uuid);
+    }
+
+    // Create and do the listing update
+    listing.setActive(state);
+    listingRepo.updateListing(convertToListingUpdate(listing));
   }
 
   /**
