@@ -32,7 +32,7 @@ const handleLogout = () => {
 const { data: user } = useGetUser(props.userId);
 const { data: listings, isPending, isError, error } = useGetUserListings(props.userId);
 const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmarkError, error: bookmarkError} = useGetUserBookmarks();
-const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.createdAt!).getFullYear());
+const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
 
 </script>
 
@@ -45,7 +45,7 @@ const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.cr
             </div>
             <div class="text-field">
                 <div class="admin-field" v-if=user?.isAdmin>Admin</div>
-                <div class="member-since">{{ createdAtText }}</div>
+                <div class="member-since">{{ $t('memberSince', {date}) }}</div>
             </div>
             <div class="settings-container" v-if="isOwnProfile">
                 <Settings class="settings-button" :size="35" @click="router.push('/profile/edit')" :stroke-width="2.2">
@@ -59,10 +59,10 @@ const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.cr
             <div class="title"> {{ isOwnProfile ? $t("ownListings") : $t("listingsByUser", {
                 name: user?.firstName ?? user?.username
             }) }} </div>
-            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">Vis alle</RouterLink>
+            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">{{ $t("showAll") }}</RouterLink>
         </div>
       <div v-if="isPending">Laster oppføringer...</div>
-      <div v-else-if="isError">Kunne ikke hente oppføringer.</div>
+      <div v-else-if="isError">{{ $t("couldNotLoadListings") }}</div>
       <div v-else>
         <div v-if="listings && listings.length > 0" class="listing-grid">
           <ListingCard
@@ -73,18 +73,18 @@ const createdAtText = computed(() => "Medlem siden: " + new Date(user?.value?.cr
           />
         </div>
         <div v-else class="no-listings">
-          Du har ingen annonser ennå.
+          Ingen annonser her.
         </div>
       </div>
         <template v-if="isOwnProfile">
             <Divider />
             <div class="title-wrapper">
-                <div class="title"> Mine favoritter </div>
-                <RouterLink class="router-link" to="/favorites">Vis alle</RouterLink>
+                <div class="title"> {{$t("myFavorites")}} </div>
+                <RouterLink class="router-link" to="/favorites">{{ $t("showAll") }}</RouterLink>
             </div>
 
           <div v-if="isBookmarkPending">Laster oppføringer...</div>
-          <div v-else-if="isBookmarkError">Kunne ikke hente oppføringer.</div>
+          <div v-else-if="isBookmarkError">{{ $t("couldNotLoadListings") }}</div>
           <div v-else>
             <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
               <ListingCard

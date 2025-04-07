@@ -1,6 +1,14 @@
-import { API_BASE_URL, PAGE_SIZE, type GetListingsRequest, type GetListingsResponse, type Listing, type Page } from "@/types";
+import {
+  API_BASE_URL,
+  PAGE_SIZE,
+  type GetListingsRequest,
+  type GetListingsResponse,
+  type Listing,
+  type Page
+} from "@/types";
+import type { DefaultResponse } from "@/types/apiResponses";
 import Fetch from "@/util/fetch";
-import { useInfiniteQuery, useQuery } from "@tanstack/vue-query";
+import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/vue-query";
 import { getListingImages } from "./images";
 import type { Ref } from "vue";
 
@@ -81,5 +89,17 @@ export const useSearchListings = (queryString: Ref<string>) => {
         initialPageParam: 0,
         retry: 1,
     })
-
 }
+export const purchaseListing = async (
+  uuid: string,
+): Promise<DefaultResponse> => {
+  return await Fetch(`${API_BASE_URL}/api/listing/${uuid}/purchase`, {
+    method: "POST"
+  });
+};
+export const usePurchaseListing = () => {
+  return useMutation({
+    mutationFn: ({uuid}: {uuid: string})=>
+      purchaseListing(uuid),
+  });
+};
