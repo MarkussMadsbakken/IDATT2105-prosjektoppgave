@@ -37,7 +37,7 @@ const getParams = () => {
         params.append("category", route.query.category as string);
     }
     if (route.query.subCategoryId) {
-        params.append("subcategory", route.query.subCategoryId as string);
+        params.append("subCategory", route.query.subCategoryId as string);
     }
     if (route.query.priceRange) {
         const priceRange = Array.isArray(route.query.priceRange) ? route.query.priceRange : [route.query.priceRange];
