@@ -30,7 +30,6 @@ public class ListingDao {
     listing.setDescription(rs.getString("description"));
     listing.setCreatedAt(rs.getTimestamp("created_at"));
     listing.setUpdatedAt(rs.getTimestamp("updated_at"));
-    // TODO: Handle subcategories List<String>
     listing.setCategory(rs.getInt("category"));
     listing.setSubcategory(rs.getInt("subcategory"));
     listing.setPostalCode(rs.getInt("postal_code"));
@@ -187,7 +186,7 @@ public class ListingDao {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
     String sql = "SELECT * FROM listings WHERE deleted = false AND "
-        + "(name ILIKE ? OR description ILIKE ?) AND "
+        + "(LOWER(name) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)) AND "
         + "(category = ? OR ? IS NULL) AND "
         + "(subcategory = ? OR ? IS NULL) AND "
         + "(price BETWEEN ? AND ?) "
