@@ -62,6 +62,17 @@ public class ListingRepo {
   }
 
   /**
+   * Retrieves a paginated list of archived listings owned by a specific user from the database.
+   *
+   * @param userId the ID of the user whose archived listings to retrieve
+   * @param pageable the pagination information, including page number, page size, and sorting
+   * @return a page of archived listings owned by the specified user
+   */
+  public Page<Listing> getArchivedListingsByUserIdPage(long userId, Pageable pageable) {
+    return listingDao.findArchivedPageByOwnerId(userId, pageable);
+  }
+
+  /**
    * Saves a new listing to the database.
    *
    * @param listing the listing to save
@@ -122,5 +133,15 @@ public class ListingRepo {
    */
   public Page<Listing> getRecomendedListingsPage(long userId, Pageable pageable) {
     return listingDao.findRecomendedListingsPage(userId, pageable);
+  }
+
+  /**
+   * Retrives a list of listings from a list of ids.
+   *
+   * @param ids the list of ids of the listings to retrieve
+   * @return a list of listings with the specified ids 
+   */
+  public List<Listing> getListingsByUuids(List<String> ids) {
+    return listingDao.findByIds(ids);
   }
 }

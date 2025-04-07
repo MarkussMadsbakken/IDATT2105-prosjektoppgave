@@ -1,6 +1,7 @@
 package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.BookmarkUserRequest;
+import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.service.BookmarkService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import edu.ntnu.stud.model.ListingResponse;
 
 /**
  * Controller class for managing bookmarks.
@@ -27,11 +26,12 @@ public class BookmarkController {
   private BookmarkService bookmarkService;
 
   /**
-   * Retrieves a list of bookmarks for a user from the database.
+   * Retrieves a list of bookmarked listings for a user from the database.
    */
   @GetMapping("/user")
-  public ResponseEntity<List<ListingResponse>> getBookmarks(@RequestHeader("Authorization") String token) {
-    List<ListingResponse> bookmarks = bookmarkService.getBookmarksFromUser(token);
+  public ResponseEntity<List<ListingResponse>> getBookmarks(
+      @RequestHeader("Authorization") String token) {
+    List<ListingResponse> bookmarks = bookmarkService.getBookmarkedListingsFromUser(token);
     return ResponseEntity.ok(bookmarks);
   }
 

@@ -47,10 +47,15 @@ public class SecurityConfig {
             .requestMatchers(
                 "/api/auth/login",
                 "/api/auth/register",
-                "/ws/**")
+                "/ws/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/swagger-ui/index.html", // Allow access to Swagger UI
+                "/v3/api-docs/**")        // Allow access to OpenAPI docs
             .permitAll()
             .requestMatchers(
                 HttpMethod.GET,
+                "/api-docs",
                 "/api/notifications",
                 "/api/notifications/**",
                 "api/bookmark/**",
@@ -64,7 +69,8 @@ public class SecurityConfig {
             .permitAll()
             .anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
             .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

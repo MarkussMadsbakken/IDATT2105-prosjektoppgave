@@ -7,10 +7,14 @@ import { computed } from 'vue';
 import { useAuth } from '@/stores/auth';
 import SellerInfoSkeleton from './skeleton/SellerInfoSkeleton.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   userId: number;
   canContactSeller?: boolean;
-}>();
+  size?: 'small' | 'medium';
+}>(),{
+  canContactSeller: true,
+  size: "medium"
+});
 
 const emit = defineEmits<{
   (e: 'contact-seller'): void;
@@ -45,8 +49,8 @@ const handleProfileClick = () => {
   <div v-else-if="isError">
     <p>Feil: {{ error?.message }}</p>
   </div>
-  <div class="seller-container" v-else>
-    <div class="seller-left">
+  <div class="seller-container" :class="[props.size, { centered: !props.canContactSeller }]" v-else>
+  <div class="seller-left">
       <div class="seller-wrapper" @click="handleProfileClick">
         <UserImage :user-id="user?.id!" />
         <div class="seller-info" :class="{ centered: !props.canContactSeller }">
@@ -61,14 +65,14 @@ const handleProfileClick = () => {
       </div>
     </div>
     <Button variant="outline" class="contact-button" @click="handleContactClick"
-      v-if="props.canContactSeller && user?.id !== auth.userId">{{
+            v-if="props.canContactSeller && props.size !== 'small' && user?.id !== auth.userId">{{
         $t("contactSeller") }}</Button>
   </div>
 
 </template>
 
 <style scoped>
-.seller-container {
+.seller-container.medium {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,7 +87,16 @@ const handleProfileClick = () => {
 .seller-container.centered {
   justify-content: center;
 }
-
+.seller-container.small{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  outline: black;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 25rem;
+  height: 8rem;
+}
 .seller-wrapper {
   display: flex;
   flex-direction: row;
@@ -96,26 +109,28 @@ const handleProfileClick = () => {
 .seller-left {
   position: relative;
   flex: 1;
-  margin-left: 1rem;
+  justify-content: center;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
 }
 
 .seller-info.centered {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  margin: 0 auto;
+  transform: none;
+  position: static;
+}
+.seller-container.small .seller-wrapper {
+  margin-left: -3rem;
 }
 
 .seller-name {
   margin-top: -0.2rem;
   font-weight: bold;
   font-size: 2rem;
-  line-clamp: 1;
+  max-width: 10rem;
 }
-
 .seller-names {
   display: flex;
   flex-direction: column;
@@ -123,6 +138,27 @@ const handleProfileClick = () => {
   justify-content: center;
   gap: 0rem;
 }
+
+.seller-name,
+.username {
+  max-width: 10rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.seller-name.small,
+.username.small {
+  max-width: 10rem;
+  font-size: 10px;
+}
+
+.seller-name.medium,
+.username.medium {
+  max-width: 12rem;
+}
+
 
 .joined-site {
   font-size: 1rem;
@@ -140,4 +176,5 @@ const handleProfileClick = () => {
 .contact-button {
   margin-right: 1rem;
 }
+
 </style>

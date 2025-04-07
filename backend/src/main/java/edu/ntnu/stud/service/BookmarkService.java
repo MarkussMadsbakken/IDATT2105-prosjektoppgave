@@ -3,13 +3,11 @@ package edu.ntnu.stud.service;
 import edu.ntnu.stud.factories.NotificationFactory;
 import edu.ntnu.stud.model.Bookmark;
 import edu.ntnu.stud.model.BookmarkUserRequest;
+import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.BookmarkRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import edu.ntnu.stud.model.ListingResponse;
-import java.util.ArrayList;
 
 /**
  * This class handles the business logic for bookmarks.
@@ -61,7 +59,8 @@ public class BookmarkService {
   /**
    * Checks if a bookmark exists in the database.
    *
-   * @param bookmark the bookmark to be checked
+   * @param listingId the ID of the listing to check
+   * @param token the JWT token of the user
    * @return true if the bookmark exists, false otherwise
    */
   public boolean bookmarkExists(String listingId, String token) {
@@ -73,23 +72,13 @@ public class BookmarkService {
   /**
    * Gets a list of bookmarks for a user from the database.
    */
-  public List<ListingResponse> getBookmarksFromUser(String token) {
+  public List<ListingResponse> getBookmarkedListingsFromUser(String token) {
     // Extract userId from the JWT token
 
     long userId = jwtService.extractUserId(token.substring(7));
     List<String> listingIds = bookmarkRepo.getBookmarksFromUser(userId);
 
-    List<ListingResponse> listings = new ArrayList<>();
-
-    for (String listingId : listingIds) {
-      ListingResponse listing = listingService.getListingByUuid(listingId);
-
-      if (listing == null) {
-        System.out.println("Feiling!!");
-      } else {
-        listings.add(listing);
-      }
-    }
+    List<ListingResponse> listings = listingService.getListingsByUuids(listingIds);
     return listings;
   }
 

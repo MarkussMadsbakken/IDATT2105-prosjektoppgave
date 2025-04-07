@@ -121,6 +121,31 @@ public class ListingController {
   }
 
   /**
+   * Retrives a paginated list of archived listings owned by a specific owner.
+   *
+   * @param userId the ID of the user whose archived listings to retrieve
+   * @param page   the page number to retrieve
+   * @param offset the number of items per page
+   * @return a page of archived listings owned by the specified user
+   */
+  @GetMapping("/user/{userId}/archived")
+  public ResponseEntity<Page<ListingResponse>> getArchivedListingsByUserId(
+      @PathVariable long userId,
+      @RequestParam int page,
+      @RequestParam int offset) {
+    logger.info(
+        "Fetching archived listings for user with ID: {}, page: {}, offset: {}",
+        userId,
+        page,
+        offset);
+    Pageable pageable = PageRequest.of(page, offset);
+    Page<ListingResponse> listingsPage = 
+        listingService.getArchivedListingsByUserIdPage(userId, pageable);
+    logger.info("Archived listings for user fetched successfully");
+    return ResponseEntity.ok(listingsPage);
+  }
+
+  /**
    * Creates a new listing.
    *
    * @param listingRequest the ListingRequest to save as a Listing
@@ -198,5 +223,25 @@ public class ListingController {
     logger.info("Listing purchased successfully with UUID: {}", uuid);
     return ResponseEntity.ok().body(
       new DefaultResponse("Listing purchased successfully", "listingPurchased"));
+  }
+
+  /**
+   * Archives a listing by its UUID.
+   *
+   * @param uuid  the UUID of the listing to archive
+   * @param state the state to set for the listing
+   * @param token the JWT token for authorization
+   * @return a response indicating the success or failure of the archiving
+   */
+  @PostMapping("/{uuid}/archive")
+  public ResponseEntity<DefaultResponse> archiveListing(
+      @PathVariable String uuid,
+      @RequestParam boolean state,
+      @RequestHeader("Authorization") String token) {
+    logger.info("Archiving listing with UUID: {}", uuid);
+    listingService.archiveListing(uuid, state, token);
+    logger.info("Listing aktive status set successfully with UUID: {}", uuid);
+    return ResponseEntity.ok().body(
+      new DefaultResponse("Listing archived successfully", "listingArchived"));
   }
 }

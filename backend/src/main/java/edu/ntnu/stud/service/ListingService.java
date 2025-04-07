@@ -9,6 +9,7 @@ import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.model.ListingUpdate;
+import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.repo.ListingRepo;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,15 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 public class ListingService {
-
   @Autowired
   private ListingRepo listingRepo;
-
   @Autowired
   private JWTService jwtService;
-
   @Autowired
   private ListingImageService listingImageService;
+  @Autowired
+  private NotificationService notificationService;
 
   /**
    * Retrieves all listings from the database.
@@ -139,6 +139,17 @@ public class ListingService {
    */
   public Page<ListingResponse> getListingsByUserIdPage(long userId, Pageable pageable) {
     Page<Listing> listingsPage = listingRepo.getListingsByUserIdPage(userId, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
+   * Retrieves a paginated list of archived listings owned by a specific user.
+   *
+   * @param userId   the ID of the user whose archived listings to retrieve
+   * @return a page of archived listings owned by the specified user
+   */
+  public Page<ListingResponse> getArchivedListingsByUserIdPage(long userId, Pageable pageable) {
+    Page<Listing> listingsPage = listingRepo.getArchivedListingsByUserIdPage(userId, pageable);
     return listingsPage.map(this::convertToResponse);
   }
 
@@ -305,6 +316,7 @@ public class ListingService {
    * @param token the JWT token of the user making the purchase
    */
   public void purchaseListing(String uuid, String token) {
+    // Fetch values
     Listing listing = listingRepo.getListingByUuid(uuid);
     if (listing == null) {
       throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
@@ -313,8 +325,50 @@ public class ListingService {
       throw new IllegalArgumentException("Listing is already sold with UUID: " + uuid);
     }
     long userId = jwtService.extractUserId(token.substring(7));
+
+    // Create and do the listing update
     listing.setSold(true);
     listing.setBuyerId(userId);
     listingRepo.updateListing(convertToListingUpdate(listing));
+
+    // Notify the owner of the listing about the purchase
+    Notification notification = new Notification();
+    notification.setUserId(listing.getOwnerId());
+    notification.setMessage("userPurchasedYourListing");
+    notification.setLink("/listing/" + uuid);
+    notificationService.addNotification(notification);
+  }
+
+  /**
+   * Archives a listing by its UUID.
+   *
+   * @param uuid the UUID of the listing to archive
+   * @param state the state to set for the listing (active or inactive)
+   * @param token the JWT token of the user making the request
+   */
+  public void archiveListing(String uuid, boolean state, String token) {
+    // Fetch values
+    Listing listing = listingRepo.getListingByUuid(uuid);
+    if (listing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
+    }
+    long userId = jwtService.extractUserId(token.substring(7));
+    if (listing.getOwnerId() != userId) {
+      throw new IllegalArgumentException("User does not own the listing with UUID: " + uuid);
+    }
+
+    // Create and do the listing update
+    listing.setActive(state);
+    listingRepo.updateListing(convertToListingUpdate(listing));
+  }
+
+  /**
+   * Retrieves a list of listings by their UUIDs.
+   */
+  public List<ListingResponse> getListingsByUuids(List<String> uuids) {
+    List<Listing> listings = listingRepo.getListingsByUuids(uuids);
+    return listings.stream()
+        .map(this::convertToResponse)
+        .collect(Collectors.toList());
   }
 }
