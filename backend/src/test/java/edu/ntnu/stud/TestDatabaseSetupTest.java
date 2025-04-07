@@ -30,21 +30,24 @@ package edu.ntnu.stud;
          *
          */
         @Test
-        @DisplayName("Should return the amount and names of tables in the test database")
+        @DisplayName("Database connection should be valid")
         public void testDatabaseConnection() {
             try (Connection connection = dataSource.getConnection()) {
                 assertTrue(connection.isValid(1), "Connection to the test database should be valid");
+            } catch (Exception e) {
+                fail("Exception should not be thrown");
+            }
+        }
 
-                // Check the names of the tables in the database
-                try (Statement statement = connection.createStatement()) {
-                    ResultSet resultSet = statement.executeQuery(
-                        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'"
-                    );
-                    while (resultSet.next()) {
-                        String tableName = resultSet.getString("TABLE_NAME");
-                        System.out.println("Table name: " + tableName);
-                    }
-                }
+        @Test
+        @DisplayName("Database should include table 'users'")
+        public void testDatabaseIncludesUsersTable() {
+            try (Connection connection = dataSource.getConnection()) {
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(
+                    "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC' AND TABLE_NAME = 'USERS'"
+                );
+                assertTrue(resultSet.next(), "The 'users' table should exist in the test database");
             } catch (Exception e) {
                 fail("Exception should not be thrown");
             }
