@@ -233,4 +233,16 @@ public class ListingDao {
     int total = listings.size();
     return new PageImpl<>(listings, pageable, total);
   }
+
+  /**
+   * Retrieves a list of listings by their IDs.
+   *
+   * @param ids the list of IDs of the listings to retrieve
+   * @return a list of listings with the specified IDs
+   */
+  public List<Listing> findByIds(List<String> ids) {
+    String sql = "SELECT * FROM listings WHERE id IN ("
+        + String.join(",", ids) + ")";
+    return jdbcTemplate.query(sql, listingRowMapper);
+  }
 }
