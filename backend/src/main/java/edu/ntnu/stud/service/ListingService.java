@@ -97,6 +97,12 @@ public class ListingService {
       throw new IllegalArgumentException(
           "User does not own the listing with UUID: " + listing.getUuid());
     }
+    if (existingListing.isSold() || listing.isSold()) {
+      throw new IllegalArgumentException("Cannot update a listing that has already been sold.");
+    }
+    if (listing.getBuyerId() != null) {
+      throw new IllegalArgumentException("Cannot set buyerId when updating a listing.");
+    }
     return listingRepo.updateListing(listing);
   }
 
@@ -299,5 +305,25 @@ public class ListingService {
     Pageable pageable = Pageable.ofSize(size).withPage(page);
     Page<Listing> listingsPage = listingRepo.getRecomendedListingsPage(userId, pageable);
     return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
+   * Purchases a listing by its UUID.
+   *
+   * @param uuid the UUID of the listing to purchase
+   * @param token the JWT token of the user making the purchase
+   */
+  public void purchaseListing(String uuid, String token) {
+    Listing listing = listingRepo.getListingByUuid(uuid);
+    if (listing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
+    }
+    if (listing.isSold()) {
+      throw new IllegalArgumentException("Listing is already sold with UUID: " + uuid);
+    }
+    long userId = jwtService.extractUserId(token.substring(7));
+    listing.setSold(true);
+    listing.setBuyerId(userId);
+    listingRepo.updateListing(convertToListingUpdate(listing));
   }
 }

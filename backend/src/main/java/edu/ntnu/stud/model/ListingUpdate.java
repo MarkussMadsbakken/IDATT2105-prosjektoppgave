@@ -17,6 +17,7 @@ public class ListingUpdate {
   private boolean active;
   private boolean deleted;
   private boolean sold;
+  private Long buyerId;
 
   /**
    * Default constructor for ListingUpdate.
@@ -37,6 +38,7 @@ public class ListingUpdate {
    * @param active the active status of the listing
    * @param deleted the deleted status of the listing
    * @param sold the sold status of the listing
+   * @param buyerId the ID of the buyer of the listing
    */
   public ListingUpdate(
       String uuid,
@@ -48,7 +50,8 @@ public class ListingUpdate {
       int postalCode,
       boolean active,
       boolean deleted,
-      boolean sold
+      boolean sold,
+      Long buyerId
   ) {
     this.uuid = uuid;
     this.name = name;
@@ -60,6 +63,7 @@ public class ListingUpdate {
     this.active = active;
     this.deleted = deleted;
     this.sold = sold;
+    this.buyerId = buyerId;
   }
 
   public String getUuid() {
@@ -140,5 +144,13 @@ public class ListingUpdate {
 
   public void setSold(boolean sold) {
     this.sold = sold;
+  }
+
+  public Long getBuyerId() {
+    return buyerId;
+  }
+
+  public void setBuyerId(Long buyerId) {
+    this.buyerId = buyerId;
   }
 }

@@ -16,6 +16,7 @@ public class ListingResponse {
   private boolean active;
   private boolean deleted;
   private boolean sold;
+  private Long buyerId;
   private long ownerId;
   private Timestamp createdAt;
   private Timestamp updatedAt;
@@ -99,6 +100,14 @@ public class ListingResponse {
 
   public void setSold(boolean sold) {
     this.sold = sold;
+  }
+
+  public Long getBuyerId() {
+    return buyerId;
+  }
+
+  public void setBuyerId(Long buyerId) {
+    this.buyerId = buyerId;
   }
 
   public long getOwnerId() {
