@@ -7,15 +7,25 @@ import LoadingSpinner from './LoadingSpinner.vue';
 
 const emit = defineEmits<(e: "subCategoryChanged", value: number) => void>();
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     selectedCategoryId: number;
     selectedSubcategories?: number[];
-}>();
+    multiSelect?: boolean;
+}>(), {
+    multiSelect: true,
+});
 
 const { data: subCategories, isError, error, isPending } = useSubCategories(props.selectedCategoryId);
 
 
 const handleSubCategoryChanged = (id: number) => {
+    if (!props.multiSelect) {
+        selectedCategories.value = selectedCategories.value.filter((subcategory) => {
+            return subcategory.id === id;
+        });
+    }
+
+
     emit("subCategoryChanged", id);
 }
 
