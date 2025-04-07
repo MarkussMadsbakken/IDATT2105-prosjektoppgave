@@ -8,7 +8,7 @@ import { computed } from 'vue';
 
 
 const props = withDefaults(defineProps<{
-  selectedCategory?: string;
+  selectedCategory?: number;
   searchValue?: string;
   open?: boolean;
   selectedSubCategories?: string[];
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<{
 
 defineEmits<{
   (e: "search", value: string): void
-  (e: "selectCategory", index: string): void
+  (e: "selectCategory", index: number): void
   (e: "newSearchValue", value: string): void
   (e: "toggleSubCategory", value: number): void
   (e: "newPriceRange", value: [number, number]): void
@@ -31,7 +31,7 @@ defineEmits<{
 const { data: categories, isError, error, isPending } = useCategories();
 
 const selectedCategoryId = computed(() => {
-  return categories.value?.find(c => c.name === props.selectedCategory)?.id ?? -1;
+  return categories.value?.find(c => c.id === props.selectedCategory)?.id ?? -1;
 });
 
 
@@ -46,7 +46,7 @@ const selectedCategoryId = computed(() => {
     <div class="categories">
       <div v-for="category in categories" :key="category.name">
         <CategoryCard :icon="category.icon" :categoryname="category.name"
-          :selected="category.name === props.selectedCategory" @click="$emit('selectCategory', category.name)">
+          :selected="category.id === props.selectedCategory" @click="$emit('selectCategory', category.id)">
           {{ $t(category.name) }}
         </CategoryCard>
       </div>
