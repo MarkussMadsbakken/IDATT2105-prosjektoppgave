@@ -11,10 +11,10 @@ const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmark
 <template>
 
   <div class="title-wrapper">
-    <div class="title">Mine favoritter: </div>
+    <div class="title">{{ $t("myFavorites") }}: </div>
   </div>
   <div v-if="isBookmarkPending">Laster oppføringer...</div>
-  <div v-else-if="isBookmarkError">Kunne ikke hente oppføringer.</div>
+  <div v-else-if="isBookmarkError">{{ $t("couldNotLoadListings") }}</div>
   <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
     <ListingCard
       v-for="listing in favoriteListings!"
@@ -24,7 +24,7 @@ const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmark
     />
   </div>
   <div v-else class="no-listings">
-    Her er det tomt...
+    {{ $t("emptyListings") }}
   </div>
 </template>
 

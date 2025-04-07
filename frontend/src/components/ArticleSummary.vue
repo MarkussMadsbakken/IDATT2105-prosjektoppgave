@@ -23,11 +23,11 @@ const {
 
 <template>
   <div class="title-wrapper">
-      <div class="title">Kjøp</div>
+      <div class="title">{{ $t('buy') }}</div>
   </div>
 
   <div class="summary-wrapper">
-    <div class="oppsummert">Oppsummert</div>
+    <div class="oppsummert">{{ $t('inSummary') }}</div>
     <Divider class="divider"/>
     <div class="content">
       <div class="image-wrapper">

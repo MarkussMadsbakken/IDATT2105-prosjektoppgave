@@ -143,6 +143,9 @@ const handleDelete = () => {
       <Alert variant="Info" v-else-if="!listing?.active">
         {{ $t("listingIsInactive") }}
       </Alert>
+      <Alert variant="Info" v-else-if="listing?.sold">
+        {{ $t("listingIsPurchased") }}
+      </Alert>
       <ListingImages :listing-id="listingId" />
       <div class="picture-footing">
         <div class="listing-price">{{ listing?.price }}kr</div>
@@ -175,7 +178,7 @@ const handleDelete = () => {
     <div v-if="!isOwnListing" class="buy-box">
       <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" size="medium"
         @contact-seller="createChatMutation(listingId)" />
-      <div v-if="auth.isLoggedIn()" class="button-box">
+      <div v-if="auth.isLoggedIn() && !listing!.sold" class="button-box">
         <Button variant="primary" @click="router.push(`/listing/${listingId}/checkout`)" style="width: 10rem; height: 3rem;">{{ $t("buy") }}</Button>
         <Button variant="secondary" style="width: 10rem; height: 3rem;">{{ $t("reserve")
         }}</Button>

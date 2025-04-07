@@ -16,10 +16,10 @@
 
 <template>
   <div class="title-wrapper">
-    <div class="title">{{ user?.username }} sine artikler: </div>
+    <div class="title">{{ $t('listingsByUser', {name: user?.username}) }} </div>
   </div>
   <div v-if="isPending">Laster oppføringer...</div>
-  <div v-else-if="isError">Kunne ikke hente oppføringer.</div>
+  <div v-else-if="isError">{{ $t("couldNotLoadListings") }}</div>
   <div v-if="listings && listings.length > 0" class="listing-grid" >
     <ListingCard
       v-for="listing in listings!"
@@ -29,7 +29,7 @@
     />
   </div>
   <div v-else class="no-listings">
-    Her er det tomt.
+    {{ $t("emptyListings") }}
   </div>
 </template>
 
