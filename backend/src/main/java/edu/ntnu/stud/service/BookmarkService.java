@@ -1,5 +1,6 @@
 package edu.ntnu.stud.service;
 
+import edu.ntnu.stud.factories.NotificationFactory;
 import edu.ntnu.stud.model.Bookmark;
 import edu.ntnu.stud.model.BookmarkUserRequest;
 import edu.ntnu.stud.repo.BookmarkRepo;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import edu.ntnu.stud.model.ListingResponse;
 import java.util.ArrayList;
-
 
 /**
  * This class handles the business logic for bookmarks.
@@ -23,6 +23,8 @@ public class BookmarkService {
   private JWTService jwtService;
   @Autowired
   private ListingService listingService;
+  @Autowired
+  private NotificationService notificationService;
 
   /**
    * Adds a new bookmark to the database.
@@ -30,9 +32,19 @@ public class BookmarkService {
    * @param bookmark the bookmark to be added
    */
   public void addBookmark(BookmarkUserRequest bookmark, String token) {
-    // Add notification to listing owner
+
+    // Extract userId
+    Long userId = jwtService.extractUserId(token.substring(7));
+
+    // Add bookmark to the database
     bookmarkRepo.addBookmark(
-        new Bookmark(jwtService.extractUserId(token.substring(7)), bookmark.getListingId()));
+        new Bookmark(userId, bookmark.getListingId()));
+
+    // Create a notification for the listing owner
+    notificationService.addNotification(
+        NotificationFactory.createBookmarkNotification(
+            bookmark.getListingId(),
+            listingService.getListingByUuid(bookmark.getListingId()).getOwnerId()));
   }
 
   /**
@@ -65,18 +77,16 @@ public class BookmarkService {
     // Extract userId from the JWT token
 
     long userId = jwtService.extractUserId(token.substring(7));
-    List<String> listingIds =bookmarkRepo.getBookmarksFromUser(userId);
+    List<String> listingIds = bookmarkRepo.getBookmarksFromUser(userId);
 
     List<ListingResponse> listings = new ArrayList<>();
-
 
     for (String listingId : listingIds) {
       ListingResponse listing = listingService.getListingByUuid(listingId);
 
-      if (listing == null){
+      if (listing == null) {
         System.out.println("Feiling!!");
-      }
-      else {
+      } else {
         listings.add(listing);
       }
     }

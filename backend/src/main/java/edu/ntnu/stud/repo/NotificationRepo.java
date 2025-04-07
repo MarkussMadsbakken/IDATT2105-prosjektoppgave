@@ -30,7 +30,7 @@ public class NotificationRepo {
     notification.setId(rs.getLong("id"));
     notification.setUserId(rs.getLong("user_id"));
     notification.setMessage(rs.getString("message"));
-    notification.setLink(rs.getString("link"));
+    notification.setLink(rs.getString("url"));
     notification.setRead(rs.getBoolean("is_read"));
     notification.setTime(rs.getTimestamp("timestamp"));
     return notification;
@@ -42,7 +42,7 @@ public class NotificationRepo {
    * @param notification the Notification object to be added
    */
   public void addNotification(Notification notification) {
-    String query = "INSERT INTO notifications (user_id, message, link) VALUES (?, ?, ?)";
+    String query = "INSERT INTO notifications (user_id, message, url) VALUES (?, ?, ?)";
     jdbcTemplate.update(
         query, notification.getUserId(), notification.getMessage(), notification.getLink());
   }
