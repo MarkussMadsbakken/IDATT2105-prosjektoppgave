@@ -35,7 +35,7 @@ const handleSearch = (searchQuery: string) => {
   });
 };
 
-const handleCategoryClick = (newCategory: string) => {
+const handleCategoryClick = (newCategory: number) => {
   router.push({
     path: "/search",
     query: { category: newCategory }
