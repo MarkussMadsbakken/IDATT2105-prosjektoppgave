@@ -7,6 +7,7 @@ import FormGroup from "@/components/FormGroup.vue";
 import {ref} from "vue";
 import Button from "@/components/Button.vue";
 import {usePurchaseListing} from "@/actions/getListing.ts";
+import {useI18n} from "vue-i18n";
 
 
 const route = useRoute();
@@ -14,7 +15,7 @@ const listingId = route.params.id as string
 const cardNumber = ref('')
 const errors = ref<{ field: string; isError: boolean }[]>([]);
 const userName = ref('');
-
+const { t } = useI18n();
 
 const { mutate: purchaseListing, isPending, isError, error, isSuccess } = usePurchaseListing();
 const submitPurchase = async () => {
@@ -30,7 +31,7 @@ const submitPurchase = async () => {
   }
   if (errors.value.length === 0) {
     purchaseListing({ uuid: listingId });
-    alert($t('purchaseAccomplished'));
+    alert(t('purchaseAccomplished'));
   }
 };
 
