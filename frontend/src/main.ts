@@ -133,6 +133,7 @@ const i18n = createI18n({
             newBookmark: "En bruker har bokmerket annonsen din",
             noNotifications: "Du har ingen varslinger",
             userReservedYourListing: "En bruker har reservert annonsen din",
+            userPurchasedYourListing: "En bruker har kjøpt annonsen din",
         },
         en: {
             recommended: "Recommended for you",
@@ -212,6 +213,7 @@ const i18n = createI18n({
             newBookmark: "A user has bookmarked your listing",
             noNotifications: "You have no notifications",
             userReservedYourListing: "A user has reserved your listing",
+            userPurchasedYourListing: "A user has purchased your listing",
         }
     },
 });
