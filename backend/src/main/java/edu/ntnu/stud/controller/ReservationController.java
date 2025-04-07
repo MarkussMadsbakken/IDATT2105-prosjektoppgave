@@ -39,12 +39,8 @@ public class ReservationController {
   public ResponseEntity<Reservation> addReservation(
       @RequestBody ReservationRequest reservationRequest,
       @RequestHeader("Authorization") String token) {
-    try {
-      Reservation reservation = reservationService.addReservation(reservationRequest, token);
-      return ResponseEntity.ok(reservation);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    }
+    Reservation reservation = reservationService.addReservation(reservationRequest, token);
+    return ResponseEntity.ok(reservation);
   }
 
   /**
