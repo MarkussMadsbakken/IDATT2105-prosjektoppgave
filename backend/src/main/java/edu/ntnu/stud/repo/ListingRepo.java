@@ -41,17 +41,6 @@ public class ListingRepo {
   }
 
   /**
-   * Retrieves listings from the database within a specified range.
-   *
-   * @param start the starting index of the range (inclusive)
-   * @param end the ending index of the range (inclusive)
-   * @return a list of listings within the specified range
-   */
-  public List<Listing> getListingsInRange(int start, int end) {
-    return listingDao.findInRange(start, end);
-  }
-
-  /**
    * Retrieves a paginated list of listings from the database.
    *
    * @param pageable the pagination information, including page number, page size, and sorting
