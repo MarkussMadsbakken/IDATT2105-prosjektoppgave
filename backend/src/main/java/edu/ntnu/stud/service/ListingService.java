@@ -261,4 +261,29 @@ public class ListingService {
         })
         .collect(Collectors.toList());
   }
+
+  /**
+   * Searches for listings based on the provided criteria.
+   *
+   * @param query       the search query to match against listing names or
+   *                    descriptions
+   * @param category    the category to filter listings by
+   * @param subCategory the subcategory to filter listings by
+   * @param minPrice    the minimum price of listings to include
+   * @param maxPrice    the maximum price of listings to include
+   * @param pageable    the pagination information, including page number, page
+   *                    size, and sorting
+   * @return a page of listings matching the search criteria
+   */
+  public Page<ListingResponse> search(
+      String query, 
+      Integer category, 
+      Integer subCategory, 
+      Double minPrice,
+      Double maxPrice, 
+      Pageable pageable) {
+    Page<Listing> listingsPage = 
+        listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
 }
