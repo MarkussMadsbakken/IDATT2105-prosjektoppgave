@@ -58,7 +58,6 @@ const handleReserve = () => {
   // TODO
 };
 
-
 const deleteMutation = useMutation({
   mutationFn: deleteListing,
 });
@@ -146,7 +145,7 @@ const handleDelete = () => {
       </Alert>
       <ListingImages :listing-id="listingId" />
       <div class="picture-footing">
-        <div class="listing-price">{{ listing?.price }},-</div>
+        <div class="listing-price">{{ listing?.price }}kr</div>
         <div class="listing-actions">
           <Button variant="outline" v-if="isOwnListing" @click="router.push(`/listing/${listingId}/edit`)">
             {{ $t("edit") }}
@@ -173,12 +172,11 @@ const handleDelete = () => {
         {{ $t('listingHasNoDescriptionLong') }}
       </Alert>
     </div>
-    <div class="buy-box">
-      <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()"
+    <div v-if="!isOwnListing" class="buy-box">
+      <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" size="medium"
         @contact-seller="createChatMutation(listingId)" />
       <div v-if="auth.isLoggedIn()" class="button-box">
-        <Button variant="primary" style="width: 10rem; height: 3rem;">{{ $t("buy")
-        }}</Button>
+        <Button variant="primary" @click="router.push(`/listing/${listingId}/checkout`)" style="width: 10rem; height: 3rem;">{{ $t("buy") }}</Button>
         <Button variant="secondary" style="width: 10rem; height: 3rem;">{{ $t("reserve")
         }}</Button>
       </div>
