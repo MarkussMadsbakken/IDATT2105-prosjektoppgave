@@ -1,8 +1,12 @@
 package edu.ntnu.stud.service;
 
+import edu.ntnu.stud.controller.AuthController;
 import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.repo.NotificationRepo;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,9 @@ public class NotificationService {
   private NotificationRepo notificationRepo;
   @Autowired
   private JWTService jwtService;
+  @Autowired
+  private WebsocketService websocketService;
+  Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
   /**
    * Initializes the NotificationService with a NotificationRepo instance.
@@ -33,8 +40,13 @@ public class NotificationService {
    * @param notification the Notification object to be added
    */
   public void addNotification(Notification notification) {
-    notificationRepo.addNotification(notification);
-    // TODO: Send the notification to the WebSocket topic for real-time updates
+    logger.info("Adding notification for user ID: {} with message {}",
+        notification.getUserId(),
+        notification.getMessage());
+
+    Long id = notificationRepo.addNotification(notification);
+    notification.setId(id);
+    websocketService.pushNotification(notification.getUserId(), notification);
   }
 
   /**
@@ -61,7 +73,7 @@ public class NotificationService {
   /**
    * Retrieves all notifications for a specific user.
    *
-   * @param token  the token of the user who is retrieving the notifications
+   * @param token the token of the user who is retrieving the notifications
    * @return a list of Notification objects for the specified user
    */
   public List<Notification> getNotificationsByUserId(String token) {
@@ -88,7 +100,7 @@ public class NotificationService {
    * @param token the token of the user who is marking the notification as read
    */
   public void markNotificationAsRead(long id, String token) {
-    long userId = jwtService.extractUserId(token);
+    long userId = jwtService.extractUserId(token.substring(7));
     Notification notification = notificationRepo.getNotificationById(id);
     if (notification == null) {
       throw new IllegalArgumentException("Notification not found");

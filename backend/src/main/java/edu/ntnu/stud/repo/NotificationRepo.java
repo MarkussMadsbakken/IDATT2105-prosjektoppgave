@@ -1,11 +1,16 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Notification;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,7 +35,7 @@ public class NotificationRepo {
     notification.setId(rs.getLong("id"));
     notification.setUserId(rs.getLong("user_id"));
     notification.setMessage(rs.getString("message"));
-    notification.setLink(rs.getString("link"));
+    notification.setLink(rs.getString("url"));
     notification.setRead(rs.getBoolean("is_read"));
     notification.setTime(rs.getTimestamp("timestamp"));
     return notification;
@@ -41,10 +46,17 @@ public class NotificationRepo {
    *
    * @param notification the Notification object to be added
    */
-  public void addNotification(Notification notification) {
-    String query = "INSERT INTO notifications (user_id, message, link) VALUES (?, ?, ?)";
-    jdbcTemplate.update(
-        query, notification.getUserId(), notification.getMessage(), notification.getLink());
+  public long addNotification(Notification notification) {
+    String query = "INSERT INTO notifications (user_id, message, url) VALUES (?, ?, ?)";
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+    jdbcTemplate.update(connection -> {
+      PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+      ps.setLong(1, notification.getUserId());
+      ps.setString(2, notification.getMessage());
+      ps.setString(3, notification.getLink());
+      return ps;
+    }, keyHolder);
+    return keyHolder.getKey().longValue();
   }
 
   /**

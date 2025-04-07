@@ -86,6 +86,12 @@ public class ListingService {
       throw new IllegalArgumentException(
           "User does not own the listing with UUID: " + listing.getUuid());
     }
+    if (existingListing.isSold() || listing.isSold()) {
+      throw new IllegalArgumentException("Cannot update a listing that has already been sold.");
+    }
+    if (listing.getBuyerId() != null) {
+      throw new IllegalArgumentException("Cannot set buyerId when updating a listing.");
+    }
     return listingRepo.updateListing(listing);
   }
 
@@ -175,6 +181,7 @@ public class ListingService {
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
+    response.setBuyerId(listing.getBuyerId());
     response.setOwnerId(listing.getOwnerId());
     response.setCreatedAt(listing.getCreatedAt());
     response.setUpdatedAt(listing.getUpdatedAt());
@@ -199,6 +206,7 @@ public class ListingService {
     listingUpdate.setActive(listing.isActive());
     listingUpdate.setDeleted(listing.isDeleted());
     listingUpdate.setSold(listing.isSold());
+    listingUpdate.setBuyerId(listing.getBuyerId());
 
     return listingUpdate;
   }
@@ -249,5 +257,64 @@ public class ListingService {
           }
         })
         .collect(Collectors.toList());
+  }
+
+  /**
+   * Searches for listings based on the provided criteria.
+   *
+   * @param query       the search query to match against listing names or
+   *                    descriptions
+   * @param category    the category to filter listings by
+   * @param subCategory the subcategory to filter listings by
+   * @param minPrice    the minimum price of listings to include
+   * @param maxPrice    the maximum price of listings to include
+   * @param pageable    the pagination information, including page number, page
+   *                    size, and sorting
+   * @return a page of listings matching the search criteria
+   */
+  public Page<ListingResponse> search(
+      String query, 
+      Integer category, 
+      Integer subCategory, 
+      Double minPrice,
+      Double maxPrice, 
+      Pageable pageable) {
+    Page<Listing> listingsPage = 
+        listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
+   * Retives a paginated list of recommended listings for a user.
+   *
+   * @param page the page number to retrieve
+   * @param size the number of listings per page
+   * @param userId the ID of the user to retrieve recommendations for
+   * @return a paginated list of recommended listings
+   */
+  public Page<ListingResponse> getRecomendedListingsPage(int page, int size, long userId) {
+    Pageable pageable = Pageable.ofSize(size).withPage(page);
+    Page<Listing> listingsPage = listingRepo.getRecomendedListingsPage(userId, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
+
+  /**
+   * Purchases a listing by its UUID.
+   *
+   * @param uuid the UUID of the listing to purchase
+   * @param token the JWT token of the user making the purchase
+   */
+  public void purchaseListing(String uuid, String token) {
+    Listing listing = listingRepo.getListingByUuid(uuid);
+    if (listing == null) {
+      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
+    }
+    if (listing.isSold()) {
+      throw new IllegalArgumentException("Listing is already sold with UUID: " + uuid);
+    }
+    long userId = jwtService.extractUserId(token.substring(7));
+    listing.setSold(true);
+    listing.setBuyerId(userId);
+    listingRepo.updateListing(convertToListingUpdate(listing));
   }
 }
