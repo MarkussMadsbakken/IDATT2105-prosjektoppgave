@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { sendMessage, useChat, useChatMessages, useChats } from '@/actions/chat';
+import { useWebSocket } from '@/actions/websocket';
 import Button from '@/components/Button.vue';
 import ChatMessage from '@/components/ChatMessage.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SellerInfo from '@/components/SellerInfo.vue';
 import TextInput from '@/components/TextInput.vue';
 import { useAuth } from '@/stores/auth';
-import type { Chat, User } from '@/types';
+import type { Chat, Message, User } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { watchOnce } from '@vueuse/core';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -23,36 +25,26 @@ const { data: messages, isPending: messagesIsPending, isError: messagesIsError, 
 
 const lastMessageRef = ref<HTMLDivElement | null>(null);
 
-onMounted(() => {
-    nextTick(() => {
-        lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
-    });
-});
+watch(
+    messages,
+    (newMessages) => {
+        if (!newMessages) return;
+        nextTick(() => {
+            setTimeout(() => {
+                lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+            }, 100);
+        });
+    }
+);
+
 
 const { mutate: sendMessageMutation, isPending: sendMessageIsPending } = useMutation({
     mutationFn: sendMessage,
-    onMutate: (newMessage) => {
-        message.value = "";
-        messages.value?.push({
-            id: -1,
-            chatId: chatId,
-            senderId: auth.userId!,
-            message: newMessage.message,
-            createdAt: new Date().getTime().toString(),
-        });
-    },
     onSuccess: () => {
         queryClient.invalidateQueries({
             queryKey: ["chat", chatId, "messages"]
         });
-        messages.value?.filter((message) => message.id !== -1);
-        nextTick(() => {
-            lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
-        });
-    },
-    onError: (error) => {
-        console.error("Error sending message:", error);
-        messages.value?.filter((message) => message.id !== -1);
+        message.value = "";
     },
 });
 
@@ -60,6 +52,26 @@ const isSeller = computed(() => {
     if (!chat.value) return false;
     return chat.value.sellerId === auth.userId;
 });
+
+const ws = useWebSocket();
+
+ws.subscribe(
+    "/user/queue/messages",
+    (message: Message) => {
+        if (message.chatId !== chatId) return;
+        queryClient.setQueryData(["chat", chatId, "messages"], (oldMessages: Message[] | undefined) => {
+            return [...(oldMessages || []), message];
+        });
+    }
+);
+
+if (messages.value) {
+    nextTick(() => {
+        setTimeout(() => {
+            lastMessageRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+        }, 100);
+    });
+}
 
 </script>
 

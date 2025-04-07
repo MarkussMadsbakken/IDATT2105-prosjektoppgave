@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchService {
   @Autowired
-  private ListingRepo listingRepo;
-  @Autowired
   private ListingService listingService;
 
   /**
@@ -44,10 +42,6 @@ public class SearchService {
     Pageable pageable = PageRequest.of(page, size);
 
     // Call the listingService to perform the search and return the results
-    Page<Listing> listings = 
-        listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
-
-    // Convert and return the page of listings
-    return listings.map(listingService::convertToResponse);
+    return listingService.search(query, category, subCategory, minPrice, maxPrice, pageable);
   }
 }

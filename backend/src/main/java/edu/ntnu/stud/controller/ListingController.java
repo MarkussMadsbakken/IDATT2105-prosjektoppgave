@@ -161,7 +161,8 @@ public class ListingController {
     logger.info("Updating listing with UUID: {}", listingRequest.getUuid());
     listingService.updateListing(listingRequest, token);
     logger.info("Listing updated successfully with UUID: {}", listingRequest.getUuid());
-    return ResponseEntity.ok().body(new DefaultResponse("Listing updated successfully", "listingUpdated"));
+    return ResponseEntity.ok().body(
+      new DefaultResponse("Listing updated successfully", "listingUpdated"));
   }
 
   /**
@@ -177,6 +178,25 @@ public class ListingController {
     logger.info("Deleting listing with UUID: {}", uuid);
     listingService.deleteListing(uuid, token);
     logger.info("Listing deleted successfully with UUID: {}", uuid);
-    return ResponseEntity.ok().body(new DefaultResponse("Listing deleted successfully", "listingDeleted"));
+    return ResponseEntity.ok().body(
+      new DefaultResponse("Listing deleted successfully", "listingDeleted"));
+  }
+
+  /**
+   * Purcheses a listing by its UUID.
+   *
+   * @param uuid  the UUID of the listing to purchase
+   * @param token the JWT token for authorization
+   * @return a response indicating the success or failure of the purchase
+   */
+  @PostMapping("/{uuid}/purchase")
+  public ResponseEntity<DefaultResponse> purchaseListing(
+      @PathVariable String uuid,
+      @RequestHeader("Authorization") String token) {
+    logger.info("Purchasing listing with UUID: {}", uuid);
+    listingService.purchaseListing(uuid, token);
+    logger.info("Listing purchased successfully with UUID: {}", uuid);
+    return ResponseEntity.ok().body(
+      new DefaultResponse("Listing purchased successfully", "listingPurchased"));
   }
 }

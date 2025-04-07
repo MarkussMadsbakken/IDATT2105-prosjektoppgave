@@ -41,33 +41,34 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
-      .cors(Customizer.withDefaults())
-      .csrf(AbstractHttpConfigurer::disable)
-      .authorizeHttpRequests(request -> request
-      .requestMatchers(
-        "/api/auth/login", 
-        "/api/auth/register"
-      ).permitAll()
-      .requestMatchers(
-        HttpMethod.GET, 
-        "/api/notifications", 
-        "/api/notifications/**",
-        "api/bookmark/**",
-        "/api/categories",
-        "/api/categories/**",
-        "/api/listing",
-        "/api/listing/**",
-        "/api/user",
-        "/api/user/**"
-      ).permitAll()
-      .anyRequest().authenticated())
-      .httpBasic(Customizer.withDefaults())
-      .sessionManagement(session 
-          -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
-      .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-      .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-      .build();
+        .cors(Customizer.withDefaults())
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(request -> request
+            .requestMatchers(
+                "/api/auth/login",
+                "/api/auth/register",
+                "/ws/**")
+            .permitAll()
+            .requestMatchers(
+                HttpMethod.GET,
+                "/api/notifications",
+                "/api/notifications/**",
+                "api/bookmark/**",
+                "/api/categories",
+                "/api/categories/**",
+                "/api/listing",
+                "/api/listing/**",
+                "/api/user",
+                "/api/user/**",
+                "/api/search")
+            .permitAll()
+            .anyRequest().authenticated())
+        .httpBasic(Customizer.withDefaults())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
+            .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
   }
 
   /**

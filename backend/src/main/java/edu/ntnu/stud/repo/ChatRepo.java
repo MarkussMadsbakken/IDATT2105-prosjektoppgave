@@ -145,4 +145,21 @@ public class ChatRepo {
     List<Chat> chats = jdbcTemplate.query(query, chatRowMapper, chatId, userId, userId);
     return !chats.isEmpty();
   }
+
+  /**
+   * Retrieves the ID of the other participant in a chat.
+   *
+   * @param userId The ID of the user
+   * @param chatId The ID of the chat
+   * @return the ID of the other participant, or null if not found
+   */
+  public Long getOtherParticipantId(long userId, long chatId) {
+    String query = "SELECT * FROM chat WHERE id = ? AND (buyer_id = ? OR seller_id = ?)";
+    List<Chat> chats = jdbcTemplate.query(query, chatRowMapper, chatId, userId, userId);
+    if (chats.isEmpty()) {
+      return null;
+    }
+    Chat chat = chats.get(0);
+    return chat.getBuyerId() == userId ? chat.getSellerId() : chat.getBuyerId();
+  }
 }

@@ -5,6 +5,8 @@ import edu.ntnu.stud.model.CreateChatRequest;
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
 import edu.ntnu.stud.repo.ChatRepo;
+
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class ChatService {
 
   @Autowired
   private ListingService listingService;
+
+  @Autowired
+  private WebsocketService websocketService;
 
   /**
    * Creates a new chat with a buyer, seller, and listing.
@@ -87,7 +92,23 @@ public class ChatService {
     // TODO: validate the message
 
     // The message should be valid, so we can add it to the chat
-    return messageService.addMessage(message);
+    Long messageId = messageService.addMessage(message);
+
+    // Check if the message was added successfully
+    if (messageId == null) {
+      return false;
+    }
+
+    // Send the message to the other participant using WebSocket
+    websocketService.pushChatMessage(
+        chatRepo.getOtherParticipantId(message.getSenderId(), message.getChatId()),
+        new Message(messageId,
+            message.getChatId(),
+            message.getSenderId(),
+            message.getMessage(),
+            new Timestamp(System.currentTimeMillis())));
+
+    return true;
   }
 
   /**
@@ -114,6 +135,13 @@ public class ChatService {
     return chatRepo.getAllUserChats(userId);
   }
 
+  /**
+   * Gets a chat by its ID.
+   *
+   * @param chatId the ID of the chat
+   * @param token  the JWT token of the user
+   * @return the chat object if found and the user is authorized, null otherwise
+   */
   public Chat getChatById(long chatId, String token) {
     // Extract the user ID from the token
     long userId = jwtService.extractUserId(token.substring(7));

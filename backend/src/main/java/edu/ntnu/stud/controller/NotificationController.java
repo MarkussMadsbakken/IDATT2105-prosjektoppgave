@@ -48,7 +48,7 @@ public class NotificationController {
    *         specified ID, or a not found status
    */
   @GetMapping("/{id}")
-  public ResponseEntity<Notification> getNotificationById(@PathVariable long id, 
+  public ResponseEntity<Notification> getNotificationById(@PathVariable long id,
       @RequestHeader("Authorization") String token) {
     Notification notification = notificationService.getNotificationById(id, token);
     if (notification != null) {

@@ -3,6 +3,8 @@ package edu.ntnu.stud.repo;
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -51,11 +55,25 @@ public class MessageRepo {
     }
   }
 
-  public boolean addMessage(MessageRequest message) {
+  /**
+   * Inserts a new message into the database, and returns its ID.
+   *
+   * @param message the message to be added
+   * @return the inserted message
+   */
+  public Long addMessage(MessageRequest message) {
     String query = "INSERT INTO message (sender_id, chat_id, message) VALUES (?, ?, ?)";
-    int rowsAffected = jdbcTemplate.update(query, message.getSenderId(), message.getChatId(),
-        message.getMessage());
-    return rowsAffected > 0;
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+    jdbcTemplate.update(connection -> {
+      PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+      ps.setLong(1, message.getSenderId());
+      ps.setLong(2, message.getChatId());
+      ps.setString(3, message.getMessage());
+      return ps;
+    }, keyHolder);
+
+    return keyHolder.getKey().longValue();
   }
 
   /**

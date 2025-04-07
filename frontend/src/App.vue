@@ -38,7 +38,6 @@ const changeLanguage = (lang: string) => {
           <SquarePlus />
         </RouterLink>
 
-        <!-- Endre til en dropdown når komponenten er ferdig -->
         <div class="link" v-if="auth.isLoggedIn()">
           <NotificationDropdown></NotificationDropdown>
         </div>
@@ -113,6 +112,7 @@ const changeLanguage = (lang: string) => {
   height: 100%;
   opacity: 95%;
   background-color: #1E6676;
+  z-index: -1;
 }
 
 .logo {
