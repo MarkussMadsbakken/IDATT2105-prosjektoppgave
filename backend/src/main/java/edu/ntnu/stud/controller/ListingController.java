@@ -121,6 +121,31 @@ public class ListingController {
   }
 
   /**
+   * Retrives a paginated list of archived listings owned by a specific owner.
+   *
+   * @param userId the ID of the user whose archived listings to retrieve
+   * @param page   the page number to retrieve
+   * @param offset the number of items per page
+   * @return a page of archived listings owned by the specified user
+   */
+  @GetMapping("/user/{userId}/archived")
+  public ResponseEntity<Page<ListingResponse>> getArchivedListingsByUserId(
+      @PathVariable long userId,
+      @RequestParam int page,
+      @RequestParam int offset) {
+    logger.info(
+        "Fetching archived listings for user with ID: {}, page: {}, offset: {}",
+        userId,
+        page,
+        offset);
+    Pageable pageable = PageRequest.of(page, offset);
+    Page<ListingResponse> listingsPage = 
+        listingService.getArchivedListingsByUserIdPage(userId, pageable);
+    logger.info("Archived listings for user fetched successfully");
+    return ResponseEntity.ok(listingsPage);
+  }
+
+  /**
    * Creates a new listing.
    *
    * @param listingRequest the ListingRequest to save as a Listing

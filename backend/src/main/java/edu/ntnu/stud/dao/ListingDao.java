@@ -154,6 +154,25 @@ public class ListingDao {
   }
 
   /**
+   * Retrieves a paginated list of archived listings owned by a specific user from the
+   * database.
+   *
+   * @param userId   the ID of the user whose archived listings to retrieve
+   * @param pageable the pagination information, including page number, page size,
+   *                and sorting
+   * @return a page of archived listings owned by the specified user
+   */
+  public Page<Listing> findArchivedPageByOwnerId(long userId, Pageable pageable) {
+    int limit = pageable.getPageSize();
+    long offset = pageable.getOffset();
+    String sql = "SELECT * FROM listings WHERE owner_id = ? AND deleted = false AND active = false "
+        + "LIMIT ? OFFSET ?";
+    List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, userId, limit, offset);
+    int total = listings.size();
+    return new PageImpl<>(listings, pageable, total);
+  }
+
+  /**
    * Retrieves a paginated list of listings owned by a specific user from the
    * database.
    *
