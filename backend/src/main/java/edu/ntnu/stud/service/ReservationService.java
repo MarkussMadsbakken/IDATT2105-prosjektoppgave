@@ -1,6 +1,7 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.factory.ReservationFactory;
+import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.model.Reservation;
 import edu.ntnu.stud.model.ReservationRequest;
 import edu.ntnu.stud.repo.ReservationRepo;
@@ -19,6 +20,10 @@ public class ReservationService {
   private ReservationRepo reservationRepo;
   @Autowired
   private JWTService jwtService;
+  @Autowired
+  private NotificationService notificationService;
+  @Autowired
+  private ListingService listingService;
 
   /**
    * Adds a new reservation to the database.
@@ -28,17 +33,31 @@ public class ReservationService {
    * @return the created Reservation object
    */
   public Reservation addReservation(ReservationRequest reservationRequest, String token) {
+    // Fetch values
     Long userId = jwtService.extractUserId(token);
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
     Reservation existingReservation = reservationRepo.getReservationByUserIdAndListingId(
         userId, reservationRequest.getListingId(), expirationDate);
+    // Check if a reservation already exists for the user and listing
     if (existingReservation != null) {
       throw new IllegalArgumentException("A reservation already exists for this listing.");
     }
+    // Create and add the new reservation
     Reservation reservation = ReservationFactory.fromRequest(reservationRequest);
     reservation.setUserId(userId);
     reservationRepo.addReservation(reservation);
+
+    // Send notification to the listing owner
+    Notification notification = new Notification();
+    notification.setUserId(
+        listingService.getListingByUuid(reservationRequest.getListingId()).getOwnerId());
+    notification.setMessage("userReservedYourListing");
+    notification.setLink(
+        "/listing/" + reservationRequest.getListingId());
+    notificationService.addNotification(notification);
+
+    // Return the created reservation
     return reservationRepo.getReservationByUserIdAndListingId(
         userId, reservationRequest.getListingId(), expirationDate);
   }

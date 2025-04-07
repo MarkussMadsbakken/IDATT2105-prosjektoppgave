@@ -141,8 +141,8 @@ const i18n = createI18n({
             purchaseAccomplished: "Kjøp fullført",
             inSummary: "Oppsummering",
             emptyListings: "Her er det tomt",
-
-
+            userReservedYourListing: "En bruker har reservert annonsen din",
+            userPurchasedYourListing: "En bruker har kjøpt annonsen din",
         },
         en: {
             recommended: "Recommended for you",
@@ -229,7 +229,8 @@ const i18n = createI18n({
             cardNumber: "Card number (NOT real)",
             purchaseAccomplished: "Purchase accomplished!",
             inSummary: "In summary"
-
+            userReservedYourListing: "A user has reserved your listing",
+            userPurchasedYourListing: "A user has purchased your listing",
         }
     },
 });

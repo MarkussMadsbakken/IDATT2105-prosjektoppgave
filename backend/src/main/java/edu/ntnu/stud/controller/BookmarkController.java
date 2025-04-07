@@ -30,8 +30,9 @@ public class BookmarkController {
    * Retrieves a list of bookmarks for a user from the database.
    */
   @GetMapping("/user")
-  public ResponseEntity<List<ListingResponse>> getBookmarks(@RequestHeader("Authorization") String token) {
-    List<ListingResponse> bookmarks = bookmarkService.getBookmarksFromUser(token);
+  public ResponseEntity<List<ListingResponse>> getBookmarks(
+      @RequestHeader("Authorization") String token) {
+    List<ListingResponse> bookmarks = bookmarkService.getBookmarkedListingsFromUser(token);
     return ResponseEntity.ok(bookmarks);
   }
 
