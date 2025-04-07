@@ -21,6 +21,8 @@ public class NotificationService {
   private NotificationRepo notificationRepo;
   @Autowired
   private JWTService jwtService;
+  @Autowired
+  private WebsocketService websocketService;
   Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
   /**
@@ -42,8 +44,9 @@ public class NotificationService {
         notification.getUserId(),
         notification.getMessage());
 
-    notificationRepo.addNotification(notification);
-    // TODO: Send the notification to the WebSocket topic for real-time updates
+    Long id = notificationRepo.addNotification(notification);
+    notification.setId(id);
+    websocketService.pushNotification(notification.getUserId(), notification);
   }
 
   /**
