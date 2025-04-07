@@ -58,7 +58,7 @@ public class ReservationRepo {
    */
   public Reservation getReservationByListingId(String listingId, Timestamp expirationDate) {
     String query = "SELECT * FROM reservations "
-                 + "WHERE listing_id = ? AND reservationDate > ?";
+                 + "WHERE listing_id = ? AND reservation_date > ?";
     return jdbcTemplate.queryForObject(query, reservationRowMapper, listingId, expirationDate);
   }
 

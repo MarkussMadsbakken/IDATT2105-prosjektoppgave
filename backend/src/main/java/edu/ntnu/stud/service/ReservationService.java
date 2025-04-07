@@ -92,7 +92,11 @@ public class ReservationService {
   public Reservation checkReservation(String listingId) {
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
-    return reservationRepo.getReservationByListingId(listingId, expirationDate);
+    try {
+      return reservationRepo.getReservationByListingId(listingId, expirationDate);
+    } catch (Exception e) {
+      return null; // Return null if no reservation is found
+    }
   }
 
   /**
