@@ -59,7 +59,8 @@ public class SecurityConfig {
                 "/api/listing",
                 "/api/listing/**",
                 "/api/user",
-                "/api/user/**")
+                "/api/user/**",
+                "/api/search")
             .permitAll()
             .anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults())

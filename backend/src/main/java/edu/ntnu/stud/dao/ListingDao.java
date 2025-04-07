@@ -30,13 +30,13 @@ public class ListingDao {
     listing.setDescription(rs.getString("description"));
     listing.setCreatedAt(rs.getTimestamp("created_at"));
     listing.setUpdatedAt(rs.getTimestamp("updated_at"));
-    // TODO: Handle subcategories List<String>
     listing.setCategory(rs.getInt("category"));
     listing.setSubcategory(rs.getInt("subcategory"));
     listing.setPostalCode(rs.getInt("postal_code"));
     listing.setActive(rs.getBoolean("active"));
     listing.setDeleted(rs.getBoolean("deleted"));
     listing.setSold(rs.getBoolean("sold"));
+    listing.setBuyerId(rs.getLong("buyerId"));
     listing.setOwnerId(rs.getLong("owner_id"));
     return listing;
   };
@@ -104,8 +104,8 @@ public class ListingDao {
    */
   public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
-        + "category = ?, subcategory = ?, postal_code = ?, active = ?, deleted = ?, sold = ? "
-        + "WHERE uuid = ?";
+        + "category = ?, subcategory = ?, postal_code = ?, active = ?, deleted = ?, sold = ?, "
+        + "buyerId = ? WHERE uuid = ?";
     return jdbcTemplate.update(
         sql,
         listing.getName(),
@@ -117,6 +117,7 @@ public class ListingDao {
         listing.isActive(),
         listing.isDeleted(),
         listing.isSold(),
+        listing.getBuyerId(),
         listing.getUuid());
   }
 
@@ -188,9 +189,9 @@ public class ListingDao {
     int limit = pageable.getPageSize();
     long offset = pageable.getOffset();
     String sql = "SELECT * FROM listings WHERE deleted = false AND "
-        + "(name ILIKE ? OR description ILIKE ?) AND "
-        + "((? IS NULL) OR category = ?) AND "
-        + "((? IS NULL) OR subcategory = ?) AND "
+        + "(LOWER(name) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)) AND "
+        + "(category = ? OR ? IS NULL) AND "
+        + "(subcategory = ? OR ? IS NULL) AND "
         + "(price BETWEEN ? AND ?) "
         + "LIMIT ? OFFSET ?";
     List<Listing> listings = jdbcTemplate.query(
@@ -201,6 +202,29 @@ public class ListingDao {
         subCategory, subCategory, // subcategory check
         minPrice, maxPrice, // price range
         limit, offset);
+    int total = listings.size();
+    return new PageImpl<>(listings, pageable, total);
+  }
+
+  /**
+   * Retrieves a paginated list of recommended listings for a specific user.
+   *
+   * @param userId the ID of the user for whom to retrieve recommended listings
+   * @param pageable the pagination information, including page number, page size
+   * @return a page of recommended listings for the specified user
+   */
+  public Page<Listing> findRecomendedListingsPage(long userId, Pageable pageable) {
+    int limit = pageable.getPageSize();
+    long offset = pageable.getOffset();
+    String sql = "SELECT * FROM listings l WHERE l.deleted = false AND "
+        + "l.owner_id != ? AND "
+        + "(l.category IN (SELECT ul.category FROM user_history uh "
+        + "JOIN listings ul ON uh.listing_id = ul.id WHERE uh.user_id = ?) OR "
+        + "l.subcategory IN (SELECT ul.subcategory FROM user_history uh "
+        + "JOIN listings ul ON uh.listing_id = ul.id WHERE uh.user_id = ?)) "
+        + "LIMIT ? OFFSET ?";
+    List<Listing> listings = jdbcTemplate.query(
+        sql, listingRowMapper, userId, userId, userId, limit, offset);
     int total = listings.size();
     return new PageImpl<>(listings, pageable, total);
   }

@@ -24,6 +24,7 @@ public class Listing {
   private boolean active;
   private boolean deleted;
   private boolean sold;
+  private Long buyerId;
   private Long ownerId;
 
   /**
@@ -296,6 +297,24 @@ public class Listing {
    */
   public void setSold(boolean sold) {
     this.sold = sold;
+  }
+
+  /**
+   * Returns the ID of the buyer of the listing.
+   *
+   * @return the ID of the buyer of the listing
+   */
+  public Long getBuyerId() {
+    return buyerId;
+  }
+
+  /**
+   * Sets the ID of the buyer of the listing.
+   *
+   * @param buyerId the buyer ID to set
+   */
+  public void setBuyerId(Long buyerId) {
+    this.buyerId = buyerId;
   }
 
   /**
