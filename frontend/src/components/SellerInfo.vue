@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { UserIcon } from 'lucide-vue-next'
-import type { User } from '@/types/user.ts'
 import Button from '@/components/Button.vue';
 import { useRouter } from "vue-router";
 import UserImage from './UserImage.vue';
 import { useGetUser } from '@/actions/user';
 import { computed } from 'vue';
 import { useAuth } from '@/stores/auth';
+import SellerInfoSkeleton from './skeleton/SellerInfoSkeleton.vue';
 
 const props = defineProps<{
   userId: number;
@@ -19,7 +18,9 @@ const emit = defineEmits<{
 
 const router = useRouter();
 const auth = useAuth();
+
 const { data: user, isPending, isError, error } = useGetUser(props.userId);
+
 
 const joinedYear = computed(() => user.value && user.value.createdAt ? "Medlem siden " + new Date(user.value.createdAt).getFullYear() : '');
 const handleContactClick = () => {
@@ -38,9 +39,9 @@ const handleProfileClick = () => {
 </script>
 
 <template>
-  <div v-if="isPending">
-    <p>Laster inn...</p>
-  </div>
+  <template v-if="isPending">
+    <SellerInfoSkeleton />
+  </template>
   <div v-else-if="isError">
     <p>Feil: {{ error?.message }}</p>
   </div>
@@ -72,10 +73,11 @@ const handleProfileClick = () => {
   justify-content: space-between;
   align-items: center;
   outline: black;
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 40rem;
+  width: 100%;
   height: 8rem;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: white;
 }
 
 .seller-container.centered {
@@ -89,7 +91,6 @@ const handleProfileClick = () => {
   justify-content: center;
   gap: 1rem;
   cursor: pointer;
-  ;
 }
 
 .seller-left {

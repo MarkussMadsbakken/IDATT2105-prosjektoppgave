@@ -5,11 +5,11 @@ import Button from '@/components/Button.vue';
 import ChatMessage from '@/components/ChatMessage.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import SellerInfo from '@/components/SellerInfo.vue';
+import SellerInfoSkeleton from '@/components/skeleton/SellerInfoSkeleton.vue';
 import TextInput from '@/components/TextInput.vue';
 import { useAuth } from '@/stores/auth';
-import type { Chat, Message, User } from '@/types';
+import type { Message } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { watchOnce } from '@vueuse/core';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -19,9 +19,15 @@ const queryClient = useQueryClient();
 
 const message = ref<string>("");
 
-const chatId = Number(route.params.chatId);
-const { data: chat, isPending: chatIsPending, isError: chatIsError, error: chatError } = useChat(Number(chatId));
-const { data: messages, isPending: messagesIsPending, isError: messagesIsError, error: messagesError } = useChatMessages(Number(chatId));
+const chatId = ref(Number(route.params.id));
+
+watch(route, (newRoute) => {
+    console.log(newRoute.params.id);
+    chatId.value = Number(newRoute.params.id);
+});
+
+const { data: chat, isPending: chatIsPending, isError: chatIsError, error: chatError } = useChat(chatId);
+const { data: messages, isPending: messagesIsPending, isError: messagesIsError, error: messagesError } = useChatMessages(chatId);
 
 const lastMessageRef = ref<HTMLDivElement | null>(null);
 
@@ -58,7 +64,7 @@ const ws = useWebSocket();
 ws.subscribe(
     "/user/queue/messages",
     (message: Message) => {
-        if (message.chatId !== chatId) return;
+        if (message.chatId !== chatId.value) return;
         queryClient.setQueryData(["chat", chatId, "messages"], (oldMessages: Message[] | undefined) => {
             return [...(oldMessages || []), message];
         });
@@ -76,24 +82,32 @@ if (messages.value) {
 </script>
 
 <template>
-    <div class="outer-wrapper" v-if="!chatIsPending && !chatIsError">
-        <div class="seller-info-wrapper">
-            <SellerInfo :userId="isSeller ? chat?.buyerId! : chat?.sellerId!" />
-        </div>
-        <div v-if="messagesIsPending" class="loading">
-            <p>{{ $t("loading") }}</p>
-        </div>
-        <div v-else-if="messagesIsError" class="error">
-            <p>{{ $t("error") }}</p>
-        </div>
-        <div v-else-if="!messages || messages.length === 0" class="no-messages">
-            <p>{{ $t("noMessages") }}</p>
-        </div>
-        <div class="messages-wrapper">
-            <div v-for="(message) in messages" :key="message.id">
-                <ChatMessage :message="message" :own-message="message.senderId == auth.userId" />
+    <div class="chats-outer-wrapper">
+        <template v-if="chatIsPending && messagesIsPending">
+            <div class="seller-info-wrapper">
+                <SellerInfoSkeleton />
+
             </div>
-        </div>
+            <div class="messages-wrapper">
+                <LoadingSpinner />
+            </div>
+        </template>
+        <template v-else-if="!chatIsError">
+            <div class="seller-info-wrapper">
+                <SellerInfo :key="chat?.chatId" :userId="isSeller ? chat?.buyerId! : chat?.sellerId!" />
+            </div>
+            <div v-if="messagesIsError" class="error">
+                <p>{{ $t("error") }}</p>
+            </div>
+            <div v-else-if="!messages || messages.length === 0 && !messagesIsPending && !chatIsPending"
+                class="no-messages">
+                <p>{{ $t("noMessages") }}</p>
+            </div>
+            <div class="messages-wrapper">
+                <ChatMessage v-for="(message) in messages" :key="message.id" :message="message"
+                    :own-message="message.senderId == auth.userId" />
+            </div>
+        </template>
         <form class="chat-box-wrapper" @submit.prevent="sendMessageMutation({ chatId: chatId, message: message })">
             <TextInput class="input" v-model="message" />
             <Button variant="primary">
@@ -111,12 +125,16 @@ if (messages.value) {
 </template>
 
 <style scoped>
-.messages-wrapper {
-    width: 60vw;
+.seller-info-wrapper {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.seller-info-wrapper {
-    position: sticky;
+.messages-wrapper {
+    width: 100%;
+    padding-bottom: 5rem;
 }
 
 .input {
@@ -124,11 +142,23 @@ if (messages.value) {
     width: 30rem;
 }
 
+@media only screen and (max-width: 1200px) {
+    .input {
+        width: 20rem;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .input {
+        width: 100%;
+    }
+}
+
 .chat-box-wrapper {
     line-height: 0;
     padding: 1rem;
-    position: sticky;
-    bottom: 0;
+    position: absolute;
+    bottom: 2rem;
     display: flex;
     flex-direction: row;
     background-color: white;
@@ -138,7 +168,7 @@ if (messages.value) {
     height: fit-content;
 }
 
-.outer-wrapper {
+.chats-outer-wrapper {
     padding-top: 1rem;
     display: flex;
     flex-direction: column;

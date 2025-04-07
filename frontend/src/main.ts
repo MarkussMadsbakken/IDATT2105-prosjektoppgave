@@ -132,6 +132,8 @@ const i18n = createI18n({
             unreadNotificaions: "uleste varslinger",
             newBookmark: "En bruker har bokmerket annonsen din",
             noNotifications: "Du har ingen varslinger",
+            chatNotSelected: "Ingen chat valgt",
+            chatNotSelectedDescription: "Velg en chat for å se meldinger",
         },
         en: {
             recommended: "Recommended for you",
@@ -210,6 +212,8 @@ const i18n = createI18n({
             markAllAsRead: "Mark all as read",
             newBookmark: "A user has bookmarked your listing",
             noNotifications: "You have no notifications",
+            chatNotSelected: "No chat selected",
+            chatNotSelectedDescription: "Select a chat to see messages",
         }
     },
 });
