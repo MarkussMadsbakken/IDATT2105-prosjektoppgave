@@ -34,7 +34,7 @@ public class ReservationService {
    */
   public Reservation addReservation(ReservationRequest reservationRequest, String token) {
     // Fetch values
-    Long userId = jwtService.extractUserId(token);
+    Long userId = jwtService.extractUserId(token.substring(7));
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
     Reservation existingReservation = reservationRepo.getReservationByUserIdAndListingId(
@@ -77,7 +77,7 @@ public class ReservationService {
    * @param token the JWT token of the user making the reservation
    */
   public List<Reservation> getReservationByUserId(String token) {
-    Long userId = jwtService.extractUserId(token);
+    Long userId = jwtService.extractUserId(token.substring(7));
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
     return reservationRepo.getReservationsByUserId(userId, expirationDate);
@@ -106,7 +106,7 @@ public class ReservationService {
    * @param token the JWT token of the user making the reservation
    */
   public void deleteReservation(long id, String token) {
-    Long userId = jwtService.extractUserId(token);
+    Long userId = jwtService.extractUserId(token.substring(7));
     Reservation reservation = reservationRepo.getReservationById(id);
     if (reservation != null && reservation.getUserId().equals(userId)) {
       reservationRepo.deleteReservation(id);
