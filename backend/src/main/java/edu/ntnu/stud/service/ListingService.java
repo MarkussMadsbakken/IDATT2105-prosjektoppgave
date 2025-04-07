@@ -317,4 +317,14 @@ public class ListingService {
     listing.setBuyerId(userId);
     listingRepo.updateListing(convertToListingUpdate(listing));
   }
+
+  /**
+   * Retrieves a list of listings by their UUIDs.
+   */
+  public List<ListingResponse> getListingsByUuids(List<String> uuids) {
+    List<Listing> listings = listingRepo.getListingsByUuids(uuids);
+    return listings.stream()
+        .map(this::convertToResponse)
+        .collect(Collectors.toList());
+  }
 }

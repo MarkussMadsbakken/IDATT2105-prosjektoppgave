@@ -123,4 +123,14 @@ public class ListingRepo {
   public Page<Listing> getRecomendedListingsPage(long userId, Pageable pageable) {
     return listingDao.findRecomendedListingsPage(userId, pageable);
   }
+
+  /**
+   * Retrives a list of listings from a list of ids.
+   *
+   * @param ids the list of ids of the listings to retrieve
+   * @return a list of listings with the specified ids 
+   */
+  public List<Listing> getListingsByUuids(List<String> ids) {
+    return listingDao.findByIds(ids);
+  }
 }
