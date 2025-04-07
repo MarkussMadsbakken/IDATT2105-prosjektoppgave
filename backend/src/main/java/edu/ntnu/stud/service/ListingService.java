@@ -56,17 +56,6 @@ public class ListingService {
   }
 
   /**
-   * Retrieves listings from the database within a specified range.
-   *
-   * @param start the starting index of the range (inclusive)
-   * @param end   the ending index of the range (inclusive)
-   * @return a list of listings within the specified range
-   */
-  public List<Listing> getListingsInRange(int start, int end) {
-    return listingRepo.getListingsInRange(start, end);
-  }
-
-  /**
    * Saves a new listing to the database.
    *
    * @param listingRequest the listingRequest to save as listing
