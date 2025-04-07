@@ -197,4 +197,27 @@ public class ListingDao {
     int total = listings.size();
     return new PageImpl<>(listings, pageable, total);
   }
+
+  /**
+   * Retrieves a paginated list of recommended listings for a specific user.
+   *
+   * @param userId the ID of the user for whom to retrieve recommended listings
+   * @param pageable the pagination information, including page number, page size
+   * @return a page of recommended listings for the specified user
+   */
+  public Page<Listing> findRecomendedListingsPage(long userId, Pageable pageable) {
+    int limit = pageable.getPageSize();
+    long offset = pageable.getOffset();
+    String sql = "SELECT * FROM listings l WHERE l.deleted = false AND "
+        + "l.owner_id != ? AND "
+        + "(l.category IN (SELECT ul.category FROM user_history uh "
+        + "JOIN listings ul ON uh.listing_id = ul.id WHERE uh.user_id = ?) OR "
+        + "l.subcategory IN (SELECT ul.subcategory FROM user_history uh "
+        + "JOIN listings ul ON uh.listing_id = ul.id WHERE uh.user_id = ?)) "
+        + "LIMIT ? OFFSET ?";
+    List<Listing> listings = jdbcTemplate.query(
+        sql, listingRowMapper, userId, userId, userId, limit, offset);
+    int total = listings.size();
+    return new PageImpl<>(listings, pageable, total);
+  }
 }

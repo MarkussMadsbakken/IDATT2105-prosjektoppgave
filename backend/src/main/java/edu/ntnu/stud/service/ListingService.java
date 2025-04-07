@@ -286,4 +286,18 @@ public class ListingService {
         listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
     return listingsPage.map(this::convertToResponse);
   }
+
+  /**
+   * Retives a paginated list of recommended listings for a user.
+   *
+   * @param page the page number to retrieve
+   * @param size the number of listings per page
+   * @param userId the ID of the user to retrieve recommendations for
+   * @return a paginated list of recommended listings
+   */
+  public Page<ListingResponse> getRecomendedListingsPage(int page, int size, long userId) {
+    Pageable pageable = Pageable.ofSize(size).withPage(page);
+    Page<Listing> listingsPage = listingRepo.getRecomendedListingsPage(userId, pageable);
+    return listingsPage.map(this::convertToResponse);
+  }
 }
