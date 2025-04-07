@@ -20,7 +20,6 @@ public class WebSocketAuthHandshakeInterceptor implements HandshakeInterceptor {
 
   private final JWTService jwtService;
 
-  @Autowired
   public WebSocketAuthHandshakeInterceptor(JWTService jwtService) {
     this.jwtService = jwtService;
   }
