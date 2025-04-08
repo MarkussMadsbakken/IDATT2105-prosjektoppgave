@@ -300,8 +300,8 @@ const i18n = createI18n({
       ...articleSummaryTranslations.no,
       ...sellerInfoTranslations.no,
       ...categorySelectorTranslations.no,
-      ...searchTranslations.no
-
+      ...searchTranslations.no,
+      ...messageTranslations.no
     }, en:{
       ...listingTranslations.en,
       ...profileTranslations.en,
@@ -319,7 +319,8 @@ const i18n = createI18n({
       ...articleSummaryTranslations.en,
       ...sellerInfoTranslations.en,
       ...categorySelectorTranslations.en,
-      ...searchTranslations.en
+      ...searchTranslations.en,
+      ...messageTranslations.en
 
     }
   }
