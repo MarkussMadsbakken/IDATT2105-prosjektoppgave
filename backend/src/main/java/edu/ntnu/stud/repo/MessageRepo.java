@@ -2,15 +2,10 @@ package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -19,13 +14,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class MessageRepo {
-
-  @Value("${spring.datasource.url}")
-  private String url;
-  @Value("${spring.datasource.username}")
-  private String user;
-  @Value("${spring.datasource.password}")
-  private String password;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
@@ -42,35 +30,15 @@ public class MessageRepo {
   };
 
   /**
-   * Initializes the MessageRepo and loads the MySQL JDBC driver.
-   */
-  public MessageRepo() {
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
    * Inserts a new message into the database, and returns its ID.
    *
    * @param message the message to be added
-   * @return the inserted message
+   * @return the inserted message ID
    */
-  public Long addMessage(MessageRequest message) {
+  public int addMessage(MessageRequest message) {
     String query = "INSERT INTO message (sender_id, chat_id, message) VALUES (?, ?, ?)";
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-
-    jdbcTemplate.update(connection -> {
-      PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-      ps.setLong(1, message.getSenderId());
-      ps.setLong(2, message.getChatId());
-      ps.setString(3, message.getMessage());
-      return ps;
-    }, keyHolder);
-
-    return keyHolder.getKey().longValue();
+    return jdbcTemplate.update(
+        query, message.getSenderId(), message.getChatId(), message.getMessage());
   }
 
   /**

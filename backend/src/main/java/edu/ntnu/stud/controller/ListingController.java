@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,7 +54,7 @@ public class ListingController {
       return ResponseEntity.ok(listingResponse);
     } else {
       logger.warn("Listing not found with UUID: {}", uuid);
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.noContent().build();
     }
   }
 
@@ -77,12 +75,12 @@ public class ListingController {
       return ResponseEntity.ok(images);
     } else {
       logger.warn("Listing not found with UUID: {}", uuid);
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.noContent().build();
     }
   }
 
   /**
-   * Retrieves a paginated list of listings.
+   * Retrieves a paginated list of listings (not deleted, sold or archived).
    *
    * @param page   the page number to retrieve
    * @param offset the number of items per page
@@ -93,8 +91,7 @@ public class ListingController {
       @RequestParam int page,
       @RequestParam int offset) {
     logger.info("Fetching listings page: {}, offset: {}", page, offset);
-    Pageable pageable = PageRequest.of(page, offset);
-    Page<ListingResponse> listingsPage = listingService.getListingsPage(pageable);
+    Page<ListingResponse> listingsPage = listingService.getListingsPage(page, offset);
     logger.info("Listings page fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -127,8 +124,8 @@ public class ListingController {
       @RequestParam int offset) {
     logger.info(
         "Fetching listings for user with ID: {}, page: {}, offset: {}", userId, page, offset);
-    Pageable pageable = PageRequest.of(page, offset);
-    Page<ListingResponse> listingsPage = listingService.getListingsByUserIdPage(userId, pageable);
+    Page<ListingResponse> listingsPage = 
+        listingService.getListingsByUserIdPage(userId, page, offset);
     logger.info("Listings for user fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -151,8 +148,8 @@ public class ListingController {
         userId,
         page,
         offset);
-    Pageable pageable = PageRequest.of(page, offset);
-    Page<ListingResponse> listingsPage = listingService.getArchivedListingsByUserIdPage(userId, pageable);
+    Page<ListingResponse> listingsPage = 
+        listingService.getArchivedListingsByUserIdPage(userId, page, offset);
     logger.info("Archived listings for user fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -178,7 +175,6 @@ public class ListingController {
 
     logger.info("Saving images for listing with name: {}", listingRequest.getName());
     logger.info("Listing created successfully with UUID: {}", listingResponse.getUuid());
-
     if (images == null || listingResponse.getUuid() == null) {
       logger.error("cant save listingimages");
     }

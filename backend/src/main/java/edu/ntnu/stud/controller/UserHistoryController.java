@@ -30,6 +30,9 @@ public class UserHistoryController {
   public ResponseEntity<List<UserHistory>> getUserHistory(
       @RequestHeader("Authorization") String token) {
     List<UserHistory> userHistory = userHistoryService.getUserHistory(token);
+    if (userHistory.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
     return ResponseEntity.ok(userHistory);
   }
 
@@ -39,11 +42,7 @@ public class UserHistoryController {
   @PostMapping
   public ResponseEntity<String> addUserHistory(
       @RequestBody UserHistoryRequest userHistory, @RequestHeader("Authorization") String token) {
-    try {
-      userHistoryService.addUserHistory(userHistory, token);
-      return ResponseEntity.ok("User history added successfully.");
-    } catch (Exception e) {
-      return ResponseEntity.status(500).body("Error adding user history: " + e.getMessage());
-    }
+    userHistoryService.addUserHistory(userHistory, token);
+    return ResponseEntity.ok("User history added successfully.");
   }
 }

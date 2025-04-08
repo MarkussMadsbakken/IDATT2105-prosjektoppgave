@@ -11,12 +11,14 @@ import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.model.ListingUpdate;
 import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.repo.ListingRepo;
+import edu.ntnu.stud.util.Validate;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,17 +70,64 @@ public class ListingService {
   }
 
   /**
+   * Validates a listing request.
+   *
+   * @param listingRequest the listingRequest to validate
+   */
+  public void validateListingRequest(ListingRequest listingRequest) {
+    Validate.that(listingRequest.getName(), Validate.isNotEmpty(), "Name must not be empty");
+    Validate.that(listingRequest.getPrice(), Validate.isNotNegative(), "Price must be positive");
+    Validate.that(listingRequest.getDescription(), Validate.isNotEmpty(), 
+        "Description must not be empty");
+    Validate.that(listingRequest.getCategory(), Validate.isPositive(), "Category must be positive");
+    Validate.that(listingRequest.getLongitude(), Validate.isNotNegative(),
+        "Longitude must be positive");
+    Validate.that(listingRequest.getLatitude(), Validate.isNotNegative(), 
+        "Latitude must be positive");
+  }
+
+  /**
    * Saves a new listing to the database.
    *
    * @param listingRequest the listingRequest to save as listing
    * @return the ListingResponse of the listing
    */
   public ListingResponse saveListing(ListingRequest listingRequest, String token) {
+    validateListingRequest(listingRequest);
     long ownerId = jwtService.extractUserId(token.substring(7));
     Listing listing = convertToListing(listingRequest);
     listing.setOwnerId(ownerId);
     listingRepo.saveListing(listing);
     return convertToResponse(listing);
+  }
+
+  /**
+   * Validates a listing update request.
+   *
+   * @param listingUpdate the listingUpdate to validate
+   * @param token         the JWT token of the user making the request
+   */
+  public void validateListingUpdate(ListingUpdate listingUpdate, String token) {
+    long ownerId = jwtService.extractUserId(token.substring(7));
+    Listing existingListing = listingRepo.getListingByUuid(listingUpdate.getUuid());
+    Validate.that(existingListing, Validate.isNotNull(), 
+        "Listing not found with UUID: " + listingUpdate.getUuid());
+    Validate.that((ownerId == existingListing.getOwnerId()), Validate.isTrue(), 
+        "User does not own the listing with UUID: " + listingUpdate.getUuid());
+    Validate.that((!existingListing.isSold() && !listingUpdate.isSold()), Validate.isTrue(),
+        "Cannot update a listing that has already been sold.");
+    Validate.that((listingUpdate.getBuyerId() == null), Validate.isTrue(),
+        "Cannot set buyerId when updating a listing.");
+    Validate.that(listingUpdate.getName(), Validate.isNotEmpty(), "Name must not be empty");
+    Validate.that(listingUpdate.getPrice(), Validate.isNotNegative(), "Price must be positive");
+    Validate.that(listingUpdate.getDescription(), Validate.isNotEmpty(),
+        "Description must not be empty");
+    Validate.that(listingUpdate.getCategory(), Validate.isPositive(),
+        "Category must be positive");
+    Validate.that(listingUpdate.getLongitude(), Validate.isNotNegative(), 
+        "Longitude must be positive");
+    Validate.that(listingUpdate.getLatitude(), Validate.isNotNegative(), 
+        "Latitude must be positive");
   }
 
   /**
@@ -89,23 +138,11 @@ public class ListingService {
    * @return the number of rows affected
    */
   public int updateListing(ListingUpdate listing, String token) {
-    long ownerId = jwtService.extractUserId(token.substring(7));
-    Listing existingListing = listingRepo.getListingByUuid(listing.getUuid());
-    if (existingListing == null) {
-      throw new IllegalArgumentException("Listing not found with UUID: " + listing.getUuid());
-    }
-    if (existingListing.getOwnerId() != ownerId) {
-      throw new IllegalArgumentException(
-          "User does not own the listing with UUID: " + listing.getUuid());
-    }
-    if (existingListing.isSold() || listing.isSold()) {
-      throw new IllegalArgumentException("Cannot update a listing that has already been sold.");
-    }
-    if (listing.getBuyerId() != null) {
-      throw new IllegalArgumentException("Cannot set buyerId when updating a listing.");
-    }
+    validateListingUpdate(listing, token);
     return listingRepo.updateListing(listing);
   }
+
+
 
   /**
    * Deletes a listing.
@@ -117,13 +154,9 @@ public class ListingService {
     long ownerId = jwtService.extractUserId(token.substring(7));
     boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
     Listing existingListing = listingRepo.getListingByUuid(uuid);
-    if (existingListing == null) {
-      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
-    }
-    if (existingListing.getOwnerId() != ownerId && !isAdmin) {
-      throw new IllegalArgumentException(
-          "User does not own the listing with UUID: " + uuid);
-    }
+    Validate.that(existingListing, Validate.isNotNull(), "Listing not found with UUID: " + uuid);
+    Validate.that((ownerId == existingListing.getOwnerId() || isAdmin), Validate.isTrue(),
+        "User does not own the listing with UUID: " + uuid);
     ListingUpdate listingUpdate = convertToListingUpdate(existingListing);
     listingUpdate.setDeleted(true);
     listingRepo.updateListing(listingUpdate);
@@ -132,11 +165,14 @@ public class ListingService {
   /**
    * Retrieves a paginated list of listings from the database.
    *
-   * @param pageable the pagination information, including page number, page size,
-   *                 and sorting
+   * @param page the page number to retrieve
+   * @param size the number of listings per page
    * @return a page of listings
    */
-  public Page<ListingResponse> getListingsPage(Pageable pageable) {
+  public Page<ListingResponse> getListingsPage(int page, int size) {
+    Validate.that(page, Validate.isNotNegative(), "Page must be positive");
+    Validate.that(size, Validate.isPositive(), "Size must be positive");
+    Pageable pageable = Pageable.ofSize(size).withPage(page);
     Page<Listing> listingsPage = listingRepo.getListingsPage(pageable);
     return listingsPage.map(this::convertToResponse);
   }
@@ -145,11 +181,14 @@ public class ListingService {
    * Retrieves a paginated list of listings owned by a specific user.
    *
    * @param userId   the ID of the user whose listings to retrieve
-   * @param pageable the pagination information, including page number, page size,
-   *                 and sorting
+   * @param page    the page number to retrieve
+   * @param size    the number of listings per page
    * @return a page of listings owned by the specified user
    */
-  public Page<ListingResponse> getListingsByUserIdPage(long userId, Pageable pageable) {
+  public Page<ListingResponse> getListingsByUserIdPage(long userId, int page, int size) {
+    Validate.that(page, Validate.isNotNegative(), "Page must be positive");
+    Validate.that(size, Validate.isPositive(), "Size must be positive");
+    Pageable pageable = PageRequest.of(page, size);
     Page<Listing> listingsPage = listingRepo.getListingsByUserIdPage(userId, pageable);
     return listingsPage.map(this::convertToResponse);
   }
@@ -157,10 +196,15 @@ public class ListingService {
   /**
    * Retrieves a paginated list of archived listings owned by a specific user.
    *
-   * @param userId the ID of the user whose archived listings to retrieve
+   * @param userId   the ID of the user whose archived listings to retrieve
+   * @param page    the page number to retrieve
+   * @param offset  the number of listings per page
    * @return a page of archived listings owned by the specified user
    */
-  public Page<ListingResponse> getArchivedListingsByUserIdPage(long userId, Pageable pageable) {
+  public Page<ListingResponse> getArchivedListingsByUserIdPage(long userId, int page, int offset) {
+    Validate.that(page, Validate.isNotNegative(), "Page must be positive");
+    Validate.that(offset, Validate.isPositive(), "Size must be positive");
+    Pageable pageable = PageRequest.of(page, offset);
     Page<Listing> listingsPage = listingRepo.getArchivedListingsByUserIdPage(userId, pageable);
     return listingsPage.map(this::convertToResponse);
   }
@@ -184,7 +228,6 @@ public class ListingService {
     listing.setActive(listingRequest.isActive());
     listing.setDeleted(listingRequest.isDeleted());
     listing.setSold(listingRequest.isSold());
-
     return listing;
   }
 
@@ -306,7 +349,8 @@ public class ListingService {
       Double minPrice,
       Double maxPrice,
       Pageable pageable) {
-    Page<Listing> listingsPage = listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
+    Page<Listing> listingsPage = listingRepo.search(
+        query, category, subCategory, minPrice, maxPrice, pageable);
     return listingsPage.map(this::convertToResponse);
   }
 
@@ -319,6 +363,8 @@ public class ListingService {
    * @return a paginated list of recommended listings
    */
   public Page<ListingResponse> getRecomendedListingsPage(int page, int size, long userId) {
+    Validate.that(page, Validate.isNotNegative(), "Page must be positive");
+    Validate.that(size, Validate.isPositive(), "Size must be positive");
     Pageable pageable = Pageable.ofSize(size).withPage(page);
     Page<Listing> listingsPage = listingRepo.getRecomendedListingsPage(userId, pageable);
     return listingsPage.map(this::convertToResponse);
@@ -333,12 +379,8 @@ public class ListingService {
   public void purchaseListing(String uuid, String token) {
     // Fetch values
     Listing listing = listingRepo.getListingByUuid(uuid);
-    if (listing == null) {
-      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
-    }
-    if (listing.isSold()) {
-      throw new IllegalArgumentException("Listing is already sold with UUID: " + uuid);
-    }
+    Validate.that(listing, Validate.isNotNull(), "Listing not found with UUID: " + uuid);
+    Validate.that(listing.isSold(), Validate.isFalse(), "Listing already sold: " + uuid);
     long userId = jwtService.extractUserId(token.substring(7));
 
     // Create and do the listing update
@@ -364,13 +406,10 @@ public class ListingService {
   public void archiveListing(String uuid, boolean state, String token) {
     // Fetch values
     Listing listing = listingRepo.getListingByUuid(uuid);
-    if (listing == null) {
-      throw new IllegalArgumentException("Listing not found with UUID: " + uuid);
-    }
+    Validate.that(listing, Validate.isNotNull(), "Listing not found with UUID: " + uuid);
     long userId = jwtService.extractUserId(token.substring(7));
-    if (listing.getOwnerId() != userId) {
-      throw new IllegalArgumentException("User does not own the listing with UUID: " + uuid);
-    }
+    Validate.that(listing.getOwnerId() == userId, Validate.isTrue(),
+        "User does not own the listing with UUID: " + uuid);
 
     // Create and do the listing update
     listing.setActive(state);

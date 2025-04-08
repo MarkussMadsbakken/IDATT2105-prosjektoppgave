@@ -42,6 +42,43 @@ CREATE TABLE listing_images (
       FOREIGN KEY (listing_uuid) REFERENCES listings(uuid) ON DELETE CASCADE
 );
 
+CREATE TABLE chat (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    listing_id VARCHAR(36) NOT NULL,
+    seller_id BIGINT NOT NULL,
+    buyer_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (listing_id) REFERENCES listings(uuid),
+    FOREIGN KEY (seller_id) REFERENCES users(id),
+    FOREIGN KEY (buyer_id) REFERENCES users(id)
+);
+
+CREATE TABLE message (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    chat_id BIGINT NOT NULL,
+    sender_id BIGINT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (chat_id) REFERENCES chat(id),
+    FOREIGN KEY (sender_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS categories (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  description VARCHAR(255),
+  icon TEXT
+);
+
+CREATE TABLE IF NOT EXISTS sub_categories (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(255),
+  category_id BIGINT NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('testuser', 'password');
 INSERT INTO users (username, password) VALUES ('testuser2', 'password');

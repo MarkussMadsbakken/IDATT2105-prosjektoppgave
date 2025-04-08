@@ -4,10 +4,15 @@ import SellerInfo from "@/components/SellerInfo.vue";
 import Button from '@/components/Button.vue';
 import { useRouter, useRoute } from "vue-router";
 import { marked } from 'marked';
-import { Trash2, Pencil, Bookmark, BookmarkCheck } from 'lucide-vue-next'
+import { Trash2, Pencil, Bookmark, BookmarkCheck, Archive, ArchiveRestore } from 'lucide-vue-next'
 import { useAuth } from "@/stores/auth.ts";
 import { computed, ref, watch } from 'vue'
-import {useCheckForReservation, useGetListing, useReserveListing} from '@/actions/getListing';
+import {
+  useCheckForReservation,
+  useGetListing,
+  useReserveListing,
+  useToggleArchive
+} from '@/actions/getListing';
 import ListingImages from '@/components/ListingImages.vue';
 import { useDialog } from 'primevue/usedialog';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
@@ -17,6 +22,7 @@ import Alert from '@/components/Alert.vue';
 import { addBookmark, removeBookmark, useListingBookmarks } from '@/actions/bookmarks';
 import { useI18n } from 'vue-i18n';
 import { createChat } from '@/actions/chat';
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -125,6 +131,30 @@ const bookmarkMutation = useMutation({
   }
 });
 
+
+const { mutate: toggleArchive, isPending: isArchivePending } = useToggleArchive();
+
+const handleToggleArchive = () => {
+
+  const oldState = listing.value?.active;
+  const newState = !oldState;
+
+  toggleArchive(
+    { uuid: listingId, state: newState },
+    {
+      onSuccess: () => {
+        // TODO Toast
+        queryClient.invalidateQueries({queryKey: ['listing', listingId]});
+        console.log("Aktivstatus oppdatert:", newState);
+      },
+      onError: (error) => {
+        console.error("Feil ved arkivering:", error);
+      }
+    }
+  );
+}
+
+
 const handleDelete = () => {
   const d = dialog.open(ConfirmDialog, {
     props: {
@@ -167,7 +197,7 @@ const handleDelete = () => {
   </div>
   <div class="listing" v-else>
     <div class="title-picture">
-      <Alert class="reserved-warning" variant="Info" v-if="reservation && !isReservedByMe">
+      <Alert class="reserved-info" variant="Info" v-if="reservation && !isReservedByMe">
         {{ $t("listingReservedByAnotherUser") }} {{ reservationEndTime }}
       </Alert>
       <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
@@ -189,11 +219,33 @@ const handleDelete = () => {
       <div class="picture-footing">
         <div class="listing-price">{{ listing?.price }}kr</div>
         <div class="listing-actions">
-          <Button variant="outline" v-if="isOwnListing && !listing?.sold" @click="router.push(`/listing/${listingId}/edit`)">
+          <Button class="listing-option-button" variant="outline" v-if="isOwnListing && !listing?.sold" @click="router.push(`/listing/${listingId}/edit`)">
             {{ $t("edit") }}
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
-          <Button variant="destructive" v-if="isOwnListing || auth.isAdmin" @click="handleDelete">
+
+          <Button
+            class="listing-option-button"
+            :class="{ 'active-button': !listing?.active }"
+            variant="outline"
+            v-if="isOwnListing && !listing?.sold"
+            :disabled="isArchivePending"
+            @click="handleToggleArchive"
+          >
+            <template v-if="isArchivePending">
+              <LoadingSpinner />
+            </template>
+            <template v-else>
+              {{ listing?.active ? $t("archive") : $t("restore") }}
+              <component
+                :is="listing?.active ? Archive : ArchiveRestore"
+                :size="18"
+                style="margin-left: 0.5rem;"
+              />
+            </template>
+          </Button>
+
+          <Button class="listing-option-button" variant="destructive" v-if="isOwnListing || auth.isAdmin" @click="handleDelete">
             {{ $t("delete") }}
             <Trash2 :size="18" style="margin-left: 0.5rem;" />
           </Button>
@@ -278,6 +330,15 @@ const handleDelete = () => {
   gap: 2rem;
 }
 
+.listing-option-button{
+  width: 6.5rem;
+}
+.active-button {
+  background-color: #f0f0f0;
+  border-color: #d5d4d4;
+  color: #333;
+}
+
 .buy-box {
   display: flex;
   flex-direction: column;
@@ -315,6 +376,7 @@ const handleDelete = () => {
   margin-left: auto;
   align-items: center;
   justify-content: center;
+  padding-left: 1rem;
 }
 
 .listing-price {

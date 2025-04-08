@@ -10,6 +10,12 @@ public class Category {
   private String icon;
 
   /**
+   * Default constructor for Category.
+   */
+  public Category() {
+  }
+
+  /**
    * Constructor for Category.
    *
    * @param id          the ID of the category

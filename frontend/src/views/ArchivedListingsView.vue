@@ -1,47 +1,54 @@
 <script setup lang="ts">
-  import {useAuth} from "@/stores/auth.ts";
-  import { useGetUserListings } from "@/actions/user.ts";
-  import ListingCard from "@/components/ListingCard.vue";
-  import { useGetUser } from "@/actions/user.ts";
+import ListingCard from "@/components/ListingCard.vue";
+import { useGetUser } from "@/actions/user.ts";
+import {useGetArchivedListingsByUser} from "@/actions/getListing.ts";
+import type {Listing} from "@/types";
+import { useRoute } from "vue-router";
 
 
-  const props = defineProps<{
-    userId: number;
-  }>();
-  const {data: listings, isPending, isError, error} = useGetUserListings(props.userId);
-  const { data: user } = useGetUser(props.userId);
+const route = useRoute();
+const userId = Number(route.params.userid);
+
+const {data: archivedListings, isPending, isError, error} = useGetArchivedListingsByUser(userId);
+const { data: user } = useGetUser(userId);
 
 
 </script>
 
 <template>
   <div class="title-wrapper">
-    <div class="title">{{ $t('listingsByUser', {name: user?.username}) }} </div>
+    <div class="title">
+      {{ $t('listingsByUser', { name: user?.username }) }}
+    </div>
+
     <div class="tab-buttons">
       <router-link
         :to="`/profile/${userId}/listings`"
         class="tab-link"
         :class="{ active: $route.path === `/profile/${userId}/listings` }"
-      >
-        {{ $t("activeListings") }}
+      >{{ $t("activeListings") }}
+
       </router-link>
+
       <span class="divider">|</span>
+
       <router-link
         :to="`/profile/${userId}/listings/archived`"
         class="tab-link"
         :class="{ active: $route.path === `/profile/${userId}/listings/archived` }"
-      >
-        {{ $t("archivedListings") }}
+      >{{ $t("archivedListings") }}
+
       </router-link>
     </div>
-
   </div>
+
   <div v-if="isPending">Laster oppføringer...</div>
   <div v-else-if="isError">{{ $t("couldNotLoadListings") }}</div>
-  <div v-if="listings && listings.length > 0" class="listing-grid" >
+
+  <div v-if="archivedListings && archivedListings.pages?.length" class="listing-grid">
     <ListingCard
-      v-for="listing in listings!"
-      :key="listing.uuid!"
+      v-for="listing in archivedListings.pages.flatMap(p => p.content)"
+      :key="listing.uuid"
       :listing="listing"
       size="medium"
     />
@@ -50,6 +57,7 @@
     {{ $t("emptyListings") }}
   </div>
 </template>
+
 
 <style scoped>
 .title{

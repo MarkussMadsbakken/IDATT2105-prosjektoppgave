@@ -8,6 +8,8 @@ import edu.ntnu.stud.model.UserImageResponse;
 import edu.ntnu.stud.model.UserResponse;
 import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.repo.UserRepo;
+import edu.ntnu.stud.util.Validate;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -47,10 +49,7 @@ public class UserService {
    */
   public UserResponse getUserByUsername(String username) {
     User user = userRepo.getUserByUsername(username);
-    if (user == null) {
-      return null;
-    }
-    return new UserResponse(user);
+    return user == null ? null : new UserResponse(user);
   }
 
   /**
@@ -102,6 +101,13 @@ public class UserService {
    */
   public UserResponse updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
     long userId = jwtService.extractUserId(token.substring(7));
+    UserResponse existingUsername = getUserByUsername(
+        jwtService.extractUserName(token.substring(7)));
+    Validate.that(existingUsername == null || existingUsername.getId() == userId,
+        Validate.isTrue(), "Username already exists");
+    Validate.that(userUpdate.getUsername(), Validate.isNotEmptyOrBlankOrNull(),
+        "Username cannot be null or empty");
+    
     User user = new User();
     user.setId(userId);
     user.setUsername(userUpdate.getUsername());

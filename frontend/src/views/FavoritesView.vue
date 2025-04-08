@@ -38,13 +38,13 @@ const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmark
   text-align: center;
 }
 .listing-grid-favorites {
+  padding-top: 2rem;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 2rem;
-  max-width: 80rem;
-  margin: 2rem auto 5rem auto;
-  padding: 0 2rem;
+  justify-content: center;
+  max-width: calc(3*25rem + 2*2rem);
+  margin: 0 auto;
 }
 .no-listings{
   font-size: 2rem;

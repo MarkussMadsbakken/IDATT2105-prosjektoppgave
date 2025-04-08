@@ -1,6 +1,7 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.ListingResponse;
+import edu.ntnu.stud.util.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class RecomendedService {
       int page,
       int size,
       String token) {
+    Validate.that(page, Validate.isNotNegative(), "Page number cannot be negative");
+    Validate.that(size, Validate.isPositive(), "Size must be positive");
     long userId = jwtService.extractUserId(token.substring(7));
     return listingService.getRecomendedListingsPage(page, size, userId);
   }

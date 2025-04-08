@@ -3,6 +3,8 @@ package edu.ntnu.stud.service;
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.ListingRepo;
+import edu.ntnu.stud.util.Validate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +40,13 @@ public class SearchService {
       int page,
       int size
   ) {
+    Validate.that(page, Validate.isNotNegative(), "Page number must be non-negative");
+    Validate.that(size, Validate.isPositive(), "Page size must be positive");
+    Validate.that(minPrice, Validate.isNotNegative(), "Minimum price must be non-negative");
+    Validate.that(maxPrice, Validate.isNotNegative(), "Maximum price must be non-negative");
+    Validate.that(minPrice <= maxPrice, Validate.isTrue(),
+        "Minimum price must be less than or equal to maximum price");
+    
     // Create a Pageable object with the specified page and size
     Pageable pageable = PageRequest.of(page, size);
 

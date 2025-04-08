@@ -147,6 +147,48 @@ export const useCheckForReservation = (uuid: string, enabled: boolean) => {
   });
 };
 
+export const toggleArchiveListing = async (
+  uuid: string,
+  state: boolean
+): Promise<DefaultResponse> => {
+
+  const params = new URLSearchParams({ state: state.toString() });
+  return await Fetch(`${API_BASE_URL}/api/listing/${uuid}/archive?${params.toString()}`, {
+    method: "POST",
+  });
+};
+export const useToggleArchive = () => {
+  return useMutation({
+    mutationFn: ({uuid, state}: {uuid: string; state: boolean})=>
+      toggleArchiveListing(uuid,state),
+  });
+};
+
+export const getArchivedListingsByUser = async (
+  userId: number,
+  page: number
+): Promise<GetListingsResponse> => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("offset", PAGE_SIZE.toString());
+  return await Fetch(`${API_BASE_URL}/api/listing/user/${userId}/archived?${params.toString()}`);
+};
+
+export const useGetArchivedListingsByUser = (userId: number) => {
+  return useInfiniteQuery({
+    queryKey: ["archivedListings", userId],
+    queryFn: ({ pageParam = 0 }) => getArchivedListingsByUser(userId, pageParam),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.last) return undefined;
+      return lastPage.number + 1;
+    },
+    initialPageParam: 0,
+    enabled: !!userId,
+  });
+};
+
+
+
 
 
 

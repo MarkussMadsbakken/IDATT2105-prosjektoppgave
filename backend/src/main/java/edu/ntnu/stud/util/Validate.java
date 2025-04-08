@@ -6,6 +6,9 @@ import java.util.function.Predicate;
  * Utility class for validating objects.
  */
 public class Validate {
+  public static <T> Predicate<T> isNull() {
+    return value -> value == null;
+  }
 
   public static <T> Predicate<T> isNotNull() {
     return value -> value != null;
@@ -31,6 +34,10 @@ public class Validate {
     return value -> value != null && value.doubleValue() > 0;
   }
 
+  public static Predicate<Number> isNotPositive() {
+    return value -> value != null && value.doubleValue() <= 0;
+  }
+
   public static Predicate<Number> isZero() {
     return value -> value != null && value.doubleValue() == 0;
   }
@@ -41,6 +48,18 @@ public class Validate {
 
   public static Predicate<Number> isNegative() {
     return value -> value != null && value.doubleValue() < 0;
+  }
+
+  public static Predicate<Number> isNotNegative() {
+    return value -> value != null && value.doubleValue() >= 0;
+  }
+
+  public static Predicate<Boolean> isTrue() {
+    return value -> value != null && value;
+  }
+
+  public static Predicate<Boolean> isFalse() {
+    return value -> value != null && !value;
   }
 
   /**

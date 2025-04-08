@@ -1,10 +1,9 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.controller.AuthController;
 import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.repo.NotificationRepo;
+import edu.ntnu.stud.util.Validate;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +25,17 @@ public class NotificationService {
   Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
   /**
-   * Initializes the NotificationService with a NotificationRepo instance.
-   *
-   * @param notificationRepo the NotificationRepo instance to be used
-   */
-  public NotificationService(NotificationRepo notificationRepo) {
-    this.notificationRepo = notificationRepo;
-  }
-
-  /**
    * Adds a new notification to the system.
    *
    * @param notification the Notification object to be added
    */
   public void addNotification(Notification notification) {
+    Validate.that(notification.getMessage(), Validate.isNotEmptyOrBlankOrNull(),
+        "Notification message cannot be null or empty");
     logger.info("Adding notification for user ID: {} with message {}",
         notification.getUserId(),
         notification.getMessage());
-
-    Long id = notificationRepo.addNotification(notification);
-    notification.setId(id);
+    notificationRepo.addNotification(notification);
     websocketService.pushNotification(notification.getUserId(), notification);
   }
 
@@ -78,9 +68,9 @@ public class NotificationService {
    */
   public List<Notification> getNotificationsByUserId(String token) {
     long tokenUserId = jwtService.extractUserId(token.substring(7));
-    if (notificationRepo.getNotificationsByUserId(tokenUserId) == null) {
-      throw new IllegalArgumentException("No notifications found for this user");
-    }
+    Validate.that(notificationRepo.getNotificationsByUserId(tokenUserId),
+        (List<Notification> notifications) -> notifications != null && !notifications.isEmpty(),
+        "No notifications found for this user");
     return notificationRepo.getNotificationsByUserId(tokenUserId);
   }
 
@@ -102,13 +92,10 @@ public class NotificationService {
   public void markNotificationAsRead(long id, String token) {
     long userId = jwtService.extractUserId(token.substring(7));
     Notification notification = notificationRepo.getNotificationById(id);
-    if (notification == null) {
-      throw new IllegalArgumentException("Notification not found");
-    }
-    if (notification.getUserId() != userId) {
-      throw new IllegalArgumentException(
-          "You do not have permission to mark this notification as read");
-    }
+    Validate.that(notification, Validate.isNotNull(), "Notification not found");
+    Validate.that(notification.getUserId() == userId,
+      Validate.isTrue(),
+      "You do not have permission to mark this notification as read");
     notificationRepo.markNotificationAsRead(id);
   }
 }
