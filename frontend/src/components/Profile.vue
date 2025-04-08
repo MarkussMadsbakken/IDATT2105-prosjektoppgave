@@ -73,7 +73,7 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
           />
         </div>
         <div v-else class="no-listings">
-          Ingen annonser her.
+          {{ $t('emptyListings') }}
         </div>
       </div>
         <template v-if="isOwnProfile">

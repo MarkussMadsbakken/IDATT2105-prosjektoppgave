@@ -34,15 +34,16 @@ public class ReservationService {
    */
   public Reservation addReservation(ReservationRequest reservationRequest, String token) {
     // Fetch values
-    Long userId = jwtService.extractUserId(token);
+    Long userId = jwtService.extractUserId(token.substring(7));
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
-    Reservation existingReservation = reservationRepo.getReservationByUserIdAndListingId(
-        userId, reservationRequest.getListingId(), expirationDate);
+    Reservation existingReservation = reservationRepo.getReservationByListingId(
+        reservationRequest.getListingId(), expirationDate);
     // Check if a reservation already exists for the user and listing
     if (existingReservation != null) {
-      throw new IllegalArgumentException("A reservation already exists for this listing.");
+      throw new IllegalArgumentException("A reservation is already active for this listing.");
     }
+
     // Create and add the new reservation
     Reservation reservation = ReservationFactory.fromRequest(reservationRequest);
     reservation.setUserId(userId);
@@ -77,7 +78,7 @@ public class ReservationService {
    * @param token the JWT token of the user making the reservation
    */
   public List<Reservation> getReservationByUserId(String token) {
-    Long userId = jwtService.extractUserId(token);
+    Long userId = jwtService.extractUserId(token.substring(7));
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
     return reservationRepo.getReservationsByUserId(userId, expirationDate);
@@ -92,7 +93,11 @@ public class ReservationService {
   public Reservation checkReservation(String listingId) {
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
-    return reservationRepo.getReservationByListingId(listingId, expirationDate);
+    try {
+      return reservationRepo.getReservationByListingId(listingId, expirationDate);
+    } catch (Exception e) {
+      return null; // Return null if no reservation is found
+    }
   }
 
   /**
@@ -102,7 +107,7 @@ public class ReservationService {
    * @param token the JWT token of the user making the reservation
    */
   public void deleteReservation(long id, String token) {
-    Long userId = jwtService.extractUserId(token);
+    Long userId = jwtService.extractUserId(token.substring(7));
     Reservation reservation = reservationRepo.getReservationById(id);
     if (reservation != null && reservation.getUserId().equals(userId)) {
       reservationRepo.deleteReservation(id);

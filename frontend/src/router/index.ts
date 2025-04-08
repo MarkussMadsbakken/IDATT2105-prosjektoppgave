@@ -80,20 +80,29 @@ const router = createRouter({
       }
     },
     {
-      path: "/messages",
-      name: "messages",
+      path: "/chat",
+      name: "chat",
       component: () => import("../views/MessagesView.vue"),
       meta: {
         requiresAuth: true
-      }
-    },
-    {
-      path: "/chat/:chatId",
-      name: "chat",
-      component: () => import("../views/ChatView.vue"),
-      meta: {
-        requiresAuth: true
-      }
+      },
+      children: [
+        {
+          path: "/new/:listingId/:userId",
+          name: "newChat",
+          component: () => import("../views/chat/ChatView.vue"),
+        },
+        {
+          path: "",
+          name: "chatNotFound",
+          component: () => import("../views/chat/SelectChatView.vue"),
+        },
+        {
+          path: ":id",
+          name: "chatroom",
+          component: () => import("../views/chat/ChatView.vue"),
+        },
+      ]
     },
     {
       path: "/login",

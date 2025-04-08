@@ -1,6 +1,7 @@
 import { API_BASE_URL, PAGE_SIZE, type Chat, type CreateChatReponse, type GetChatsResponse, type Message, type Page, type SendMessageRequest } from "@/types"
 import Fetch from "@/util/fetch"
 import { useInfiniteQuery, useQuery } from "@tanstack/vue-query";
+import type { Ref } from "vue";
 
 export const getChats = async (): Promise<GetChatsResponse> => {
     return await Fetch(`${API_BASE_URL}/api/chat`)
@@ -34,17 +35,17 @@ export const getChat = async (chatId: number): Promise<Chat> => {
     return await Fetch(`${API_BASE_URL}/api/chat/${chatId}`);
 }
 
-export const useChat = (chatId: number) => {
+export const useChat = (chatId: Ref<number>) => {
     return useQuery({
         queryKey: ['chat', chatId],
-        queryFn: () => getChat(chatId),
+        queryFn: () => getChat(chatId.value),
     });
 }
 
-export const useChatMessages = (chatId: number) => {
+export const useChatMessages = (chatId: Ref<number>) => {
     return useQuery({
         queryKey: ['chat', chatId, 'messages'],
-        queryFn: () => getChatMessages(chatId),
+        queryFn: () => getChatMessages(chatId.value),
     })
 }
 
@@ -68,5 +69,6 @@ export const useLatestMessage = (chatId: number) => {
     return useQuery({
         queryKey: ['chat', chatId, 'messages', 'latest'],
         queryFn: () => getLatestMessage(chatId),
+        retry: false,
     })
 }

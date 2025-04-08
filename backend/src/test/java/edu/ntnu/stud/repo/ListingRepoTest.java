@@ -32,7 +32,7 @@ public class ListingRepoTest {
 
     @AfterEach
     public void tearDown() {
-      jdbcTemplate.execute("TRUNCATE TABLE listings");
+      jdbcTemplate.execute("DELETE FROM listings");
     }
 
     @Test
