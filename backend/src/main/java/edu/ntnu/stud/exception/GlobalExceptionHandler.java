@@ -1,4 +1,4 @@
-package edu.ntnu.stud.config;
+package edu.ntnu.stud.exception;
 
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
