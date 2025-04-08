@@ -147,7 +147,12 @@ const i18n = createI18n({
             userPurchasedYourListing: "En bruker har kjøpt annonsen din",
             listingReservedByAnotherUser: "Artikkelen er reservert av en annen bruker fram til",
             listingReservedByMe: "Du har reservert artikkelen fram til",
-            reservedUntil: "Reservert til"
+            reservedUntil: "Reservert til",
+            archive: "Arkiver",
+            restore: "Gjenoprett",
+            archivedListing: "Denne artikkelen er arkivert",
+            activeListings: "Aktive aritkler",
+            archivedListings: "Arkiverte arktikler"
         },
         en: {
             recommended: "Recommended for you",
@@ -240,7 +245,12 @@ const i18n = createI18n({
             userPurchasedYourListing: "A user has purchased your listing",
             listingReservedByAnotherUser: "Listing is reserved by another user until",
             listingReservedByMe: "You have reserved this listing until",
-            reservedUntil: "Reserved until"
+            reservedUntil: "Reserved until",
+            archive: "Archive",
+            restore: "Restore",
+            archivedListing: "This listing is archived.",
+            activeListings: "Active listings",
+            archivedListings: "Arcived listings"
         }
     },
 });
