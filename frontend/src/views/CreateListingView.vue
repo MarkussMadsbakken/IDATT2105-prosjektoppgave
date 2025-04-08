@@ -6,9 +6,10 @@ import FormGroup from '@/components/FormGroup.vue';
 import ImageSelector from '@/components/ImageSelector.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import PhotoGallery from '@/components/PhotoGallery.vue';
+import PositionSelectorModal from '@/components/PositionSelectorModal.vue';
 import TextInput from '@/components/TextInput.vue';
-import type { Listing } from '@/types';
 import { useMutation } from '@tanstack/vue-query';
+import { useDialog } from 'primevue/usedialog';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -16,10 +17,13 @@ import { useRouter } from 'vue-router';
 const title = ref("");
 const description = ref("");
 const price = ref("");
-const postalCode = ref("");
+const position = ref<{ latitude: number; longitude: number, label?: string } | null>(null);
 const category = ref<number | null>(null);
 const subCategories = ref<number[] | null>(null);
 const selectedImages = ref<File[]>([]);
+const dialog = useDialog();
+
+
 let errors = ref<{
     field: string;
     isError: boolean;
@@ -53,10 +57,6 @@ const onSubmit = () => {
         errors.value.push({ field: "price", isError: true });
     }
 
-    if (!postalCode.value) {
-        errors.value.push({ field: "postalCode", isError: true });
-    }
-
     if (!category.value) {
         errors.value.push({ field: "category", isError: true });
     }
@@ -65,16 +65,38 @@ const onSubmit = () => {
         return;
     }
 
-    // TODO: when backend stores sub categories with listing, add them here!
     createListingMutation({
         name: title.value,
         description: description.value,
         price: Number(price.value),
-        postalCode: Number(postalCode.value),
         category: category.value!,
         subcategory: subCategories?.value?.[0] ?? undefined,
+        longitude: position.value?.longitude ?? 0,
+        latitude: position.value?.latitude ?? 0,
         images: selectedImages.value
     });
+}
+
+const openPositionSelector = () => {
+
+    const d = dialog.open(PositionSelectorModal, {
+        props: {
+            header: "Select position",
+            modal: true,
+            draggable: false,
+            dismissableMask: true,
+        },
+        data: {
+            initialLatitude: position.value?.latitude ?? 0,
+            initialLongitude: position.value?.longitude ?? 0,
+        },
+        emits: {
+            onPositionSelected: (pos: any) => {
+                position.value = pos;
+                d.close();
+            },
+        }
+    })
 }
 
 </script>
@@ -103,9 +125,20 @@ const onSubmit = () => {
                 :isNotFilledIn="errors.find(e => e.field === 'price')?.isError">
                 <TextInput v-model="price" type="number" id="price" name="price" autocomplete="off" />
             </FormGroup>
-            <FormGroup :label="$t('postalCode')" name="postalCode"
-                :isNotFilledIn="errors.find(e => e.field === 'postalCode')?.isError">
-                <TextInput v-model="postalCode" type="number" id="postalCode" name="postalCode" autocomplete="off" />
+            <FormGroup :label="$t('position')" name="position">
+                <div class="position-selector">
+                    <Button variant="primary" @click="openPositionSelector">
+                        {{ $t('selectPosition') }}
+                    </Button>
+                    <template v-if="position && position?.latitude !== 0 && position?.longitude !== 0">
+                        <p>
+                            {{ position?.latitude }}, {{ position?.longitude }}
+                        </p>
+                        <p>
+                            {{ position?.label }}
+                        </p>
+                    </template>
+                </div>
             </FormGroup>
             <FormGroup :label="$t('category')" name="category"
                 :isNotFilledIn="errors.find(e => e.field === 'category')?.isError">
@@ -128,6 +161,13 @@ const onSubmit = () => {
 </template>
 
 <style scoped>
+.position-selector {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
