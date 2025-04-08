@@ -27,6 +27,14 @@ onMounted(() => {
     // Watch for changes to listings and add markers
     watch(listings, (newListings) => {
         if (newListings) {
+            // Clear existing markers
+            map.eachLayer((layer) => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            // Add new markers
             newListings.forEach(listing => {
                 if (listing.latitude === 0 || listing.longitude === 0) return; // Skip if no coordinates
                 L.marker([listing.latitude, listing.longitude]).addTo(map).bindPopup(() => {
