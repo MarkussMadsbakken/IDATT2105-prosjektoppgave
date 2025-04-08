@@ -23,68 +23,72 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class ListingRepoTest {
 
-
   @Autowired
   private ListingRepo listingRepo;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-    @AfterEach
-    public void tearDown() {
-      jdbcTemplate.execute("DELETE FROM listings");
-    }
+  @AfterEach
+  public void tearDown() {
+    jdbcTemplate.execute("DELETE FROM listings");
+  }
 
-    @Test
-    public void testSaveListing() {
-        Listing listing = new Listing("Test Listing", 100.0, "test listing description", 0, 0, 1388, 1L);
+  @Test
+  public void testSaveListing() {
+    Listing listing = new Listing("Test Listing", 100.0,
+        "test listing description", 0, 0, 0, 0, 1L);
 
-        int rowsChanged = listingRepo.saveListing(listing);
+    int rowsChanged = listingRepo.saveListing(listing);
 
-        assertThat(rowsChanged).isEqualTo(1);
-    }
+    assertThat(rowsChanged).isEqualTo(1);
+  }
 
+  @Test
+  public void testFindById() {
+    Listing listing = new Listing("Test Listing", 100.0,
+        "test listing description", 0, 0, 0, 0, 1L);
 
-    @Test
-    public void testFindById() {
-      Listing listing = new Listing("Test Listing", 100.0, "test listing description", 0, 0, 1388, 1L);
+    listingRepo.saveListing(listing);
+    Listing foundListing = listingRepo.getListingByUuid(listing.getUuid());
+    assertThat(foundListing).isNotNull();
+    assertThat(foundListing.getName()).isEqualTo("Test Listing");
+  }
 
-      listingRepo.saveListing(listing);
-      Listing foundListing = listingRepo.getListingByUuid(listing.getUuid());
-      assertThat(foundListing).isNotNull();
-      assertThat(foundListing.getName()).isEqualTo("Test Listing");
-    }
+  @Test
+  public void testFindAll() {
+    Listing listing1 = new Listing("Test Listing 1", 100.0,
+        "This is the first test listing", 0, 0, 0, 0, 1L);
+    Listing listing2 = new Listing("Test Listing 2", 200.0,
+        "This is the second test listing", 0, 0, 0, 0, 1L);
 
+    listingRepo.saveListing(listing1);
+    listingRepo.saveListing(listing2);
 
-    @Test
-    public void testFindAll() {
-        Listing listing1 = new Listing("Test Listing 1", 100.0, "This is the first test listing", 0, 0, 1388, 1L);
-        Listing listing2 = new Listing("Test Listing 2", 200.0, "This is the second test listing", 0, 0, 1388, 1L);
+    List<Listing> listings = listingRepo.getAllListings();
 
-        listingRepo.saveListing(listing1);
-        listingRepo.saveListing(listing2);
+    assertThat(listings).hasSize(2);
+  }
 
-        List<Listing> listings = listingRepo.getAllListings();
+  @Test
+  public void testDeleteListing() {
+    Listing listing = new Listing("Test Listing 2", 100.0,
+        "This is a test listing", 0, 0, 0, 0, 1L);
 
-        assertThat(listings).hasSize(2);
-    }
+    listingRepo.saveListing(listing);
+    listingRepo.deleteListingByUuid(listing.getUuid());
 
-    @Test
-    public void testDeleteListing() {
-        Listing listing = new Listing("Test Listing 2", 100.0, "This is a test listing", 0, 0, 1388, 1L);
+    Listing foundListing = listingRepo.getListingByUuid(listing.getUuid());
 
-        listingRepo.saveListing(listing);
-        listingRepo.deleteListingByUuid(listing.getUuid());
-
-        Listing foundListing = listingRepo.getListingByUuid(listing.getUuid());
-
-      assertThat(foundListing).isNull();
-    }
+    assertThat(foundListing).isNull();
+  }
 
   @Test
   public void testGetListingsPage() {
-    Listing listing1 = new Listing("Test Listing 1", 100.0, "This is the first test listing", 0, 0, 1388, 1L);
-    Listing listing2 = new Listing("Test Listing 2", 200.0, "This is the second test listing", 0, 0, 1388, 1L);
+    Listing listing1 = new Listing("Test Listing 1", 100.0,
+        "This is the first test listing", 0, 0, 0, 0, 1L);
+    Listing listing2 = new Listing("Test Listing 2", 200.0,
+        "This is the second test listing", 0, 0, 0, 0, 1L);
 
     listingRepo.saveListing(listing1);
     listingRepo.saveListing(listing2);
@@ -97,8 +101,10 @@ public class ListingRepoTest {
 
   @Test
   public void testGetListingsByUserIdPage() {
-    Listing listing1 = new Listing("Test Listing 1", 100.0, "This is the first test listing", 0, 0, 1388, 1L);
-    Listing listing2 = new Listing("Test Listing 2", 200.0, "This is the second test listing", 0, 0, 1388, 1L);
+    Listing listing1 = new Listing("Test Listing 1", 100.0,
+        "This is the first test listing", 0, 0, 0, 0, 1L);
+    Listing listing2 = new Listing("Test Listing 2", 200.0,
+        "This is the second test listing", 0, 0, 0, 0, 1L);
 
     listingRepo.saveListing(listing1);
     listingRepo.saveListing(listing2);
@@ -111,7 +117,8 @@ public class ListingRepoTest {
 
   @Test
   public void testUpdateListing() {
-    Listing listing = new Listing("Test Listing", 100.0, "test listing description", 0, 0, 1388, 1L);
+    Listing listing = new Listing("Test Listing", 100.0,
+        "test listing description", 0, 0, 0, 0, 1L);
     listingRepo.saveListing(listing);
 
     ListingUpdate listingUpdate = new ListingUpdate();
@@ -121,7 +128,8 @@ public class ListingRepoTest {
     listingUpdate.setDescription("updated description");
     listingUpdate.setCategory(0);
     listingUpdate.setSubcategory(0);
-    listingUpdate.setPostalCode(1388);
+    listingUpdate.setLongitude(0);
+    listingUpdate.setLatitude(0);
     listingUpdate.setActive(true);
     listingUpdate.setDeleted(false);
     listingUpdate.setSold(false);
@@ -137,8 +145,10 @@ public class ListingRepoTest {
 
   @Test
   public void testSearch() {
-    Listing listing1 = new Listing("Test Listing 1", 100.0, "This is the first test listing", 0, 0, 1388, 1L);
-    Listing listing2 = new Listing("Test Listing 2", 200.0, "This is the second test listing", 0, 0, 1388, 1L);
+    Listing listing1 = new Listing("Test Listing 1", 100.0,
+        "This is the first test listing", 0, 0, 0, 0, 1L);
+    Listing listing2 = new Listing("Test Listing 2", 200.0,
+        "This is the second test listing", 0, 0, 0, 0, 1L);
 
     listingRepo.saveListing(listing1);
     listingRepo.saveListing(listing2);

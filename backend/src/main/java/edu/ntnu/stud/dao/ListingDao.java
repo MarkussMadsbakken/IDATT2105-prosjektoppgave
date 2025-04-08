@@ -33,7 +33,8 @@ public class ListingDao {
     listing.setUpdatedAt(rs.getTimestamp("updated_at"));
     listing.setCategory(rs.getInt("category"));
     listing.setSubcategory(rs.getInt("subcategory"));
-    listing.setPostalCode(rs.getInt("postal_code"));
+    listing.setLongitude(rs.getInt("longitude"));
+    listing.setLatitude(rs.getInt("latitude"));
     listing.setActive(rs.getBoolean("active"));
     listing.setDeleted(rs.getBoolean("deleted"));
     listing.setSold(rs.getBoolean("sold"));
@@ -49,6 +50,16 @@ public class ListingDao {
    */
   public List<Listing> findAll() {
     String sql = "SELECT * FROM listings";
+    return jdbcTemplate.query(sql, listingRowMapper);
+  }
+
+  /**
+   * Retrieves all active listings from the database.
+   *
+   * @return a list of all active listings
+   */
+  public List<Listing> findAllActive() {
+    String sql = "SELECT * FROM listings WHERE deleted = false AND active = true";
     return jdbcTemplate.query(sql, listingRowMapper);
   }
 
@@ -87,8 +98,8 @@ public class ListingDao {
    */
   public int save(Listing listing) {
     String sql = "INSERT INTO listings "
-        + "(uuid, name, price, description, category, subcategory, postal_code, owner_id)"
-        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        + "(uuid, name, price, description, category, subcategory, longitude, latitude, owner_id)"
+        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     return jdbcTemplate.update(
         sql,
         listing.getUuid(),
@@ -97,7 +108,8 @@ public class ListingDao {
         listing.getDescription(),
         listing.getCategory(),
         listing.getSubcategory(),
-        listing.getPostalCode(),
+        listing.getLongitude(),
+        listing.getLatitude(),
         listing.getOwnerId());
   }
 
@@ -109,8 +121,8 @@ public class ListingDao {
    */
   public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
-        + "category = ?, subcategory = ?, postal_code = ?, active = ?, deleted = ?, sold = ?, "
-        + "buyer_id = ? WHERE uuid = ?";
+        + "category = ?, subcategory = ?, longitute = ?, latitude = ?, active = ?, "
+        + "deleted = ?, sold = ?, buyer_id = ? WHERE uuid = ?";
     return jdbcTemplate.update(
         sql,
         listing.getName(),
@@ -118,7 +130,8 @@ public class ListingDao {
         listing.getDescription(),
         listing.getCategory(),
         listing.getSubcategory(),
-        listing.getPostalCode(),
+        listing.getLongitude(),
+        listing.getLatitude(),
         listing.isActive(),
         listing.isDeleted(),
         listing.isSold(),
@@ -154,12 +167,13 @@ public class ListingDao {
   }
 
   /**
-   * Retrieves a paginated list of archived listings owned by a specific user from the
+   * Retrieves a paginated list of archived listings owned by a specific user from
+   * the
    * database.
    *
    * @param userId   the ID of the user whose archived listings to retrieve
    * @param pageable the pagination information, including page number, page size,
-   *                and sorting
+   *                 and sorting
    * @return a page of archived listings owned by the specified user
    */
   public Page<Listing> findArchivedPageByOwnerId(long userId, Pageable pageable) {
@@ -233,7 +247,7 @@ public class ListingDao {
   /**
    * Retrieves a paginated list of recommended listings for a specific user.
    *
-   * @param userId the ID of the user for whom to retrieve recommended listings
+   * @param userId   the ID of the user for whom to retrieve recommended listings
    * @param pageable the pagination information, including page number, page size
    * @return a page of recommended listings for the specified user
    */

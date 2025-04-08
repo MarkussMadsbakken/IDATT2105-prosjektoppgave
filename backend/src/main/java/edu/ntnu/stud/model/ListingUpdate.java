@@ -13,7 +13,8 @@ public class ListingUpdate {
   private String description;
   private int category;
   private int subcategory;
-  private int postalCode;
+  private long longitude;
+  private long latitude;
   private boolean active;
   private boolean deleted;
   private boolean sold;
@@ -28,17 +29,18 @@ public class ListingUpdate {
   /**
    * Constructs a new ListingRequest with the specified details.
    *
-   * @param uuid the UUID of the listing
-   * @param name the name of the listing
-   * @param price the price of the listing
+   * @param uuid        the UUID of the listing
+   * @param name        the name of the listing
+   * @param price       the price of the listing
    * @param description the description of the listing
-   * @param category the category of the listing
+   * @param category    the category of the listing
    * @param subcategory a list of subcategory of the listing
-   * @param postalCode the postal code of the listing
-   * @param active the active status of the listing
-   * @param deleted the deleted status of the listing
-   * @param sold the sold status of the listing
-   * @param buyerId the ID of the buyer of the listing
+   * @param longitude   the longitude of the listing
+   * @param latitude    the latitude of the listing
+   * @param active      the active status of the listing
+   * @param deleted     the deleted status of the listing
+   * @param sold        the sold status of the listing
+   * @param buyerId     the ID of the buyer of the listing
    */
   public ListingUpdate(
       String uuid,
@@ -47,19 +49,20 @@ public class ListingUpdate {
       String description,
       int category,
       int subcategory,
-      int postalCode,
+      long longitude,
+      long latitude,
       boolean active,
       boolean deleted,
       boolean sold,
-      Long buyerId
-  ) {
+      Long buyerId) {
     this.uuid = uuid;
     this.name = name;
     this.price = price;
     this.description = description;
     this.category = category;
     this.subcategory = subcategory;
-    this.postalCode = postalCode;
+    this.longitude = longitude;
+    this.latitude = latitude;
     this.active = active;
     this.deleted = deleted;
     this.sold = sold;
@@ -114,12 +117,20 @@ public class ListingUpdate {
     this.subcategory = subcategory;
   }
 
-  public int getPostalCode() {
-    return postalCode;
+  public long getLongitude() {
+    return longitude;
   }
 
-  public void setPostalCode(int postalCode) {
-    this.postalCode = postalCode;
+  public void setLongitude(long longitude) {
+    this.longitude = longitude;
+  }
+
+  public long getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(long latitude) {
+    this.latitude = latitude;
   }
 
   public boolean isActive() {

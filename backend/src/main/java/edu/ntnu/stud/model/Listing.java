@@ -20,7 +20,8 @@ public class Listing {
   private List<Blob> pictures;
   private int category;
   private int subcategory;
-  private int postalCode;
+  private long longitude;
+  private long latitude;
   private boolean active;
   private boolean deleted;
   private boolean sold;
@@ -37,13 +38,14 @@ public class Listing {
   /**
    * Constructs a new Listing with the specified details.
    *
-   * @param name the name of the listing
-   * @param price the price of the listing
+   * @param name        the name of the listing
+   * @param price       the price of the listing
    * @param description the description of the listing
-   * @param category the category of the listing
+   * @param category    the category of the listing
    * @param subcategory the subcategory of the listing
-   * @param postalCode the postal code of the listing
-   * @param ownerId the ID of the owner of the listing
+   * @param longitude   the longitude of the listing
+   * @param latitude    the latitude of the listing
+   * @param ownerId     the ID of the owner of the listing
    */
   public Listing(
       String name,
@@ -51,16 +53,17 @@ public class Listing {
       String description,
       int category,
       int subcategory,
-      int postalCode,
-      Long ownerId
-  ) {
+      long longitude,
+      long latitude,
+      Long ownerId) {
     this.uuid = UUID.randomUUID().toString();
     this.name = name;
     this.price = price;
     this.description = description;
     this.category = category;
     this.subcategory = subcategory;
-    this.postalCode = postalCode;
+    this.latitude = latitude;
+    this.longitude = longitude;
     this.ownerId = ownerId;
   }
 
@@ -81,7 +84,6 @@ public class Listing {
   public void setUuid(String uuid) {
     this.uuid = uuid;
   }
-
 
   /**
    * Returns the name of the listing.
@@ -227,22 +229,25 @@ public class Listing {
     this.subcategory = subcategory;
   }
 
-  /**
-   * Returns the postal code of the listing.
-   *
-   * @return the postal code of the listing
-   */
-  public int getPostalCode() {
-    return postalCode;
+  public long getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(long longitude) {
+    this.longitude = longitude;
+  }
+
+  public long getLatitude() {
+    return latitude;
   }
 
   /**
-   * Sets the postal code of the listing.
+   * Sets the latitude of the listing.
    *
-   * @param postalCode the postal code to set
+   * @param latitude the latitude to set
    */
-  public void setPostalCode(int postalCode) {
-    this.postalCode = postalCode;
+  public void setLatitude(long latitude) {
+    this.latitude = latitude;
   }
 
   /**

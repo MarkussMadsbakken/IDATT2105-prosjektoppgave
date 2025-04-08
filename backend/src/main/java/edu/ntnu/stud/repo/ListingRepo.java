@@ -1,6 +1,5 @@
 package edu.ntnu.stud.repo;
 
-
 import edu.ntnu.stud.dao.ListingDao;
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingUpdate;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
 
 /**
  * Repository class for managing Listing entities in the database.
@@ -31,6 +29,15 @@ public class ListingRepo {
   }
 
   /**
+   * Retrieves all active listings from the database.
+   *
+   * @return a list of all active listings
+   */
+  public List<Listing> getAllActiveListings() {
+    return listingDao.findAllActive();
+  }
+
+  /**
    * Retrieves a listing by its uuid.
    *
    * @param uuid the uuid of the listing to retrieve
@@ -43,7 +50,8 @@ public class ListingRepo {
   /**
    * Retrieves a paginated list of listings from the database.
    *
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings
    */
   public Page<Listing> getListingsPage(Pageable pageable) {
@@ -51,10 +59,12 @@ public class ListingRepo {
   }
 
   /**
-   * Retrives a paginated list of listings owned by a specific user from the database.
+   * Retrives a paginated list of listings owned by a specific user from the
+   * database.
    *
-   * @param userId the ID of the user whose listings to retrieve
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param userId   the ID of the user whose listings to retrieve
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of listings owned by the specified user
    */
   public Page<Listing> getListingsByUserIdPage(long userId, Pageable pageable) {
@@ -62,10 +72,12 @@ public class ListingRepo {
   }
 
   /**
-   * Retrieves a paginated list of archived listings owned by a specific user from the database.
+   * Retrieves a paginated list of archived listings owned by a specific user from
+   * the database.
    *
-   * @param userId the ID of the user whose archived listings to retrieve
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param userId   the ID of the user whose archived listings to retrieve
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of archived listings owned by the specified user
    */
   public Page<Listing> getArchivedListingsByUserIdPage(long userId, Pageable pageable) {
@@ -105,12 +117,13 @@ public class ListingRepo {
   /**
    * Retrieves a paginated list of listings based on search criteria.
    *
-   * @param query the search query
-   * @param category the category to filter by
+   * @param query       the search query
+   * @param category    the category to filter by
    * @param subCategory the subcategory to filter by
-   * @param minPrice the minimum price to filter by
-   * @param maxPrice the maximum price to filter by
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param minPrice    the minimum price to filter by
+   * @param maxPrice    the maximum price to filter by
+   * @param pageable    the pagination information, including page number, page
+   *                    size, and sorting
    * @return a page of listings matching the search criteria
    */
   public Page<Listing> search(
@@ -119,16 +132,16 @@ public class ListingRepo {
       Integer subCategory,
       double minPrice,
       double maxPrice,
-      Pageable pageable
-  ) {
+      Pageable pageable) {
     return listingDao.search(query, category, subCategory, minPrice, maxPrice, pageable);
   }
 
   /**
    * Retrieves a paginated list of recommended listings for a user.
    *
-   * @param userId the ID of the user for whom to retrieve recommendations
-   * @param pageable the pagination information, including page number, page size, and sorting
+   * @param userId   the ID of the user for whom to retrieve recommendations
+   * @param pageable the pagination information, including page number, page size,
+   *                 and sorting
    * @return a page of recommended listings for the specified user
    */
   public Page<Listing> getRecomendedListingsPage(long userId, Pageable pageable) {
@@ -139,7 +152,7 @@ public class ListingRepo {
    * Retrives a list of listings from a list of ids.
    *
    * @param ids the list of ids of the listings to retrieve
-   * @return a list of listings with the specified ids 
+   * @return a list of listings with the specified ids
    */
   public List<Listing> getListingsByUuids(List<String> ids) {
     return listingDao.findByIds(ids);
