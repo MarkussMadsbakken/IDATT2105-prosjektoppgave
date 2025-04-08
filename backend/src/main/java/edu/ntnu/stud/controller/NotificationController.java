@@ -31,12 +31,16 @@ public class NotificationController {
    *
    * @param token the JWT token of the user
    * @return a ResponseEntity containing a list of Notification objects for the
-   *         specified user
+   *         specified user or a no content status if no notifications are found
+   *         for the user
    */
   @GetMapping("/user")
   public ResponseEntity<List<Notification>> getNotificationsByUserId(
       @RequestHeader("Authorization") String token) {
     List<Notification> notifications = notificationService.getNotificationsByUserId(token);
+    if (notifications.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
     return ResponseEntity.ok(notifications);
   }
 
@@ -54,7 +58,7 @@ public class NotificationController {
     if (notification != null) {
       return ResponseEntity.ok(notification);
     } else {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.noContent().build();
     }
   }
 
@@ -68,11 +72,7 @@ public class NotificationController {
   @PatchMapping("/{id}/read")
   public ResponseEntity<Void> markNotificationAsRead(
       @PathVariable long id, @RequestHeader("Authorization") String token) {
-    try {
-      notificationService.markNotificationAsRead(id, token);
-      return ResponseEntity.ok().build();
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
+    notificationService.markNotificationAsRead(id, token);
+    return ResponseEntity.ok().build();
   }
 }
