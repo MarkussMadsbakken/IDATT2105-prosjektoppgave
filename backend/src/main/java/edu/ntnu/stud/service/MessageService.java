@@ -2,12 +2,9 @@ package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
-import edu.ntnu.stud.repo.ChatRepo;
 import edu.ntnu.stud.repo.MessageRepo;
-import edu.ntnu.stud.util.Validate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,12 +28,12 @@ public class MessageService {
   }
 
   /**
-   * Adds a message to a chat, and returns the ID of the new message.
+   * Adds a message to a chat.
    *
    * @param message the message to add
-   * @return the ID of the new message
+   * @return the amount of rows affected in the database
    */
-  public Long addMessage(MessageRequest message) {
+  public int addMessage(MessageRequest message) {
     return messageRepo.addMessage(message);
   }
 
