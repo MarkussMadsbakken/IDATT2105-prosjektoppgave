@@ -33,8 +33,8 @@ public class ListingDao {
     listing.setUpdatedAt(rs.getTimestamp("updated_at"));
     listing.setCategory(rs.getInt("category"));
     listing.setSubcategory(rs.getInt("subcategory"));
-    listing.setLongitude(rs.getLong("longitude"));
-    listing.setLatitude(rs.getLong("latitude"));
+    listing.setLongitude(rs.getDouble("longitude"));
+    listing.setLatitude(rs.getDouble("latitude"));
     listing.setActive(rs.getBoolean("active"));
     listing.setDeleted(rs.getBoolean("deleted"));
     listing.setSold(rs.getBoolean("sold"));

@@ -172,6 +172,8 @@ public class ListingController {
       @RequestPart("images") List<MultipartFile> images,
       @RequestHeader("Authorization") String token) {
     logger.info("Creating new listing with name: {}", listingRequest.getName());
+    System.out.println("Longitude: " + listingRequest.getLongitude());
+    System.out.println("Latitude: " + listingRequest.getLatitude());
     ListingResponse listingResponse = listingService.saveListing(listingRequest, token);
 
     logger.info("Saving images for listing with name: {}", listingRequest.getName());
