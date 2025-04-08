@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('../views/SearchView.vue'),
     },
     {
+      path: "/search/map",
+      name: "searchMap",
+      component: () => import('../views/MapView.vue'),
+    },
+    {
       path: "/listing/:id",
       name: "listing",
       component: () => import('../views/ListingView.vue'),
@@ -59,9 +64,20 @@ const router = createRouter({
     },
     {
       path: "/profile/:userid/listings",
-      name: "listings",
-      component: () => import("../views/UserListingsView.vue")
-    },
+      children: [
+        {
+          path: "",
+          name: "listings",
+          component: () => import("../views/UserListingsView.vue"),
+        },
+        {
+          path: "archived",
+          name: "archivedListings",
+          component: () => import("../views/ArchivedListingsView.vue"),
+        }
+      ]
+    }
+    ,
     {
       path: "/profile/listings/create",
       name: "createListing",
@@ -69,7 +85,6 @@ const router = createRouter({
       meta: {
         requiresAuth: true
       }
-
     },
     {
       path: "/favorites",

@@ -12,24 +12,25 @@ public class ListingRequest {
   private String description;
   private int category;
   private int subcategory;
-  private int postalCode;
+  private long longitude;
+  private long latitude;
   private boolean active;
   private boolean deleted;
   private boolean sold;
 
-
   /**
    * Constructs a new ListingRequest with the specified details.
    *
-   * @param name the name of the listing
-   * @param price the price of the listing
+   * @param name        the name of the listing
+   * @param price       the price of the listing
    * @param description the description of the listing
-   * @param category the category of the listing
+   * @param category    the category of the listing
    * @param subcategory a list of subcategory of the listing
-   * @param postalCode the postal code of the listing
-   * @param active the active status of the listing
-   * @param deleted the deleted status of the listing
-   * @param sold the sold status of the listing
+   * @param longitude   the longitude of the listing
+   * @param latitude    the latitude of the listing
+   * @param active      the active status of the listing
+   * @param deleted     the deleted status of the listing
+   * @param sold        the sold status of the listing
    */
   public ListingRequest(
       String name,
@@ -37,17 +38,18 @@ public class ListingRequest {
       String description,
       int category,
       int subcategory,
-      int postalCode,
+      long longitude,
+      long latitude,
       boolean active,
       boolean deleted,
-      boolean sold
-  ) {
+      boolean sold) {
     this.name = name;
     this.price = price;
     this.description = description;
     this.category = category;
     this.subcategory = subcategory;
-    this.postalCode = postalCode;
+    this.longitude = longitude;
+    this.latitude = latitude;
     this.active = active;
     this.deleted = deleted;
     this.sold = sold;
@@ -93,12 +95,20 @@ public class ListingRequest {
     this.subcategory = subcategory;
   }
 
-  public int getPostalCode() {
-    return postalCode;
+  public long getLongitude() {
+    return longitude;
   }
 
-  public void setPostalCode(int postalCode) {
-    this.postalCode = postalCode;
+  public void setLongitude(long longitude) {
+    this.longitude = longitude;
+  }
+
+  public long getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(long latitude) {
+    this.latitude = latitude;
   }
 
   public boolean isActive() {

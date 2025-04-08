@@ -1,4 +1,4 @@
-package edu.ntnu.stud.factories;
+package edu.ntnu.stud.factory;
 
 import java.sql.Timestamp;
 import edu.ntnu.stud.model.Notification;

@@ -26,7 +26,7 @@ const auth = useAuth();
 const { data: user, isPending, isError, error } = useGetUser(props.userId);
 
 
-const joinedYear = computed(() => user.value && user.value.createdAt ? "Medlem siden " + new Date(user.value.createdAt).getFullYear() : '');
+const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
 const handleContactClick = () => {
   emit('contact-seller');
 };
@@ -59,7 +59,7 @@ const handleProfileClick = () => {
             <div class="username">{{ user?.username }}</div>
           </div>
           <div class="seller-meta">
-            <span class="joined-site">{{ joinedYear }}</span>
+            <span class="joined-site">{{ $t('memberSince', {date}) }}</span>
           </div>
         </div>
       </div>

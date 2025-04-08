@@ -16,7 +16,8 @@ CREATE TABLE listings (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   category BIGINT,
   subcategory BIGINT,
-  postal_code INT,
+  longitude DOUBLE,
+  latitude DOUBLE,
   active BOOLEAN DEFAULT TRUE,
   deleted BOOLEAN DEFAULT FALSE,
   sold BOOLEAN DEFAULT FALSE,
@@ -31,6 +32,14 @@ CREATE TABLE bookmarks (
      PRIMARY KEY (user_id, listing_id),
      CONSTRAINT fk_user_bookmarks FOREIGN KEY (user_id) REFERENCES users(id),
      CONSTRAINT fk_listing_bookmarks FOREIGN KEY (listing_id) REFERENCES listings(uuid)
+);
+
+CREATE TABLE listing_images (
+      uuid VARCHAR(36) PRIMARY KEY,
+      listing_uuid VARCHAR(36),
+      image_blob LONGBLOB NOT NULL,
+      image_format VARCHAR(16) NOT NULL,
+      FOREIGN KEY (listing_uuid) REFERENCES listings(uuid) ON DELETE CASCADE
 );
 
 -- Insert a user

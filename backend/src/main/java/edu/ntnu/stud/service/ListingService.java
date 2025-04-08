@@ -46,6 +46,18 @@ public class ListingService {
   }
 
   /**
+   * Retrieves all active listings from the database.
+   *
+   * @return a list of all active listings
+   */
+  public List<ListingResponse> getAllActiveListings() {
+    return listingRepo.getAllActiveListings()
+        .stream()
+        .map(this::convertToResponse)
+        .toList();
+  }
+
+  /**
    * Retrieves a listing by its uuid.
    *
    * @param uuid the uuid of the listing to retrieve
@@ -145,7 +157,7 @@ public class ListingService {
   /**
    * Retrieves a paginated list of archived listings owned by a specific user.
    *
-   * @param userId   the ID of the user whose archived listings to retrieve
+   * @param userId the ID of the user whose archived listings to retrieve
    * @return a page of archived listings owned by the specified user
    */
   public Page<ListingResponse> getArchivedListingsByUserIdPage(long userId, Pageable pageable) {
@@ -166,7 +178,9 @@ public class ListingService {
     listing.setDescription(listingRequest.getDescription());
     listing.setCategory(listingRequest.getCategory());
     listing.setSubcategory(listingRequest.getSubcategory());
-    listing.setPostalCode(listingRequest.getPostalCode());
+    listing.setLongitude(listingRequest.getLongitude());
+    listing.setLatitude(listingRequest.getLatitude());
+    listing.setLatitude(listingRequest.getLatitude());
     listing.setActive(listingRequest.isActive());
     listing.setDeleted(listingRequest.isDeleted());
     listing.setSold(listingRequest.isSold());
@@ -188,7 +202,7 @@ public class ListingService {
     response.setDescription(listing.getDescription());
     response.setCategory(listing.getCategory());
     response.setSubcategory(listing.getSubcategory());
-    response.setPostalCode(listing.getPostalCode());
+
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
@@ -213,7 +227,8 @@ public class ListingService {
     listingUpdate.setDescription(listing.getDescription());
     listingUpdate.setCategory(listing.getCategory());
     listingUpdate.setSubcategory(listing.getSubcategory());
-    listingUpdate.setPostalCode(listing.getPostalCode());
+    listingUpdate.setLongitude(listing.getLongitude());
+    listingUpdate.setLatitude(listing.getLatitude());
     listingUpdate.setActive(listing.isActive());
     listingUpdate.setDeleted(listing.isDeleted());
     listingUpdate.setSold(listing.isSold());
@@ -284,22 +299,21 @@ public class ListingService {
    * @return a page of listings matching the search criteria
    */
   public Page<ListingResponse> search(
-      String query, 
-      Integer category, 
-      Integer subCategory, 
+      String query,
+      Integer category,
+      Integer subCategory,
       Double minPrice,
-      Double maxPrice, 
+      Double maxPrice,
       Pageable pageable) {
-    Page<Listing> listingsPage = 
-        listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
+    Page<Listing> listingsPage = listingRepo.search(query, category, subCategory, minPrice, maxPrice, pageable);
     return listingsPage.map(this::convertToResponse);
   }
 
   /**
    * Retives a paginated list of recommended listings for a user.
    *
-   * @param page the page number to retrieve
-   * @param size the number of listings per page
+   * @param page   the page number to retrieve
+   * @param size   the number of listings per page
    * @param userId the ID of the user to retrieve recommendations for
    * @return a paginated list of recommended listings
    */
@@ -312,7 +326,7 @@ public class ListingService {
   /**
    * Purchases a listing by its UUID.
    *
-   * @param uuid the UUID of the listing to purchase
+   * @param uuid  the UUID of the listing to purchase
    * @param token the JWT token of the user making the purchase
    */
   public void purchaseListing(String uuid, String token) {
@@ -342,7 +356,7 @@ public class ListingService {
   /**
    * Archives a listing by its UUID.
    *
-   * @param uuid the UUID of the listing to archive
+   * @param uuid  the UUID of the listing to archive
    * @param state the state to set for the listing (active or inactive)
    * @param token the JWT token of the user making the request
    */

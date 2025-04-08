@@ -1,6 +1,6 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.factories.NotificationFactory;
+import edu.ntnu.stud.factory.NotificationFactory;
 import edu.ntnu.stud.model.Bookmark;
 import edu.ntnu.stud.model.BookmarkUserRequest;
 import edu.ntnu.stud.model.ListingResponse;
@@ -96,7 +96,7 @@ public class BookmarkService {
    * Checks if a bookmark exists in the database.
    *
    * @param listingId the ID of the listing to check
-   * @param token the JWT token of the user
+   * @param token     the JWT token of the user
    * @return true if the bookmark exists, false otherwise
    */
   public boolean bookmarkExists(String listingId, String token) {

@@ -4,9 +4,9 @@ import {
   type GetListingsRequest,
   type GetListingsResponse,
   type Listing,
-  type Page
+  type Page,
 } from "@/types";
-import type { DefaultResponse } from "@/types/apiResponses";
+import type { DefaultResponse, ReservationResponse } from "@/types/apiResponses";
 import Fetch from "@/util/fetch";
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/vue-query";
 import { getListingImages } from "./images";
@@ -103,3 +103,81 @@ export const usePurchaseListing = () => {
       purchaseListing(uuid),
   });
 };
+export const reserveListing = async (
+  uuid: string
+): Promise<ReservationResponse> => {
+  return await Fetch(`${API_BASE_URL}/api/reservation`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ "listingId": uuid })
+  });
+};
+
+export const useReserveListing = () => {
+  return useMutation({
+    mutationFn: ({uuid}: {uuid: string}) =>
+      reserveListing(uuid)
+  });
+};
+export const checkForReservation = async (
+ uuid: string
+):Promise<ReservationResponse> => {
+  const params = new URLSearchParams({ listingId: uuid });
+  return await Fetch(`${API_BASE_URL}/api/reservation/${uuid.toString()}`);
+}
+export const useCheckForReservation = (uuid: string, enabled: boolean) => {
+  return useQuery({
+    queryKey: ['reservation', uuid],
+    queryFn: () => checkForReservation(uuid),
+    enabled
+  });
+};
+
+export const toggleArchiveListing = async (
+  uuid: string,
+  state: boolean
+): Promise<DefaultResponse> => {
+
+  const params = new URLSearchParams({ state: state.toString() });
+  return await Fetch(`${API_BASE_URL}/api/listing/${uuid}/archive?${params.toString()}`, {
+    method: "POST",
+  });
+};
+export const useToggleArchive = () => {
+  return useMutation({
+    mutationFn: ({uuid, state}: {uuid: string; state: boolean})=>
+      toggleArchiveListing(uuid,state),
+  });
+};
+
+export const getArchivedListingsByUser = async (
+  userId: number,
+  page: number
+): Promise<GetListingsResponse> => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("offset", PAGE_SIZE.toString());
+  return await Fetch(`${API_BASE_URL}/api/listing/user/${userId}/archived?${params.toString()}`);
+};
+
+export const useGetArchivedListingsByUser = (userId: number) => {
+  return useInfiniteQuery({
+    queryKey: ["archivedListings", userId],
+    queryFn: ({ pageParam = 0 }) => getArchivedListingsByUser(userId, pageParam),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.last) return undefined;
+      return lastPage.number + 1;
+    },
+    initialPageParam: 0,
+    enabled: !!userId,
+  });
+};
+
+
+
+
+
+
+

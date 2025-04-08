@@ -35,14 +35,4 @@ public class ListingImageService {
   public int saveListingImage(ListingImage listingImage) {
     return listingImageRepo.saveListingImage(listingImage);
   }
-
-  /**
-   * Deletes a listing image by its UUID.
-   *
-   * @param uuid the UUID of the listing image to delete
-   * @return the number of rows affected
-   */
-  public int deleteListingImageByUuid(String uuid) {
-    return listingImageRepo.deleteListingImageByUuid(uuid);
-  }
 }

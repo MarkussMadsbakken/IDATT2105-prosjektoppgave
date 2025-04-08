@@ -100,6 +100,19 @@ public class ListingController {
   }
 
   /**
+   * Retrieves all active listings (not deleted, sold or archived).
+   *
+   * @return a list of all active listings
+   */
+  @GetMapping("/all")
+  public ResponseEntity<List<ListingResponse>> getAllActiveListings() {
+    logger.info("Fetching all listings");
+    List<ListingResponse> listings = listingService.getAllActiveListings();
+    logger.info("All listings fetched successfully");
+    return ResponseEntity.ok(listings);
+  }
+
+  /**
    * Retrives a paginated of listing owned by a specific owner.
    *
    * @param userId the ID of the user whose listings to retrieve
@@ -139,8 +152,7 @@ public class ListingController {
         page,
         offset);
     Pageable pageable = PageRequest.of(page, offset);
-    Page<ListingResponse> listingsPage = 
-        listingService.getArchivedListingsByUserIdPage(userId, pageable);
+    Page<ListingResponse> listingsPage = listingService.getArchivedListingsByUserIdPage(userId, pageable);
     logger.info("Archived listings for user fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -187,7 +199,7 @@ public class ListingController {
     listingService.updateListing(listingRequest, token);
     logger.info("Listing updated successfully with UUID: {}", listingRequest.getUuid());
     return ResponseEntity.ok().body(
-      new DefaultResponse("Listing updated successfully", "listingUpdated"));
+        new DefaultResponse("Listing updated successfully", "listingUpdated"));
   }
 
   /**
@@ -204,7 +216,7 @@ public class ListingController {
     listingService.deleteListing(uuid, token);
     logger.info("Listing deleted successfully with UUID: {}", uuid);
     return ResponseEntity.ok().body(
-      new DefaultResponse("Listing deleted successfully", "listingDeleted"));
+        new DefaultResponse("Listing deleted successfully", "listingDeleted"));
   }
 
   /**
@@ -222,7 +234,7 @@ public class ListingController {
     listingService.purchaseListing(uuid, token);
     logger.info("Listing purchased successfully with UUID: {}", uuid);
     return ResponseEntity.ok().body(
-      new DefaultResponse("Listing purchased successfully", "listingPurchased"));
+        new DefaultResponse("Listing purchased successfully", "listingPurchased"));
   }
 
   /**
@@ -242,6 +254,6 @@ public class ListingController {
     listingService.archiveListing(uuid, state, token);
     logger.info("Listing aktive status set successfully with UUID: {}", uuid);
     return ResponseEntity.ok().body(
-      new DefaultResponse("Listing archived successfully", "listingArchived"));
+        new DefaultResponse("Listing archived successfully", "listingArchived"));
   }
 }
