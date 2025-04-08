@@ -36,14 +36,4 @@ public class ListingImageRepo {
   public int saveListingImage(ListingImage listingImage) {
     return listingImageDao.save(listingImage);
   }
-
-  /**
-   * Deletes a ListingImage entity from the database by its UUID.
-   *
-   * @param uuid the UUID of the ListingImage entity to delete
-   * @return the number of rows affected by the delete operation
-   */
-  public int deleteListingImageByUuid(String uuid) {
-    return listingImageDao.deleteByUuid(uuid);
-  }
 }

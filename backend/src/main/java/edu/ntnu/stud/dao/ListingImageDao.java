@@ -58,15 +58,4 @@ public class ListingImageDao {
         listingImage.getImageFormat()
     );
   }
-
-  /**
-   * Deletes a ListingImage entity from the database by its UUID.
-   *
-   * @param uuid the UUID of the ListingImage entity to delete
-   * @return the number of rows affected by the delete operation
-   */
-  public int deleteByUuid(String uuid) {
-    String sql = "DELETE FROM listing_images WHERE uuid = ?";
-    return jdbcTemplate.update(sql, uuid);
-  }
 }
