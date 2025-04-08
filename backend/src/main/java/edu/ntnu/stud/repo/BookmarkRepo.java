@@ -1,13 +1,10 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Bookmark;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,25 +13,15 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class BookmarkRepo {
-  @Value("${spring.datasource.url}")
-  private String url;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
-  @Value("${spring.datasource.username}")
-  private String user;
-
-  @Value("${spring.datasource.password}")
-  private String password;
-
-  /**
-   * Initializes the repo and loads the MySQL JDBC driver.
-   */
-  public BookmarkRepo() {
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
+  private final RowMapper<Bookmark> bookmarkRowMapper = (resultSet, rowNum) -> {
+    Bookmark bookmark = new Bookmark();
+    bookmark.setUserId(resultSet.getLong("user_id"));
+    bookmark.setListingId(resultSet.getString("listing_id"));
+    return bookmark;
+  };
 
   /**
    * Adds a new bookmark to the database.
@@ -43,14 +30,7 @@ public class BookmarkRepo {
    */
   public void addBookmark(Bookmark bookmark) {
     String query = "INSERT INTO bookmarks (user_id, listing_id) VALUES (?, ?)";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setLong(1, bookmark.getUserId());
-      statement.setString(2, bookmark.getListingId());
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    jdbcTemplate.update(query, bookmark.getUserId(), bookmark.getListingId());
   }
 
   /**
@@ -60,14 +40,7 @@ public class BookmarkRepo {
    */
   public void removeBookmark(Bookmark bookmark) {
     String query = "DELETE FROM bookmarks WHERE user_id = ? AND listing_id = ?";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setLong(1, bookmark.getUserId());
-      statement.setString(2, bookmark.getListingId());
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    jdbcTemplate.update(query, bookmark.getUserId(), bookmark.getListingId());
   }
 
   /**
@@ -78,20 +51,8 @@ public class BookmarkRepo {
    */
   public boolean bookmarkExists(Bookmark bookmark) {
     String query = "SELECT COUNT(*) FROM bookmarks WHERE user_id = ? AND listing_id = ?";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setLong(1, bookmark.getUserId());
-      statement.setString(2, bookmark.getListingId());
-
-      var resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        int count = resultSet.getInt(1);
-        return count > 0;
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return false;
+    return jdbcTemplate.query(
+        query, bookmarkRowMapper, bookmark.getUserId(), bookmark.getListingId()).size() > 0;
   }
 
   /**
@@ -101,20 +62,14 @@ public class BookmarkRepo {
    * @return a list of bookmarks for the user in the form of ListingUuids
    */
   public List<String> getBookmarksFromUser(long userId) {
-    String query = "SELECT * FROM bookmarks WHERE user_id = ?";
-    List<String> bookmarks = new ArrayList<>();
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setLong(1, userId);
-      var resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        String listingId = resultSet.getString("listing_id");
-        bookmarks.add(listingId);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return bookmarks;
+    String query = "SELECT listing_id FROM bookmarks WHERE user_id = ?";
+    return jdbcTemplate.query(
+        query,
+        bookmarkRowMapper,
+        userId
+    ).stream()
+        .map(Bookmark::getListingId)
+        .toList();
   }
 
   /**
@@ -124,20 +79,7 @@ public class BookmarkRepo {
    * @return a list of bookmarks for the listing in the form of userIds
    */
   public List<Long> getBookmarksFromListing(String listingId) {
-    String query = "SELECT * FROM bookmarks WHERE listing_id = ?";
-    List<Long> bookmarks = new ArrayList<>();
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setString(1, listingId);
-      var resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        long userId = resultSet.getLong("user_id");
-        bookmarks.add(userId);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return bookmarks;
+    String query = "SELECT user_id FROM bookmarks WHERE listing_id = ?";
+    return jdbcTemplate.queryForList(query, Long.class, listingId);
   }
-
 }
