@@ -35,7 +35,8 @@ class ListingImageRepoTest {
 
   @BeforeEach
   public void setUp() {
-    listing = new Listing("test listing for bookmarkRepoTest", 100.0, "test listing for bookmarkRepoTest", 1, 1, 1388, 1L);
+    listing = new Listing("test listing for bookmarkRepoTest", 100.0,
+        "test listing for bookmarkRepoTest", 1, 1, 0, 0, 1L);
     listingRepo.saveListing(listing);
   }
 
@@ -48,7 +49,7 @@ class ListingImageRepoTest {
   @Test
   public void testSaveListingImage() throws SQLException {
     Blob imageBlob = jdbcTemplate.getDataSource().getConnection().createBlob();
-    imageBlob.setBytes(1, new byte[]{1, 2, 3}); // Example binary data
+    imageBlob.setBytes(1, new byte[] { 1, 2, 3 }); // Example binary data
     ListingImage listingImage = new ListingImage(imageBlob, listing.getUuid(), "image/jpeg");
 
     int rowsChanged = listingImageRepo.saveListingImage(listingImage);
@@ -59,11 +60,11 @@ class ListingImageRepoTest {
   @Test
   public void testGetImagesByListingUuid() throws SQLException {
     Blob imageBlob1 = jdbcTemplate.getDataSource().getConnection().createBlob();
-    imageBlob1.setBytes(1, new byte[]{1, 2, 3});
+    imageBlob1.setBytes(1, new byte[] { 1, 2, 3 });
     ListingImage listingImage1 = new ListingImage(imageBlob1, listing.getUuid(), "image/jpeg");
 
     Blob imageBlob2 = jdbcTemplate.getDataSource().getConnection().createBlob();
-    imageBlob2.setBytes(1, new byte[]{4, 5, 6});
+    imageBlob2.setBytes(1, new byte[] { 4, 5, 6 });
     ListingImage listingImage2 = new ListingImage(imageBlob2, listing.getUuid(), "image/png");
 
     listingImageRepo.saveListingImage(listingImage1);
