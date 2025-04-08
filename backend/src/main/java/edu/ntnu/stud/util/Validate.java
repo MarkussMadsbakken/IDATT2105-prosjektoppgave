@@ -6,6 +6,9 @@ import java.util.function.Predicate;
  * Utility class for validating objects.
  */
 public class Validate {
+  public static <T> Predicate<T> isNull() {
+    return value -> value == null;
+  }
 
   public static <T> Predicate<T> isNotNull() {
     return value -> value != null;
