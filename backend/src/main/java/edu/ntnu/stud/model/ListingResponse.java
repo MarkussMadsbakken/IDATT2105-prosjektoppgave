@@ -12,8 +12,8 @@ public class ListingResponse {
   private String description;
   private int category;
   private int subcategory;
-  private long longitude;
-  private long latitude;
+  private double longitude;
+  private double latitude;
   private boolean active;
   private boolean deleted;
   private boolean sold;
@@ -71,19 +71,19 @@ public class ListingResponse {
     this.subcategory = subcategory;
   }
 
-  public long getLongitude() {
+  public double getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(long longitude) {
+  public void setLongitude(double longitude) {
     this.longitude = longitude;
   }
 
-  public long getLatitude() {
+  public double getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(long latitude) {
+  public void setLatitude(double latitude) {
     this.latitude = latitude;
   }
 

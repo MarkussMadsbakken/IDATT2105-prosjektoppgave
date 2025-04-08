@@ -8,13 +8,16 @@ import ImageSelector from '@/components/ImageSelector.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NumberInput from '@/components/NumberInput.vue';
 import PhotoGallery from '@/components/PhotoGallery.vue';
+import PositionSelectorModal from '@/components/PositionSelectorModal.vue';
 import TextInput from '@/components/TextInput.vue';
 import { useMutation } from '@tanstack/vue-query';
+import { useDialog } from 'primevue/usedialog';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
+const dialog = useDialog();
 
 const listingId = route.params.id as string
 
@@ -28,7 +31,7 @@ const {
 const title = ref(listingWithImages?.value?.listing?.name ?? "");
 const description = ref(listingWithImages?.value?.listing?.description ?? "");
 const price = ref(listingWithImages?.value?.listing?.price ?? 0);
-const postalCode = ref(listingWithImages?.value?.listing?.postalCode);
+const position = ref<{ latitude: number; longitude: number, label?: string } | null>(null);
 const category = ref<number | null>(null);
 const subcategory = ref<number | null>(null);
 
@@ -38,9 +41,12 @@ watch(listingWithImages, (newListing) => {
     title.value = newListing?.listing.name ?? "";
     description.value = newListing?.listing.description ?? "";
     price.value = newListing?.listing.price ?? 0;
-    postalCode.value = newListing?.listing.postalCode ?? 0;
     category.value = newListing?.listing.category;
     subcategory.value = newListing?.listing.subcategory ?? 0;
+    position.value = {
+        latitude: newListing?.listing.latitude,
+        longitude: newListing?.listing.longitude
+    };
 }, { deep: true });
 
 const images = computed(() => {
@@ -72,10 +78,6 @@ const onSubmit = () => {
         errors.value.push({ field: "price", isError: true });
     }
 
-    if (!postalCode.value) {
-        errors.value.push({ field: "postalCode", isError: true });
-    }
-
     if (!category.value) {
         errors.value.push({ field: "category", isError: true });
     }
@@ -88,7 +90,8 @@ const onSubmit = () => {
         name: title.value,
         description: description.value,
         price: Number(price.value),
-        postalCode: Number(postalCode.value),
+        latitude: position.value?.latitude ?? 0,
+        longitude: position.value?.longitude ?? 0,
         category: category.value!,
         subcategory: subcategory.value ?? undefined,
         uuid: listingId,
@@ -97,6 +100,28 @@ const onSubmit = () => {
         sold: listingWithImages.value?.listing.sold!,
     });
 }
+
+const openPositionSelector = () => {
+    const d = dialog.open(PositionSelectorModal, {
+        props: {
+            header: "Select position",
+            modal: true,
+            draggable: false,
+            dismissableMask: true,
+        },
+        data: {
+            initialLatitude: position.value?.latitude ?? 0,
+            initialLongitude: position.value?.longitude ?? 0,
+        },
+        emits: {
+            onPositionSelected: (pos: any) => {
+                position.value = pos;
+                d.close();
+            },
+        }
+    });
+}
+
 </script>
 
 <template>
@@ -119,9 +144,20 @@ const onSubmit = () => {
                 :isNotFilledIn="errors.find(e => e.field === 'price')?.isError">
                 <NumberInput v-model="price" type="number" id="price" name="price" autocomplete="off" />
             </FormGroup>
-            <FormGroup :label="$t('postalCode')" name="postalCode"
-                :isNotFilledIn="errors.find(e => e.field === 'postalCode')?.isError">
-                <NumberInput v-model="postalCode" type="number" id="postalCode" name="postalCode" autocomplete="off" />
+            <FormGroup :label="$t('position')" name="position">
+                <div class="position-selector">
+                    <Button variant="primary" @click="openPositionSelector">
+                        {{ $t('selectPosition') }}
+                    </Button>
+                    <template v-if="position && position?.latitude !== 0 && position?.longitude !== 0">
+                        <p>
+                            {{ position?.latitude }}, {{ position?.longitude }}
+                        </p>
+                        <p>
+                            {{ position?.label }}
+                        </p>
+                    </template>
+                </div>
             </FormGroup>
             <FormGroup :label="$t('category')" name="category"
                 :isNotFilledIn="errors.find(e => e.field === 'category')?.isError">
@@ -146,6 +182,14 @@ const onSubmit = () => {
 </template>
 
 <style scoped>
+.position-selector {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+
 .form-group {
     display: flex;
     flex-direction: column;

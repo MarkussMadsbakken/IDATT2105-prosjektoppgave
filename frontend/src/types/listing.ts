@@ -5,7 +5,8 @@ export type Listing = {
     category: number;
     subcategory?: number;
     active: boolean;
-    postalCode: number;
+    longitude: number;
+    latitude: number;
     deleted: boolean;
     sold: false;
     ownerId: number,
