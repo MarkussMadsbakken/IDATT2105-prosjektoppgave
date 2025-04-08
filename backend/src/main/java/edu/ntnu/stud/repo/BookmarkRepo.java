@@ -50,7 +50,7 @@ public class BookmarkRepo {
    * @return true if the bookmark exists, false otherwise
    */
   public boolean bookmarkExists(Bookmark bookmark) {
-    String query = "SELECT COUNT(*) FROM bookmarks WHERE user_id = ? AND listing_id = ?";
+    String query = "SELECT * FROM bookmarks WHERE user_id = ? AND listing_id = ?";
     return jdbcTemplate.query(
         query, bookmarkRowMapper, bookmark.getUserId(), bookmark.getListingId()).size() > 0;
   }
@@ -62,7 +62,7 @@ public class BookmarkRepo {
    * @return a list of bookmarks for the user in the form of ListingUuids
    */
   public List<String> getBookmarksFromUser(long userId) {
-    String query = "SELECT listing_id FROM bookmarks WHERE user_id = ?";
+    String query = "SELECT * FROM bookmarks WHERE user_id = ?";
     return jdbcTemplate.query(
         query,
         bookmarkRowMapper,
