@@ -94,7 +94,8 @@ if (messages.value) {
         </template>
         <template v-else-if="!chatIsError">
             <div class="seller-info-wrapper">
-                <SellerInfo :key="chat?.chatId" :userId="isSeller ? chat?.buyerId! : chat?.sellerId!" />
+                <SellerInfo :can-contact-seller="false" :key="chat?.chatId"
+                    :userId="isSeller ? chat?.buyerId! : chat?.sellerId!" />
             </div>
             <div v-if="messagesIsError" class="error">
                 <p>{{ $t("error") }}</p>
