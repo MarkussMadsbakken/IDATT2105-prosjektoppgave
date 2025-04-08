@@ -2,13 +2,10 @@ package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.SubCategory;
 import edu.ntnu.stud.model.SubCategoryRequest;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,25 +13,17 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class SubCategoryRepo {
-  @Value("${spring.datasource.url}")
-  private String url;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
-  @Value("${spring.datasource.username}")
-  private String user;
-
-  @Value("${spring.datasource.password}")
-  private String password;
-
-  /**
-   * Initializes the repo and loads the MySQL JDBC driver.
-   */
-  public SubCategoryRepo() {
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
+  private final RowMapper<SubCategory> subCategoryRowMapper = (resultSet, rowNum) -> {
+    SubCategory subCategory = new SubCategory();
+    subCategory.setId(resultSet.getInt("id"));
+    subCategory.setName(resultSet.getString("name"));
+    subCategory.setDescription(resultSet.getString("description"));
+    subCategory.setParentId(resultSet.getInt("category_id"));
+    return subCategory;
+  };
 
   /**
    * Adds a new category to the database.
@@ -43,15 +32,8 @@ public class SubCategoryRepo {
    */
   public void addSubCategory(SubCategoryRequest category) {
     String query = "INSERT INTO sub_categories (name, description, category_id) VALUES (?, ?, ?)";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setString(1, category.getName());
-      statement.setString(2, category.getDescription());
-      statement.setInt(3, category.getParentId());
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    jdbcTemplate.update(query, 
+        category.getName(), category.getDescription(), category.getParentId());
   }
 
   /**
@@ -61,13 +43,7 @@ public class SubCategoryRepo {
    */
   public void deleteSubCategory(int categoryId) {
     String query = "DELETE FROM sub_categories WHERE id = ?";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setInt(1, categoryId);
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    jdbcTemplate.update(query, categoryId);
   }
 
   /**
@@ -76,17 +52,13 @@ public class SubCategoryRepo {
    * @param category the category to be updated
    */
   public void updateSubCategory(SubCategory category) {
-    String query = "UPDATE sub_categories SET name = ?, description = ?, category_id = ? WHERE id = ?";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setString(1, category.getName());
-      statement.setString(2, category.getDescription());
-      statement.setInt(4, category.getId());
-      statement.setInt(5, category.getParentId());
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    String query = 
+        "UPDATE sub_categories SET name = ?, description = ?, category_id = ? WHERE id = ?";
+    jdbcTemplate.update(query, 
+        category.getName(), 
+        category.getDescription(), 
+        category.getParentId(), 
+        category.getId());
   }
 
   /**
@@ -97,21 +69,8 @@ public class SubCategoryRepo {
    */
   public SubCategory getSubCategoryById(int categoryId) {
     String query = "SELECT * FROM sub_categories WHERE id = ?";
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setInt(1, categoryId);
-      var resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        return new SubCategory(
-            resultSet.getInt("id"),
-            resultSet.getString("name"),
-            resultSet.getString("description"),
-            resultSet.getInt("category_id"));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return null;
+    List<SubCategory> subCategories = jdbcTemplate.query(query, subCategoryRowMapper, categoryId);
+    return subCategories.isEmpty() ? null : subCategories.get(0);
   }
 
   /**
@@ -120,22 +79,8 @@ public class SubCategoryRepo {
    * @return a list of all categories
    */
   public List<SubCategory> getAllCategories() {
-    String query = "SELECT * FROM categories";
-    List<SubCategory> categories = new ArrayList<>();
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      var resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        categories.add(new SubCategory(
-            resultSet.getInt("id"),
-            resultSet.getString("name"),
-            resultSet.getString("description"),
-            resultSet.getInt("parrent_id")));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return categories;
+    String query = "SELECT * FROM sub_categories";
+    return jdbcTemplate.query(query, subCategoryRowMapper);
   }
 
   /**
@@ -146,21 +91,6 @@ public class SubCategoryRepo {
    */
   public List<SubCategory> getSubCategoriesByCategoryId(int categoryId) {
     String query = "SELECT * FROM sub_categories WHERE category_id = ?";
-    List<SubCategory> subCategories = new ArrayList<>();
-    try (Connection connection = DriverManager.getConnection(url, user, password);
-        PreparedStatement statement = connection.prepareStatement(query)) {
-      statement.setInt(1, categoryId);
-      var resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        subCategories.add(new SubCategory(
-            resultSet.getInt("id"),
-            resultSet.getString("name"),
-            resultSet.getString("description"),
-            resultSet.getInt("category_id")));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return subCategories;
+    return jdbcTemplate.query(query, subCategoryRowMapper, categoryId);
   }
 }
