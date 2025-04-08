@@ -31,6 +31,10 @@ public class Validate {
     return value -> value != null && value.doubleValue() > 0;
   }
 
+  public static Predicate<Number> isNotPositive() {
+    return value -> value != null && value.doubleValue() <= 0;
+  }
+
   public static Predicate<Number> isZero() {
     return value -> value != null && value.doubleValue() == 0;
   }
@@ -41,6 +45,10 @@ public class Validate {
 
   public static Predicate<Number> isNegative() {
     return value -> value != null && value.doubleValue() < 0;
+  }
+
+  public static Predicate<Number> isNotNegative() {
+    return value -> value != null && value.doubleValue() >= 0;
   }
 
   public static Predicate<Boolean> isTrue() {
