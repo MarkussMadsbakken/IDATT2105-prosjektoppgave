@@ -75,6 +75,13 @@ export type DefaultResponse = {
     shortMessage: string;
 };
 
+export type ReservationResponse = {
+    id: number;
+    listingID: string,
+    userId: number,
+    createdAt: string
+};
+
 /**
  * Error response returned from the API
  */
