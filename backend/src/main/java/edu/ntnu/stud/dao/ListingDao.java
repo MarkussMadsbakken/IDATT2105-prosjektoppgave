@@ -4,7 +4,6 @@ import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingUpdate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -83,11 +82,8 @@ public class ListingDao {
    */
   public Listing findByUuid(String uuid) {
     String sql = "SELECT * FROM listings WHERE uuid = ?";
-    try {
-      return jdbcTemplate.queryForObject(sql, listingRowMapper, uuid);
-    } catch (EmptyResultDataAccessException e) {
-      return null;
-    }
+    List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, uuid);
+    return listings.isEmpty() ? null : listings.get(0);
   }
 
   /**
