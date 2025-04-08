@@ -8,6 +8,12 @@ public class Bookmark {
   private String listingId; // ID of the listing that is bookmarked
 
   /**
+   * Default constructor for the Bookmark class.
+   */
+  public Bookmark() {
+  }
+
+  /**
    * Constructor to create a new Bookmark object.
    *
    * @param userId the ID of the user who created the bookmark
