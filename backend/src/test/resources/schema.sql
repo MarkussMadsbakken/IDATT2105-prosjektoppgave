@@ -64,6 +64,20 @@ CREATE TABLE message (
     FOREIGN KEY (sender_id) REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS categories (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  description VARCHAR(255),
+  icon TEXT
+);
+
+CREATE TABLE IF NOT EXISTS sub_categories (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(255),
+  category_id BIGINT NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
 
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('testuser', 'password');
