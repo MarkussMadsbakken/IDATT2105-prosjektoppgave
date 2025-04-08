@@ -37,12 +37,13 @@ public class ReservationService {
     Long userId = jwtService.extractUserId(token.substring(7));
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
-    Reservation existingReservation = reservationRepo.getReservationByUserIdAndListingId(
-        userId, reservationRequest.getListingId(), expirationDate);
+    Reservation existingReservation = reservationRepo.getReservationByListingId(
+        reservationRequest.getListingId(), expirationDate);
     // Check if a reservation already exists for the user and listing
     if (existingReservation != null) {
-      throw new IllegalArgumentException("A reservation already exists for this listing.");
+      throw new IllegalArgumentException("A reservation is already active for this listing.");
     }
+
     // Create and add the new reservation
     Reservation reservation = ReservationFactory.fromRequest(reservationRequest);
     reservation.setUserId(userId);
