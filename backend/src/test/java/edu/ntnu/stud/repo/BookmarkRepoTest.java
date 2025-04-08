@@ -29,8 +29,9 @@ public class BookmarkRepoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-  @Autowired
-  private ListingRepo listingRepo;
+
+    @Autowired
+    private ListingRepo listingRepo;
 
   @BeforeEach
     public void setUp() {

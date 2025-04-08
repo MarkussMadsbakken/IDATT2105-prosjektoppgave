@@ -33,6 +33,14 @@ CREATE TABLE bookmarks (
      CONSTRAINT fk_listing_bookmarks FOREIGN KEY (listing_id) REFERENCES listings(uuid)
 );
 
+CREATE TABLE listing_images (
+      uuid VARCHAR(36) PRIMARY KEY,
+      listing_uuid VARCHAR(36),
+      image_blob LONGBLOB NOT NULL,
+      image_format VARCHAR(16) NOT NULL,
+      FOREIGN KEY (listing_uuid) REFERENCES listings(uuid) ON DELETE CASCADE
+);
+
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('testuser', 'password');
 INSERT INTO users (username, password) VALUES ('testuser2', 'password');
