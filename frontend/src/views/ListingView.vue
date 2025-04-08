@@ -3,12 +3,11 @@ import type { Listing, User } from '@/types'
 import SellerInfo from "@/components/SellerInfo.vue";
 import Button from '@/components/Button.vue';
 import { useRouter, useRoute } from "vue-router";
-import PhotoGallery from "@/components/PhotoGallery.vue";
 import { marked } from 'marked';
 import { Trash2, Pencil, Bookmark, BookmarkCheck } from 'lucide-vue-next'
 import { useAuth } from "@/stores/auth.ts";
 import { computed, ref, watch } from 'vue'
-import { useGetListing } from '@/actions/getListing';
+import {useCheckForReservation, useGetListing, useReserveListing} from '@/actions/getListing';
 import ListingImages from '@/components/ListingImages.vue';
 import { useDialog } from 'primevue/usedialog';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
@@ -53,10 +52,44 @@ const { mutate: createChatMutation } = useMutation({
   }
 })
 
+const{ mutate: reserve, isPending: isReservePending, isError: isPendingError, error: reserveError, isSuccess: isReserveSuccess } = useReserveListing();
 
-const handleReserve = () => {
-  // TODO
-};
+const handleReserve = () =>{
+  reserve({ uuid: listingId });
+}
+
+const {
+  data: reservation,
+  isError: isReservationError,
+  error: reservationCheckError,
+  isPending: reservationChecKIsPending
+} = useCheckForReservation(listingId, auth.isLoggedIn());
+
+const reservationEndTime = computed(()=>{
+  if (!reservation?.value?.createdAt) return null;
+  const createdAt = new Date (reservation.value.createdAt)
+  const expiresAt = new Date(createdAt.getTime() + 60*60*1000);
+
+  return expiresAt.toLocaleTimeString(navigator.language, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+})
+
+const isReservedByMe = computed(()=>{
+  console.log(reservation);
+  console.log(reservation?.value?.userId);
+  console.log(auth.userId);
+  console.log(reservation?.value?.userId === auth.userId)
+  return reservation?.value?.userId === auth.userId;
+})
+const reserveButtonText = computed(()=> {
+  if (reservation?.value && isReservedByMe.value){
+    return `${i18n.t("reservedUntil")}: ${reservationEndTime.value}`;
+  }
+  return i18n.t("reserve");
+})
 
 const deleteMutation = useMutation({
   mutationFn: deleteListing,
@@ -134,6 +167,12 @@ const handleDelete = () => {
   </div>
   <div class="listing" v-else>
     <div class="title-picture">
+      <Alert class="reserved-warning" variant="Info" v-if="reservation && !isReservedByMe">
+        {{ $t("listingReservedByAnotherUser") }} {{ reservationEndTime }}
+      </Alert>
+      <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
+        {{ $t("listingReservedByMe") }} {{ reservationEndTime }}
+      </Alert>
       <h3 class="listing-title">
         {{ listing?.name }}
       </h3>
@@ -178,10 +217,25 @@ const handleDelete = () => {
     <div v-if="!isOwnListing" class="buy-box">
       <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" size="medium"
         @contact-seller="createChatMutation(listingId)" />
+
+
       <div v-if="auth.isLoggedIn() && !listing!.sold" class="button-box">
-        <Button variant="primary" @click="router.push(`/listing/${listingId}/checkout`)" style="width: 10rem; height: 3rem;">{{ $t("buy") }}</Button>
-        <Button variant="secondary" style="width: 10rem; height: 3rem;">{{ $t("reserve")
-        }}</Button>
+        <Button variant="primary"
+                :class="{ 'is-disabled': reservation && !isReservedByMe }"
+                @click="router.push(`/listing/${listingId}/checkout`)"
+                :disabled="reservation && !isReservedByMe"
+                style="width: 10rem;
+                 height: 3rem;">{{ $t("buy") }}</Button>
+
+        <Button
+          variant="secondary"
+          :class="{ 'is-disabled': reservation && !isReservedByMe }"
+          :disabled="reservation && isReservedByMe"
+          @click="handleReserve"
+          style="width: 10rem; height: 3rem;"
+        >
+          {{ reserveButtonText }}
+        </Button>
       </div>
     </div>
   </div>
@@ -270,4 +324,13 @@ const handleDelete = () => {
 .sold-warning{
   width: 45rem;
 }
+.is-disabled {
+  background-color: #ccc !important;
+  color: #999 !important;
+  cursor: not-allowed !important;
+  border: 1px solid #aaa !important;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 </style>

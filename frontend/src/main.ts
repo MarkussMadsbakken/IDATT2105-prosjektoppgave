@@ -145,6 +145,9 @@ const i18n = createI18n({
             emptyListings: "Her er det tomt",
             userReservedYourListing: "En bruker har reservert annonsen din",
             userPurchasedYourListing: "En bruker har kjøpt annonsen din",
+            listingReservedByAnotherUser: "Artikkelen er reservert av en annen bruker fram til",
+            listingReservedByMe: "Du har reservert artikkelen fram til",
+            reservedUntil: "Reservert til"
         },
         en: {
             recommended: "Recommended for you",
@@ -235,6 +238,9 @@ const i18n = createI18n({
             inSummary: "In summary",
             userReservedYourListing: "A user has reserved your listing",
             userPurchasedYourListing: "A user has purchased your listing",
+            listingReservedByAnotherUser: "Listing is reserved by another user until",
+            listingReservedByMe: "You have reserved this listing until",
+            reservedUntil: "Reserved until"
         }
     },
 });

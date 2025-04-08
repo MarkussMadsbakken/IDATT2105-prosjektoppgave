@@ -4,9 +4,9 @@ import {
   type GetListingsRequest,
   type GetListingsResponse,
   type Listing,
-  type Page
+  type Page,
 } from "@/types";
-import type { DefaultResponse } from "@/types/apiResponses";
+import type { DefaultResponse, ReservationResponse } from "@/types/apiResponses";
 import Fetch from "@/util/fetch";
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/vue-query";
 import { getListingImages } from "./images";
@@ -103,3 +103,39 @@ export const usePurchaseListing = () => {
       purchaseListing(uuid),
   });
 };
+export const reserveListing = async (
+  uuid: string
+): Promise<ReservationResponse> => {
+  return await Fetch(`${API_BASE_URL}/api/reservation`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ "listingId": uuid })
+  });
+};
+
+export const useReserveListing = () => {
+  return useMutation({
+    mutationFn: ({uuid}: {uuid: string}) =>
+      reserveListing(uuid)
+  });
+};
+export const checkForReservation = async (
+ uuid: string
+):Promise<ReservationResponse> => {
+  const params = new URLSearchParams({ listingId: uuid });
+  return await Fetch(`${API_BASE_URL}/api/reservation/${uuid.toString()}`);
+}
+export const useCheckForReservation = (uuid: string, enabled: boolean) => {
+  return useQuery({
+    queryKey: ['reservation', uuid],
+    queryFn: () => checkForReservation(uuid),
+    enabled
+  });
+};
+
+
+
+
+
