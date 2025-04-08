@@ -62,6 +62,8 @@ public class SecurityConfig {
                 "/api/categories",
                 "/api/categories/**",
                 "/api/listing",
+                    "/api/reservation",
+                    "/api/reservation/**",
                 "/api/listing/**",
                 "/api/reservation",
                 "/api/reservation/**",
