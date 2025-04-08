@@ -32,8 +32,6 @@ public class CategoryController {
   private CategoryService categoryService;
   @Autowired
   private SubCategoryService subCategoryService;
-  @Autowired
-  private JWTService jwtService;
 
   /**
    * Retrieves a category by its ID.
@@ -48,7 +46,7 @@ public class CategoryController {
     if (category != null) {
       return ResponseEntity.ok(category);
     } else {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.noContent().build();
     }
   }
 
@@ -60,7 +58,11 @@ public class CategoryController {
   @GetMapping
   public ResponseEntity<List<Category>> getAllCategories() {
     List<Category> categories = categoryService.getAllCategories();
-    return ResponseEntity.ok(categories);
+    if (categories != null && !categories.isEmpty()) {
+      return ResponseEntity.ok(categories);
+    } else {
+      return ResponseEntity.noContent().build();
+    }
   }
 
   /**
@@ -75,7 +77,7 @@ public class CategoryController {
     if (subCategory != null) {
       return ResponseEntity.ok(subCategory);
     } else {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.noContent().build();
     }
   }
 
@@ -93,7 +95,7 @@ public class CategoryController {
     } else if (subCategories != null) {
       return ResponseEntity.ok(subCategories);
     } else {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.noContent().build();
     }
   }
 
@@ -105,7 +107,11 @@ public class CategoryController {
   @GetMapping("/subcategories")
   public ResponseEntity<List<SubCategory>> getAllSubCategories() {
     List<SubCategory> subCategories = subCategoryService.getAllSubCategories();
-    return ResponseEntity.ok(subCategories);
+    if (subCategories != null && !subCategories.isEmpty()) {
+      return ResponseEntity.ok(subCategories);
+    } else {
+      return ResponseEntity.noContent().build();
+    }
   }
 
   /**
@@ -116,13 +122,9 @@ public class CategoryController {
   @PostMapping
   public ResponseEntity<DefaultResponse> addCategory(@RequestBody CategoryRequest category,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
-    if (!isAdmin) {
-      return ResponseEntity.status(403)
-          .body(new DefaultResponse("Error: You are not authorized to add categories.", "CategoryAddFailed"));
-    }
-    categoryService.addCategory(category);
-    return ResponseEntity.ok().body(new DefaultResponse("Category added successfully.", "CategoryAddSuccessfull"));
+    categoryService.addCategory(category, token);
+    return ResponseEntity.ok().body(new DefaultResponse("Category added successfully.", 
+      "CategoryAddSuccessfull"));
   }
 
   /**
@@ -133,13 +135,9 @@ public class CategoryController {
   @PutMapping
   public ResponseEntity<DefaultResponse> updateCategory(@RequestBody Category category,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
-    if (!isAdmin) {
-      return ResponseEntity.status(403)
-          .body(new DefaultResponse("Error: You are not authorized to update categories.", "CategoryUpdateFailed"));
-    }
-    categoryService.updateCategory(category);
-    return ResponseEntity.ok().body(new DefaultResponse("Category updated successfully.", "CategoryUpdateSuccessfull"));
+    categoryService.updateCategory(category, token);
+    return ResponseEntity.ok().body(new DefaultResponse("Category updated successfully.",
+      "CategoryUpdateSuccessfull"));
   }
 
   /**
@@ -150,13 +148,9 @@ public class CategoryController {
   @DeleteMapping("/{id}")
   public ResponseEntity<DefaultResponse> deleteCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
-    if (!isAdmin) {
-      return ResponseEntity.status(403)
-          .body(new DefaultResponse("Error: You are not authorized to delete categories.", "CategoryDeleteFailed"));
-    }
-    categoryService.deleteCategory(id);
-    return ResponseEntity.ok().body(new DefaultResponse("Category deleted successfully.", "CategoryDeleteSuccessfull"));
+    categoryService.deleteCategory(id, token);
+    return ResponseEntity.ok().body(new DefaultResponse("Category deleted successfully.",
+      "CategoryDeleteSuccessfull"));
   }
 
   /**
@@ -167,12 +161,7 @@ public class CategoryController {
   @PostMapping("/subcategories")
   public ResponseEntity<DefaultResponse> addSubCategory(@RequestBody SubCategoryRequest subCategory,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
-    if (!isAdmin) {
-      return ResponseEntity.status(403).body(
-          new DefaultResponse("Error: You are not authorized to add subcategories.", "SubCategoryAddFailed"));
-    }
-    subCategoryService.addSubCategory(subCategory);
+    subCategoryService.addSubCategory(subCategory, token);
     return ResponseEntity.ok()
         .body(new DefaultResponse("Subcategory added successfully.", "SubCategoryAddSuccessfull"));
   }
@@ -185,12 +174,7 @@ public class CategoryController {
   @PutMapping("/subcategories")
   public ResponseEntity<String> updateSubCategory(@RequestBody SubCategory subCategory,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
-    if (!isAdmin) {
-      return ResponseEntity.status(403)
-          .body("Error: You are not authorized to update subcategories.");
-    }
-    subCategoryService.updateSubCategory(subCategory);
+    subCategoryService.updateSubCategory(subCategory, token);
     return ResponseEntity.ok("Subcategory updated successfully.");
   }
 
@@ -202,15 +186,10 @@ public class CategoryController {
   @DeleteMapping("/subcategories/{id}")
   public ResponseEntity<DefaultResponse> deleteSubCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
-    boolean isAdmin = jwtService.extractIsAdmin(token.substring(7));
-    if (!isAdmin) {
-      return ResponseEntity.status(403)
-          .body(
-              new DefaultResponse("Error: You are not authorized to delete subcategories.", "SubCategoryDeleteFailed"));
-    }
-    subCategoryService.deleteSubCategory(id);
+    subCategoryService.deleteSubCategory(id, token);
     return ResponseEntity.ok()
-        .body(new DefaultResponse("Subcategory deleted successfully.", "SubCategoryDeleteSuccessfull"));
+        .body(new DefaultResponse("Subcategory deleted successfully.", 
+        "SubCategoryDeleteSuccessfull"));
   }
 
 }

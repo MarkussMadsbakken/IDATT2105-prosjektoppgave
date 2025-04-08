@@ -3,6 +3,9 @@ package edu.ntnu.stud.service;
 import edu.ntnu.stud.model.SubCategory;
 import edu.ntnu.stud.model.SubCategoryRequest;
 import edu.ntnu.stud.repo.SubCategoryRepo;
+import edu.ntnu.stud.util.Validate;
+import jakarta.validation.Valid;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubCategoryService {
 
-  private final CategoryService categoryService;
-
   @Autowired
   private SubCategoryRepo subCategoryRepo;
+  @Autowired
+  private CategoryService categoryService;
+  @Autowired
+  private JWTService jwtService;
 
   /**
    * Initializes the SubCategoryService with a CategoryService instance.
@@ -28,39 +33,18 @@ public class SubCategoryService {
   }
 
   /**
-   * Validates the subcategory object.
-   *
-   * @param subCategory the subcategory to be validated
-   */
-  private void validateSubCategory(SubCategory subCategory) {
-    // TODO: field validation e.i. name, description, parrentId
-
-    // Validate parrent
-    if (categoryService.getCategoryById(subCategory.getParentId()) == null) {
-      throw new IllegalArgumentException("Parent category does not exist.");
-    }
-  }
-
-  /**
-   * Validates the subcategory request object.
-   *
-   * @param subCategoryRequest the subcategory request to be validated
-   */
-  public void validateSubCategoryRequest(SubCategoryRequest subCategoryRequest) {
-    // TODO: field validation e.i. name, description, parrentId
-
-    if (categoryService.getCategoryById(subCategoryRequest.getParentId()) == null) {
-      throw new IllegalArgumentException("Parent category does not exist.");
-    }
-  }
-
-  /**
    * Adds a new subcategory to the database.
    *
    * @param subCategory the subcategory to be added
+   * @param token the JWT token for authorization
    */
-  public void addSubCategory(SubCategoryRequest subCategory) {
-    validateSubCategoryRequest(subCategory);
+  public void addSubCategory(SubCategoryRequest subCategory, String token) {
+    Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
+        "You are not authorized to add a subcategory.");
+    Validate.that(subCategory.getName(), Validate.isNotEmptyOrBlankOrNull(),
+        "Subcategory name cannot be null or empty.");
+    Validate.that(categoryService.getCategoryById(subCategory.getParentId()), Validate.isNotNull(), 
+        "Parent category does not exist.");
     subCategoryRepo.addSubCategory(subCategory);
   }
 
@@ -68,9 +52,15 @@ public class SubCategoryService {
    * Updates an existing subcategory in the database.
    *
    * @param subCategory the subcategory to be updated
+   * @param token the JWT token for authorization
    */
-  public void updateSubCategory(SubCategory subCategory) {
-    validateSubCategory(subCategory);
+  public void updateSubCategory(SubCategory subCategory, String token) {
+    Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
+        "You are not authorized to update a subcategory.");
+    Validate.that(subCategory.getName(), Validate.isNotEmptyOrBlankOrNull(),
+        "Subcategory name cannot be null or empty.");
+    Validate.that(categoryService.getCategoryById(subCategory.getParentId()), Validate.isNotNull(), 
+        "Parent category does not exist.");
     subCategoryRepo.updateSubCategory(subCategory);
   }
 
@@ -78,8 +68,11 @@ public class SubCategoryService {
    * Deletes a subcategory from the database.
    *
    * @param subCategoryId the ID of the subcategory to be deleted
+   * @param token the JWT token for authorization
    */
-  public void deleteSubCategory(int subCategoryId) {
+  public void deleteSubCategory(int subCategoryId, String token) {
+    Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
+        "You are not authorized to delete a subcategory.");
     subCategoryRepo.deleteSubCategory(subCategoryId);
   }
 

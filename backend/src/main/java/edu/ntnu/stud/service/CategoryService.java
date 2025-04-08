@@ -2,9 +2,12 @@ package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Category;
 import edu.ntnu.stud.model.CategoryRequest;
+import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.repo.CategoryRepo;
+import edu.ntnu.stud.util.Validate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,16 +15,22 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CategoryService {
-
   @Autowired
   private CategoryRepo categoryRepo;
+  @Autowired
+  private JWTService jwtService;
 
   /**
    * Adds a new category to the database.
    *
    * @param category the category to be added
+   * @param token the JWT token for authorization
    */
-  public void addCategory(CategoryRequest category) {
+  public void addCategory(CategoryRequest category, String token) {
+    Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
+        "You are not authorized to add a category.");
+    Validate.that(category.getName(), Validate.isNotEmptyOrBlankOrNull(),
+        "Category name cannot be null or empty.");
     categoryRepo.addCategory(category);
   }
 
@@ -29,8 +38,13 @@ public class CategoryService {
    * Updates an existing category in the database.
    *
    * @param category the category to be updated
+   * @param token the JWT token for authorization
    */
-  public void updateCategory(Category category) {
+  public void updateCategory(Category category, String token) {
+    Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
+        "You are not authorized to update a category.");
+    Validate.that(category.getName(), Validate.isNotEmptyOrBlankOrNull(),
+        "Category name cannot be null or empty.");
     categoryRepo.updateCategory(category);
   }
 
@@ -38,8 +52,11 @@ public class CategoryService {
    * Deletes a category from the database.
    *
    * @param categoryId the ID of the category to be deleted
+   * @param token the JWT token for authorization
    */
-  public void deleteCategory(int categoryId) {
+  public void deleteCategory(int categoryId, String token) {
+    Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
+        "You are not authorized to delete a category.");
     categoryRepo.deleteCategory(categoryId);
     // Delete subcategories associated with this category
   }
