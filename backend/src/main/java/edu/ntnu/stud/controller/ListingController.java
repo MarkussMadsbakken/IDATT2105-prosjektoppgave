@@ -124,8 +124,7 @@ public class ListingController {
       @RequestParam int offset) {
     logger.info(
         "Fetching listings for user with ID: {}, page: {}, offset: {}", userId, page, offset);
-    Page<ListingResponse> listingsPage = 
-        listingService.getListingsByUserIdPage(userId, page, offset);
+    Page<ListingResponse> listingsPage = listingService.getListingsByUserIdPage(userId, page, offset);
     logger.info("Listings for user fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -148,8 +147,7 @@ public class ListingController {
         userId,
         page,
         offset);
-    Page<ListingResponse> listingsPage = 
-        listingService.getArchivedListingsByUserIdPage(userId, page, offset);
+    Page<ListingResponse> listingsPage = listingService.getArchivedListingsByUserIdPage(userId, page, offset);
     logger.info("Archived listings for user fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -169,8 +167,6 @@ public class ListingController {
       @RequestPart("images") List<MultipartFile> images,
       @RequestHeader("Authorization") String token) {
     logger.info("Creating new listing with name: {}", listingRequest.getName());
-    System.out.println("Longitude: " + listingRequest.getLongitude());
-    System.out.println("Latitude: " + listingRequest.getLatitude());
     ListingResponse listingResponse = listingService.saveListing(listingRequest, token);
 
     logger.info("Saving images for listing with name: {}", listingRequest.getName());
