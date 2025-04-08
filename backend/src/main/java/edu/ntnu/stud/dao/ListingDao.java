@@ -33,8 +33,8 @@ public class ListingDao {
     listing.setUpdatedAt(rs.getTimestamp("updated_at"));
     listing.setCategory(rs.getInt("category"));
     listing.setSubcategory(rs.getInt("subcategory"));
-    listing.setLongitude(rs.getInt("longitude"));
-    listing.setLatitude(rs.getInt("latitude"));
+    listing.setLongitude(rs.getLong("longitude"));
+    listing.setLatitude(rs.getLong("latitude"));
     listing.setActive(rs.getBoolean("active"));
     listing.setDeleted(rs.getBoolean("deleted"));
     listing.setSold(rs.getBoolean("sold"));
@@ -121,7 +121,7 @@ public class ListingDao {
    */
   public int update(ListingUpdate listing) {
     String sql = "UPDATE listings SET name = ?, price = ?, description = ?, "
-        + "category = ?, subcategory = ?, longitute = ?, latitude = ?, active = ?, "
+        + "category = ?, subcategory = ?, longitude = ?, latitude = ?, active = ?, "
         + "deleted = ?, sold = ?, buyer_id = ? WHERE uuid = ?";
     return jdbcTemplate.update(
         sql,
