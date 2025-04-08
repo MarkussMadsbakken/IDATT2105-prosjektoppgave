@@ -152,7 +152,9 @@ const i18n = createI18n({
             restore: "Gjenoprett",
             archivedListing: "Denne artikkelen er arkivert",
             activeListings: "Aktive aritkler",
-            archivedListings: "Arkiverte arktikler"
+            archivedListings: "Arkiverte arktikler",
+            backToHomePage: "Tilbake til hjemside",
+            pageNotFound: "Fant ikke siden du lette etter"
         },
         en: {
             recommended: "Recommended for you",
@@ -250,7 +252,9 @@ const i18n = createI18n({
             restore: "Restore",
             archivedListing: "This listing is archived.",
             activeListings: "Active listings",
-            archivedListings: "Arcived listings"
+            archivedListings: "Arcived listings",
+            backToHomePage: "Back to home page",
+            pageNotFound: "Could not find this page"
         }
     },
 });
