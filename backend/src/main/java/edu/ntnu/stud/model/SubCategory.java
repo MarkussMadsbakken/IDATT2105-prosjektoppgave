@@ -10,6 +10,12 @@ public class SubCategory {
   private int parentId;
 
   /**
+   * Default constructor for SubCategory.
+   */
+  public SubCategory() {
+  }
+
+  /**
    * Constructor for SubCategory.
    *
    * @param id          the ID of the subcategory

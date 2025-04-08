@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,14 +53,9 @@ public class ReservationController {
   public ResponseEntity<DefaultResponse> deleteReservation(
       @RequestParam long id,
       @RequestHeader("Authorization") String token) {
-    try {
-      reservationService.deleteReservation(id, token);
-      return ResponseEntity.ok(new DefaultResponse(
-          "Reservation deleted successfully", "reservationDeleted"));
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new DefaultResponse(
-          "Failed to delete reservation: " + e.getMessage(), "reservationNotDeleted"));
-    }
+    reservationService.deleteReservation(id, token);
+    return ResponseEntity.ok(new DefaultResponse(
+        "Reservation deleted successfully", "reservationDeleted"));
   }
 
   /**
@@ -91,12 +85,11 @@ public class ReservationController {
   @GetMapping("/user")
   public ResponseEntity<List<Reservation>> getReservationsByUserId(
       @RequestHeader("Authorization") String token) {
-    try {
-      List<Reservation> reservations = reservationService.getReservationByUserId(token);
-      return ResponseEntity.ok(reservations);
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    List<Reservation> reservations = reservationService.getReservationByUserId(token);
+    if (reservations.isEmpty()) {
+      return ResponseEntity.noContent().build();
     }
+    return ResponseEntity.ok(reservations);
   }
 
 }

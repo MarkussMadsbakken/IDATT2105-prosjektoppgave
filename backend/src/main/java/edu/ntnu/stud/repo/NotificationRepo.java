@@ -1,16 +1,10 @@
 package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Notification;
-
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -19,13 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class NotificationRepo {
-
-  @Value("${spring.datasource.url}")
-  private String url;
-  @Value("${spring.datasource.username}")
-  private String user;
-  @Value("${spring.datasource.password}")
-  private String password;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
@@ -46,17 +33,10 @@ public class NotificationRepo {
    *
    * @param notification the Notification object to be added
    */
-  public long addNotification(Notification notification) {
+  public int addNotification(Notification notification) {
     String query = "INSERT INTO notifications (user_id, message, url) VALUES (?, ?, ?)";
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-    jdbcTemplate.update(connection -> {
-      PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-      ps.setLong(1, notification.getUserId());
-      ps.setString(2, notification.getMessage());
-      ps.setString(3, notification.getLink());
-      return ps;
-    }, keyHolder);
-    return keyHolder.getKey().longValue();
+    return jdbcTemplate.update(
+        query, notification.getUserId(), notification.getMessage(), notification.getLink());
   }
 
   /**
@@ -67,7 +47,8 @@ public class NotificationRepo {
    */
   public Notification getNotificationById(long id) {
     String query = "SELECT * FROM notifications WHERE id = ?";
-    return jdbcTemplate.queryForObject(query, notificationRowMapper, id);
+    List<Notification> notifications = jdbcTemplate.query(query, notificationRowMapper, id);
+    return notifications.isEmpty() ? null : notifications.get(0);
   }
 
   /**

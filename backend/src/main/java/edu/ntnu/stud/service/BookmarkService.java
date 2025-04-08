@@ -5,6 +5,7 @@ import edu.ntnu.stud.model.Bookmark;
 import edu.ntnu.stud.model.BookmarkUserRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.repo.BookmarkRepo;
+import edu.ntnu.stud.util.Validate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,44 @@ public class BookmarkService {
   private NotificationService notificationService;
 
   /**
+   * Validates a bookmark request.
+   *
+   * @param bookmarkRequest the bookmark request to be validated
+   * @param token the JWT token of the user
+   * @throws IllegalArgumentException if the request is invalid
+   */
+  public void validateBookmarkRequest(BookmarkUserRequest bookmarkRequest, String token) {
+    Validate.that(bookmarkRepo.bookmarkExists(
+        new Bookmark(jwtService.extractUserId(token.substring(7)), bookmarkRequest.getListingId())),
+        Validate.isFalse(), 
+        "Bookmark already exists");
+    Validate.that(listingService.getListingByUuid(bookmarkRequest.getListingId()),
+        Validate.isNotNull(),
+        "Listing does not exist");
+  }
+
+  /**
+   * Validate bookmark deletion request.
+   *
+   * @param bookmarkRequest the bookmark request to be validated
+   * @param token the JWT token of the user
+   */
+  public void validateBookmarkDeletionRequest(BookmarkUserRequest bookmarkRequest, String token) {
+    Validate.that(bookmarkRequest.getListingId(), Validate.isNotEmptyOrBlankOrNull(),
+        "Listing ID cannot be null or empty");
+    Validate.that(bookmarkRepo.bookmarkExists(
+        new Bookmark(jwtService.extractUserId(token.substring(7)), bookmarkRequest.getListingId())),
+        Validate.isTrue(), 
+        "Bookmark does not exist");
+  }
+
+  /**
    * Adds a new bookmark to the database.
    *
    * @param bookmark the bookmark to be added
    */
   public void addBookmark(BookmarkUserRequest bookmark, String token) {
+    validateBookmarkRequest(bookmark, token);
 
     // Extract userId
     Long userId = jwtService.extractUserId(token.substring(7));
@@ -51,6 +85,8 @@ public class BookmarkService {
    * @param bookmark the bookmark to be removed
    */
   public void removeBookmark(BookmarkUserRequest bookmark, String token) {
+    validateBookmarkDeletionRequest(bookmark, token);
+
     // Extract userId from the JWT token
     bookmarkRepo.removeBookmark(
         new Bookmark(jwtService.extractUserId(token.substring(7)), bookmark.getListingId()));
@@ -73,11 +109,8 @@ public class BookmarkService {
    * Gets a list of bookmarks for a user from the database.
    */
   public List<ListingResponse> getBookmarkedListingsFromUser(String token) {
-    // Extract userId from the JWT token
-
     long userId = jwtService.extractUserId(token.substring(7));
     List<String> listingIds = bookmarkRepo.getBookmarksFromUser(userId);
-
     List<ListingResponse> listings = listingService.getListingsByUuids(listingIds);
     return listings;
   }

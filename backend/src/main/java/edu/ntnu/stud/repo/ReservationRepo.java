@@ -45,7 +45,7 @@ public class ReservationRepo {
   public Reservation getReservationById(long id) {
     String query = "SELECT * FROM reservations WHERE id = ? ORDER BY reservation_date DESC";
     List<Reservation> reservations = jdbcTemplate.query(query, reservationRowMapper, id);
-    return reservations.isEmpty() ? null : reservations.get(0); // Return the latest reservation or null
+    return reservations.isEmpty() ? null : reservations.get(0);
   }
 
   /**
@@ -59,8 +59,9 @@ public class ReservationRepo {
     String query = "SELECT * FROM reservations "
         + "WHERE listing_id = ? AND reservation_date < ? "
         + "ORDER BY reservation_date DESC";
-    List<Reservation> reservations = jdbcTemplate.query(query, reservationRowMapper, listingId, expirationDate);
-    return reservations.isEmpty() ? null : reservations.get(0); // Return the latest reservation or null
+    List<Reservation> reservations = jdbcTemplate.query(
+        query, reservationRowMapper, listingId, expirationDate);
+    return reservations.isEmpty() ? null : reservations.get(0);
   }
 
   /**
@@ -88,8 +89,9 @@ public class ReservationRepo {
     String query = 
         "SELECT * FROM reservations WHERE user_id = ? AND listing_id = ? AND reservation_date < ? "
         + "ORDER BY reservation_date DESC";
-    List<Reservation> reservations = jdbcTemplate.query(query, reservationRowMapper, userId, listingId, expirationDate);
-    return reservations.isEmpty() ? null : reservations.get(0); // Return the latest reservation or null
+    List<Reservation> reservations = jdbcTemplate.query(
+        query, reservationRowMapper, userId, listingId, expirationDate);
+    return reservations.isEmpty() ? null : reservations.get(0);
   }
 
   /**

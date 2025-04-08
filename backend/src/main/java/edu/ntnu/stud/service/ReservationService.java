@@ -5,6 +5,8 @@ import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.model.Reservation;
 import edu.ntnu.stud.model.ReservationRequest;
 import edu.ntnu.stud.repo.ReservationRepo;
+import edu.ntnu.stud.util.Validate;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
@@ -33,16 +35,16 @@ public class ReservationService {
    * @return the created Reservation object
    */
   public Reservation addReservation(ReservationRequest reservationRequest, String token) {
-    // Fetch values
+    Validate.that(reservationRequest.getListingId(),
+        Validate.isNotEmptyOrBlankOrNull(), "Listing ID cannot be null or empty");
     Long userId = jwtService.extractUserId(token.substring(7));
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
     Reservation existingReservation = reservationRepo.getReservationByListingId(
         reservationRequest.getListingId(), expirationDate);
     // Check if a reservation already exists for the user and listing
-    if (existingReservation != null) {
-      throw new IllegalArgumentException("A reservation is already active for this listing.");
-    }
+    Validate.that(existingReservation, Validate.isNull(), 
+        "There alreaddy is a reservation for this listing");
 
     // Create and add the new reservation
     Reservation reservation = ReservationFactory.fromRequest(reservationRequest);
@@ -109,10 +111,9 @@ public class ReservationService {
   public void deleteReservation(long id, String token) {
     Long userId = jwtService.extractUserId(token.substring(7));
     Reservation reservation = reservationRepo.getReservationById(id);
-    if (reservation != null && reservation.getUserId().equals(userId)) {
-      reservationRepo.deleteReservation(id);
-    } else {
-      throw new IllegalArgumentException("Reservation not found or user not authorized");
-    }
+    Validate.that(reservation, Validate.isNotNull(), "Reservation not found");
+    Validate.that(reservation.getUserId() == userId, Validate.isTrue(), 
+        "You are not authorized to delete this reservation");
+    reservationRepo.deleteReservation(id);
   }
 }

@@ -5,7 +5,6 @@ import edu.ntnu.stud.model.CreateChatRequest;
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
 import edu.ntnu.stud.repo.ChatRepo;
-
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -89,13 +88,11 @@ public class ChatService {
       return false;
     }
 
-    // TODO: validate the message
-
     // The message should be valid, so we can add it to the chat
-    Long messageId = messageService.addMessage(message);
+    int messageId = messageService.addMessage(message);
 
     // Check if the message was added successfully
-    if (messageId == null) {
+    if (messageId == 0) {
       return false;
     }
 
@@ -175,6 +172,13 @@ public class ChatService {
     return messageService.getAllMessagesByChatId(chatId);
   }
 
+  /**
+   * Gets the latest message for a given chat ID.
+   *
+   * @param chatId the ID of the chat
+   * @param token the JWT token of the user
+   * @return the latest message for the chat, or null if not found or unauthorized
+   */
   public Message getLatestMessage(long chatId, String token) {
     // Extract the user ID from the token
     long userId = jwtService.extractUserId(token.substring(7));
