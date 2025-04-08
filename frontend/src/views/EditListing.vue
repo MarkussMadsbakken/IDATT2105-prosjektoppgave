@@ -14,10 +14,14 @@ import { useMutation } from '@tanstack/vue-query';
 import { useDialog } from 'primevue/usedialog';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const route = useRoute();
 const dialog = useDialog();
+const toast = useToast();
+const { t } = useI18n();
 
 const listingId = route.params.id as string
 
@@ -63,7 +67,16 @@ let errors = ref<{
 const { isPending, isError, error, mutate: editListingMutation } = useMutation({
     mutationFn: editListing,
     onSuccess: () => {
-        router.push(`/listing/${listingId}`);
+        toast.add(
+            {
+                severity: "success",
+                summary: t("success"),
+                detail: t("listing.updated"),
+                life: 30000,
+                closable: true,
+            }
+        );
+        //router.push(`/listing/${listingId}`);
     }
 })
 
