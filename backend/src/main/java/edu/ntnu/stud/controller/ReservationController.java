@@ -77,7 +77,7 @@ public class ReservationController {
     if (reservation != null) {
       return ResponseEntity.ok(reservation);
     } else {
-      return ResponseEntity.notFound().build();
+      return ResponseEntity.noContent().build();
     }
   }
 
