@@ -202,7 +202,8 @@ public class ListingService {
     response.setDescription(listing.getDescription());
     response.setCategory(listing.getCategory());
     response.setSubcategory(listing.getSubcategory());
-
+    response.setLongitude(listing.getLongitude());
+    response.setLatitude(listing.getLatitude());
     response.setActive(listing.isActive());
     response.setDeleted(listing.isDeleted());
     response.setSold(listing.isSold());
