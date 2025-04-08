@@ -67,7 +67,7 @@ public class BookmarkController {
 
   @GetMapping("/{listingId}/count")
   public ResponseEntity<Long> getNumberOfBookmarks(
-      @RequestHeader("Authorization") String token, @PathVariable String listingId) {
+      @PathVariable String listingId) {
     long numberOfBookmarks = bookmarkService.getBookmarksFromListing(listingId).size();
     return ResponseEntity.ok(numberOfBookmarks);
   }
