@@ -243,9 +243,9 @@ public class ListingDao {
     String sql = "SELECT * FROM listings l WHERE l.deleted = false AND l.active = true AND "
         + "l.owner_id != ? AND "
         + "(l.category IN (SELECT ul.category FROM user_history uh "
-        + "JOIN listings ul ON uh.listing_id = ul.id WHERE uh.user_id = ?) OR "
+        + "JOIN listings ul ON uh.listing_id = ul.uuid WHERE uh.user_id = ?) OR "
         + "l.subcategory IN (SELECT ul.subcategory FROM user_history uh "
-        + "JOIN listings ul ON uh.listing_id = ul.id WHERE uh.user_id = ?)) "
+        + "JOIN listings ul ON uh.listing_id = ul.uuid WHERE uh.user_id = ?)) "
         + "LIMIT ? OFFSET ?";
     List<Listing> listings = jdbcTemplate.query(
         sql, listingRowMapper, userId, userId, userId, limit, offset);

@@ -2,14 +2,11 @@ package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
