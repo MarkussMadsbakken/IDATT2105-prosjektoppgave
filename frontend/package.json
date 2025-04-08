@@ -22,6 +22,7 @@
     "@tanstack/vue-query": "^5.69.0",
     "@vueuse/core": "^13.0.0",
     "jwt-decode": "^4.0.0",
+    "leaflet": "^1.9.4",
     "lucide-vue-next": "^0.484.0",
     "marked": "^15.0.7",
     "motion-v": "^1.0.0-alpha.4",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
     "@types/jsdom": "^21.1.7",
+    "@types/leaflet": "^1.9.17",
     "@types/node": "^22.13.9",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/eslint-plugin": "^1.1.36",

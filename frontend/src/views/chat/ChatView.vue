@@ -105,6 +105,7 @@ if (messages.value) {
                 <p>{{ $t("noMessages") }}</p>
             </div>
             <div class="messages-wrapper">
+
                 <ChatMessage v-for="(message) in messages" :key="message.id" :message="message"
                     :own-message="message.senderId == auth.userId" />
             </div>

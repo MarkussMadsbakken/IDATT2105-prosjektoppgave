@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import CreateCategory from '@/components/admin/CreateCategory.vue';
 import Divider from '@/components/Divider.vue';
 import EditCategories from '@/components/admin/EditCategories.vue';
-import { Folders, Grid, Users } from 'lucide-vue-next';
+import { Folders, Users } from 'lucide-vue-next';
 import { ref } from 'vue';
 import EditUsers from '@/components/admin/EditUsers.vue';
 
