@@ -23,10 +23,10 @@ watch(password, (newPassword) => {
 
 <template>
     <div class="password-select-container">
-        <FormGroup name="password" label="Velg brukernavn">
-            <TextInput name="password" v-model="username" type="text" disabled />
+        <FormGroup name="username" :label="$t('register.chooseUsername')">
+            <TextInput name="username" v-model="username" type="text" disabled />
         </FormGroup>
-        <FormGroup name="password" label="Velg passord">
+        <FormGroup name="password" :label="$t('register.choosePassword')">
             <TextInput name="password" v-model="password" type="password" />
         </FormGroup>
     </div>

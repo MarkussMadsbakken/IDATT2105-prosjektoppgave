@@ -58,9 +58,9 @@ const { mutate: createChatMutation } = useMutation({
   }
 })
 
-const{ mutate: reserve, isPending: isReservePending, isError: isPendingError, error: reserveError, isSuccess: isReserveSuccess } = useReserveListing();
+const { mutate: reserve, isPending: isReservePending, isError: isPendingError, error: reserveError, isSuccess: isReserveSuccess } = useReserveListing();
 
-const handleReserve = () =>{
+const handleReserve = () => {
   reserve({ uuid: listingId });
 }
 
@@ -71,10 +71,10 @@ const {
   isPending: reservationChecKIsPending
 } = useCheckForReservation(listingId, auth.isLoggedIn());
 
-const reservationEndTime = computed(()=>{
+const reservationEndTime = computed(() => {
   if (!reservation?.value?.createdAt) return null;
-  const createdAt = new Date (reservation.value.createdAt)
-  const expiresAt = new Date(createdAt.getTime() + 60*60*1000);
+  const createdAt = new Date(reservation.value.createdAt)
+  const expiresAt = new Date(createdAt.getTime() + 60 * 60 * 1000);
 
   return expiresAt.toLocaleTimeString(navigator.language, {
     hour: "2-digit",
@@ -83,15 +83,15 @@ const reservationEndTime = computed(()=>{
   });
 })
 
-const isReservedByMe = computed(()=>{
+const isReservedByMe = computed(() => {
   console.log(reservation);
   console.log(reservation?.value?.userId);
   console.log(auth.userId);
   console.log(reservation?.value?.userId === auth.userId)
   return reservation?.value?.userId === auth.userId;
 })
-const reserveButtonText = computed(()=> {
-  if (reservation?.value && isReservedByMe.value){
+const reserveButtonText = computed(() => {
+  if (reservation?.value && isReservedByMe.value) {
     return `${i18n.t("reservedUntil")}: ${reservationEndTime.value}`;
   }
   return i18n.t("reserve");
@@ -144,7 +144,7 @@ const handleToggleArchive = () => {
     {
       onSuccess: () => {
         // TODO Toast
-        queryClient.invalidateQueries({queryKey: ['listing', listingId]});
+        queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
         console.log("Aktivstatus oppdatert:", newState);
       },
       onError: (error) => {
@@ -158,7 +158,7 @@ const handleToggleArchive = () => {
 const handleDelete = () => {
   const d = dialog.open(ConfirmDialog, {
     props: {
-      header: i18n.t("delete", i18n.t("listing")),
+      header: i18n.t("listing.delete", i18n.t("listing")),
       modal: true,
       draggable: false,
       dismissableMask: true,
@@ -198,55 +198,47 @@ const handleDelete = () => {
   <div class="listing" v-else>
     <div class="title-picture">
       <Alert class="reserved-info" variant="Info" v-if="reservation && !isReservedByMe">
-        {{ $t("listingReservedByAnotherUser") }} {{ reservationEndTime }}
+        {{ $t("listing.reservedByAnotherUser") }} {{ reservationEndTime }}
       </Alert>
       <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
-        {{ $t("listingReservedByMe") }} {{ reservationEndTime }}
+        {{ $t("listing.reservedByMe") }} {{ reservationEndTime }}
       </Alert>
       <h3 class="listing-title">
         {{ listing?.name }}
       </h3>
       <Alert variant="Warning" v-if="listing?.deleted">
-        {{ $t("listingIsDeleted") }}
+        {{ $t("listing.isDeleted") }}
       </Alert>
       <Alert variant="Info" v-else-if="!listing?.active">
-        {{ $t("listingIsInactive") }}
+        {{ $t("listing.isInactive") }}
       </Alert>
       <Alert class="sold-warning" variant="Info" v-else-if="listing?.sold">
-        {{ $t("listingIsPurchased") }}
+        {{ $t("listing.isPurchased") }}
       </Alert>
       <ListingImages :listing-id="listingId" />
       <div class="picture-footing">
         <div class="listing-price">{{ listing?.price }}kr</div>
         <div class="listing-actions">
-          <Button class="listing-option-button" variant="outline" v-if="isOwnListing && !listing?.sold" @click="router.push(`/listing/${listingId}/edit`)">
-            {{ $t("edit") }}
+          <Button class="listing-option-button" variant="outline" v-if="isOwnListing && !listing?.sold"
+            @click="router.push(`/listing/${listingId}/edit`)">
+            {{ $t("listing.edit") }}
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
 
-          <Button
-            class="listing-option-button"
-            :class="{ 'active-button': !listing?.active }"
-            variant="outline"
-            v-if="isOwnListing && !listing?.sold"
-            :disabled="isArchivePending"
-            @click="handleToggleArchive"
-          >
+          <Button class="listing-option-button" :class="{ 'active-button': !listing?.active }" variant="outline"
+            v-if="isOwnListing && !listing?.sold" :disabled="isArchivePending" @click="handleToggleArchive">
             <template v-if="isArchivePending">
               <LoadingSpinner />
             </template>
             <template v-else>
               {{ listing?.active ? $t("archive") : $t("restore") }}
-              <component
-                :is="listing?.active ? Archive : ArchiveRestore"
-                :size="18"
-                style="margin-left: 0.5rem;"
-              />
+              <component :is="listing?.active ? Archive : ArchiveRestore" :size="18" style="margin-left: 0.5rem;" />
             </template>
           </Button>
 
-          <Button class="listing-option-button" variant="destructive" v-if="isOwnListing || auth.isAdmin" @click="handleDelete">
-            {{ $t("delete") }}
+          <Button class="listing-option-button" variant="destructive" v-if="isOwnListing || auth.isAdmin"
+            @click="handleDelete">
+            {{ $t("listing.delete") }}
             <Trash2 :size="18" style="margin-left: 0.5rem;" />
           </Button>
           <div @click="() => bookmarkMutation.mutate(bookmarked)" style="cursor: pointer" v-if="auth.isLoggedIn()"
@@ -263,7 +255,7 @@ const handleDelete = () => {
       </div>
       <div v-if="listing?.description" class="listing-description" v-html="parsedDescription"></div>
       <Alert v-if="!listing?.description && isOwnListing" variant="Info">
-        {{ $t('listingHasNoDescriptionLong') }}
+        {{ $t('listing.hasNoDescriptionLong') }}
       </Alert>
     </div>
     <div v-if="!isOwnListing" class="buy-box">
@@ -272,20 +264,12 @@ const handleDelete = () => {
 
 
       <div v-if="auth.isLoggedIn() && !listing!.sold" class="button-box">
-        <Button variant="primary"
-                :class="{ 'is-disabled': reservation && !isReservedByMe }"
-                @click="router.push(`/listing/${listingId}/checkout`)"
-                :disabled="reservation && !isReservedByMe"
-                style="width: 10rem;
-                 height: 3rem;">{{ $t("buy") }}</Button>
+        <Button variant="primary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
+          @click="router.push(`/listing/${listingId}/checkout`)" :disabled="reservation && !isReservedByMe" style="width: 10rem;
+                 height: 3rem;">{{ $t("listing.buy") }}</Button>
 
-        <Button
-          variant="secondary"
-          :class="{ 'is-disabled': reservation && !isReservedByMe }"
-          :disabled="reservation && isReservedByMe"
-          @click="handleReserve"
-          style="width: 10rem; height: 3rem;"
-        >
+        <Button variant="secondary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
+          :disabled="reservation && isReservedByMe" @click="handleReserve" style="width: 10rem; height: 3rem;">
           {{ reserveButtonText }}
         </Button>
       </div>
@@ -330,9 +314,10 @@ const handleDelete = () => {
   gap: 2rem;
 }
 
-.listing-option-button{
+.listing-option-button {
   width: 6.5rem;
 }
+
 .active-button {
   background-color: #f0f0f0;
   border-color: #d5d4d4;
@@ -383,9 +368,11 @@ const handleDelete = () => {
   font-size: 3rem;
   font-weight: bold;
 }
-.sold-warning{
+
+.sold-warning {
   width: 45rem;
 }
+
 .is-disabled {
   background-color: #ccc !important;
   color: #999 !important;
@@ -394,5 +381,4 @@ const handleDelete = () => {
   opacity: 0.7;
   pointer-events: none;
 }
-
 </style>

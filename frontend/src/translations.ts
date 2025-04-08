@@ -1,7 +1,7 @@
-import {createI18n} from "vue-i18n";
+import { createI18n } from "vue-i18n";
 
 const listingViewTranslations = {
-  no:{
+  no: {
     listingReservedByAnotherUser: "Artikkelen er reservert av en annen bruker fram til",
     listingReservedByMe: "Du har reservert artikkelen fram til",
     listingIsDeleted: "Denne annonsen er slettet",
@@ -12,7 +12,7 @@ const listingViewTranslations = {
     listingHasNoDescriptionLong: "Annonsen har ingen beskrivelse. Legg til en beskrivelse via \"Rediger\"-knappen.",
     thisListing: "annonsen",
   },
-  en:{
+  en: {
     listingReservedByAnotherUser: "Listing is reserved by another user until",
     listingReservedByMe: "You have reserved this listing until",
     listingIsDeleted: "This listing is deleted",
@@ -24,14 +24,14 @@ const listingViewTranslations = {
     thisListing: "this listing",
   }
 }
-const listingTranslations= {
-  no:{
+const listingTranslations = {
+  no: {
     reservedUntil: "Reservert til",
     reserve: "Reserver",
     delete: "Slett",
     areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?"
   },
-  en:{
+  en: {
     reservedUntil: "Reserved until",
     reserve: "Reserve",
     delete: "Delete",
@@ -39,15 +39,15 @@ const listingTranslations= {
   }
 }
 const userListingsTranslations = {
-  no:{
+  no: {
     archivedListings: "Arkiverte arktikler"
   },
-  en:{
+  en: {
     archivedListings: "Archived listings"
   }
 }
 const profileTranslations = {
-  no:{
+  no: {
     memberSince: "Medlem siden {date}",
     logout: "Logg av",
     ownListings: "Mine annonser",
@@ -69,7 +69,7 @@ const profileTranslations = {
   }
 }
 const registerTranslations = {
-  no:{
+  no: {
     register: "Lag en bruker",
     previous: "Forrige",
     next: "Neste",
@@ -80,8 +80,14 @@ const registerTranslations = {
     usernameTooShort: "Brukernavnet må være minst 3 tegn langt",
     usernameAvailable: "Brukernavnet er tilgjengelig",
     usernameNotAvailable: "Brukernavnet er ikke tilgjengelig",
+    chooseUsername: "Velg brukernavn",
+    choosePassword: "Velg passord",
+    chooseProfileImage: "Velg profilbilde",
+    chooseFirstName: "Velg fornavn",
+    chooseLastName: "Velg etternavn",
+    preview: "Forhåndsvisning",
   },
-  en:{
+  en: {
     register: "Register",
     previous: "Previous",
     next: "Next",
@@ -92,6 +98,12 @@ const registerTranslations = {
     usernameTooShort: "Username must be at least 3 characters long",
     usernameAvailable: "Username is available",
     usernameNotAvailable: "Username is not available",
+    chooseUsername: "Choose username",
+    choosePassword: "Choose password",
+    chooseProfileImage: "Choose profile image",
+    chooseFirstName: "Choose first name",
+    chooseLastName: "Choose last name",
+    preview: "Preview",
   }
 }
 const homeViewTranslations = {
@@ -105,13 +117,13 @@ const homeViewTranslations = {
   }
 }
 const checkoutTranslations = {
-  no:{
+  no: {
     listingIsPurchased: "Denne annonsen er solgt",
     name: "Navn",
     cardNumber: "Kortnummer(Ikke skriv ekte)",
     buy: "Kjøp"
   },
-  en:{
+  en: {
     listingIsPurchased: "This listing is purchased",
     name: "Name",
     cardNumber: "Card number (NOT real)",
@@ -119,35 +131,41 @@ const checkoutTranslations = {
   }
 }
 const messageViewTranslations = {
-  no:{
+  no: {
     messages: "Meldinger",
     noMessages: "Ingen meldinger funnet. Vær den første til å sende en melding!",
-    error: "Feil"
+    error: "Feil. Kunne ikke hente meldinger"
   },
-  en:{
+  en: {
     messages: "Messages",
     noMessages: "No messages found. Be the first to send a message!",
-    error: "Error"
+    error: "Error. Could not fetch messages"
   }
 
 }
 const loginTranslation = {
-  no:{
+  no: {
     username: "Brukernavn",
     password: "Passord",
-    noAccount: "Har du ikke bruker?"
+    noAccount: "Har du ikke bruker?",
+    register: "Registrer deg",
+    login: "Logg inn",
+    somethingWentWrong: "Noe gikk galt",
   },
-  en:{
+  en: {
     username: "Username",
     password: "Password",
-    noAccount: "Don't have an account?"
+    noAccount: "Don't have an account?",
+    register: "Register",
+    login: "Login",
+    somethingWentWrong: "Something went wrong",
   }
 }
 const sellerInfoTranslations = {
-  no:{
+  no: {
     contactSeller: "Kontakt selger"
   },
-  en:{
+  en: {
     contactSeller: "Contact seller"
   }
 }
@@ -163,12 +181,12 @@ const archivedListingsTranslations = {
   }
 }
 const searchTranslations = {
-  no:{
+  no: {
     showCategories: "Vis kategorier",
     search: "Søk",
     hideCategories: "Skjul kategorier",
   },
-  en:{
+  en: {
     showCategories: "Show categories",
     search: "Search",
     hideCategories: "Hide categories",
@@ -198,12 +216,12 @@ const articleSummaryTranslations = {
   no: {
     inSummary: "Oppsummering"
   },
-  en:{
+  en: {
     inSummary: "In summary"
   }
 }
 const createListingViewTranslations = {
-  no:{
+  no: {
     createListing: "Opprett en ny annonse",
     image: "Bilde",
     title: "Tittel",
@@ -220,7 +238,7 @@ const createListingViewTranslations = {
     thisFieldIsRequired: "Dette feltet er påkrevd",
     selectSubCategory: "Velg underkategori",
   },
-  en:{
+  en: {
     createListing: "Create a new listing",
     image: "Image",
     title: "Title",
@@ -239,8 +257,8 @@ const createListingViewTranslations = {
     subCategory: "Sub category",
   }
 }
-const notificationTranslations= {
-  no:{
+const notificationTranslations = {
+  no: {
     notifications: "Varslinger",
     unreadNotifications: "uleste varslinger",
     markAllAsRead: "Marker alle som lest",
@@ -251,7 +269,7 @@ const notificationTranslations= {
     userReservedYourListing: "En bruker har reservert annonsen din",
     chatNotSelected: "Ingen chat valgt",
   },
-  en:{
+  en: {
     notifications: "Notifications",
     unreadNotifications: "unread notifications",
     markAllAsRead: "Mark all as read",
@@ -264,14 +282,14 @@ const notificationTranslations= {
     chatNotSelectedDescription: "Select a chat to see messages",
   }
 }
-const messageTranslations = {
-  no:{
+const chatTranslations = {
+  no: {
     noChats: "Ingen chatter funnet. Kontakt en selger for å starte en chat.",
     youHaveNotSentMessage: "Du har ikke sendt en melding enda",
     youHaveNotReceivedMessage: "Du har ikke mottatt en melding enda",
 
   },
-  en:{
+  en: {
     noChats: "No chats found. Contact a seller to start a chat.",
     youHaveNotSentMessage: "You have not sent a message yet",
     youHaveNotReceivedMessage: "You have not received a message yet",
@@ -282,90 +300,101 @@ const messageTranslations = {
 const i18n = createI18n({
   locale: 'no',
   fallbackLocale: 'en',
-  messages:{
-    no:{
-      ...listingTranslations.no,
-      ...profileTranslations.no,
-      ...registerTranslations.no,
-      ...homeViewTranslations.no,
-      ...checkoutTranslations.no,
-      ...notFoundTranslations.no,
-      ...archivedListingsTranslations.no,
-      ...listingViewTranslations.no,
-      ...userListingsTranslations.no,
-      ...messageViewTranslations.no,
-      ...loginTranslation.no,
-      ...notificationTranslations.no,
-      ...createListingViewTranslations.no,
-      ...articleSummaryTranslations.no,
-      ...sellerInfoTranslations.no,
-      ...categorySelectorTranslations.no,
-      ...searchTranslations.no,
-      ...messageTranslations.no
-    }, en:{
-      ...listingTranslations.en,
-      ...profileTranslations.en,
-      ...registerTranslations.en,
-      ...homeViewTranslations.en,
-      ...checkoutTranslations.en,
-      ...notFoundTranslations.en,
-      ...archivedListingsTranslations.en,
-      ...listingViewTranslations.en,
-      ...userListingsTranslations.en,
-      ...messageViewTranslations.en,
-      ...loginTranslation.en,
-      ...notificationTranslations.en,
-      ...createListingViewTranslations.en,
-      ...articleSummaryTranslations.en,
-      ...sellerInfoTranslations.en,
-      ...categorySelectorTranslations.en,
-      ...searchTranslations.en,
-      ...messageTranslations.en
-
+  messages: {
+    no: {
+      listings: {
+        archive: archivedListingsTranslations.no,
+        create: createListingViewTranslations.no,
+        seller: sellerInfoTranslations.no,
+        ...listingTranslations.no,
+      },
+      profile: {
+        ...profileTranslations.no,
+        listings: userListingsTranslations.no,
+      },
+      home: homeViewTranslations.no,
+      checkout: checkoutTranslations.no,
+      notFound: notFoundTranslations.no,
+      messages: {
+        ...messageViewTranslations.no,
+        chat: chatTranslations.no
+      },
+      notifications: notificationTranslations.no,
+      login: loginTranslation.no,
+      register: registerTranslations.no,
+      search: {
+        categorySelector: categorySelectorTranslations.no,
+        ...searchTranslations.no,
+      }
+    }, en: {
+      listings: {
+        archive: archivedListingsTranslations.en,
+        create: createListingViewTranslations.en,
+        seller: sellerInfoTranslations.en,
+        ...listingTranslations.en,
+      },
+      profile: {
+        ...profileTranslations.en,
+        listings: userListingsTranslations.en,
+      },
+      home: homeViewTranslations.en,
+      checkout: checkoutTranslations.en,
+      notFound: notFoundTranslations.en,
+      messages: {
+        ...messageViewTranslations.en,
+        chat: chatTranslations.en
+      },
+      notifications: notificationTranslations.en,
+      login: loginTranslation.en,
+      register: registerTranslations.en,
+      search: {
+        categorySelector: categorySelectorTranslations.en,
+        ...searchTranslations.en,
+      }
     }
   }
 });
 
 const notUsedTranslations = {
-    no: {
-      listing: "annonse",
-      interior: "Interiør",
-      electronics: "Elektronikk",
-      appliances: "Hvitevarer",
-      leisure: "Fritid",
-      sports: "Sport",
-      clothing: "Klær",
-      transport: "Transport",
-      garden: "Hage",
-      registerHere: "Lag en bruker her",
-      loginHere: "Logg inn her",
-      open: "Åpne",
-      close: "Lukk",
-      createNewSubCategory: "Opprett ny underkategori",
-      finish: "Fullfør",
-      purchaseAccomplished: "Kjøp fullført",
-      userReservedYourListing: "En bruker har reservert annonsen din",
-    },
-    en: {
-      interior: "Interior",
-      electronics: "Electronics",
-      appliances: "Appliances",
-      leisure: "Leisure",
-      sports: "Sports",
-      clothing: "Clothing",
-      transport: "Transport",
-      garden: "Garden",
-      registerHere: "Register here",
-      loginHere: "Log in here",
-      open: "Open",
-      close: "Close",
-      price: "Price",
-      noSubCategoriesFound: "No sub categories found",
-      createNewSubCategory: "Create new sub category",
-      noSubCategories: "No sub categories",
-      selectSubCategory: "Select sub category",
-      listing: "listing",
-      finish: "Finish",
-    }
+  no: {
+    listing: "annonse",
+    interior: "Interiør",
+    electronics: "Elektronikk",
+    appliances: "Hvitevarer",
+    leisure: "Fritid",
+    sports: "Sport",
+    clothing: "Klær",
+    transport: "Transport",
+    garden: "Hage",
+    registerHere: "Lag en bruker her",
+    loginHere: "Logg inn her",
+    open: "Åpne",
+    close: "Lukk",
+    createNewSubCategory: "Opprett ny underkategori",
+    finish: "Fullfør",
+    purchaseAccomplished: "Kjøp fullført",
+    userReservedYourListing: "En bruker har reservert annonsen din",
+  },
+  en: {
+    interior: "Interior",
+    electronics: "Electronics",
+    appliances: "Appliances",
+    leisure: "Leisure",
+    sports: "Sports",
+    clothing: "Clothing",
+    transport: "Transport",
+    garden: "Garden",
+    registerHere: "Register here",
+    loginHere: "Log in here",
+    open: "Open",
+    close: "Close",
+    price: "Price",
+    noSubCategoriesFound: "No sub categories found",
+    createNewSubCategory: "Create new sub category",
+    noSubCategories: "No sub categories",
+    selectSubCategory: "Select sub category",
+    listing: "listing",
+    finish: "Finish",
+  }
 }
 export default i18n;

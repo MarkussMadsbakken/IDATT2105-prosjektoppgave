@@ -41,15 +41,15 @@ const onEnter = (event: KeyboardEvent) => {
 
 <template>
     <div class="outer-wrapper">
-        <h1 class="title">{{ $t("login") }}</h1>
+        <h1 class="title">{{ $t("login.login") }}</h1>
         <form class="login-form" @submit="onSubmit">
             <div>
-                <label for="username">{{ $t('username') }}</label>
+                <label for="username">{{ $t('login.username') }}</label>
                 <TextInput v-model="username" type="text" id="username" name="username" autocomplete="off"
                     @keypress.enter="onEnter" />
             </div>
             <div>
-                <label for="password">{{ $t('password') }}</label>
+                <label for="password">{{ $t('login.password') }}</label>
                 <TextInput v-model="password" type="password" autocomplete="off" @keypress.enter="onEnter" />
             </div>
             <Button variant="primary" type="submit" class="submit">
@@ -57,15 +57,15 @@ const onEnter = (event: KeyboardEvent) => {
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t("login") }}
+                    {{ $t("login.login") }}
                 </template>
             </button>
         </form>
-        <div v-if="isError" class="errorText">{{ error?.message ?? $t("somethingWentWrong") }} </div>
+        <div v-if="isError" class="errorText">{{ error?.message ?? $t("login.somethingWentWrong") }} </div>
         <div>
-            {{ $t("noAccount") }}
+            {{ $t("login.noAccount") }}
             <RouterLink to="/register" class="register-link">
-                {{ $t("register") }}
+                {{ $t("login.register") }}
             </RouterLink>
         </div>
     </div>
