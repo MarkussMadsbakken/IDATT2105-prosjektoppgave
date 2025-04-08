@@ -4,7 +4,6 @@ import edu.ntnu.stud.model.Reservation;
 import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -41,11 +40,12 @@ public class ReservationRepo {
    * Retrieves a reservation by its ID.
    *
    * @param id the ID of the reservation to retrieve
-   * @return the Reservation object, or null if not found
+   * @return the latest Reservation object, or null if not found
    */
   public Reservation getReservationById(long id) {
-    String query = "SELECT * FROM reservations WHERE id = ?";
-    return jdbcTemplate.queryForObject(query, reservationRowMapper, id);
+    String query = "SELECT * FROM reservations WHERE id = ? ORDER BY reservation_date DESC";
+    List<Reservation> reservations = jdbcTemplate.query(query, reservationRowMapper, id);
+    return reservations.isEmpty() ? null : reservations.get(0); // Return the latest reservation or null
   }
 
   /**
@@ -53,12 +53,14 @@ public class ReservationRepo {
    *
    * @param listingId      the ID of the listing to retrieve the reservation for
    * @param expirationDate the expiration date to check against
-   * @return the Reservation object, or null if not found
+   * @return the latest Reservation object, or null if not found
    */
   public Reservation getReservationByListingId(String listingId, Timestamp expirationDate) {
     String query = "SELECT * FROM reservations "
-        + "WHERE listing_id = ? AND reservation_date > ?";
-    return jdbcTemplate.queryForObject(query, reservationRowMapper, listingId, expirationDate);
+        + "WHERE listing_id = ? AND reservation_date < ? "
+        + "ORDER BY reservation_date DESC";
+    List<Reservation> reservations = jdbcTemplate.query(query, reservationRowMapper, listingId, expirationDate);
+    return reservations.isEmpty() ? null : reservations.get(0); // Return the latest reservation or null
   }
 
   /**
@@ -69,7 +71,7 @@ public class ReservationRepo {
    * @return the Reservation object, or null if not found
    */
   public List<Reservation> getReservationsByUserId(long userId, Timestamp expirationDate) {
-    String query = "SELECT * FROM reservations WHERE user_id = ? AND reservation_date > ?";
+    String query = "SELECT * FROM reservations WHERE user_id = ? AND reservation_date < ?";
     return jdbcTemplate.query(query, reservationRowMapper, userId, expirationDate);
   }
 
@@ -79,18 +81,15 @@ public class ReservationRepo {
    * @param userId         the ID of the user to retrieve the reservation for
    * @param listingId      the ID of the listing to retrieve the reservation for
    * @param expirationDate the expiration date to check against
-   * @return the Reservation object, or null if not found
+   * @return the latest Reservation object, or null if not found
    */
   public Reservation getReservationByUserIdAndListingId(
       long userId, String listingId, Timestamp expirationDate) {
     String query = 
-        "SELECT * FROM reservations WHERE user_id = ? AND listing_id = ? AND reservation_date > ?";
-    try {
-      return jdbcTemplate.queryForObject(
-          query, reservationRowMapper, userId, listingId, expirationDate);
-    } catch (EmptyResultDataAccessException e) {
-      return null; // Return null if no result is found
-    }
+        "SELECT * FROM reservations WHERE user_id = ? AND listing_id = ? AND reservation_date < ? "
+        + "ORDER BY reservation_date DESC";
+    List<Reservation> reservations = jdbcTemplate.query(query, reservationRowMapper, userId, listingId, expirationDate);
+    return reservations.isEmpty() ? null : reservations.get(0); // Return the latest reservation or null
   }
 
   /**
