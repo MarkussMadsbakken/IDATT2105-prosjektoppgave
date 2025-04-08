@@ -23,7 +23,8 @@ INSERT INTO listings (
   description, 
   category, 
   subcategory, 
-  postal_code, 
+  longitude,
+  latitude, 
   owner_id
 ) VALUES
   (
@@ -33,7 +34,8 @@ INSERT INTO listings (
     'Description for test listing 1', 
     (SELECT id FROM categories WHERE name = 'Category1'), 
     (SELECT id FROM sub_categories WHERE name = 'SubCategory1'), 
-    1234, 
+    60,
+    25,
     (SELECT id FROM users WHERE username = 'testuser1')
   ),(
     '123e4567-e89b-12d3-a456-426614174001', 
@@ -42,7 +44,8 @@ INSERT INTO listings (
     'Description for test listing 2', 
     (SELECT id FROM categories WHERE name = 'Category3'), 
     NULL, 
-    5678, 
+    70,
+    10, 
     (SELECT id FROM users WHERE username = 'testuser1')
   ), (
     '123e4567-e89b-12d3-a456-426614174002', 
@@ -51,7 +54,8 @@ INSERT INTO listings (
     'Description for test listing 3', 
     (SELECT id FROM categories WHERE name = 'Category2'), 
     (SELECT id FROM sub_categories WHERE name = 'SubCategory3'), 
-    9101, 
+    80,
+    80,
     (SELECT id FROM users WHERE username = 'testuser2')
   )
 );
