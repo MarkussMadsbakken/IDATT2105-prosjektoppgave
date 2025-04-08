@@ -43,6 +43,14 @@ public class Validate {
     return value -> value != null && value.doubleValue() < 0;
   }
 
+  public static Predicate<Boolean> isTrue() {
+    return value -> value != null && value;
+  }
+
+  public static Predicate<Boolean> isFalse() {
+    return value -> value != null && !value;
+  }
+
   /**
    * Validates that a given value by the provided predicate and throws an exception with the 
    * provided message if validation fails.
