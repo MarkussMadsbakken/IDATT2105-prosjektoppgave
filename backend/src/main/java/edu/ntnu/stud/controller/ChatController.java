@@ -43,15 +43,26 @@ public class ChatController {
     List<Chat> chats = chatService.getAllChatsByToken(token);
 
     // Return the list of chats
+    if (chats.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
     return ResponseEntity.ok(chats);
   }
 
+  /**
+   * Get a specific chat by its ID.
+   *
+   * @param chatId the ID of the chat
+   * @param token the JWT token of the user
+   * @return the chat with the specified ID
+   */
   @GetMapping("/{chatId}")
   public ResponseEntity<Chat> getChat(@PathVariable long chatId,
       @RequestHeader("Authorization") String token) {
-
-    // Get the chat by ID and return it
     Chat chat = chatService.getChatById(chatId, token);
+    if (chat == null) {
+      return ResponseEntity.noContent().build();
+    }
     return ResponseEntity.ok(chat);
   }
 
@@ -65,9 +76,10 @@ public class ChatController {
   @GetMapping("/{chatId}/messages")
   public ResponseEntity<List<Message>> getChatMessages(@PathVariable long chatId,
       @RequestHeader("Authorization") String token) {
-
-    // Get messages for the chat and return them
     List<Message> messages = chatService.getAllMessagesByChatId(chatId, token);
+    if (messages.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
     return ResponseEntity.ok(messages);
   }
 
@@ -81,9 +93,10 @@ public class ChatController {
   @GetMapping("/{chatId}/messages/latest")
   public ResponseEntity<Message> getLatestMessage(@PathVariable long chatId,
       @RequestHeader("Authorization") String token) {
-
-    // Get the latest message for the chat and return it
     Message message = chatService.getLatestMessage(chatId, token);
+    if (message == null) {
+      return ResponseEntity.noContent().build();
+    }
     return ResponseEntity.ok(message);
   }
 
@@ -99,8 +112,6 @@ public class ChatController {
   @PostMapping
   public ResponseEntity<CreateChatResponse> createChat(@RequestHeader("Authorization") String token,
       @RequestBody CreateChatRequest req) {
-
-    // Create a new chat and return the chat ID
     Long chatId = chatService.createChat(req, token);
     return ResponseEntity.ok(new CreateChatResponse(chatId));
   }
@@ -117,8 +128,6 @@ public class ChatController {
   public ResponseEntity<DefaultResponse> addMessageToChat(@PathVariable long chatId,
       @RequestHeader("Authorization") String token, @RequestBody MessageRequest message) {
     message.setChatId(chatId);
-
-    // Add a message to the chat and return the response
     if (chatService.addMessageToChat(message, token)) {
       return ResponseEntity.ok(new DefaultResponse("Message sent successfully", "messageSent"));
     } else {
