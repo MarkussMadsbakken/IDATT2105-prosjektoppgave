@@ -68,9 +68,6 @@ public class NotificationService {
    */
   public List<Notification> getNotificationsByUserId(String token) {
     long tokenUserId = jwtService.extractUserId(token.substring(7));
-    Validate.that(notificationRepo.getNotificationsByUserId(tokenUserId),
-        (List<Notification> notifications) -> notifications != null && !notifications.isEmpty(),
-        "No notifications found for this user");
     return notificationRepo.getNotificationsByUserId(tokenUserId);
   }
 
