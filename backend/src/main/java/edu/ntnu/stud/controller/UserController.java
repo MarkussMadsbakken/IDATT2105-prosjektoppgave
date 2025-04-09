@@ -4,6 +4,11 @@ import edu.ntnu.stud.model.UserImageResponse;
 import edu.ntnu.stud.model.UserResponse;
 import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +43,16 @@ public class UserController {
    * @return the ResponseEntity containing the UserResponse if found, or a 404
    *         status if not found
    */
+  @Operation(summary = "Retrieve a user by their ID",
+      description = "Fetches a user based on their unique ID."
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User found",
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = UserResponse.class))),
+      @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+  })
   @GetMapping("/{id}")
   public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
     UserResponse userResponse = userService.getUserById(id);
@@ -57,6 +72,16 @@ public class UserController {
    * @return the ResponseEntity containing the UserImageResponse if found,
    *         or a 404 status if not found
    */
+  @Operation(summary = "Retrieve a user's image by their ID",
+      description = "Fetches the profile image of a user based on their unique ID."
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User image found",
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = UserImageResponse.class))),
+      @ApiResponse(responseCode = "404", description = "User image not found", content = @Content)
+  })
   @GetMapping("/{id}/image")
   public ResponseEntity<UserImageResponse> getUserImage(@PathVariable long id) {
     UserImageResponse userImageResponse = userService.getImageByUserId(id);
@@ -76,6 +101,14 @@ public class UserController {
    * @return the ResponseEntity containing the UserResponse if found, or a 404
    *         status if not found
    */
+  @Operation(summary = "Retrieve a user by their username",
+      description = "Fetches a user based on their unique username.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User found",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = UserResponse.class))),
+      @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+  })
   @GetMapping("/username/{username}")
   public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
     UserResponse userResponse = userService.getUserByUsername(username);
@@ -94,6 +127,15 @@ public class UserController {
    * @return the ResponseEntity containing the list of UserResponse if found,
    *         or a 204 status if not found
    */
+  @Operation(summary = "Retrieve all users",
+      description = "Fetches a list of all users in the system."
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Users found",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = UserResponse.class))),
+      @ApiResponse(responseCode = "204", description = "No users found", content = @Content)
+  })
   @GetMapping
   public ResponseEntity<List<UserResponse>> getAllUsers() {
     List<UserResponse> users = userService.getAllUsers();
@@ -114,6 +156,17 @@ public class UserController {
    * @param userImage the users profile image (optional)
    * @return a ResponseEntity indicating the result of the update operation
    */
+  @Operation(summary = "Update user information",
+      description = "Updates the details of a user in the system."
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User updated successfully",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = UserResponse.class))),
+      @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+      @ApiResponse(responseCode = "409", description = "Username conflict", content = @Content),
+      @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+  })
   @PutMapping("/update")
   public ResponseEntity<UserResponse> updateUser(
       @RequestPart("userUpdate") UserUpdate user,

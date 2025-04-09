@@ -64,6 +64,30 @@ CREATE TABLE message (
     FOREIGN KEY (sender_id) REFERENCES users(id)
 );
 
+CREATE TABLE categories (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  description VARCHAR(255),
+  icon TEXT
+);
+
+CREATE TABLE sub_categories (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    category_id BIGINT NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE notifications (
+     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     user_id BIGINT NOT NULL,
+     is_read BOOLEAN DEFAULT FALSE,
+     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     url TEXT NOT NULL,
+     message TEXT NOT NULL,
+     CONSTRAINT fk_user_notifications FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('testuser', 'password');

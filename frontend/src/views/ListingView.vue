@@ -28,6 +28,7 @@ import {
 import { useI18n } from 'vue-i18n';
 import { createChat } from '@/actions/chat';
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { useToast } from 'primevue/usetoast';
 
 const router = useRouter();
 const route = useRoute();
@@ -35,6 +36,7 @@ const auth = useAuth();
 const dialog = useDialog();
 const queryClient = useQueryClient();
 const i18n = useI18n();
+const toast = useToast();
 
 const listingId = route.params.id as string
 
@@ -56,15 +58,38 @@ const isOwnListing = computed(() => {
 const { mutate: createChatMutation } = useMutation({
   mutationFn: createChat,
   onSuccess: (data) => {
-    console.log(data);
     router.push(`/chat/${data.chatId}`);
   }
 })
 
-const{ mutate: reserve, isPending: isReservePending, isError: isPendingError, error: reserveError, isSuccess: isReserveSuccess } = useReserveListing();
+const { mutate: reserve, isPending: isReservePending, isError: isPendingError, error: reserveError, isSuccess: isReserveSuccess } = useReserveListing();
 
-const handleReserve = () =>{
-  reserve({ uuid: listingId });
+const handleReserve = () => {
+  reserve({ uuid: listingId }, {
+    onSuccess: () => {
+      toast.add(
+        {
+          severity: "success",
+          summary: i18n.t("success"),
+          detail: i18n.t("listing.reserved"),
+          life: 3000,
+          closable: true,
+        }
+      );
+      queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
+    },
+    onError: (error) => {
+      toast.add(
+        {
+          severity: "error",
+          summary: i18n.t("Error"),
+          detail: i18n.t("listing.reservedError"),
+          life: 3000,
+          closable: true,
+        }
+      );
+    }
+  });
 }
 
 const {
@@ -74,10 +99,10 @@ const {
   isPending: reservationChecKIsPending
 } = useCheckForReservation(listingId, auth.isLoggedIn());
 
-const reservationEndTime = computed(()=>{
+const reservationEndTime = computed(() => {
   if (!reservation?.value?.createdAt) return null;
-  const createdAt = new Date (reservation.value.createdAt)
-  const expiresAt = new Date(createdAt.getTime() + 60*60*1000);
+  const createdAt = new Date(reservation.value.createdAt)
+  const expiresAt = new Date(createdAt.getTime() + 60 * 60 * 1000);
 
   return expiresAt.toLocaleTimeString(navigator.language, {
     hour: "2-digit",
@@ -86,11 +111,11 @@ const reservationEndTime = computed(()=>{
   });
 })
 
-const isReservedByMe = computed(()=>{
+const isReservedByMe = computed(() => {
   return reservation?.value?.userId === auth.userId;
 })
-const reserveButtonText = computed(()=> {
-  if (reservation?.value && isReservedByMe.value){
+const reserveButtonText = computed(() => {
+  if (reservation?.value && isReservedByMe.value) {
     return `${i18n.t("reservedUntil")}: ${reservationEndTime.value}`;
   }
   return i18n.t("reserve");
@@ -143,12 +168,27 @@ const handleToggleArchive = () => {
     { uuid: listingId, state: newState },
     {
       onSuccess: () => {
-        // TODO Toast
-        queryClient.invalidateQueries({queryKey: ['listing', listingId]});
-        console.log("Aktivstatus oppdatert:", newState);
+        toast.add(
+          {
+            severity: "success",
+            summary: i18n.t("success"),
+            detail: i18n.t(newState ? "listing.restored" : "listing.archived"),
+            life: 3000,
+            closable: true,
+          }
+        );
+        queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
       },
       onError: (error) => {
-        console.error("Feil ved arkivering:", error);
+        toast.add(
+          {
+            severity: "error",
+            summary: i18n.t("Error"),
+            detail: i18n.t("listing.archivedError"),
+            life: 3000,
+            closable: true,
+          }
+        );
       }
     }
   );
@@ -172,13 +212,28 @@ const handleDelete = () => {
       onAccept: () => {
         deleteMutation.mutate(listingId, {
           onSuccess: (a) => {
-            console.log(a);
-            console.log("Successed!")
+            toast.add(
+              {
+                severity: "success",
+                summary: i18n.t("success"),
+                detail: i18n.t("listing.deleted"),
+                life: 3000,
+                closable: true,
+              }
+            );
             d.close();
             router.push('/');
           },
           onError: (e) => {
-            console.log(error.value)
+            toast.add(
+              {
+                severity: "error",
+                summary: i18n.t("Error"),
+                detail: i18n.t("listing.deleteError"),
+                life: 3000,
+                closable: true,
+              }
+            );
           }
         });
       }
@@ -197,12 +252,6 @@ const handleDelete = () => {
   </div>
   <div class="listing" v-else>
     <div class="title-picture">
-      <Alert class="reserved-info" variant="Info" v-if="reservation && !isReservedByMe">
-        {{ $t("listingReservedByAnotherUser") }} {{ reservationEndTime }}
-      </Alert>
-      <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
-        {{ $t("listingReservedByMe") }} {{ reservationEndTime }}
-      </Alert>
       <h3 class="listing-title">
         {{ listing?.name }}
       </h3>
@@ -219,33 +268,24 @@ const handleDelete = () => {
       <div class="picture-footing">
         <div class="listing-price">{{ listing?.price }}kr</div>
         <div class="listing-actions">
-          <Button class="listing-option-button" variant="outline" v-if="isOwnListing && !listing?.sold" @click="router.push(`/listing/${listingId}/edit`)">
+          <Button class="listing-option-button" variant="outline" v-if="isOwnListing && !listing?.sold"
+            @click="router.push(`/listing/${listingId}/edit`)">
             {{ $t("edit") }}
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
 
-          <Button
-            class="listing-option-button"
-            :class="{ 'active-button': !listing?.active }"
-            variant="outline"
-            v-if="isOwnListing && !listing?.sold"
-            :disabled="isArchivePending"
-            @click="handleToggleArchive"
-          >
+          <Button class="listing-option-button" :class="{ 'active-button': !listing?.active }" variant="outline"
+            v-if="isOwnListing && !listing?.sold" :disabled="isArchivePending" @click="handleToggleArchive">
             <template v-if="isArchivePending">
               <LoadingSpinner />
             </template>
             <template v-else>
               {{ listing?.active ? $t("archive") : $t("restore") }}
-              <component
-                :is="listing?.active ? Archive : ArchiveRestore"
-                :size="18"
-                style="margin-left: 0.5rem;"
-              />
+              <component :is="listing?.active ? Archive : ArchiveRestore" :size="18" style="margin-left: 0.5rem;" />
             </template>
           </Button>
-
-          <Button class="listing-option-button" variant="destructive" v-if="isOwnListing || auth.isAdmin" @click="handleDelete">
+          <Button class="listing-option-button" variant="destructive" v-if="isOwnListing || auth.isAdmin"
+            @click="handleDelete">
             {{ $t("delete") }}
             <Trash2 :size="18" style="margin-left: 0.5rem;" />
           </Button>
@@ -266,27 +306,30 @@ const handleDelete = () => {
         {{ $t('listingHasNoDescriptionLong') }}
       </Alert>
     </div>
+    <Alert class="reserved-info" variant="Info" v-if="reservation && !isReservedByMe">
+      {{ $t("listingReservedByAnotherUser") }} {{ reservationEndTime }}
+    </Alert>
+    <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
+      {{ $t("listingReservedByMe") }} {{ reservationEndTime }}
+    </Alert>
     <div v-if="!isOwnListing" class="buy-box">
       <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" size="medium"
         @contact-seller="createChatMutation(listingId)" />
 
 
       <div v-if="auth.isLoggedIn() && !listing!.sold" class="button-box">
-        <Button variant="primary"
-                :class="{ 'is-disabled': reservation && !isReservedByMe }"
-                @click="router.push(`/listing/${listingId}/checkout`)"
-                :disabled="reservation && !isReservedByMe"
-                style="width: 10rem;
+        <Button variant="primary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
+          @click="router.push(`/listing/${listingId}/checkout`)" :disabled="reservation && !isReservedByMe" style="width: 10rem;
                  height: 3rem;">{{ $t("buy") }}</Button>
 
-        <Button
-          variant="secondary"
-          :class="{ 'is-disabled': reservation && !isReservedByMe }"
-          :disabled="reservation && isReservedByMe"
-          @click="handleReserve"
-          style="width: 10rem; height: 3rem;"
-        >
-          {{ reserveButtonText }}
+        <Button variant="secondary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
+          :disabled="reservation && isReservedByMe" @click="handleReserve" style="width: 10rem; height: 3rem;">
+          <template v-if="isReservePending">
+            <LoadingSpinner />
+          </template>
+          <template v-else>
+            {{ reserveButtonText }}
+          </template>
         </Button>
       </div>
     </div>
@@ -330,9 +373,10 @@ const handleDelete = () => {
   gap: 2rem;
 }
 
-.listing-option-button{
+.listing-option-button {
   width: 6.5rem;
 }
+
 .active-button {
   background-color: #f0f0f0;
   border-color: #d5d4d4;
@@ -383,9 +427,11 @@ const handleDelete = () => {
   font-size: 3rem;
   font-weight: bold;
 }
-.sold-warning{
+
+.sold-warning {
   width: 45rem;
 }
+
 .is-disabled {
   background-color: #ccc !important;
   color: #999 !important;
@@ -394,5 +440,4 @@ const handleDelete = () => {
   opacity: 0.7;
   pointer-events: none;
 }
-
 </style>

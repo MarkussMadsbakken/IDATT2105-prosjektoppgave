@@ -5,7 +5,8 @@ import Collapsible from './Collapsible.vue';
 import { useCategories, useSubCategories } from '@/actions/categories';
 import AdvancedSearch from './AdvancedSearch.vue';
 import { computed } from 'vue';
-
+import { Map } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
 
 const props = withDefaults(defineProps<{
   selectedCategory?: number;
@@ -28,6 +29,7 @@ defineEmits<{
   (e: "newPriceRange", value: [number, number]): void
 }>();
 
+const router = useRouter();
 const { data: categories, isError, error, isPending } = useCategories();
 
 const selectedCategoryId = computed(() => {
@@ -38,9 +40,14 @@ const selectedCategoryId = computed(() => {
 </script>
 
 <template>
-  <div class="search">
-    <Searchbar :placeholder="$t('search')" @input="$emit('newSearchValue', $event)" @search="$emit('search', $event)"
-      :value="props.searchValue" />
+  <div class="search-outer-wrapper">
+    <div class="search">
+      <Searchbar :placeholder="$t('search')" @input="$emit('newSearchValue', $event)" @search="$emit('search', $event)"
+        :value="props.searchValue" />
+    </div>
+    <div class="search-icon-wrapper" @click="router.push('/search/map')">
+      <Map class="search-icon" :size="24"></Map>
+    </div>
   </div>
   <Collapsible :openTitle="$t('showCategories')" :closedTitle="$t('hideCategories')" :open="props.open">
     <div class="categories">
@@ -61,6 +68,22 @@ const selectedCategoryId = computed(() => {
 
 
 <style scoped>
+.search-outer-wrapper {
+  position: relative;
+}
+
+.search-icon-wrapper {
+  position: absolute;
+  top: 0;
+  right: -3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+}
+
 .search {
   width: 63rem;
   display: flex;

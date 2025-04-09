@@ -26,7 +26,8 @@ export type CreateListingRequest = {
     description: string,
     category: number,
     subcategory?: number,
-    postalCode: number,
+    latitude?: number;
+    longitude?: number;
     images: File[];
 }
 
