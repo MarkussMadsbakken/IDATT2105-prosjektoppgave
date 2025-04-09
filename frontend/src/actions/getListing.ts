@@ -33,7 +33,28 @@ export const useGetListings = () => {
       return lastPage.number + 1;
     },
     initialPageParam: 0
-  })
+  });
+}
+
+export const getRecommendedListings = async (req: GetListingsRequest): Promise<GetListingsResponse> => {
+  return await Fetch(`${API_BASE_URL}/api/recommended`);
+}
+
+export const useGetRecommendedListings = () => {
+  return useInfiniteQuery({
+    queryKey: ['listings'],
+    queryFn: async ({ pageParam = 0 }) => {
+      return getRecommendedListings({ page: pageParam, offset: PAGE_SIZE });
+    },
+    getNextPageParam: (lastPage: Page<Listing>) => {
+      if (lastPage.last) {
+        return undefined;
+      }
+
+      return lastPage.number + 1;
+    },
+    initialPageParam: 0
+  });
 }
 
 export const getAllListings = async (): Promise<Listing[]> => {
@@ -159,8 +180,8 @@ export const toggleArchiveListing = async (
 };
 export const useToggleArchive = () => {
   return useMutation({
-    mutationFn: ({uuid, state}: {uuid: string; state: boolean})=>
-      toggleArchiveListing(uuid,state),
+    mutationFn: ({ uuid, state }: { uuid: string; state: boolean }) =>
+      toggleArchiveListing(uuid, state),
   });
 };
 
