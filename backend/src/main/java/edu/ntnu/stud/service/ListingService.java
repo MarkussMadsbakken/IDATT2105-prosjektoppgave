@@ -37,6 +37,10 @@ public class ListingService {
   private ListingImageService listingImageService;
   @Autowired
   private NotificationService notificationService;
+  @Autowired
+  private CategoryService categoryService;
+  @Autowired
+  private SubCategoryService subCategoryService;
 
   /**
    * Retrieves all listings from the database.
@@ -79,7 +83,8 @@ public class ListingService {
     Validate.that(listingRequest.getPrice(), Validate.isNotNegative(), "Price must be positive");
     Validate.that(listingRequest.getDescription(), Validate.isNotEmpty(), 
         "Description must not be empty");
-    Validate.that(listingRequest.getCategory(), Validate.isPositive(), "Category must be positive");
+    Validate.that(categoryService.getCategoryById(listingRequest.getCategory()),Validate.isNotNull(),"Category must exist in database");
+    Validate.that(subCategoryService.getSubCategoryById(listingRequest.getCategory()),Validate.isNotNull(),"subcategory must exist in database");
     Validate.that(listingRequest.getLongitude(), Validate.isNotNegative(),
         "Longitude must be positive");
     Validate.that(listingRequest.getLatitude(), Validate.isNotNegative(), 
@@ -122,8 +127,9 @@ public class ListingService {
     Validate.that(listingUpdate.getPrice(), Validate.isNotNegative(), "Price must be positive");
     Validate.that(listingUpdate.getDescription(), Validate.isNotEmpty(),
         "Description must not be empty");
-    Validate.that(listingUpdate.getCategory(), Validate.isPositive(),
-        "Category must be positive");
+    Validate.that(categoryService.getCategoryById(listingUpdate.getCategory()),Validate.isNotNull(),"Category must exist in database");
+    Validate.that(subCategoryService.getSubCategoryById(listingUpdate.getCategory()),Validate.isNotNull(),"subcategory must exist in database");
+
     Validate.that(listingUpdate.getLongitude(), Validate.isNotNegative(), 
         "Longitude must be positive");
     Validate.that(listingUpdate.getLatitude(), Validate.isNotNegative(), 
