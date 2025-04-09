@@ -5,7 +5,7 @@ import ListingCard from "@/components/ListingCard.vue";
 import { useGetUser, useGetUserBookmarks, useGetUserListings } from '@/actions/user';
 import Divider from '@/components/Divider.vue';
 import ListingCardSkeleton from './skeleton/ListingCardSkeleton.vue';
-import ProfileHeader from './profile/profileHeader.vue';
+import ProfileHeader from './profile/ProfileHeader.vue';
 import ProfileHeaderSkeleton from './skeleton/ProfileHeaderSkeleton.vue';
 
 const emit = defineEmits<{

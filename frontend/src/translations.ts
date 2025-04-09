@@ -250,7 +250,7 @@ const createListingViewTranslations = {
     thisFieldIsRequired: "Dette feltet er påkrevd",
     selectSubCategory: "Velg underkategori",
     selectPosition: "Velg posisjon",
-    position:"Posisjon"
+    position: "Posisjon"
   },
   en: {
     createListing: "Create a new listing",
@@ -270,7 +270,7 @@ const createListingViewTranslations = {
     subCategories: "Sub categories",
     subCategory: "Sub category",
     selectPosition: "Select position",
-    position:"Position"
+    position: "Position"
   }
 }
 const notificationTranslations = {
@@ -312,18 +312,45 @@ const chatTranslations = {
   }
 
 }
-const mapTranslations= {
-  no:{
+const mapTranslations = {
+  no: {
     searchAddress: "Søk etter adresse",
     selectPosition: "Velg posisjon",
     noResults: "Ingen resultater funnet",
     cancel: "Avbryt",
   },
-  en:{
+  en: {
     searchAddress: "Search for address",
     selectPosition: "Select position",
     noResults: "No results found",
     cancel: "Cancel",
+  }
+}
+
+const breadcrumbTranslations = {
+  no: {
+    home: "Hjem",
+    profile: "Profil",
+    listings: "Annonser",
+    myFavorites: "Mine favoritter",
+    messages: "Meldinger",
+    notifications: "Varslinger",
+    checkout: "Kjøp",
+    chat: "Chat",
+    editProfile: "Rediger profil",
+    createListing: "Opprett annonse",
+  },
+  en: {
+    home: "Home",
+    profile: "Profile",
+    listings: "Listings",
+    myFavorites: "My favorites",
+    messages: "Messages",
+    notifications: "Notifications",
+    checkout: "Checkout",
+    chat: "Chat",
+    editProfile: "Edit profile",
+    createListing: "Create listing"
   }
 }
 
@@ -358,7 +385,8 @@ const i18n = createI18n({
       search: {
         categorySelector: categorySelectorTranslations.no,
         ...searchTranslations.no,
-      }
+      },
+      breadcrumb: breadcrumbTranslations.no,
     }, en: {
       listings: {
         archive: archivedListingsTranslations.en,
@@ -384,7 +412,8 @@ const i18n = createI18n({
       search: {
         categorySelector: categorySelectorTranslations.en,
         ...searchTranslations.en,
-      }
+      },
+      breadcrumb: breadcrumbTranslations.en,
     }
   }
 });

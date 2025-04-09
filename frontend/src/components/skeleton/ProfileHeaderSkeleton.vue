@@ -123,6 +123,7 @@ const emit = defineEmits<{
     background-color: #ffffff;
     border-radius: 10px;
     width: 100%;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .profile-header-info-wrapper {
