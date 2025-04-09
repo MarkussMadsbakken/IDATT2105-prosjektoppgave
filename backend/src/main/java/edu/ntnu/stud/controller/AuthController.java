@@ -42,17 +42,9 @@ public class AuthController {
    */
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
-    try {
-      RegisterResponse registerResponse = service.register(registerRequest);
-      logger.info("User registered successfully: {}", registerRequest.getUsername());
-      return ResponseEntity.ok(registerResponse);
-
-    } catch (Exception e) {
-      Map<String, String> errorResponse = new HashMap<>();
-      errorResponse.put("error", e.getMessage());
-      logger.error("Error registering user: {}", e.getMessage());
-      return ResponseEntity.badRequest().body(errorResponse);
-    }
+    RegisterResponse registerResponse = service.register(registerRequest);
+    logger.info("User registered successfully: {}", registerRequest.getUsername());
+    return ResponseEntity.ok(registerResponse);
   }
 
   /**
@@ -64,17 +56,9 @@ public class AuthController {
    */
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-    try {
-      LoginResponse loginResponse = service.login(loginRequest);
-      logger.info("User logged in successfully: {}", loginRequest.getUsername());
-      return ResponseEntity.ok(loginResponse);
-
-    } catch (Exception e) {
-      Map<String, String> errorResponse = new HashMap<>();
-      errorResponse.put("error", e.getMessage());
-      logger.error("Error logging in user: {}", e.getMessage());
-      return ResponseEntity.badRequest().body(errorResponse);
-    }
+    LoginResponse loginResponse = service.login(loginRequest);
+    logger.info("User logged in successfully: {}", loginRequest.getUsername());
+    return ResponseEntity.ok(loginResponse);
   }
 
   /**
