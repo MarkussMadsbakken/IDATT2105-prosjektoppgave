@@ -67,6 +67,10 @@ const profileTranslations = {
     passwordUpdated: "Passordet ble oppdatert",
     repeatPassword: "Gjenta passord",
     savePassword: "Lagre passord",
+    updateFailed: "Oppdatering feilet",
+    credentialsUpdated: "Brukeropplysninger oppdatert",
+    passWordTooShort: "Passordet må være minst 8 tegn langt",
+    passwordMismatch: "Passordene stemmer ikke overens",
   },
   en: {
     memberSince: "Member since {date}",
@@ -88,6 +92,10 @@ const profileTranslations = {
     passwordUpdated: "Password updated",
     repeatPassword: "Repeat password",
     savePassword: "Save password",
+    updateFailed: "Update failed",
+    credentialsUpdated: "User credentials updated",
+    passwordTooShort: "Password must be at least 8 characters long",
+    passwordMismatch: "Passwords do not match",
   }
 }
 const registerTranslations = {
@@ -127,7 +135,7 @@ const registerTranslations = {
     chooseFirstName: "Choose first name",
     chooseLastName: "Choose last name",
     preview: "Preview",
-    profilePicture: "Profile picture"
+    profilePicture: "Profile picture",
   }
 }
 const homeViewTranslations = {
