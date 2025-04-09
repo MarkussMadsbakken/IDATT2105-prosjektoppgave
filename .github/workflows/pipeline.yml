@@ -75,7 +75,7 @@ jobs:
           path: frontend-build/
       - name: Start Backend
         run: |
-          nohup java -jar backend/target/prosjektoppgave-0.0.1-SNAPSHOT.jar --spring.profiles.active=test > backend.log 2>&1 &
+          nohup java -jar backend/target/prosjektoppgave-0.0.1-SNAPSHOT.jar --spring.profiles.active=test &
           sleep 10
       - name: Start Frontend
         run: |
