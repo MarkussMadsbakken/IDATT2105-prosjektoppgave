@@ -85,7 +85,12 @@ public class ListingRepo {
     long offset = pageable.getOffset();
     String sql = "SELECT * FROM listings WHERE deleted = false AND active = true LIMIT ? OFFSET ?";
     List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, limit, offset);
-    int total = listings.size();
+
+    // Calculate the total number of listings
+    Integer totalResult = jdbcTemplate.queryForObject(
+        "SELECT COUNT(*) FROM listings WHERE deleted = false AND active = true", Integer.class);
+    int total = totalResult != null ? totalResult : 0;
+
     return new PageImpl<>(listings, pageable, total);
   }
 
