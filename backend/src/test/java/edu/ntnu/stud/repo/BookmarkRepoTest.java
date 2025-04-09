@@ -1,7 +1,10 @@
 package edu.ntnu.stud.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edu.ntnu.stud.model.Bookmark;
 import edu.ntnu.stud.model.Listing;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+/**
+ * Test class for BookmarkRepo.
+ */
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -33,6 +35,9 @@ public class BookmarkRepoTest {
   @Autowired
   private ListingRepo listingRepo;
 
+  /**
+   * Sets up the test environment by creating a test listing.
+   */
   @BeforeEach
   public void setUp() {
     listing = new Listing("test listing for bookmarkRepoTest", 100.0,

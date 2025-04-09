@@ -1,8 +1,10 @@
 package edu.ntnu.stud.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edu.ntnu.stud.model.Notification;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,10 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+/**
+ * Test class for NotificationRepo.
+ */
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -92,25 +93,25 @@ public class NotificationRepoTest {
 
   @Test
   public void testGetAllNotifications() {
-      Notification notification1 = new Notification();
-      notification1.setUserId(userId);
-      notification1.setMessage("First notification");
-      notification1.setLink("http://example.com/1");
+    Notification notification1 = new Notification();
+    notification1.setUserId(userId);
+    notification1.setMessage("First notification");
+    notification1.setLink("http://example.com/1");
 
-      Notification notification2 = new Notification();
-      notification2.setUserId(userId);
-      notification2.setMessage("Second notification");
-      notification2.setLink("http://example.com/2");
+    Notification notification2 = new Notification();
+    notification2.setUserId(userId);
+    notification2.setMessage("Second notification");
+    notification2.setLink("http://example.com/2");
 
-      notificationRepo.addNotification(notification1);
-      notificationRepo.addNotification(notification2);
+    notificationRepo.addNotification(notification1);
+    notificationRepo.addNotification(notification2);
 
-      List<Notification> notifications = notificationRepo.getAllNotifications();
+    List<Notification> notifications = notificationRepo.getAllNotifications();
 
-      assertThat(notifications).hasSize(2);
-      assertThat(notifications).extracting(Notification::getMessage)
-          .containsExactlyInAnyOrder("First notification", "Second notification");
-      assertThat(notifications).extracting(Notification::getLink)
-          .containsExactlyInAnyOrder("http://example.com/1", "http://example.com/2");
+    assertThat(notifications).hasSize(2);
+    assertThat(notifications).extracting(Notification::getMessage)
+        .containsExactlyInAnyOrder("First notification", "Second notification");
+    assertThat(notifications).extracting(Notification::getLink)
+        .containsExactlyInAnyOrder("http://example.com/1", "http://example.com/2");
   }
 }
