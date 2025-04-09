@@ -2,7 +2,7 @@ package edu.ntnu.stud.repo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.ntnu.stud.model.User;
+import edu.ntnu.stud.model.base.User;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+
 
 /**
  * Test class for UserRepo.

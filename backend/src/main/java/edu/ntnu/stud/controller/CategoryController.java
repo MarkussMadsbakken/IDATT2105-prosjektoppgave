@@ -1,10 +1,10 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.Category;
-import edu.ntnu.stud.model.CategoryRequest;
-import edu.ntnu.stud.model.DefaultResponse;
-import edu.ntnu.stud.model.SubCategory;
-import edu.ntnu.stud.model.SubCategoryRequest;
+import edu.ntnu.stud.model.base.Category;
+import edu.ntnu.stud.model.base.DefaultResponse;
+import edu.ntnu.stud.model.base.SubCategory;
+import edu.ntnu.stud.model.request.CategoryRequest;
+import edu.ntnu.stud.model.response.SubCategoryRequest;
 import edu.ntnu.stud.service.CategoryService;
 import edu.ntnu.stud.service.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -206,7 +206,7 @@ public class CategoryController {
    * @param id the ID of the subcategory to delete
    */
   @Operation(summary = "Delete a subcategory", 
-      description = "Deletes a subcategory from the database by its ID.")
+        description = "Deletes a subcategory from the database by its ID.")
   @DeleteMapping("/subcategories/{id}")
   public ResponseEntity<DefaultResponse> deleteSubCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {

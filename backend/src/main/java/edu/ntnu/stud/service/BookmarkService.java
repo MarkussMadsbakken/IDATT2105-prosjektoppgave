@@ -1,9 +1,9 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.factory.NotificationFactory;
-import edu.ntnu.stud.model.Bookmark;
-import edu.ntnu.stud.model.BookmarkUserRequest;
-import edu.ntnu.stud.model.ListingResponse;
+import edu.ntnu.stud.model.base.Bookmark;
+import edu.ntnu.stud.model.request.BookmarkUserRequest;
+import edu.ntnu.stud.model.response.ListingResponse;
 import edu.ntnu.stud.repo.BookmarkRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;

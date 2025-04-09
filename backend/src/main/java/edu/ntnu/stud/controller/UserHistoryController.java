@@ -1,7 +1,7 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.UserHistory;
-import edu.ntnu.stud.model.UserHistoryRequest;
+import edu.ntnu.stud.model.base.UserHistory;
+import edu.ntnu.stud.model.request.UserHistoryRequest;
 import edu.ntnu.stud.service.UserHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

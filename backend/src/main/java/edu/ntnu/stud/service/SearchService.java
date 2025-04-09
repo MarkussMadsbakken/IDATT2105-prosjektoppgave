@@ -1,6 +1,6 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.ListingResponse;
+import edu.ntnu.stud.model.response.ListingResponse;
 import edu.ntnu.stud.util.Validate;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

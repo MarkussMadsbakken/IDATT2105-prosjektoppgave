@@ -1,11 +1,12 @@
 package edu.ntnu.stud.repo;
 
-import edu.ntnu.stud.model.User;
+import edu.ntnu.stud.model.base.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 
 /**
  * Repository class for managing User entities in the database.

@@ -1,10 +1,9 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.SubCategory;
-import edu.ntnu.stud.model.SubCategoryRequest;
+import edu.ntnu.stud.model.base.SubCategory;
+import edu.ntnu.stud.model.response.SubCategoryRequest;
 import edu.ntnu.stud.repo.SubCategoryRepo;
 import edu.ntnu.stud.util.Validate;
-
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

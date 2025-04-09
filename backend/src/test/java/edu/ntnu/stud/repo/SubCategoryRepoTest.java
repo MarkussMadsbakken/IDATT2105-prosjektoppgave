@@ -2,8 +2,8 @@ package edu.ntnu.stud.repo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.ntnu.stud.model.SubCategory;
-import edu.ntnu.stud.model.SubCategoryRequest;
+import edu.ntnu.stud.model.base.SubCategory;
+import edu.ntnu.stud.model.response.SubCategoryRequest;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,8 +2,8 @@ package edu.ntnu.stud.repo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.ntnu.stud.model.Listing;
-import edu.ntnu.stud.model.ListingImage;
+import edu.ntnu.stud.model.base.Listing;
+import edu.ntnu.stud.model.base.ListingImage;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;

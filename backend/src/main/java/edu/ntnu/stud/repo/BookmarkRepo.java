@@ -1,11 +1,12 @@
 package edu.ntnu.stud.repo;
 
-import edu.ntnu.stud.model.Bookmark;
+import edu.ntnu.stud.model.base.Bookmark;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 
 /**
  * This class handles the database operations related to bookmarks.

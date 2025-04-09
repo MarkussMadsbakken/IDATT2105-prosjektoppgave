@@ -1,11 +1,12 @@
 package edu.ntnu.stud.repo;
 
-import edu.ntnu.stud.model.ListingImage;
+import edu.ntnu.stud.model.base.ListingImage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 
 /**
  * Repository class for managing ListingImage entities in the database.

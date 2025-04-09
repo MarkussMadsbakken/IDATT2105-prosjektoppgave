@@ -1,6 +1,6 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.Notification;
+import edu.ntnu.stud.model.base.Notification;
 import edu.ntnu.stud.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -1,7 +1,7 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.Category;
-import edu.ntnu.stud.model.CategoryRequest;
+import edu.ntnu.stud.model.base.Category;
+import edu.ntnu.stud.model.request.CategoryRequest;
 import edu.ntnu.stud.repo.CategoryRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;

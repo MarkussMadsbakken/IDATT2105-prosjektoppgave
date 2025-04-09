@@ -1,6 +1,6 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.ListingResponse;
+import edu.ntnu.stud.model.response.ListingResponse;
 import edu.ntnu.stud.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

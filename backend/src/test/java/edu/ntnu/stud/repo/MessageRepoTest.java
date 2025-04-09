@@ -2,9 +2,9 @@ package edu.ntnu.stud.repo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.ntnu.stud.model.Listing;
-import edu.ntnu.stud.model.Message;
-import edu.ntnu.stud.model.MessageRequest;
+import edu.ntnu.stud.model.base.Listing;
+import edu.ntnu.stud.model.base.Message;
+import edu.ntnu.stud.model.request.MessageRequest;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.User;
-import edu.ntnu.stud.model.UserPrincipal;
+import edu.ntnu.stud.model.base.User;
+import edu.ntnu.stud.model.base.UserPrincipal;
 import edu.ntnu.stud.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
