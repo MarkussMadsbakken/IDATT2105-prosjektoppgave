@@ -2,7 +2,6 @@ package edu.ntnu.stud.config;
 
 import edu.ntnu.stud.service.JWTService;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
