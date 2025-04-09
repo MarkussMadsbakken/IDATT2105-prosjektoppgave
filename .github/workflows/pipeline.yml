@@ -79,7 +79,7 @@ jobs:
           sleep 10
       - name: Start Frontend
         run: |
-          nohup npx serve -s frontend-build/dist -l 4173 &
+          nohup npx serve -s frontend-build -l 4173 &
           sleep 10
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
