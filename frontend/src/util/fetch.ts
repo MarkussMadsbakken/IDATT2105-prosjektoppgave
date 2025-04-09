@@ -1,5 +1,6 @@
-import { useAuth } from "@/stores/auth";
+import { logout, useAuth } from "@/stores/auth";
 import { ApiError } from "@/types";
+import { useToast } from "primevue/usetoast";
 
 /**
  * Sends a fetch request with the token in the Authorization header
@@ -8,6 +9,11 @@ export default async function Fetch(input: string | URL | globalThis.Request, in
     const res = await FetchWithoutParse(input, init);
 
     if (!res.ok) {
+        if (res.status === 401) {
+            logout();
+            return;
+        }
+
         const err = await res.json();
         console.log(err);
         throw new ApiError(err.error);
