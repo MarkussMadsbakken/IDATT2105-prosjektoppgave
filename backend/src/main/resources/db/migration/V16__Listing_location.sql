@@ -1,4 +1,3 @@
-ALTER TABLE listings
-DROP COLUMN postal_code,
-ADD COLUMN longitude DOUBLE,
-ADD COLUMN latitude DOUBLE;
+ALTER TABLE listings DROP COLUMN postal_code;
+ALTER TABLE listings ADD COLUMN longitude DOUBLE;
+ALTER TABLE listings ADD COLUMN latitude DOUBLE;
