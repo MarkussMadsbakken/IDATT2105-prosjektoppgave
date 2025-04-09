@@ -1,7 +1,10 @@
 package edu.ntnu.stud.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edu.ntnu.stud.model.SubCategory;
 import edu.ntnu.stud.model.SubCategoryRequest;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+/**
+ * Test class for SubCategoryRepo.
+ */
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -24,21 +26,29 @@ public class SubCategoryRepoTest {
   @Autowired
   private SubCategoryRepo subCategoryRepo;
 
-  @Autowired CategoryRepo categoryRepo;
+  @Autowired
+  CategoryRepo categoryRepo;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
   private int parentCategoryId;
 
+  /**
+   * Sets up the test environment by creating a parent category and a subcategory.
+   */
   @BeforeEach
   public void setUp() {
-    jdbcTemplate.execute("INSERT INTO categories (name, description, icon) VALUES ('Parent Category', 'Parent Description', 'parent-icon.png')");
+    jdbcTemplate.execute(
+        "INSERT INTO categories (name, description, icon) " 
+        + "VALUES ('Parent Category', 'Parent Description', 'parent-icon.png')");
 
     parentCategoryId = categoryRepo.getAllCategories().getFirst().getId();
 
-    jdbcTemplate.execute("INSERT INTO sub_categories (name, description, category_id) VALUES ('Test SubCategory', 'Test Description', " + parentCategoryId + ")");
-
+    jdbcTemplate.execute(
+        "INSERT INTO sub_categories (name, description, category_id) " 
+        + "VALUES ('Test SubCategory', 'Test Description', "
+            + parentCategoryId + ")");
 
   }
 
@@ -50,7 +60,9 @@ public class SubCategoryRepoTest {
 
   @Test
   public void testAddSubCategory() {
-    SubCategoryRequest subCategoryRequest = new SubCategoryRequest("New SubCategory", "New Description", "icon", parentCategoryId);
+    SubCategoryRequest subCategoryRequest = 
+        new SubCategoryRequest("New SubCategory", "New Description", "icon",
+        parentCategoryId);
 
     subCategoryRepo.addSubCategory(subCategoryRequest);
 
@@ -101,7 +113,8 @@ public class SubCategoryRepoTest {
 
   @Test
   public void testGetSubCategoriesByCategoryId() {
-    List<SubCategory> subCategories = subCategoryRepo.getSubCategoriesByCategoryId(parentCategoryId);
+    List<SubCategory> subCategories = 
+        subCategoryRepo.getSubCategoriesByCategoryId(parentCategoryId);
 
     assertThat(subCategories).hasSize(1);
     assertThat(subCategories.getFirst().getName()).isEqualTo("Test SubCategory");
