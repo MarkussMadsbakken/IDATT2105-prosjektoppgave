@@ -13,6 +13,7 @@ import { toImgString } from "@/util/imageToImgString";
 import { watchOnce } from "@vueuse/core";
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
+import Breadcrumb from 'primevue/breadcrumb';
 
 const toast = useToast();
 const { t } = useI18n();
@@ -96,12 +97,18 @@ const onSubmit = () => {
 
 <template>
   <div class="outer-wrapper">
-    <div class="page-title">{{ $t("profile.editProfile") }}</div>
-
+    <div class="edit-profile-header">
+      <div class="title-wrapper">
+        <div class="title">{{ $t("profile.editProfile") }}: </div>
+      </div>
+      <div class="breadcrumb">
+        <Breadcrumb
+          :model="[{ label: $t('breadcrumb.profile'), url: '/profile' }, { label: $t('breadcrumb.editProfile') }]" />
+      </div>
+    </div>
     <div class="listing-form">
-
       <div class="form-group">
-        <label for="profileImage">{{$t("register.profilePicture")}}</label>
+        <label for="profileImage">{{ $t("register.profilePicture") }}</label>
         <div class="image-upload-preview">
           <ImageSelector @file-select="onImageSelected" />
           <img v-if="profileImagePreview" :src="profileImagePreview" alt="Forhåndsvisning" width="120" />
@@ -113,30 +120,67 @@ const onSubmit = () => {
       <FormGroup name="lastName" :label="$t('profile.lastName')">
         <TextInput v-model="lastName" type="text" id="lastName" />
       </FormGroup>
-
-
-      <div class="button-box">
-
-        <div class="save-button-wrapper">
-          <Button variant="primary" @click="onSubmit">
-            <template v-if="isUpdatingUser">
-              <LoadingSpinner />
-            </template>
-            <template v-else>
-              {{ $t("profile.saveChanges") }}
-            </template>
-          </Button>
-        </div>
-        <Button class="edit-password-button" variant="primary" @click="router.push('/profile/change-credentials')">
-          {{ $t("profile.editPassword") }}
+      <div class="save-button-wrapper">
+        <Button variant="primary" @click="onSubmit">
+          <template v-if="isUpdatingUser">
+            <LoadingSpinner />
+          </template>
+          <template v-else>
+            {{ $t("profile.saveChanges") }}
+          </template>
         </Button>
       </div>
-
+      <Button class="edit-password-button" variant="primary" @click="router.push('/profile/change-credentials')">
+        {{ $t("profile.editPassword") }}
+      </Button>
     </div>
   </div>
 </template>
 
 <style scoped>
+.edit-profile-header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  padding-bottom: 0.1rem;
+  width: 100%;
+}
+
+.breadcrumb {
+  position: absolute;
+  left: 2rem;
+}
+
+@media (max-width: 700px) {
+  .edit-profile-header {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .breadcrumb {
+    position: static;
+    width: fit-content;
+  }
+
+}
+
+.breadcrumb>* {
+  background-color: var(--color-background);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.title-wrapper {
+  text-align: center;
+}
+
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -154,12 +198,22 @@ const onSubmit = () => {
   width: 50rem;
 }
 
+@media (max-width: 800px) {
+  .listing-form {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 .outer-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 5rem;
 }
 
 .image-upload-preview {
@@ -184,6 +238,7 @@ const onSubmit = () => {
 .invalid {
   border: 1px solid red;
 }
+
 .button-box {
   display: flex;
   justify-content: space-between;
@@ -195,8 +250,8 @@ const onSubmit = () => {
 .save-button-wrapper {
   margin: 0 auto;
 }
-.edit-password-button{
-  width: 7rem;
-}
 
+.edit-password-button {
+  width: 10rem;
+}
 </style>

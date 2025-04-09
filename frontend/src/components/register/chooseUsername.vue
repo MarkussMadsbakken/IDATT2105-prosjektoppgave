@@ -16,13 +16,15 @@ const isLoading = ref(false);
 
 watch(username, (newUsername) => {
     emit('username-selected', { username: newUsername, isValid: false });
+    const trimmedUsername = newUsername.trim();
 
-    if (newUsername.length < 3) {
+    if (trimmedUsername.length < 3) {
         usernameIsAvailable.value = null;
         return;
     }
+
     isLoading.value = true;
-    checkUsernameIsAvailable(newUsername);
+    checkUsernameIsAvailable(trimmedUsername);
 });
 
 const checkUsernameIsAvailable = useDebounceFn(
@@ -48,7 +50,7 @@ const emit = defineEmits<{
 <template>
     <div class="username-select-container">
         <FormGroup name="username" :label="$t('register.chooseUsername')">
-            <TextInput name="username" v-model="username" type="text" autocomplete="off" />
+            <TextInput @keypress.space.prevent name="username" v-model="username" type="text" autocomplete="off" />
         </FormGroup>
         <div class="username-availability">
             <template v-if="usernameIsAvailable === null && !isLoading">
