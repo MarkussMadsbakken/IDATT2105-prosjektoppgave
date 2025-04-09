@@ -7,6 +7,10 @@ import edu.ntnu.stud.model.LoginResponse;
 import edu.ntnu.stud.model.RegisterRequest;
 import edu.ntnu.stud.model.RegisterResponse;
 import edu.ntnu.stud.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
  * like login, registration, token management and changing a user's password.
  * It provides endpoints for user registration, login and changing of password.
  */
+@Tag(name = "Authentication", 
+    description = "Endpoints for user authentication and registration")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -38,6 +44,11 @@ public class AuthController {
    * @param registerRequest the registration request containing user details
    * @return a ResponseEntity containing the registration response or an error message
    */
+  @Operation(summary = "Register a new user", 
+      description = "Create a new user account with the provided details.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User registered successfully"),
+  })
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
     RegisterResponse registerResponse = service.register(registerRequest);
@@ -52,6 +63,11 @@ public class AuthController {
    * @param loginRequest the login request containing the user's credentials
    * @return a ResponseEntity containing the login response or an error message
    */
+  @Operation(summary = "Login a user", 
+      description = "Authenticate a user and return a JWT token.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User logged in successfully"),
+  })
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
     LoginResponse loginResponse = service.login(loginRequest);
@@ -66,6 +82,11 @@ public class AuthController {
    * @param changeCredentialsRequest the request containing the current and new passwords
    * @return a ResponseEntity indicating success or failure
    */
+  @Operation(summary = "Change user credentials", 
+      description = "Update the user's password after verifying their identity.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User credentials changed successfully"),
+  })
   @PostMapping("/change-credentials")
   public ResponseEntity<?> changeCredentials(
       @RequestBody ChangeCredentialsRequest changeCredentialsRequest,

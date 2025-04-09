@@ -2,9 +2,12 @@ package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.Notification;
 import edu.ntnu.stud.service.NotificationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
  * include
  * endpoints for creating notifications as these are handled internally.
  */
+@Tag(name = "Notification",
+    description = "Endpoints for managing notifications")
 @RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {
@@ -34,6 +39,12 @@ public class NotificationController {
    *         specified user or a no content status if no notifications are found
    *         for the user
    */
+  @Operation(summary = "Get all notifications for a user", 
+      description = "Retrieve all notifications associated with the authenticated user.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved notifications"),
+      @ApiResponse(responseCode = "204", description = "No notifications found for the user")
+  })
   @GetMapping("/user")
   public ResponseEntity<List<Notification>> getNotificationsByUserId(
       @RequestHeader("Authorization") String token) {
@@ -51,6 +62,12 @@ public class NotificationController {
    * @return a ResponseEntity containing the Notification object with the
    *         specified ID, or a not found status
    */
+  @Operation(summary = "Get a notification by ID", 
+      description = "Retrieve a specific notification by its unique ID.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved the notification"),
+      @ApiResponse(responseCode = "204", description = "Notification not found")
+  })
   @GetMapping("/{id}")
   public ResponseEntity<Notification> getNotificationById(@PathVariable long id,
       @RequestHeader("Authorization") String token) {
@@ -69,6 +86,12 @@ public class NotificationController {
    * @param token the JWT token of the user
    * @return a ResponseEntity indicating the result of the operation
    */
+  @Operation(summary = "Mark a notification as read", 
+      description = "Mark a specific notification as read by its unique ID.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", 
+          description = "Successfully marked the notification as read")
+  })
   @PatchMapping("/{id}/read")
   public ResponseEntity<Void> markNotificationAsRead(
       @PathVariable long id, @RequestHeader("Authorization") String token) {

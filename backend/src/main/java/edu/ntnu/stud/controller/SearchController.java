@@ -2,6 +2,10 @@ package edu.ntnu.stud.controller;
 
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.service.SearchService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for handling search requests.
  */
+@Tag(name = "Search", 
+    description = "Endpoints for searching listings")
 @RestController
 @RequestMapping("/api/search")
 public class SearchController {
@@ -31,6 +37,12 @@ public class SearchController {
    * @param size the number of listings per page
    * @return a ResponseEntity containing the page of listings or no content if none found
    */
+  @Operation(summary = "Search listings", 
+      description = "Retrieves a page of listings based on the search criteria.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved listings"),
+      @ApiResponse(responseCode = "204", description = "No content found")
+  })
   @GetMapping
   public ResponseEntity<Page<ListingResponse>> searchPage(
       @RequestParam(defaultValue = "") String query,
