@@ -53,8 +53,8 @@ public class Listing {
       String description,
       int category,
       int subcategory,
-      long longitude,
-      long latitude,
+      double longitude,
+      double latitude,
       Long ownerId) {
     this.uuid = UUID.randomUUID().toString();
     this.name = name;

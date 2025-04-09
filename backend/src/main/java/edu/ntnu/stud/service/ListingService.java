@@ -81,13 +81,16 @@ public class ListingService {
   public void validateListingRequest(ListingRequest listingRequest) {
     Validate.that(listingRequest.getName(), Validate.isNotEmpty(), "Name must not be empty");
     Validate.that(listingRequest.getPrice(), Validate.isNotNegative(), "Price must be positive");
-    Validate.that(listingRequest.getDescription(), Validate.isNotEmpty(), 
+    Validate.that(listingRequest.getDescription(), Validate.isNotEmpty(),
         "Description must not be empty");
-    Validate.that(categoryService.getCategoryById(listingRequest.getCategory()),Validate.isNotNull(),"Category must exist in database");
-    Validate.that(subCategoryService.getSubCategoryById(listingRequest.getCategory()),Validate.isNotNull(),"subcategory must exist in database");
+    Validate.that(categoryService.getCategoryById(
+        listingRequest.getCategory()), Validate.isNotNull(), "Category must exist in database");
+    Validate.that(subCategoryService.getSubCategoryById(
+        listingRequest.getCategory()), Validate.isNotNull(),
+        "subcategory must exist in database");
     Validate.that(listingRequest.getLongitude(), Validate.isNotNegative(),
         "Longitude must be positive");
-    Validate.that(listingRequest.getLatitude(), Validate.isNotNegative(), 
+    Validate.that(listingRequest.getLatitude(), Validate.isNotNegative(),
         "Latitude must be positive");
   }
 
@@ -115,9 +118,9 @@ public class ListingService {
   public void validateListingUpdate(ListingUpdate listingUpdate, String token) {
     long ownerId = jwtService.extractUserId(token.substring(7));
     Listing existingListing = listingRepo.getListingByUuid(listingUpdate.getUuid());
-    Validate.that(existingListing, Validate.isNotNull(), 
+    Validate.that(existingListing, Validate.isNotNull(),
         "Listing not found with UUID: " + listingUpdate.getUuid());
-    Validate.that((ownerId == existingListing.getOwnerId()), Validate.isTrue(), 
+    Validate.that((ownerId == existingListing.getOwnerId()), Validate.isTrue(),
         "User does not own the listing with UUID: " + listingUpdate.getUuid());
     Validate.that((!existingListing.isSold() && !listingUpdate.isSold()), Validate.isTrue(),
         "Cannot update a listing that has already been sold.");
@@ -127,12 +130,14 @@ public class ListingService {
     Validate.that(listingUpdate.getPrice(), Validate.isNotNegative(), "Price must be positive");
     Validate.that(listingUpdate.getDescription(), Validate.isNotEmpty(),
         "Description must not be empty");
-    Validate.that(categoryService.getCategoryById(listingUpdate.getCategory()),Validate.isNotNull(),"Category must exist in database");
-    Validate.that(subCategoryService.getSubCategoryById(listingUpdate.getCategory()),Validate.isNotNull(),"subcategory must exist in database");
+    Validate.that(categoryService.getCategoryById(
+        listingUpdate.getCategory()), Validate.isNotNull(), "Category must exist in database");
+    Validate.that(subCategoryService.getSubCategoryById(
+        listingUpdate.getCategory()), Validate.isNotNull(), "subcategory must exist in database");
 
-    Validate.that(listingUpdate.getLongitude(), Validate.isNotNegative(), 
+    Validate.that(listingUpdate.getLongitude(), Validate.isNotNegative(),
         "Longitude must be positive");
-    Validate.that(listingUpdate.getLatitude(), Validate.isNotNegative(), 
+    Validate.that(listingUpdate.getLatitude(), Validate.isNotNegative(),
         "Latitude must be positive");
   }
 
@@ -147,8 +152,6 @@ public class ListingService {
     validateListingUpdate(listing, token);
     return listingRepo.updateListing(listing);
   }
-
-
 
   /**
    * Deletes a listing.
@@ -186,9 +189,9 @@ public class ListingService {
   /**
    * Retrieves a paginated list of listings owned by a specific user.
    *
-   * @param userId   the ID of the user whose listings to retrieve
-   * @param page    the page number to retrieve
-   * @param size    the number of listings per page
+   * @param userId the ID of the user whose listings to retrieve
+   * @param page   the page number to retrieve
+   * @param size   the number of listings per page
    * @return a page of listings owned by the specified user
    */
   public Page<ListingResponse> getListingsByUserIdPage(long userId, int page, int size) {
@@ -202,9 +205,9 @@ public class ListingService {
   /**
    * Retrieves a paginated list of archived listings owned by a specific user.
    *
-   * @param userId   the ID of the user whose archived listings to retrieve
-   * @param page    the page number to retrieve
-   * @param offset  the number of listings per page
+   * @param userId the ID of the user whose archived listings to retrieve
+   * @param page   the page number to retrieve
+   * @param offset the number of listings per page
    * @return a page of archived listings owned by the specified user
    */
   public Page<ListingResponse> getArchivedListingsByUserIdPage(long userId, int page, int offset) {
