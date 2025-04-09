@@ -18,8 +18,7 @@ export const login = async (req: LoginRequest): Promise<LoginResponse> => {
     });
 
     if (!res.ok) {
-        const err = await res.json();
-        throw new ApiError(err.error);
+        throw new ApiError("Bad credentials");
     }
 
     return res.json();
