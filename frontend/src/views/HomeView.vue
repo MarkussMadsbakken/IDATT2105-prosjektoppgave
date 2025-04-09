@@ -65,7 +65,12 @@ useInfiniteScroll(
     <SearchOptions @search="handleSearch" @select-category="handleCategoryClick" :open="true" />
     <Divider />
     <div class="header-title">
-      {{ $t('home.recommended') }}
+      <template v-if="auth.isLoggedIn()">
+        {{ $t('home.recommended') }}
+      </template>
+      <template v-else>
+        {{ $t('home.listings') }}
+      </template>
     </div>
     <div class="recommended-listings">
       <template v-for="(page, index) in listings">
