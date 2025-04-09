@@ -87,10 +87,8 @@ public class ListingRepo {
     List<Listing> listings = jdbcTemplate.query(sql, listingRowMapper, limit, offset);
 
     // Calculate the total number of listings
-    Integer totalResult = jdbcTemplate.queryForObject(
-        "SELECT COUNT(*) FROM listings WHERE deleted = false AND active = true", Integer.class);
-    int total = totalResult != null ? totalResult : 0;
-
+    String countSql = "SELECT COUNT(*) FROM listings WHERE deleted = false AND active = true";
+    int total = jdbcTemplate.query(countSql, (rs, rowNum) -> rs.getInt(1)).get(0);
     return new PageImpl<>(listings, pageable, total);
   }
 
