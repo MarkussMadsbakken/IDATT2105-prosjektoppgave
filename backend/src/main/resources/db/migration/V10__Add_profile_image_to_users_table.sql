@@ -1,3 +1,2 @@
-ALTER TABLE users
-ADD COLUMN image_blob LONGBLOB,
-ADD COLUMN image_file_type VARCHAR(16);
+ALTER TABLE users ADD COLUMN image_blob LONGBLOB;
+ALTER TABLE users ADD COLUMN image_file_type VARCHAR(16);
