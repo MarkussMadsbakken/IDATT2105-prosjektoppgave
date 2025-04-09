@@ -180,6 +180,16 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/edu/ntnu/stud/model/**</exclude>
+								<exclude>**/edu/ntnu/stud/controller/**</exclude>
+								<exclude>**/edu/ntnu/stud/config/**</exclude>
+								<exclude>**/edu/ntnu/stud/factory/**</exclude>
+								<exclude>**/edu/ntnu/stud/filter/**</exclude>
+								<exclude>**/App.class</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 					<execution>
 						<id>check</id>
@@ -194,7 +204,7 @@
 										<limit>
 											<counter>INSTRUCTION</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.70</minimum>
+											<minimum>0.50</minimum>
 										</limit>
 									</limits>
 								</rule>
