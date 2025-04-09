@@ -77,12 +77,9 @@ jobs:
           sleep 10
       - name: Checkout Code
         uses: actions/checkout@v4
-      - name: Install cypress
-        run: npm install cypress
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
-          install: false  
+          install: npm ci
           working-directory: frontend
           start: npx serve -s dist -l 4173
-          config-file: frontend/cypress.config.ts
