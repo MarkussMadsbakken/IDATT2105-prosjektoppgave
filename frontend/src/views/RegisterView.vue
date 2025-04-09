@@ -58,8 +58,7 @@ const handleNextStep = () => {
                 editUser({
                     firstName: firstName.value,
                     lastName: lastName.value,
-                    profileImage: userImage.value ?? undefined,
-                    username: username.value,
+                    profileImage: userImage.value ?? undefined
                 }, {
                     onSettled: () => {
                         queryClient.invalidateQueries({

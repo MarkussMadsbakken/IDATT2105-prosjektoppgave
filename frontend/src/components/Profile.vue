@@ -1,17 +1,12 @@
 <script setup lang="ts">
 
-import Button from '@/components/Button.vue';
-import { logout, useAuth } from '@/stores/auth';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import ListingCard from "@/components/ListingCard.vue";
-import { Settings } from "lucide-vue-next";
-import UserImage from "@/components/UserImage.vue";
-import {useGetUser, useGetUserBookmarks} from '@/actions/user';
-import {computed, watch} from 'vue';
+import { useGetUser, useGetUserBookmarks, useGetUserListings } from '@/actions/user';
 import Divider from '@/components/Divider.vue';
-import { useGetUserListings } from '@/actions/user';
-
-
+import ListingCardSkeleton from './skeleton/ListingCardSkeleton.vue';
+import ProfileHeader from './profile/ProfileHeader.vue';
+import ProfileHeaderSkeleton from './skeleton/ProfileHeaderSkeleton.vue';
 
 const emit = defineEmits<{
     (e: 'logout'): void;
@@ -24,79 +19,65 @@ const props = defineProps<{
 
 
 const router = useRouter();
+
 const handleLogout = () => {
     emit('logout');
 }
 
-const { data: user } = useGetUser(props.userId);
+const { data: user, isPending: userIsPending } = useGetUser(props.userId);
 const { data: listings, isPending, isError, error } = useGetUserListings(props.userId);
-const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmarkError, error: bookmarkError} = useGetUserBookmarks();
-const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
+const { data: favoriteListings, isPending: isBookmarkPending, isError: isBookmarkError, error: bookmarkError } = useGetUserBookmarks();
 
 </script>
 
 <template>
     <div class="page">
-        <div class="user-box">
-            <div class="user-info-box">
-                <UserImage :user-id="props.userId" :size="120" stroke-width="1.5" />
-                <h3 class="username">{{ user?.username }}</h3>
-            </div>
-            <div class="text-field">
-                <div class="admin-field" v-if=user?.isAdmin>Admin</div>
-                <div class="member-since">{{ $t('profile.memberSince', {date}) }}</div>
-            </div>
-            <div class="settings-container" v-if="isOwnProfile">
-                <Settings class="settings-button" :size="35" @click="router.push('/profile/edit')" :stroke-width="2.2">
-                </Settings>
-                <Button class="logout-button" variant="primary" @click="handleLogout">{{ $t("profile.logout") }}</Button>
-            </div>
-
+        <div class="profile-header">
+            <ProfileHeaderSkeleton @logout="handleLogout" :is-own-profile="props.isOwnProfile" v-if="userIsPending" />
+            <ProfileHeader v-else :user="user!" :is-own-profile="props.isOwnProfile"
+                @edit-profile="router.push('/profile/edit')" @logout="handleLogout" />
         </div>
         <Divider />
         <div class="title-wrapper">
             <div class="title"> {{ isOwnProfile ? $t("profile.ownListings") : $t("profile.listingsByUser", {
                 name: user?.firstName ?? user?.username
             }) }} </div>
-            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">{{ $t("profile.showAll") }}</RouterLink>
+            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">{{ $t("profile.showAll") }}
+            </RouterLink>
         </div>
-      <div v-if="isPending">Laster oppføringer...</div>
-      <div v-else-if="isError">{{ $t("profile.couldNotLoadListings") }}</div>
-      <div v-else>
-        <div v-if="listings && listings.length > 0" class="listing-grid">
-          <ListingCard
-            v-for="listing in listings.slice(0, 3)"
-            :key="listing.uuid"
-            :listing="listing"
-            size="medium"
-          />
+        <div v-if="isPending" class="listing-grid">
+            <ListingCardSkeleton :size="'medium'" v-for="i in 3" :key="i" />
         </div>
-        <div v-else class="no-listings">
-          {{ $t('profile.emptyListings') }}
-        </div>
-      </div>
+        <div v-else-if="isError">{{ $t("profile.couldNotLoadListings") }}</div>
+        <template v-else>
+            <div v-if="listings && listings.length > 0" class="listing-grid">
+                <ListingCard v-for="listing in listings.slice(0, 3)" :key="listing.uuid" :listing="listing"
+                    size="medium" />
+            </div>
+            <div v-else class="no-listings">
+                {{ $t('profile.emptyListings') }}
+            </div>
+        </template>
         <template v-if="isOwnProfile">
             <Divider />
             <div class="title-wrapper">
-                <div class="title"> {{$t("profile.myFavorites")}} </div>
+                <div class="title"> {{ $t("profile.myFavorites") }} </div>
                 <RouterLink class="router-link" to="/favorites">{{ $t("profile.showAll") }}</RouterLink>
             </div>
 
-          <div v-if="isBookmarkPending">Laster oppføringer...</div>
-          <div v-else-if="isBookmarkError">{{ $t("profile.couldNotLoadListings") }}</div>
-          <div v-else>
-            <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
-              <ListingCard
-                v-for="listing in favoriteListings.slice(0, 3)"
-                :key="listing.uuid"
-                :listing="listing"
-                size="medium"
-              />
+            <div v-if="isBookmarkPending" class="listing-grid-favorites">
+                <ListingCardSkeleton :size="'medium'" v-for="i in 3" :key="i" />
             </div>
-            <div v-else class="no-listings">
-              {{ $t("profile.noFavorites") }}
+            <div v-else-if="isBookmarkError">{{ $t("profile.couldNotLoadListings") }}</div>
+            <div v-else>
+                <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
+                    <ListingCard v-for="listing in favoriteListings.slice(0, 3)" :key="listing.uuid" :listing="listing"
+                        size="medium" />
+                </div>
+                <div v-else class="no-listings">
+                    {{ $t("profile.noFavorites") }}
+                </div>
             </div>
-          </div>
         </template>
 
     </div>
@@ -105,23 +86,10 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
 
 
 <style scoped>
-.user-box {
-    margin-top: 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 5px;
-    width: 40rem;
-    height: 8rem;
-    gap: 3rem;
-}
-
-.user-info-box {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
+.profile-header {
+    margin-top: 1rem;
+    width: 80%;
+    min-width: 20rem;
 }
 
 .page {
@@ -133,21 +101,10 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     padding-bottom: 3rem;
 }
 
-.username {
-    font-size: 20px;
-    font-weight: bold;
-}
-
 .text-field {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 3rem;
-}
-
-.settings-button {
-    cursor: pointer;
-    display: block;
-
 }
 
 .settings-container {
@@ -166,7 +123,8 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     max-width: calc(3*25rem + 2*2rem);
     margin: 0 auto;
 }
-.listing-grid-favorites{
+
+.listing-grid-favorites {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
@@ -180,13 +138,6 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     flex: 1 1 18rem;
     max-width: 25rem;
     box-sizing: border-box;
-}
-
-.logout-button {
-    width: 7rem;
-    height: 2rem;
-    font-size: 14px;
-    padding: 0.25rem 0.25rem;
 }
 
 .router-link {
@@ -213,9 +164,10 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     font-size: 50px;
     font-weight: bold;
 }
-.no-listings{
-  font-size: 1rem;
-  padding-bottom: 1rem;
-  font-weight: bold;
+
+.no-listings {
+    font-size: 1rem;
+    padding-bottom: 1rem;
+    font-weight: bold;
 }
 </style>

@@ -81,7 +81,7 @@ public class AuthServiceTest {
 
   @Test
   void register() {
-    RegisterRequest registerRequest = new RegisterRequest("testuser1", "password");
+    RegisterRequest registerRequest = new RegisterRequest("testuser1", "password1");
 
     try {
       authService.register(registerRequest);
@@ -109,7 +109,6 @@ public class AuthServiceTest {
 
     LoginResponse loginResponse = authService.login(loginRequest);
 
-    assertThat(loginResponse.getMessage()).isEqualTo("Login successful!");
     assertThat(loginResponse.getToken()).isNotNull();
   }
 
@@ -120,7 +119,6 @@ public class AuthServiceTest {
 
     LoginResponse loginResponse = authService.login(loginRequest);
 
-    assertThat(loginResponse.getMessage()).isEqualTo("Invalid username or password");
     assertThat(loginResponse.getToken()).isNull();
   }
 }

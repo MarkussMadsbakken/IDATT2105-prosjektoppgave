@@ -54,11 +54,11 @@ const {
   data: image,
 } = useUserImage(auth.userId);
 
-const usernameIsError = ref(false);
+
 const profileImagePreview = ref<string | null>(image.value ? toImgString(image.value) : null);
 const firstName = ref(user.value?.firstName ?? "");
 const lastName = ref(user.value?.lastName ?? "");
-const userName = ref(user.value?.username ?? "");
+
 
 watch(profileImage, (newImage) => {
   if (newImage) {
@@ -70,7 +70,6 @@ watchOnce(user, (newuser) => {
   if (newuser) {
     firstName.value = newuser.firstName ?? "";
     lastName.value = newuser.lastName ?? "";
-    userName.value = newuser.username!;
   }
 });
 
@@ -86,14 +85,7 @@ const onImageSelected = (files: File[]) => {
   }
 };
 const onSubmit = () => {
-
-  if (!userName.value) {
-    usernameIsError.value = true;
-    return;
-  }
-
   updateUser({
-    username: userName.value,
     firstName: firstName.value,
     lastName: lastName.value,
     profileImage: profileImage.value ?? undefined,
@@ -121,17 +113,25 @@ const onSubmit = () => {
       <FormGroup name="lastName" :label="$t('profile.lastName')">
         <TextInput v-model="lastName" type="text" id="lastName" />
       </FormGroup>
-      <FormGroup name="userName" :label="$t('login.username')" :is-not-filled-in="usernameIsError">
-        <TextInput v-model="userName" type="text" id="userName" :class="{ invalid: usernameIsError }" />
-      </FormGroup>
-      <Button variant="primary" @click="onSubmit">
-        <template v-if="isUpdatingUser">
-          <LoadingSpinner />
-        </template>
-        <template v-else>
-          {{ $t("profile.saveChanges") }}
-        </template>
-      </Button>
+
+
+      <div class="button-box">
+
+        <div class="save-button-wrapper">
+          <Button variant="primary" @click="onSubmit">
+            <template v-if="isUpdatingUser">
+              <LoadingSpinner />
+            </template>
+            <template v-else>
+              {{ $t("profile.saveChanges") }}
+            </template>
+          </Button>
+        </div>
+        <Button class="edit-password-button" variant="primary" @click="router.push('/profile/change-credentials')">
+          {{ $t("profile.editPassword") }}
+        </Button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -184,4 +184,19 @@ const onSubmit = () => {
 .invalid {
   border: 1px solid red;
 }
+.button-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.save-button-wrapper {
+  margin: 0 auto;
+}
+.edit-password-button{
+  width: 7rem;
+}
+
 </style>

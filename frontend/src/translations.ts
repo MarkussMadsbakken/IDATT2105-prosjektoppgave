@@ -61,6 +61,18 @@ const profileTranslations = {
     saveChanges: "Lagre endringer",
     editProfile: "Rediger profil",
     noFavorites: "Ingen favoritter funnet",
+    editPassword: "Endre passord",
+    currentPassword: "Nåværende passord",
+    newPassword: "Nytt passord",
+    passwordUpdated: "Passordet ble oppdatert",
+    repeatPassword: "Gjenta passord",
+    savePassword: "Lagre passord",
+    updateFailed: "Oppdatering feilet",
+    credentialsUpdated: "Brukeropplysninger oppdatert",
+    passWordTooShort: "Passordet må være minst 8 tegn langt",
+    passwordMismatch: "Passordene stemmer ikke overens",
+    error: "Feil",
+    userDoesNotExist: "Brukeren finnes ikke",
   },
   en: {
     memberSince: "Member since {date}",
@@ -75,7 +87,17 @@ const profileTranslations = {
     lastName: "Last name",
     saveChanges: "Save Changes",
     editProfile: "Edit profile",
-    noFavorites: "No favorites found"
+    noFavorites: "No favorites found",
+    editPassword: "Edit password",
+    currentPassword: "Current password",
+    newPassword: "New password",
+    passwordUpdated: "Password updated",
+    repeatPassword: "Repeat password",
+    savePassword: "Save password",
+    updateFailed: "Update failed",
+    credentialsUpdated: "User credentials updated",
+    passwordTooShort: "Password must be at least 8 characters long",
+    passwordMismatch: "Passwords do not match",
   }
 }
 const registerTranslations = {
@@ -115,7 +137,7 @@ const registerTranslations = {
     chooseFirstName: "Choose first name",
     chooseLastName: "Choose last name",
     preview: "Preview",
-    profilePicture: "Profile picture"
+    profilePicture: "Profile picture",
   }
 }
 const homeViewTranslations = {
@@ -250,7 +272,7 @@ const createListingViewTranslations = {
     thisFieldIsRequired: "Dette feltet er påkrevd",
     selectSubCategory: "Velg underkategori",
     selectPosition: "Velg posisjon",
-    position:"Posisjon"
+    position: "Posisjon"
   },
   en: {
     createListing: "Create a new listing",
@@ -270,7 +292,7 @@ const createListingViewTranslations = {
     subCategories: "Sub categories",
     subCategory: "Sub category",
     selectPosition: "Select position",
-    position:"Position"
+    position: "Position"
   }
 }
 const notificationTranslations = {
@@ -312,18 +334,47 @@ const chatTranslations = {
   }
 
 }
-const mapTranslations= {
-  no:{
+const mapTranslations = {
+  no: {
     searchAddress: "Søk etter adresse",
     selectPosition: "Velg posisjon",
     noResults: "Ingen resultater funnet",
     cancel: "Avbryt",
   },
-  en:{
+  en: {
     searchAddress: "Search for address",
     selectPosition: "Select position",
     noResults: "No results found",
     cancel: "Cancel",
+  }
+}
+
+const breadcrumbTranslations = {
+  no: {
+    home: "Hjem",
+    profile: "Profil",
+    listings: "Annonser",
+    myFavorites: "Mine favoritter",
+    myListings: "Mine annonser",
+    messages: "Meldinger",
+    notifications: "Varslinger",
+    checkout: "Kjøp",
+    chat: "Chat",
+    editProfile: "Rediger profil",
+    createListing: "Opprett annonse",
+  },
+  en: {
+    home: "Home",
+    profile: "Profile",
+    listings: "Listings",
+    myFavorites: "My favorites",
+    myListings: "My listings",
+    messages: "Messages",
+    notifications: "Notifications",
+    checkout: "Checkout",
+    chat: "Chat",
+    editProfile: "Edit profile",
+    createListing: "Create listing"
   }
 }
 
@@ -358,7 +409,8 @@ const i18n = createI18n({
       search: {
         categorySelector: categorySelectorTranslations.no,
         ...searchTranslations.no,
-      }
+      },
+      breadcrumb: breadcrumbTranslations.no,
     }, en: {
       listings: {
         archive: archivedListingsTranslations.en,
@@ -384,7 +436,8 @@ const i18n = createI18n({
       search: {
         categorySelector: categorySelectorTranslations.en,
         ...searchTranslations.en,
-      }
+      },
+      breadcrumb: breadcrumbTranslations.en,
     }
   }
 });

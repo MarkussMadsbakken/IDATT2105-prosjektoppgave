@@ -36,13 +36,24 @@ public class AuthService {
   /**
    * Registers a new user in the system.
    */
-  public RegisterResponse register(RegisterRequest registerRequest) throws Exception {
-    if (userRepo.getUserByUsername(registerRequest.getUsername()) != null) {
-      throw new Exception("User with username "
-          + registerRequest.getUsername()
-          + " already exists"
-      );
-    }
+  public RegisterResponse register(RegisterRequest registerRequest) {
+
+    Validate.that(registerRequest.getUsername(),
+        Validate.isNotBlankOrNull(),
+        "Username cannot be blank or null"
+    );
+    Validate.that(isUsernameAvailable(registerRequest.getUsername()),
+        Validate.isTrue(),
+        "Username is not available"
+    );
+
+    Validate.that(registerRequest.getPassword(),
+        Validate.isNotBlankOrNull(),
+        "New password cannot be blank or null");
+    Validate.that(isPasswordValid(registerRequest.getPassword()),
+        Validate.isTrue(),
+        "New password must be at least 8 characters long, including both a letter and a digit"
+    );
 
     User user = new User();
 
@@ -50,35 +61,31 @@ public class AuthService {
     user.setPassword(encoder.encode(registerRequest.getPassword()));
     userRepo.addUser(user);
 
-    // Log the user in after registration
-    LoginResponse loginResponse = authenticateUser(
-        user.getUsername(),
-        registerRequest.getPassword()
-    );
+    String token = authenticateUser(registerRequest.getUsername(), registerRequest.getPassword());
 
-    return new RegisterResponse("Registration successful!", loginResponse.getToken());
+    return new RegisterResponse("Registration successful!", token);
   }
 
   /**
    * Verifies the login credentials of a user.
    */
   public LoginResponse login(LoginRequest loginRequest) {
-    return authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+    String token = authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+    return new LoginResponse("Login successful!", token);
   }
 
   /**
    * Authenticates the user and generates a token.
    */
-  private LoginResponse authenticateUser(String username, String password) {
+  private String authenticateUser(String username, String password) {
     Authentication authentication = authManager
         .authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
     if (authentication.isAuthenticated() && userRepo.getUserByUsername(username) != null) {
       User user = userRepo.getUserByUsername(username);
-      String token = jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
-      return new LoginResponse("Login successful!", token);
+      return jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
     } else {
-      return new LoginResponse("Invalid username or password", null);
+      return null;
     }
   }
 
@@ -96,18 +103,18 @@ public class AuthService {
     User user = userRepo.getUserByUsername(
         jwtService.extractUserName(token.substring(7))
     );
-
-    // validations for username
     Validate.that(changeCredentialsRequest.getUsername(),
         Validate.isNotBlankOrNull(),
         "New username cannot be blank or null"
     );
-    Validate.that(isUsernameAvailable(changeCredentialsRequest.getUsername(), token),
-        Validate.isTrue(),
-        "New username is not available"
-    );
-
-    // validations for password
+    // check if new username is availanle if the request includes a new username,
+    // skip if user is keeping old username
+    if (!user.getUsername().equals(changeCredentialsRequest.getUsername())) {
+      Validate.that(isUsernameAvailable(changeCredentialsRequest.getUsername()),
+          Validate.isTrue(),
+          "New username is not available"
+      );
+    }
     Validate.that(!encoder.matches(changeCredentialsRequest.getCurrentPassword(),
             user.getPassword()),
             Validate.isFalse(),
@@ -133,11 +140,11 @@ public class AuthService {
     user.setUsername(changeCredentialsRequest.getUsername());
     userRepo.updateUserCredentials(user);
 
-    LoginResponse loginResponse = authenticateUser(
+    String newToken = authenticateUser(
         changeCredentialsRequest.getUsername(),
         changeCredentialsRequest.getNewPassword()
     );
-    return new ChangeCredentialsResponse("Password changed successfully", loginResponse.getToken());
+    return new ChangeCredentialsResponse("Password changed successfully", newToken);
   }
 
   /**
@@ -172,16 +179,12 @@ public class AuthService {
   }
 
   /**
-   * Verfies that a username is available.
+   * Checks if a username is available.
    *
-   * @param username   the username to verify
-   * @param token      the JWT token of the user making the request
-   * @return true if the username is available or is already used by the current user,
-   *         false otherwise
+   * @param username   the username to check availability of
+   * @return true if the username is available or false if otherwise
    */
-  public boolean isUsernameAvailable(String username, String token) {
-    long userId = jwtService.extractUserId(token.substring(7));
-    User existingUserByUsername = userRepo.getUserByUsername(username);
-    return existingUserByUsername == null || existingUserByUsername.getId() == userId;
+  public boolean isUsernameAvailable(String username) {
+    return userRepo.getUserByUsername(username) == null;
   }
 }
