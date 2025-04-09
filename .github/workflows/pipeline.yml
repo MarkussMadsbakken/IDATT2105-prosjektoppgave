@@ -77,9 +77,12 @@ jobs:
         run: |
           nohup java -jar backend/target/prosjektoppgave-0.0.1-SNAPSHOT.jar --spring.profiles.active=test > backend.log 2>&1 &
           sleep 10
+      - name: Start Frontend
+        run: |
+          nohup npx serve -s frontend/dist -l 4173 &
+          sleep 10
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
-          install: npm ci
           working-directory: frontend
-          start: npx serve -s dist -l 4173
+
