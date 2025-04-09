@@ -7,8 +7,6 @@ import edu.ntnu.stud.model.LoginResponse;
 import edu.ntnu.stud.model.RegisterRequest;
 import edu.ntnu.stud.model.RegisterResponse;
 import edu.ntnu.stud.service.AuthService;
-import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
