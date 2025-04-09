@@ -1,5 +1,7 @@
 package edu.ntnu.stud.controller;
 
+import edu.ntnu.stud.model.ChangeCredentialsRequest;
+import edu.ntnu.stud.model.ChangeCredentialsResponse;
 import edu.ntnu.stud.model.LoginRequest;
 import edu.ntnu.stud.model.LoginResponse;
 import edu.ntnu.stud.model.RegisterRequest;
@@ -13,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * This is a controller class for managing user authentication and registration.
- * It provides endpoints for user registration and login.
+ * This is a controller class responsible for authentication and security-related operations,
+ * like login, registration, token management and changing a user's password.
+ * It provides endpoints for user registration, login and changing of password.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -71,5 +75,23 @@ public class AuthController {
       logger.error("Error logging in user: {}", e.getMessage());
       return ResponseEntity.badRequest().body(errorResponse);
     }
+  }
+
+  /**
+   * This method handles requests to change a user's password.
+   * It verifies the user's identity and updates the password if valid.
+   *
+   * @param changeCredentialsRequest the request containing the current and new passwords
+   * @return a ResponseEntity indicating success or failure
+   */
+  @PostMapping("/change-credentials")
+  public ResponseEntity<?> changeCredentials(
+      @RequestBody ChangeCredentialsRequest changeCredentialsRequest,
+      @RequestHeader("Authorization") String token
+  ) {
+    ChangeCredentialsResponse changeCredentialsResponse = service
+        .changeCredentials(changeCredentialsRequest, token);
+    logger.info("User credentials changed successfully");
+    return ResponseEntity.ok(changeCredentialsResponse);
   }
 }
