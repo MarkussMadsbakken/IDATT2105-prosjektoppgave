@@ -41,8 +41,6 @@ public class ReservationRepoTest {
    */
   @BeforeEach
   public void setUp() {
-    jdbcTemplate.execute("DELETE FROM reservations");
-
     listing = new Listing();
     listing.setName("Test Listing");
     listing.setDescription("This is a test listing.");
@@ -60,6 +58,7 @@ public class ReservationRepoTest {
   @AfterEach
   public void tearDown() {
     jdbcTemplate.execute("DELETE FROM reservations");
+    jdbcTemplate.execute("DELETE FROM listings");
   }
 
   @Test
