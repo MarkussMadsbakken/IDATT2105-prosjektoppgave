@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.request;
 
 /**
  * Represents a login request in the system.

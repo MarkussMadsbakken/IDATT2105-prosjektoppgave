@@ -1,5 +1,8 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.request;
 
+/**
+ * Represents a request to create a chat between a buyer and a seller.
+ */
 public class CreateChatRequest {
 
   private String listingId;

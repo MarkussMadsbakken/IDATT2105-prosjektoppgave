@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.request;
 
 /**
  * This class represents a request to bookmark a listing in the application.

@@ -1,7 +1,7 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.UserHistoryRequest;
 import edu.ntnu.stud.model.base.UserHistory;
+import edu.ntnu.stud.model.request.UserHistoryRequest;
 import edu.ntnu.stud.repo.UserHistoryRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;
