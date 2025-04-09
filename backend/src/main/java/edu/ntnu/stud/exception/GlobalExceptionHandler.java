@@ -3,6 +3,7 @@ package edu.ntnu.stud.exception;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -102,6 +103,19 @@ public class GlobalExceptionHandler {
     logger.error("Request method not supported: {}", ex.getMethod(), ex);
     return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
         .body("Request method " + ex.getMethod() + " not supported for this endpoint.");
+  }
+
+  /**
+   * Handles AuthenticationException.
+   *
+   * @param ex the AuthenticationException
+   * @return the ResponseEntity with a 401 status and error message
+   */
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
+    logger.error("Authentication failed: {}", ex.getMessage(), ex);
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        .body("Authentication failed: " + ex.getMessage());
   }
 
   /**
