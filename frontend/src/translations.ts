@@ -271,6 +271,7 @@ const formTranslations = {
     imageSelected: "Bilde valgt",
     chooseImage: "Velg bilde",
     uploadedImages: "Opplastede bilder",
+    thisFieldIsRequired: "Dette feltet er påkrevd",
   },
   en: {
     error: "Error",
@@ -279,6 +280,7 @@ const formTranslations = {
     imageSelected: "Image selected",
     chooseImage: "Choose image",
     uploadedImages: "Uploaded images",
+    thisFieldIsRequired: "This field is required",
   }
 }
 
@@ -405,15 +407,6 @@ const breadcrumbTranslations = {
     editProfile: "Edit profile",
     createListing: "Create listing",
     editCredentials: "Edit credentials",
-  }
-}
-
-const formTranslations = {
-  no: {
-    thisFieldIsRequired: "Dette feltet er påkrevd",
-  },
-  en: {
-    thisFieldIsRequired: "This field is required",
   }
 }
 
