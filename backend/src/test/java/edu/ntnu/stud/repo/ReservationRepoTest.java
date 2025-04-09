@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.Reservation;
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +54,6 @@ public class ReservationRepoTest {
     reservation.setId(1L);
     reservation.setUserId(1L);
     reservation.setListingId(listingRepo.getAllListings().get(0).getUuid());
-    reservation.setCreatedAt(new Timestamp(System.currentTimeMillis()));
   }
 
   @AfterEach
@@ -85,7 +86,7 @@ public class ReservationRepoTest {
 
     List<Reservation> reservations = reservationRepo.getReservationsByUserId(
         1L,
-        new Timestamp(System.currentTimeMillis() + 10000));
+        Timestamp.from(ZonedDateTime.now(ZoneId.systemDefault()).minusHours(1).toInstant()));
     assertThat(reservations).hasSize(1);
   }
 
@@ -104,7 +105,7 @@ public class ReservationRepoTest {
 
     Reservation retrieved = reservationRepo.getReservationByUserIdAndListingId(
         1L, reservation.getListingId(), 
-        new Timestamp(System.currentTimeMillis() + 10000));
+        Timestamp.from(ZonedDateTime.now(ZoneId.systemDefault()).minusHours(1).toInstant()));
     assertThat(retrieved).isNotNull();
     assertThat(retrieved.getUserId()).isEqualTo(1L);
     assertThat(retrieved.getListingId()).isEqualTo(reservation.getListingId());
@@ -115,7 +116,8 @@ public class ReservationRepoTest {
     reservationRepo.addReservation(reservation);
 
     Reservation retrieved = reservationRepo.getReservationByListingId(
-        reservation.getListingId(), new Timestamp(System.currentTimeMillis() + 10000));
+        reservation.getListingId(), 
+        Timestamp.from(ZonedDateTime.now(ZoneId.systemDefault()).minusHours(1).toInstant()));
     assertThat(retrieved).isNotNull();
     assertThat(retrieved.getListingId()).isEqualTo(reservation.getListingId());
   }
