@@ -3,6 +3,12 @@ package edu.ntnu.stud.controller;
 import edu.ntnu.stud.model.BookmarkUserRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.service.BookmarkService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for managing bookmarks.
  */
+@Tag(name = "Bookmark", 
+    description = "Endpoints for managing bookmarks")
 @RestController
 @RequestMapping("/api/bookmark")
 public class BookmarkController {
@@ -28,6 +36,11 @@ public class BookmarkController {
   /**
    * Retrieves a list of bookmarked listings for a user from the database.
    */
+  @Operation(summary = "Get bookmarked listings", 
+      description = "Retrieves a list of bookmarked listings for a user.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved bookmarks"),
+  })
   @GetMapping("/user")
   public ResponseEntity<List<ListingResponse>> getBookmarks(
       @RequestHeader("Authorization") String token) {
@@ -38,9 +51,15 @@ public class BookmarkController {
   /**
    * Adds a new bookmark to the database.
    */
+  @Operation(summary = "Add a bookmark", 
+      description = "Adds a new bookmark to the database.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Successfully added bookmark"),
+  })
   @PostMapping
   public ResponseEntity<Void> addBookmark(
-      @RequestBody BookmarkUserRequest bookmark, @RequestHeader("Authorization") String token) {
+      @RequestBody BookmarkUserRequest bookmark,
+      @RequestHeader("Authorization") String token) {
     bookmarkService.addBookmark(bookmark, token);
     return ResponseEntity.ok().build();
   }
@@ -48,9 +67,15 @@ public class BookmarkController {
   /**
    * Removes a bookmark from the database.
    */
+  @Operation(summary = "Remove a bookmark", 
+      description = "Removes a bookmark from the database.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Successfully removed bookmark"),
+  })
   @DeleteMapping
   public ResponseEntity<Void> removeBookmark(
-      @RequestBody BookmarkUserRequest bookmark, @RequestHeader("Authorization") String token) {
+      @RequestBody BookmarkUserRequest bookmark,
+      @RequestHeader("Authorization") String token) {
     bookmarkService.removeBookmark(bookmark, token);
     return ResponseEntity.ok().build();
   }
@@ -58,16 +83,30 @@ public class BookmarkController {
   /**
    * Checks if a bookmark exists in the database.
    */
+  @Operation(summary = "Check bookmark existence", 
+      description = "Checks if a bookmark exists in the database for a user on a listing.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Successfully checked bookmark existence"),
+  })
   @GetMapping("/{listingId}/exists")
   public ResponseEntity<Boolean> bookmarkExists(
-      @PathVariable String listingId, @RequestHeader("Authorization") String token) {
+      @Parameter(description = "Listing ID") @PathVariable String listingId,
+      @RequestHeader("Authorization") String token) {
     boolean exists = bookmarkService.bookmarkExists(listingId, token);
     return ResponseEntity.ok(exists);
   }
 
+  /**
+   * Retrieves the number of bookmarks for a specific listing.
+   */
+  @Operation(summary = "Get bookmark count", 
+      description = "Retrieves the number of bookmarks for a specific listing.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved bookmark count"),
+  })
   @GetMapping("/{listingId}/count")
   public ResponseEntity<Long> getNumberOfBookmarks(
-      @PathVariable String listingId) {
+      @Parameter(description = "Listing ID") @PathVariable String listingId) {
     long numberOfBookmarks = bookmarkService.getBookmarksFromListing(listingId).size();
     return ResponseEntity.ok(numberOfBookmarks);
   }
