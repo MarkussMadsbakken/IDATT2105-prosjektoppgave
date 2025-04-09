@@ -45,13 +45,6 @@ router.beforeEach((to, from, next) => {
 
 app.use(router)
 app.use(VueQueryPlugin)
-app.use(PrimeVue, {
-    theme: {
-        preset: Aura,
-    }
-
-})
-
 
 app.directive('click-outside', {
     beforeMount: (el, binding) => {
@@ -68,7 +61,15 @@ app.directive('click-outside', {
 });
 
 app.use(i18n);
-app.use(DialogService)
-app.use(ToastService)
+
+// PrimeVue
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+    }
+
+});
+app.use(DialogService);
+app.use(ToastService);
 
 app.mount('#app')

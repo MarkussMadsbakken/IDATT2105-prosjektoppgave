@@ -100,7 +100,7 @@ const variants = {
 
 <template>
     <div class="outer-wrapper">
-        <h1 class="title">{{ $t("register") }}</h1>
+        <h1 class="title">{{ $t("register.register") }}</h1>
 
         <motion.form layout @submit.prevent="handleNextStep" class="register-form">
             <AnimatePresence mode="wait">
@@ -128,7 +128,7 @@ const variants = {
 
             <div class="step-group">
                 <Button class="prev-step" type="button" @click="handlePrevStep" :disabled="!hasPreviousStep">
-                    {{ $t("previous") }}
+                    {{ $t("register.previous") }}
                 </Button>
 
                 <Button class="next-step" type="submit" :disabled="!hasNextStep">
@@ -136,18 +136,18 @@ const variants = {
                         <LoadingSpinner />
                     </template>
                     <template v-else>
-                        <template v-if="step == 0">{{ $t("next") }}</template>
-                        <template v-else-if="step == 1">{{ $t("next") }}</template>
-                        <template v-else-if="step == 2">{{ $t("createAccount") }}</template>
+                        <template v-if="step == 0">{{ $t("register.next") }}</template>
+                        <template v-else-if="step == 1">{{ $t("register.next") }}</template>
+                        <template v-else-if="step == 2">{{ $t("register.createAccount") }}</template>
                     </template>
                 </Button>
             </div>
-            <div v-if="isError" class="errorText">{{ error?.message ?? $t("somethingWentWrong") }} </div>
+            <div v-if="isError" class="errorText">{{ error?.message ?? $t("register.somethingWentWrong") }} </div>
         </motion.form>
         <div>
-            {{ $t("haveAccount") }}
+            {{ $t("register.haveAccount") }}
             <RouterLink to="/profile" class="login-link">
-                {{ $t("login") }}
+                {{ $t("register.login") }}
             </RouterLink>
         </div>
     </div>

@@ -47,21 +47,21 @@ const emit = defineEmits<{
 
 <template>
     <div class="username-select-container">
-        <FormGroup name="username" label="Velg brukernavn">
+        <FormGroup name="username" :label="$t('register.chooseUsername')">
             <TextInput name="username" v-model="username" type="text" autocomplete="off" />
         </FormGroup>
         <div class="username-availability">
             <template v-if="usernameIsAvailable === null && !isLoading">
-                <p class="username-is-error">{{ $t("usernameTooShort") }}</p>
+                <p class="username-is-error">{{ $t("register.usernameTooShort") }}</p>
             </template>
             <template v-else-if="isLoading">
                 <LoadingSpinner />
             </template>
             <template v-else-if="usernameIsAvailable">
-                <p class="username-is-avaiable">{{ $t("usernameAvailable") }}</p>
+                <p class="username-is-avaiable">{{ $t("register.usernameAvailable") }}</p>
             </template>
             <template v-else>
-                <p class="username-is-error"> {{ $t("usernameNotAvailable") }}</p>
+                <p class="username-is-error"> {{ $t("register.usernameNotAvailable") }}</p>
             </template>
         </div>
     </div>

@@ -42,14 +42,14 @@ const selectedCategoryId = computed(() => {
 <template>
   <div class="search-outer-wrapper">
     <div class="search">
-      <Searchbar :placeholder="$t('search')" @input="$emit('newSearchValue', $event)" @search="$emit('search', $event)"
+      <Searchbar :placeholder="$t('search.search')" @input="$emit('newSearchValue', $event)" @search="$emit('search', $event)"
         :value="props.searchValue" />
     </div>
     <div class="search-icon-wrapper" @click="router.push('/search/map')">
       <Map class="search-icon" :size="24"></Map>
     </div>
   </div>
-  <Collapsible :openTitle="$t('showCategories')" :closedTitle="$t('hideCategories')" :open="props.open">
+  <Collapsible :openTitle="$t('search.showCategories')" :closedTitle="$t('search.hideCategories')" :open="props.open">
     <div class="categories">
       <div v-for="category in categories" :key="category.name">
         <CategoryCard :icon="category.icon" :categoryname="category.name"

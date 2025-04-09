@@ -104,24 +104,24 @@ const onSubmit = () => {
 
 <template>
   <div class="outer-wrapper">
-    <div class="page-title">Rediger profil</div>
+    <div class="page-title">{{ $t("profile.editProfile") }}</div>
 
     <div class="listing-form">
 
       <div class="form-group">
-        <label for="profileImage">Profilbilde</label>
+        <label for="profileImage">{{$t("register.profilePicture")}}</label>
         <div class="image-upload-preview">
           <ImageSelector @file-select="onImageSelected" />
           <img v-if="profileImagePreview" :src="profileImagePreview" alt="Forhåndsvisning" width="120" />
         </div>
       </div>
-      <FormGroup name="firstName" :label="$t('firstName')">
+      <FormGroup name="firstName" :label="$t('profile.firstName')">
         <TextInput v-model="firstName" type="text" id="firstName" />
       </FormGroup>
-      <FormGroup name="lastName" :label="$t('lastName')">
+      <FormGroup name="lastName" :label="$t('profile.lastName')">
         <TextInput v-model="lastName" type="text" id="lastName" />
       </FormGroup>
-      <FormGroup name="userName" :label="$t('username')" :is-not-filled-in="usernameIsError">
+      <FormGroup name="userName" :label="$t('login.username')" :is-not-filled-in="usernameIsError">
         <TextInput v-model="userName" type="text" id="userName" :class="{ invalid: usernameIsError }" />
       </FormGroup>
       <Button variant="primary" @click="onSubmit">
@@ -129,7 +129,7 @@ const onSubmit = () => {
           <LoadingSpinner />
         </template>
         <template v-else>
-          {{ $t("saveChanges") }}
+          {{ $t("profile.saveChanges") }}
         </template>
       </Button>
     </div>

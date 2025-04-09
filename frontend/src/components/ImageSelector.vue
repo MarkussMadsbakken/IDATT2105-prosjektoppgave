@@ -53,7 +53,7 @@ const debounceSuccess = useDebounceFn(() => {
             </motion.div>
             <motion.div v-if="!isOverDropZone && !showSuccess" initial="hidden" animate="visible" :variants="variants"
                 :exit="{ opacity: 0 }">
-                {{ $t('chooseImage') }}
+                {{ $t('listings.create.chooseImage') }}
             </motion.div>
             <motion.div v-if="showSuccess" initial="hidden" animate="visible" :variants="variants"
                 class="success-message" :exit="{ opacity: 0 }">

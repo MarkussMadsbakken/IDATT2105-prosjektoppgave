@@ -11,14 +11,14 @@ const { data: chats, isPending, isError, error } = useChats();
     <div class="outer-wrapper">
         <div class="chats-wrapper">
             <div class="page-title">
-                {{ $t("messages") }}
+                {{ $t("messages.messages") }}
             </div>
             <ChatCardSkeleon :key="i" v-if="isPending" v-for="i in 5" />
             <div v-else-if="isError">
-                <p>{{ $t("error") }} {{ error }}</p>
+                <p>{{ $t("messages.error") }} {{ error }}</p>
             </div>
             <div v-else-if="!chats || chats.length === 0">
-                <p>{{ $t("noMessages") }}</p>
+                <p>{{ $t("messages.noMessages") }}</p>
             </div>
             <ChatCard v-for="chat in chats" :chat="chat" :is-selected="Number($route.params.id) === chat.chatId" />
         </div>

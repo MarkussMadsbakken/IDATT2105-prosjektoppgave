@@ -14,7 +14,7 @@ defineEmits<{
 <template>
     <div class="notification-outer-wrapper" @click="$emit('notificationClicked', notification)">
         <div class=" notification-inner-wrapper">
-            <p>{{ $t(notification.message) }}</p>
+          <p>{{ $t(`notifications.${notification.message}`) }}</p>
         </div>
         <div class="dot" v-if="!notification.read"></div>
     </div>

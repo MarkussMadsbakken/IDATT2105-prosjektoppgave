@@ -36,16 +36,16 @@ watch([firstName, lastName], () => {
 <template>
     <div class="optionals-select-container">
         <div>
-            <label for="imageSelector" class="optionals-image-label">Velg profilbilde</label>
+            <label for="imageSelector" class="optionals-image-label">{{ $t('register.chooseProfileImage') }}</label>
             <div class="image-upload-preview">
                 <ImageSelector @file-select="onImageSelected" />
-                <img v-if="profileImagePreview" :src="profileImagePreview" alt="Forhåndsvisning" width="120" />
+                <img v-if="profileImagePreview" :src="profileImagePreview" :alt="$t('register.preview')" width="120" />
             </div>
         </div>
-        <FormGroup name="firstname" label="Velg fornavn">
+        <FormGroup name="firstname" :label="$t('register.chooseFirstName')">
             <TextInput name="firstname" v-model="firstName" type="text" />
         </FormGroup>
-        <FormGroup name="lastName" label="Velg etternavn">
+        <FormGroup name="lastName" :label="$t('register.chooseLastName')">
             <TextInput name="lastname" v-model="lastName" type="text" />
         </FormGroup>
     </div>

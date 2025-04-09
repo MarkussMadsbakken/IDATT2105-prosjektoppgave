@@ -117,14 +117,14 @@ const selectPosition = (result: any) => {
         <div id="map-selector">
         </div>
         <div class="address-search">
-            <FormGroup name="address" :label="$t('searchAddress')">
+            <FormGroup name="address" :label="$t('map.searchAddress')">
                 <TextInput id="address" name="address" type="text" v-model="address" @focus="popoverRef?.show($event)"
                     autocomplete="off" @blur="popoverRef?.hide()" />
                 <Popover ref="popoverRef">
                     <div class="popover-content">
                         <LoadingSpinner v-if="searching" />
                         <div class="no-results" v-else-if="searchResults.length === 0">
-                            <p>{{ $t('noResults') }}</p>
+                            <p>{{ $t('map.noResults') }}</p>
                         </div>
                         <div v-else v-for="result in searchResults" class="popover-item"
                             @click="selectPosition(result)">
@@ -136,14 +136,14 @@ const selectPosition = (result: any) => {
         </div>
         <div class="actions">
             <Button variant="outline" @click="dialogRef?.close()">
-                {{ $t('cancel') }}
+                {{ $t('map.cancel') }}
             </Button>
             <Button @click="emit('position-selected', {
                 latitude: selectedPosition[0],
                 longitude: selectedPosition[1],
                 label: address
             })">
-                {{ $t('selectPosition') }}
+                {{ $t('map.selectPosition') }}
             </Button>
         </div>
     </div>

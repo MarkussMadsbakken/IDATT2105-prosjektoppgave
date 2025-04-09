@@ -116,21 +116,21 @@ const variants = {
         <div class="dropdown-inner-wrapper">
           <div class="title-wrapper">
             <div class="notification-title">
-              {{ $t('notifications') }}
+              {{ $t('notifications.notifications') }}
             </div>
             <X @click="toggleDropdown" class="close-button" />
           </div>
           <Divider />
           <div class="unread" v-if="unreadCount > 0">
             <div>
-              {{ unreadCount }} {{ $t('unreadNotifications') }}
+              {{ $tc('notifications.unreadNotifications', unreadCount) }}
             </div>
             <Button class="mark-as-read-button" variant="outline" @click="handleMarkAllAsRead">
               <template v-if="readMultipleIsPending">
                 <LoadingSpinner />
               </template>
               <template v-else>
-                {{ $t('markAllAsRead') }}
+                {{ $t('notifications.markAllAsRead') }}
               </template>
             </Button>
           </div>
@@ -140,7 +140,7 @@ const variants = {
               @click.prevent="handleNotificationClick(notification)" />
             <div v-else class="dropdown-empty">
               <div>
-                {{ $t('noNotifications') }}
+                {{ $t('notifications.noNotifications') }}
               </div>
             </div>
           </div>

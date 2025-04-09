@@ -23,7 +23,7 @@ const {
 
 <template>
   <div class="title-wrapper">
-      <div class="title">{{ $t('buy') }}</div>
+      <div class="title">{{ $t('checkout.buy') }}</div>
   </div>
 
   <div class="summary-wrapper">

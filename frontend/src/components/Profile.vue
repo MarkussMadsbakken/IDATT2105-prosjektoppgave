@@ -44,24 +44,24 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
             </div>
             <div class="text-field">
                 <div class="admin-field" v-if=user?.isAdmin>Admin</div>
-                <div class="member-since">{{ $t('memberSince', {date}) }}</div>
+                <div class="member-since">{{ $t('profile.memberSince', {date}) }}</div>
             </div>
             <div class="settings-container" v-if="isOwnProfile">
                 <Settings class="settings-button" :size="35" @click="router.push('/profile/edit')" :stroke-width="2.2">
                 </Settings>
-                <Button class="logout-button" variant="primary" @click="handleLogout">{{ $t("logout") }}</Button>
+                <Button class="logout-button" variant="primary" @click="handleLogout">{{ $t("profile.logout") }}</Button>
             </div>
 
         </div>
         <Divider />
         <div class="title-wrapper">
-            <div class="title"> {{ isOwnProfile ? $t("ownListings") : $t("listingsByUser", {
+            <div class="title"> {{ isOwnProfile ? $t("profile.ownListings") : $t("profile.listingsByUser", {
                 name: user?.firstName ?? user?.username
             }) }} </div>
-            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">{{ $t("showAll") }}</RouterLink>
+            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">{{ $t("profile.showAll") }}</RouterLink>
         </div>
       <div v-if="isPending">Laster oppføringer...</div>
-      <div v-else-if="isError">{{ $t("couldNotLoadListings") }}</div>
+      <div v-else-if="isError">{{ $t("profile.couldNotLoadListings") }}</div>
       <div v-else>
         <div v-if="listings && listings.length > 0" class="listing-grid">
           <ListingCard
@@ -72,18 +72,18 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
           />
         </div>
         <div v-else class="no-listings">
-          {{ $t('emptyListings') }}
+          {{ $t('profile.emptyListings') }}
         </div>
       </div>
         <template v-if="isOwnProfile">
             <Divider />
             <div class="title-wrapper">
-                <div class="title"> {{$t("myFavorites")}} </div>
-                <RouterLink class="router-link" to="/favorites">{{ $t("showAll") }}</RouterLink>
+                <div class="title"> {{$t("profile.myFavorites")}} </div>
+                <RouterLink class="router-link" to="/favorites">{{ $t("profile.showAll") }}</RouterLink>
             </div>
 
           <div v-if="isBookmarkPending">Laster oppføringer...</div>
-          <div v-else-if="isBookmarkError">{{ $t("couldNotLoadListings") }}</div>
+          <div v-else-if="isBookmarkError">{{ $t("profile.couldNotLoadListings") }}</div>
           <div v-else>
             <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
               <ListingCard
@@ -94,7 +94,7 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
               />
             </div>
             <div v-else class="no-listings">
-              Du har ingen favoritter ennå.
+              {{ $t("profile.noFavorites") }}
             </div>
           </div>
         </template>
