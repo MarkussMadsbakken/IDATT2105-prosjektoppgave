@@ -32,8 +32,9 @@ public class ReservationRepo {
    * @param reservation the Reservation object to be added
    */
   public void addReservation(Reservation reservation) {
-    String query = "INSERT INTO reservations (user_id, listing_id) VALUES (?, ?)";
-    jdbcTemplate.update(query, reservation.getUserId(), reservation.getListingId());
+    String query = "INSERT INTO reservations (id ,user_id, listing_id) VALUES (?, ?, ?)";
+    jdbcTemplate.update(query,
+        reservation.getId(), reservation.getUserId(), reservation.getListingId());
   }
 
   /**

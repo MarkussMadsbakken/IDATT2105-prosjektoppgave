@@ -50,7 +50,6 @@ const submitPurchase = async () => {
 </script>
 
 <template>
-  <Alert class="purchased-alert" variant="Info">{{ $t("listingIsPurchased") }}</Alert>
   <ArticleSummary :listing-id="listingId" />
   <div v-if="!showSuccess" class="form">
     <form @submit.prevent="submitPurchase">
