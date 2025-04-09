@@ -8,8 +8,6 @@ import edu.ntnu.stud.model.UserImageResponse;
 import edu.ntnu.stud.model.UserResponse;
 import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.repo.UserRepo;
-import edu.ntnu.stud.util.Validate;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -74,23 +72,6 @@ public class UserService {
   }
 
   /**
-   * Verfies the username og a user update request.
-   *
-   * @param userUpdate the UserUpdate object containing the username to verify
-   * @param token      the JWT token of the user making the request
-   * @return true if the username is valid, false otherwise
-   */
-  public boolean verifyUsername(UserUpdate userUpdate, String token) {
-    long userId = jwtService.extractUserId(token.substring(7));
-    User existingUserByUsername = userRepo.getUserByUsername(userUpdate.getUsername());
-    if (existingUserByUsername != null && existingUserByUsername.getId() != userId) {
-      // User with the same username already exists
-      return false;
-    }
-    return true;
-  }
-
-  /**
    * Updates the information of a user in the database.
    *
    * @param userUpdate the User object containing updated information
@@ -101,16 +82,9 @@ public class UserService {
    */
   public UserResponse updateUser(UserUpdate userUpdate, String token, MultipartFile image) {
     long userId = jwtService.extractUserId(token.substring(7));
-    UserResponse existingUsername = getUserByUsername(
-        jwtService.extractUserName(token.substring(7)));
-    Validate.that(existingUsername == null || existingUsername.getId() == userId,
-        Validate.isTrue(), "Username already exists");
-    Validate.that(userUpdate.getUsername(), Validate.isNotBlankOrNull(),
-        "Username cannot be null or empty");
     
     User user = new User();
     user.setId(userId);
-    user.setUsername(userUpdate.getUsername());
     user.setFirstName(userUpdate.getFirstName());
     user.setLastName(userUpdate.getLastName());
 
