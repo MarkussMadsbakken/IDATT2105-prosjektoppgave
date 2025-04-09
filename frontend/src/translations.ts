@@ -73,6 +73,7 @@ const profileTranslations = {
     passwordMismatch: "Passordene stemmer ikke overens",
     error: "Feil",
     userDoesNotExist: "Brukeren finnes ikke",
+    imageTooLarge: "Bilde er for stort",
   },
   en: {
     memberSince: "Member since {date}",
@@ -98,6 +99,7 @@ const profileTranslations = {
     credentialsUpdated: "User credentials updated",
     passwordTooShort: "Password must be at least 8 characters long",
     passwordMismatch: "Passwords do not match",
+    imageTooLarge: "Image is too large",
   }
 }
 const registerTranslations = {
@@ -254,6 +256,26 @@ const articleSummaryTranslations = {
     inSummary: "In summary"
   }
 }
+
+const formTranslations = {
+  no: {
+    error: "Feil",
+    imageTooLarge: "Bilde er for stort (maks 1MB)",
+    releaseToUpload: "Slipp for å laste opp",
+    imageSelected: "Bilde valgt",
+    chooseImage: "Velg bilde",
+    uploadedImages: "Opplastede bilder",
+  },
+  en: {
+    error: "Error",
+    imageTooLarge: "Image is too large (max 1MB)",
+    releaseToUpload: "Release to upload",
+    imageSelected: "Image selected",
+    chooseImage: "Choose image",
+    uploadedImages: "Uploaded images",
+  }
+}
+
 const createListingViewTranslations = {
   no: {
     createListing: "Opprett en ny annonse",
@@ -411,6 +433,7 @@ const i18n = createI18n({
         ...searchTranslations.no,
       },
       breadcrumb: breadcrumbTranslations.no,
+      form: formTranslations.no,
     }, en: {
       listings: {
         archive: archivedListingsTranslations.en,
@@ -438,6 +461,7 @@ const i18n = createI18n({
         ...searchTranslations.en,
       },
       breadcrumb: breadcrumbTranslations.en,
+      form: formTranslations.en,
     }
   }
 });
