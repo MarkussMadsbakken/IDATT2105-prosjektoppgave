@@ -30,7 +30,7 @@ public class NotificationService {
    * @param notification the Notification object to be added
    */
   public void addNotification(Notification notification) {
-    Validate.that(notification.getMessage(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(notification.getMessage(), Validate.isNotBlankOrNull(),
         "Notification message cannot be null or empty");
     logger.info("Adding notification for user ID: {} with message {}",
         notification.getUserId(),

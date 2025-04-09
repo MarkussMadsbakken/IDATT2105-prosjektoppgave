@@ -32,7 +32,7 @@ public class UserHistoryService {
    * 
    */
   public void addUserHistory(UserHistoryRequest userHistoryRequest, String token) {
-    Validate.that(userHistoryRequest.getListingId(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(userHistoryRequest.getListingId(), Validate.isNotBlankOrNull(),
         "Listing ID must not be empty or null");
     long userId = jwtService.extractUserId(token.substring(7));
     UserHistory userHistory = new UserHistory(
