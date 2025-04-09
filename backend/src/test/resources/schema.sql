@@ -79,6 +79,15 @@ CREATE TABLE IF NOT EXISTS sub_categories (
   FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
+CREATE TABLE reservations (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    listing_id VARCHAR(36) NOT NULL,
+    user_id BIGINT NOT NULL,
+    reservation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (listing_id) REFERENCES listings(uuid),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('testuser', 'password');
 INSERT INTO users (username, password) VALUES ('testuser2', 'password');
