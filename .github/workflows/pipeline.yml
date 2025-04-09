@@ -61,7 +61,6 @@ jobs:
       DATABASE_PASSWORD=: h2
       SPRING_DATABASE_DRIVER: org.h2.Driver
     steps:
-      - uses: actions/checkout@v4
       - name: Download Backend Artifact
         uses: actions/download-artifact@v4
         with:
@@ -72,8 +71,6 @@ jobs:
         with:
           name: frontend-build
           path: frontend/
-      - name: Install Frontend Dependencies
-        run: cd frontend && npm ci
       - name: Start Backend
         run: |
           nohup java -jar backend/target/prosjektoppgave-0.0.1-SNAPSHOT.jar --spring.profiles.active=test > backend.log 2>&1 &
@@ -82,6 +79,5 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
-          working-directory: frontend
-          build: npm run build
-          start: npm run preview
+          build: false
+          start: nohup npx serve -s frontend/dist --port 3000
