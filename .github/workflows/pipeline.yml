@@ -78,5 +78,4 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
-          install: false
           start: nohup npx serve -s frontend/dist --port 3000
