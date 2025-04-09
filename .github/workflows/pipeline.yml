@@ -83,5 +83,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false  
-          start: nohup npx serve -s frontend/dist -l 4173
+          working-directory: frontend
+          start: npx serve -s dist -l 4173
           config-file: frontend/cypress.config.ts
