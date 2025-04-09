@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * the application starts in the "test" profile.
  */
 @Component
-@Profile("test")
+@Profile("test-e2e")
 public class TestDataInitializer implements CommandLineRunner {
 
   @Autowired
@@ -47,14 +47,13 @@ public class TestDataInitializer implements CommandLineRunner {
     user.setPassword("passwordAdmin");
     user.setAdmin(true);
     userRepo.addUser(user);
-    
+
     // Create test categories and subcategories
     for (int i = 0; i < 3; i++) {
       categoryRepo.addCategory(new CategoryRequest(
           "Test Category " + i,
           "Test Description " + i,
-          "icon" + i + ".png"
-      ));
+          "icon" + i + ".png"));
     }
     List<Category> categories = categoryRepo.getAllCategories();
     for (int i = 0; i < 6; i++) {
@@ -62,16 +61,14 @@ public class TestDataInitializer implements CommandLineRunner {
           "Test SubCategory " + i,
           "Test Description " + i,
           "icon" + i + ".png",
-          categories.get(i % categories.size()).getId()
-      ));
+          categories.get(i % categories.size()).getId()));
     }
 
     // Create test listings
     List<User> users = userRepo.getAllUsers();
     for (int i = 0; i < 3; i++) {
-      SubCategory subCategoryForCategory = 
-          subCategoryRepo.getSubCategoriesByCategoryId(
-            categories.get(i % categories.size()).getId()).get(0);
+      SubCategory subCategoryForCategory = subCategoryRepo.getSubCategoriesByCategoryId(
+          categories.get(i % categories.size()).getId()).get(0);
       listingRepo.saveListing(new Listing(
           "Test Listing " + i,
           100.0 + (long) i,
@@ -80,12 +77,8 @@ public class TestDataInitializer implements CommandLineRunner {
           subCategoryForCategory.getId(),
           10.395467071105747,
           63.42245621159982,
-          users.get(i % users.size()).getId()
-      ));
+          users.get(i % users.size()).getId()));
     }
-
-
-
 
   }
 }
