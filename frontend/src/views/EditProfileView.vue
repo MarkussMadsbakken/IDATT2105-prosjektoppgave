@@ -11,6 +11,11 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import FormGroup from "@/components/FormGroup.vue";
 import { toImgString } from "@/util/imageToImgString";
 import { watchOnce } from "@vueuse/core";
+import { useToast } from 'primevue/usetoast';
+import { useI18n } from 'vue-i18n';
+
+const toast = useToast();
+const { t } = useI18n();
 
 const profileImage = ref<File | null>(null);
 const auth = useAuth();
@@ -32,8 +37,16 @@ const {
   error: updateError
 } = useUpdateUser({
   onSuccess: () => {
-    router.push('/profile').then(() => {
-    })
+    toast.add(
+      {
+        severity: "success",
+        summary: t("success"),
+        detail: t("profile.updated"),
+        life: 3000,
+        closable: true,
+      }
+    );
+    router.push('/profile');
   },
 });
 

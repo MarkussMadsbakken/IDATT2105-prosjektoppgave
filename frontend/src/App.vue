@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { UserRound, MessageSquare, Bell, SquarePlus, ShieldUser } from 'lucide-vue-next';
+import { MessageSquare, SquarePlus, ShieldUser } from 'lucide-vue-next';
 import { useAuth } from './stores/auth';
 import NotificationDropdown from "@/components/NotificationDropdown.vue";
 import DynamicDialog from 'primevue/dynamicdialog';
 import { useI18n } from 'vue-i18n';
 import UserImage from './components/UserImage.vue';
+import Toast from 'primevue/toast';
 const auth = useAuth();
 const i18n = useI18n();
 
@@ -59,12 +60,13 @@ const changeLanguage = (lang: string) => {
   <div class="color-wrapper">
     <main class="main">
       <DynamicDialog />
+      <Toast position="bottom-right" />
       <RouterView />
     </main>
   </div>
 </template>
 
-<style>
+<style scoped>
 .translation-selector {
   display: flex;
   gap: 1rem;

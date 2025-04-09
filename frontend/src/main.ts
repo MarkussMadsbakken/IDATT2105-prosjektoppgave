@@ -10,6 +10,7 @@ import { VueQueryPlugin } from '@tanstack/vue-query'
 import i18n from "@/translations.ts";
 import { useAuth } from './stores/auth';
 import DialogService from 'primevue/dialogservice';
+import ToastService from 'primevue/toastservice';
 
 const app = createApp(App)
 
@@ -68,5 +69,6 @@ app.directive('click-outside', {
 
 app.use(i18n);
 app.use(DialogService)
+app.use(ToastService)
 
 app.mount('#app')
