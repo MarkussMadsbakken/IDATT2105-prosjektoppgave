@@ -61,6 +61,12 @@ export const useAuth = defineStore("auth", {
             return this.loggedIn;
 
         },
+        /**
+         * Logs the user in by calling the login action
+         *
+         * @param loginAction  The login action to call
+         * @returns  success  Whether the login was successful
+         */
         async login(loginAction: () => Promise<LoginResponse>) {
             // Call the login action
             let res = await loginAction();
@@ -85,6 +91,12 @@ export const useAuth = defineStore("auth", {
                 success: true
             }
         },
+        /**
+         * Registers the user and logs them in
+         *
+         * @param registerAction  The register action to call
+         * @returns success  Whether the registration was successful
+         */
         async register(registerAction: () => Promise<RegisterResponse>) {
             // Call the register action
             let res = await registerAction();
@@ -110,7 +122,10 @@ export const useAuth = defineStore("auth", {
         decodeToken(token: string) {
             return jwtDecode(token) as Token;
         },
-
+        /**
+         * Logs the user out by clearing the token from session storage
+         * and setting the loggedIn state to false
+         */
         logout() {
             // Clear values
             sessionStorage.setItem("token", "");
@@ -118,6 +133,19 @@ export const useAuth = defineStore("auth", {
             this.decodedToken = undefined;
             this.rawToken = undefined;
         },
+        /**
+         * Swaps the current token with a new one, and logs the user in again
+         * @param token  The new token to swap with
+         */
+        swapToken(token: string) {
+            this.logout();
+            this.login(async () => {
+                return {
+                    token: token,
+                    message: "Token swapped"
+                }
+            });
+        }
     }
 });
 

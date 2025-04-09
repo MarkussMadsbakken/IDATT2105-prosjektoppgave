@@ -1,13 +1,31 @@
 <script setup lang="ts">
 import { useDebounceFn, useDropZone } from '@vueuse/core'
 import { AnimatePresence, motion } from 'motion-v';
+import { useToast } from 'primevue/usetoast';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const dropZoneRef = ref<HTMLDivElement>();
+const toast = useToast();
+const { t } = useI18n();
 
-const emit = defineEmits<(e: "file-select", files: File[]) => void>()
+const emit = defineEmits<(e: "file-select", files: File[]) => void>();
 
 const onDrop = (files: File[] | null) => {
+    if (files && files.length > 0) {
+        const file = files[0];
+        if (file.size > 1024 * 1024) {
+            showSuccess.value = false;
+            toast.add({
+                severity: 'error',
+                summary: t('form.error'),
+                detail: t('form.imageTooLarge'),
+                life: 3000,
+                closable: true,
+            });
+            return;
+        }
+    }
     showSuccess.value = true;
     debounceSuccess();
 
@@ -49,7 +67,7 @@ const debounceSuccess = useDebounceFn(() => {
         <AnimatePresence mode="popLayout">
             <motion.div v-if="isOverDropZone" initial="hidden" animate="visible" :variants="variants"
                 :exit="{ opacity: 0 }">
-                {{ $t('releaseToUpload') }}
+                {{ $t('form.releaseToUpload') }}
             </motion.div>
             <motion.div v-if="!isOverDropZone && !showSuccess" initial="hidden" animate="visible" :variants="variants"
                 :exit="{ opacity: 0 }">
@@ -57,7 +75,7 @@ const debounceSuccess = useDebounceFn(() => {
             </motion.div>
             <motion.div v-if="showSuccess" initial="hidden" animate="visible" :variants="variants"
                 class="success-message" :exit="{ opacity: 0 }">
-                {{ $t('imageSelected') }}
+                {{ $t('form.imageSelected') }}
             </motion.div>
         </AnimatePresence>
         <input type="file" class="file-input" accept="image/png, image/jpeg, image/gif, image/webp"
