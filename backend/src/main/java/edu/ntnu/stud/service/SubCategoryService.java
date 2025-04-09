@@ -4,7 +4,6 @@ import edu.ntnu.stud.model.SubCategory;
 import edu.ntnu.stud.model.SubCategoryRequest;
 import edu.ntnu.stud.repo.SubCategoryRepo;
 import edu.ntnu.stud.util.Validate;
-import jakarta.validation.Valid;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class SubCategoryService {
   public void addSubCategory(SubCategoryRequest subCategory, String token) {
     Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
         "You are not authorized to add a subcategory.");
-    Validate.that(subCategory.getName(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(subCategory.getName(), Validate.isNotBlankOrNull(),
         "Subcategory name cannot be null or empty.");
     Validate.that(categoryService.getCategoryById(subCategory.getParentId()), Validate.isNotNull(), 
         "Parent category does not exist.");
@@ -57,7 +56,7 @@ public class SubCategoryService {
   public void updateSubCategory(SubCategory subCategory, String token) {
     Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
         "You are not authorized to update a subcategory.");
-    Validate.that(subCategory.getName(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(subCategory.getName(), Validate.isNotBlankOrNull(),
         "Subcategory name cannot be null or empty.");
     Validate.that(categoryService.getCategoryById(subCategory.getParentId()), Validate.isNotNull(), 
         "Parent category does not exist.");

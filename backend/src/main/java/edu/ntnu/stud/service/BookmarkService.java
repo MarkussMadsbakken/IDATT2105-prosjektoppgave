@@ -49,7 +49,7 @@ public class BookmarkService {
    * @param token the JWT token of the user
    */
   public void validateBookmarkDeletionRequest(BookmarkUserRequest bookmarkRequest, String token) {
-    Validate.that(bookmarkRequest.getListingId(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(bookmarkRequest.getListingId(), Validate.isNotBlankOrNull(),
         "Listing ID cannot be null or empty");
     Validate.that(bookmarkRepo.bookmarkExists(
         new Bookmark(jwtService.extractUserId(token.substring(7)), bookmarkRequest.getListingId())),

@@ -105,7 +105,7 @@ public class UserService {
         jwtService.extractUserName(token.substring(7)));
     Validate.that(existingUsername == null || existingUsername.getId() == userId,
         Validate.isTrue(), "Username already exists");
-    Validate.that(userUpdate.getUsername(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(userUpdate.getUsername(), Validate.isNotBlankOrNull(),
         "Username cannot be null or empty");
     
     User user = new User();

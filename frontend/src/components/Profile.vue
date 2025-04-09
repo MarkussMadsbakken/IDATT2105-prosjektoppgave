@@ -7,7 +7,6 @@ import ListingCard from "@/components/ListingCard.vue";
 import { Settings } from "lucide-vue-next";
 import UserImage from "@/components/UserImage.vue";
 import {useGetUser, useGetUserBookmarks} from '@/actions/user';
-import type { Listing } from '@/types';
 import {computed, watch} from 'vue';
 import Divider from '@/components/Divider.vue';
 import { useGetUserListings } from '@/actions/user';

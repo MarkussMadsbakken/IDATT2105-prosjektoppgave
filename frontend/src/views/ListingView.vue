@@ -19,10 +19,16 @@ import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { deleteListing } from '@/actions/createListing';
 import Alert from '@/components/Alert.vue';
-import { addBookmark, removeBookmark, useListingBookmarks } from '@/actions/bookmarks';
+import {
+  addBookmark,
+  removeBookmark,
+  useHasBookmarked,
+  useListingBookmarks
+} from '@/actions/bookmarks';
 import { useI18n } from 'vue-i18n';
 import { createChat } from '@/actions/chat';
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { useToast } from 'primevue/usetoast';
 
 const router = useRouter();
 const route = useRoute();
@@ -30,6 +36,7 @@ const auth = useAuth();
 const dialog = useDialog();
 const queryClient = useQueryClient();
 const i18n = useI18n();
+const toast = useToast();
 
 const listingId = route.params.id as string
 
@@ -40,9 +47,7 @@ const {
   isPending
 } = useGetListing(listingId);
 
-const { data: bookmarks } = useListingBookmarks(listingId);
 
-const bookmarked = ref(bookmarks.value?.hasBookmarked ?? false);
 
 const parsedDescription = computed(() => marked(listing.value?.description ?? ''));
 const isOwnListing = computed(() => {
@@ -53,7 +58,6 @@ const isOwnListing = computed(() => {
 const { mutate: createChatMutation } = useMutation({
   mutationFn: createChat,
   onSuccess: (data) => {
-    console.log(data);
     router.push(`/chat/${data.chatId}`);
   }
 })
@@ -61,7 +65,31 @@ const { mutate: createChatMutation } = useMutation({
 const { mutate: reserve, isPending: isReservePending, isError: isPendingError, error: reserveError, isSuccess: isReserveSuccess } = useReserveListing();
 
 const handleReserve = () => {
-  reserve({ uuid: listingId });
+  reserve({ uuid: listingId }, {
+    onSuccess: () => {
+      toast.add(
+        {
+          severity: "success",
+          summary: i18n.t("success"),
+          detail: i18n.t("listing.reserved"),
+          life: 3000,
+          closable: true,
+        }
+      );
+      queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
+    },
+    onError: (error) => {
+      toast.add(
+        {
+          severity: "error",
+          summary: i18n.t("Error"),
+          detail: i18n.t("listing.reservedError"),
+          life: 3000,
+          closable: true,
+        }
+      );
+    }
+  });
 }
 
 const {
@@ -84,10 +112,7 @@ const reservationEndTime = computed(() => {
 })
 
 const isReservedByMe = computed(() => {
-  console.log(reservation);
-  console.log(reservation?.value?.userId);
-  console.log(auth.userId);
-  console.log(reservation?.value?.userId === auth.userId)
+
   return reservation?.value?.userId === auth.userId;
 })
 const reserveButtonText = computed(() => {
@@ -101,34 +126,35 @@ const deleteMutation = useMutation({
   mutationFn: deleteListing,
 });
 
-const bookmarkCountLocal = ref(bookmarks.value?.bookMarkCount || 0);
-watch(bookmarks, (newval) => {
-  bookmarkCountLocal.value = newval ? newval.bookMarkCount : 0;
-  bookmarked.value = newval ? newval.hasBookmarked : false;
+const { data: bookmarks } = useListingBookmarks(listingId);
+const { data: hasBookmarkedRef } = useHasBookmarked(listingId, {
+  enabled: auth.isLoggedIn(),
 });
+
+const bookmarked = computed(() => auth.isLoggedIn() && (hasBookmarkedRef?.value ?? false));
+const bookmarkCount = computed(() => bookmarks.value?.bookMarkCount || 0);
 
 const bookmarkMutation = useMutation({
   mutationFn: async (removingBookmark: boolean) => {
     if (!listing.value) return;
-    if (removingBookmark) {
-      return await removeBookmark(listingId);
-    } else {
-      return await addBookmark(listingId);
-    }
+    return removingBookmark ? removeBookmark(listingId) : addBookmark(listingId);
   },
-  onMutate: async () => {
-    if (bookmarked.value) {
-      bookmarkCountLocal.value -= 1;
-    } else {
-      bookmarkCountLocal.value += 1;
-    }
-    bookmarked.value = !bookmarked.value;
+  onMutate: async (removingBookmark) => {
+    queryClient.setQueryData(["listing", "bookmarks", listingId], (oldData: any) => ({
+      ...oldData,
+      bookMarkCount: oldData.bookMarkCount + (removingBookmark ? -1 : 1),
+    }));
+    queryClient.setQueryData(["listing", "bookmarks", listingId, "exists"], !removingBookmark);
   },
-  onSuccess: (data) => {
-    queryClient.invalidateQueries({
-      queryKey: ['listing', listingId, "bookmarks"],
-    })
-  }
+  onError: (error, removingBookmark) => {
+    console.error("Error updating bookmark:", error);
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId] });
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId, "exists"] });
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId] });
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId, "exists"] });
+  },
 });
 
 
@@ -143,12 +169,27 @@ const handleToggleArchive = () => {
     { uuid: listingId, state: newState },
     {
       onSuccess: () => {
-        // TODO Toast
+        toast.add(
+          {
+            severity: "success",
+            summary: i18n.t("success"),
+            detail: i18n.t(newState ? "listing.restored" : "listing.archived"),
+            life: 3000,
+            closable: true,
+          }
+        );
         queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
-        console.log("Aktivstatus oppdatert:", newState);
       },
       onError: (error) => {
-        console.error("Feil ved arkivering:", error);
+        toast.add(
+          {
+            severity: "error",
+            summary: i18n.t("Error"),
+            detail: i18n.t("listing.archivedError"),
+            life: 3000,
+            closable: true,
+          }
+        );
       }
     }
   );
@@ -172,13 +213,28 @@ const handleDelete = () => {
       onAccept: () => {
         deleteMutation.mutate(listingId, {
           onSuccess: (a) => {
-            console.log(a);
-            console.log("Successed!")
+            toast.add(
+              {
+                severity: "success",
+                summary: i18n.t("success"),
+                detail: i18n.t("listing.deleted"),
+                life: 3000,
+                closable: true,
+              }
+            );
             d.close();
             router.push('/');
           },
           onError: (e) => {
-            console.log(error.value)
+            toast.add(
+              {
+                severity: "error",
+                summary: i18n.t("Error"),
+                detail: i18n.t("listing.deleteError"),
+                life: 3000,
+                closable: true,
+              }
+            );
           }
         });
       }
@@ -197,12 +253,6 @@ const handleDelete = () => {
   </div>
   <div class="listing" v-else>
     <div class="title-picture">
-      <Alert class="reserved-info" variant="Info" v-if="reservation && !isReservedByMe">
-        {{ $t("listings.view.listingReservedByAnotherUser") }} {{ reservationEndTime }}
-      </Alert>
-      <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
-        {{ $t("listing.reservedByMe") }} {{ reservationEndTime }}
-      </Alert>
       <h3 class="listing-title">
         {{ listing?.name }}
       </h3>
@@ -222,6 +272,7 @@ const handleDelete = () => {
           <Button class="listing-option-button" variant="outline" v-if="isOwnListing && !listing?.sold"
             @click="router.push(`/listing/${listingId}/edit`)">
             {{ $t("listings.view.edit") }}
+
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
 
@@ -241,10 +292,10 @@ const handleDelete = () => {
             {{ $t("listings.delete") }}
             <Trash2 :size="18" style="margin-left: 0.5rem;" />
           </Button>
-          <div @click="() => bookmarkMutation.mutate(bookmarked)" style="cursor: pointer" v-if="auth.isLoggedIn()"
+          <div @click="() => bookmarkMutation.mutate(bookmarked!)" style="cursor: pointer" v-if="auth.isLoggedIn()"
             class="bookmark">
             <div class="bookmark-count">
-              {{ bookmarkCountLocal }}
+              {{ bookmarkCount }}
             </div>
             <Bookmark class="bookmark" v-if="!bookmarked" :size="38" />
             <BookmarkCheck v-else :size="38" />
@@ -258,6 +309,12 @@ const handleDelete = () => {
         {{ $t('listing.hasNoDescriptionLong') }}
       </Alert>
     </div>
+    <Alert class="reserved-info" variant="Info" v-if="reservation && !isReservedByMe">
+      {{ $t("listingReservedByAnotherUser") }} {{ reservationEndTime }}
+    </Alert>
+    <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
+      {{ $t("listingReservedByMe") }} {{ reservationEndTime }}
+    </Alert>
     <div v-if="!isOwnListing" class="buy-box">
       <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" size="medium"
         @contact-seller="createChatMutation(listingId)" />
@@ -266,11 +323,16 @@ const handleDelete = () => {
       <div v-if="auth.isLoggedIn() && !listing!.sold" class="button-box">
         <Button variant="primary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
           @click="router.push(`/listing/${listingId}/checkout`)" :disabled="reservation && !isReservedByMe" style="width: 10rem;
-                 height: 3rem;">{{ $t("checkout.buy") }}</Button>
+                 height: 3rem;">{{ $t("buy") }}</Button>
 
         <Button variant="secondary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
           :disabled="reservation && isReservedByMe" @click="handleReserve" style="width: 10rem; height: 3rem;">
-          {{ reserveButtonText }}
+          <template v-if="isReservePending">
+            <LoadingSpinner />
+          </template>
+          <template v-else>
+            {{ reserveButtonText }}
+          </template>
         </Button>
       </div>
     </div>

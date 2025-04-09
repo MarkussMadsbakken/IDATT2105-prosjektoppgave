@@ -64,7 +64,6 @@ export type GetUserResponse = User;
 
 export type GetListingBookmarksResponse = {
     bookMarkCount: number;
-    hasBookmarked: boolean;
 }
 
 /**

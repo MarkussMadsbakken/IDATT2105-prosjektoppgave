@@ -37,9 +37,10 @@ public class UserRepo {
    * @param user the User object to be added
    */
   public void addUser(User user) {
-    String query = "INSERT INTO users (username, password, first_name, last_name, is_admin)"
-        + " VALUES (?, ?, ?, ?, ?)";
+    String query = "INSERT INTO users (id, username, password, first_name, last_name, is_admin)"
+        + " VALUES (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(query,
+        user.getId(),
         user.getUsername(),
         user.getPassword(),
         user.getFirstName(),

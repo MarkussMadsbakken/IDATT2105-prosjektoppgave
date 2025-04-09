@@ -22,12 +22,8 @@ public class Validate {
     return value -> value != null && !value.isBlank();
   }
 
-  public static Predicate<String> isNotEmptyOrBlank() {
-    return value -> value != null && !value.isEmpty() && !value.isBlank();
-  }
-
-  public static Predicate<String> isNotEmptyOrBlankOrNull() {
-    return value -> value != null && !value.isEmpty() && !value.isBlank();
+  public static Predicate<String> isNotBlankOrNull() {
+    return value -> value != null && !value.isBlank();
   }
 
   public static Predicate<Number> isPositive() {

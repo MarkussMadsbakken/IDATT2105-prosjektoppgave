@@ -1,10 +1,14 @@
 -- Create users table
-CREATE TABLE users (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(255) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  image_blob LONGBLOB,
-  image_file_type VARCHAR(16)
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_admin BOOLEAN,
+    image_blob LONGBLOB,
+    image_file_type VARCHAR(16)
 );
 
 CREATE TABLE listings (
@@ -64,21 +68,49 @@ CREATE TABLE message (
     FOREIGN KEY (sender_id) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS categories (
+CREATE TABLE categories (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,
   description VARCHAR(255),
   icon TEXT
 );
 
-CREATE TABLE IF NOT EXISTS sub_categories (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  description VARCHAR(255),
-  category_id BIGINT NOT NULL,
-  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+CREATE TABLE sub_categories (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    category_id BIGINT NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE notifications (
+     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     user_id BIGINT NOT NULL,
+     is_read BOOLEAN DEFAULT FALSE,
+     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     url TEXT NOT NULL,
+     message TEXT NOT NULL,
+     CONSTRAINT fk_user_notifications FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE user_history (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    listing_id CHAR(36) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user_history FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_listing_history FOREIGN KEY (listing_id) REFERENCES listings(uuid)
+);
+
+CREATE TABLE reservations (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    listing_id VARCHAR(36) NOT NULL,
+    user_id BIGINT NOT NULL,
+    reservation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (listing_id) REFERENCES listings(uuid),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Insert a user
-INSERT INTO users (username, password) VALUES ('testuser', 'password');
-INSERT INTO users (username, password) VALUES ('testuser2', 'password');
+INSERT INTO users (id, username, password) VALUES (1, 'testuser', 'password');
+INSERT INTO users (id, username, password) VALUES (2, 'testuser2', 'password');

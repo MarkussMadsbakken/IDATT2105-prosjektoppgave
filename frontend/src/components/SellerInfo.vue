@@ -82,6 +82,7 @@ const handleProfileClick = () => {
   border-radius: 5px;
   border: 1px solid black;
   background-color: white;
+  padding-left: 2rem;
 }
 
 .seller-container.centered {

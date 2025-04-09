@@ -40,8 +40,18 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
 
-  --section-gap: 160px;
+  --p-toast-success-background: oklch(87.1% 0.15 154.449) !important;
+  --p-toast-success-color: var(--color-text) !important;
+  --p-toast-info-background: oklch(88.2% 0.059 254.128) !important;
+  --p-toast-info-color: var(--color-text) !important;
+  --p-toast-warn-background: oklch(94.5% 0.129 101.54) !important;
+  --p-toast-warn-color: var(--color-text) !important;
+  --p-toast-error-background: oklch(80.8% 0.114 19.571) !important;
+  --p-toast-error-color: var(--color-text) !important;
+  --p-toast-summary-font-weight: 600 !important;
+  --p-toast-border-width: 0 !important;
 }
+
 
 *,
 *::before,
