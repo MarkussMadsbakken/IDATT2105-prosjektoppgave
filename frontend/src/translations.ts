@@ -61,6 +61,12 @@ const profileTranslations = {
     saveChanges: "Lagre endringer",
     editProfile: "Rediger profil",
     noFavorites: "Ingen favoritter funnet",
+    editPassword: "Endre passord",
+    currentPassword: "Nåværende passord",
+    newPassword: "Nytt passord",
+    passwordUpdated: "Passordet ble oppdatert",
+    repeatPassword: "Gjenta passord",
+    savePassword: "Lagre passord",
   },
   en: {
     memberSince: "Member since {date}",
@@ -75,7 +81,13 @@ const profileTranslations = {
     lastName: "Last name",
     saveChanges: "Save Changes",
     editProfile: "Edit profile",
-    noFavorites: "No favorites found"
+    noFavorites: "No favorites found",
+    editPassword: "Edit password",
+    currentPassword: "Current password",
+    newPassword: "New password",
+    passwordUpdated: "Password updated",
+    repeatPassword: "Repeat password",
+    savePassword: "Save password",
   }
 }
 const registerTranslations = {

@@ -124,14 +124,24 @@ const onSubmit = () => {
       <FormGroup name="userName" :label="$t('login.username')" :is-not-filled-in="usernameIsError">
         <TextInput v-model="userName" type="text" id="userName" :class="{ invalid: usernameIsError }" />
       </FormGroup>
-      <Button variant="primary" @click="onSubmit">
-        <template v-if="isUpdatingUser">
-          <LoadingSpinner />
-        </template>
-        <template v-else>
-          {{ $t("profile.saveChanges") }}
-        </template>
-      </Button>
+
+      <div class="button-box">
+
+        <div class="save-button-wrapper">
+          <Button variant="primary" @click="onSubmit">
+            <template v-if="isUpdatingUser">
+              <LoadingSpinner />
+            </template>
+            <template v-else>
+              {{ $t("profile.saveChanges") }}
+            </template>
+          </Button>
+        </div>
+        <Button class="edit-password-button" variant="primary" @click="router.push('/profile/edit-password')">
+          {{ $t("profile.editPassword") }}
+        </Button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -184,4 +194,19 @@ const onSubmit = () => {
 .invalid {
   border: 1px solid red;
 }
+.button-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.save-button-wrapper {
+  margin: 0 auto;
+}
+.edit-password-button{
+  width: 7rem;
+}
+
 </style>
