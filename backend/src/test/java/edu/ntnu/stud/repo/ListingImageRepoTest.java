@@ -1,7 +1,12 @@
 package edu.ntnu.stud.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingImage;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,12 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)

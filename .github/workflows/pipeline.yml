@@ -21,7 +21,7 @@ jobs:
       - name: Install Maven
         run: sudo apt-get update && sudo apt-get install maven -y
       - name: Build with Maven
-        run: cd backend && mvn -B package -Dspring.profiles.active=test
+        run: cd backend && mvn -B package -Dspring.profiles.active=test -Ptest
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
         with: 
@@ -63,6 +63,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
       - name: Download Backend Artifact
         uses: actions/download-artifact@v4
         with:
@@ -75,7 +80,7 @@ jobs:
           path: frontend-build/
       - name: Start Backend
         run: |
-          nohup java -jar backend/target/prosjektoppgave-0.0.1-SNAPSHOT.jar --spring.profiles.active=test > backend.log 2>&1 &
+          nohup java -jar backend/prosjektoppgave-0.0.1-SNAPSHOT.jar --spring.profiles.active=test &
           sleep 10
       - name: Start Frontend
         run: |

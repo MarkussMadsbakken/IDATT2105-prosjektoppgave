@@ -176,10 +176,6 @@ public class UserController {
       logger.error("User does not exist");
       return ResponseEntity.notFound().build();
     }
-    if (!userService.verifyUsername(user, token)) {
-      logger.error("Username already exists");
-      return ResponseEntity.status(HttpStatus.CONFLICT).build();
-    }
     UserResponse updatedUser = userService.updateUser(user, token, userImage);
     if (updatedUser != null) {
       logger.info("user updated successfully");

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import edu.ntnu.stud.model.User;
 import java.util.List;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,5 +85,44 @@ public class UserRepoTest {
     List<User> users = userRepo.getAllUsers();
     assertThat(users).isNotEmpty();
     assertThat(users.get(0).getUsername()).isEqualTo(user.getUsername());
+  }
+
+  @Test
+  public void testGetUserByUsername() {
+    userRepo.addUser(user);
+
+    User retrieved = userRepo.getUserByUsername(user.getUsername());
+    assertThat(retrieved).isNotNull();
+    assertThat(retrieved.getUsername()).isEqualTo(user.getUsername());
+  }
+
+  @Test
+  public void testUpdateUser() {
+    userRepo.addUser(user);
+
+    user.setFirstName("UpdatedFirstName");
+    user.setLastName("UpdatedLastName");
+    boolean updated = userRepo.updateUser(user);
+
+    assertThat(updated).isTrue();
+
+    User retrieved = userRepo.getUserById(user.getId());
+    assertThat(retrieved.getFirstName()).isEqualTo("UpdatedFirstName");
+    assertThat(retrieved.getLastName()).isEqualTo("UpdatedLastName");
+  }
+
+  @Test
+  public void testUpdateUserWithoutImage() {
+    userRepo.addUser(user);
+
+    user.setFirstName("UpdatedFirstName");
+    user.setLastName("UpdatedLastName");
+    boolean updated = userRepo.updateUserWithoutImage(user);
+
+    assertThat(updated).isTrue();
+
+    User retrieved = userRepo.getUserById(user.getId());
+    assertThat(retrieved.getFirstName()).isEqualTo("UpdatedFirstName");
+    assertThat(retrieved.getLastName()).isEqualTo("UpdatedLastName");
   }
 }

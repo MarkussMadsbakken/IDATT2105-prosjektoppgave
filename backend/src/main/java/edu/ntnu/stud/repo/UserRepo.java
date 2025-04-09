@@ -89,10 +89,9 @@ public class UserRepo {
    */
   public boolean updateUser(User user) {
     String query = "UPDATE users SET "
-        + "username = ?, first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?"
+        + "first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?"
         + " WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(query,
-        user.getUsername(),
         user.getFirstName(),
         user.getLastName(),
         user.getImageBlob(),
@@ -108,13 +107,29 @@ public class UserRepo {
    */
   public boolean updateUserWithoutImage(User user) {
     String query = "UPDATE users SET "
-        + "username = ?, first_name = ?, last_name = ?"
+        + "first_name = ?, last_name = ?"
         + " WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(query,
-        user.getUsername(),
         user.getFirstName(),
         user.getLastName(),
         user.getId());
     return rowsAffected > 0;
   }
+
+  /**
+   * Updates the users username and password.
+   *
+   * @param user the User object to be updated
+   */
+  public boolean updateUserCredentials(User user) {
+    String query = "UPDATE users SET "
+        + "username = ?, password = ?"
+        + " WHERE id = ?";
+    int rowsAffected = jdbcTemplate.update(query,
+        user.getUsername(),
+        user.getPassword(),
+        user.getId());
+    return rowsAffected > 0;
+  }
+
 }

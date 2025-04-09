@@ -31,7 +31,7 @@ const getParams = () => {
     const params = new URLSearchParams();
 
     if (route.query.q) {
-        params.append("q", route.query.q as string);
+        params.append("query", route.query.q as string);
     }
     if (route.query.category) {
         params.append("category", route.query.category as string);

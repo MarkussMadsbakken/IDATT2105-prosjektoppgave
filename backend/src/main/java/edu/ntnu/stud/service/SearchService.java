@@ -1,10 +1,8 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingResponse;
-import edu.ntnu.stud.repo.ListingRepo;
 import edu.ntnu.stud.util.Validate;
-
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class SearchService {
   @Autowired
   private ListingService listingService;
+
+  Logger logger = org.slf4j.LoggerFactory.getLogger(SearchService.class);
 
   /**
    * Retrieves a page of listings based on the search criteria.
@@ -40,6 +40,10 @@ public class SearchService {
       int page,
       int size
   ) {
+    logger.info(
+        "Search inputs - Query: {}, Category: {}, SubCategory: {}, MinPrice: {}, MaxPrice: {}"
+        + ", Page: {}, Size: {}",
+        query, category, subCategory, minPrice, maxPrice, page, size);
     Validate.that(page, Validate.isNotNegative(), "Page number must be non-negative");
     Validate.that(size, Validate.isPositive(), "Page size must be positive");
     Validate.that(minPrice, Validate.isNotNegative(), "Minimum price must be non-negative");

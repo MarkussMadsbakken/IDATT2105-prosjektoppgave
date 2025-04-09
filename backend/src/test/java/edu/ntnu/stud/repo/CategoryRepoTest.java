@@ -1,7 +1,10 @@
 package edu.ntnu.stud.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edu.ntnu.stud.model.Category;
 import edu.ntnu.stud.model.CategoryRequest;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+/**
+ * Test class for CategoryRepo.
+ */
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -29,7 +31,8 @@ public class CategoryRepoTest {
 
   @BeforeEach
   public void setUp() {
-    jdbcTemplate.execute("INSERT INTO categories (name, description, icon) VALUES ('Test Category', 'Test Description', 'test-icon.png')");
+    jdbcTemplate.execute("INSERT INTO categories (name, description, icon) " 
+        + "VALUES ('Test Category', 'Test Description', 'test-icon.png')");
   }
 
   @AfterEach
@@ -40,7 +43,8 @@ public class CategoryRepoTest {
 
   @Test
   public void testAddCategory() {
-    CategoryRequest categoryRequest = new CategoryRequest("New Category", "New Description", "new-icon.png");
+    CategoryRequest categoryRequest = new CategoryRequest(
+        "New Category", "New Description", "new-icon.png");
 
     categoryRepo.addCategory(categoryRequest);
 

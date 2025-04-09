@@ -1,7 +1,11 @@
 package edu.ntnu.stud.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edu.ntnu.stud.model.Chat;
 import edu.ntnu.stud.model.Listing;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+/**
+ * Test class for ChatRepo.
+ */
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -35,6 +37,9 @@ public class ChatRepoTest {
   private final long sellerId = 2L;
   private String listingId;
 
+  /**
+   * Sets up the test environment by creating a test listing.
+   */
   @BeforeEach
   public void setUp() {
     Listing listing = new Listing("test listing for chatRepoTest", 100.0,
@@ -53,17 +58,17 @@ public class ChatRepoTest {
 
   @Test
   public void testCreateChat() {
-    long chatId = chatRepo.createChat(buyerId, sellerId, listingId);
+    long rowsAffected = chatRepo.createChat(buyerId, sellerId, listingId);
 
-    assertThat(chatId).isGreaterThan(0);
-    boolean exists = chatRepo.chatExists(chatId);
-    assertThat(exists).isTrue();
+    assertThat(rowsAffected).isEqualTo(1);
+    Optional<Long> chatId = chatRepo.chatAlreadyExists(buyerId, sellerId, listingId);
+    assertThat(chatId).isPresent();
   }
 
   @Test
   public void testChatExists() {
-    long chatId = chatRepo.createChat(buyerId, sellerId, listingId);
-
+    chatRepo.createChat(buyerId, sellerId, listingId);
+    Long chatId = chatRepo.chatAlreadyExists(buyerId, sellerId, listingId).orElse(null);
     boolean exists = chatRepo.chatExists(chatId);
     assertThat(exists).isTrue();
   }
@@ -78,7 +83,8 @@ public class ChatRepoTest {
 
   @Test
   public void testDeleteChat() {
-    long chatId = chatRepo.createChat(buyerId, sellerId, listingId);
+    chatRepo.createChat(buyerId, sellerId, listingId);
+    Long chatId = chatRepo.chatAlreadyExists(buyerId, sellerId, listingId).orElse(null);
 
     boolean deleted = chatRepo.deleteChat(String.valueOf(chatId));
     assertThat(deleted).isTrue();
@@ -98,7 +104,8 @@ public class ChatRepoTest {
 
   @Test
   public void testGetChatById() {
-    long chatId = chatRepo.createChat(buyerId, sellerId, listingId);
+    chatRepo.createChat(buyerId, sellerId, listingId);
+    Long chatId = chatRepo.chatAlreadyExists(buyerId, sellerId, listingId).orElse(null);
 
     Chat chat = chatRepo.getChatById(chatId);
     assertThat(chat).isNotNull();
@@ -107,7 +114,8 @@ public class ChatRepoTest {
 
   @Test
   public void testUserIsParticipant() {
-    long chatId = chatRepo.createChat(buyerId, sellerId, listingId);
+    chatRepo.createChat(buyerId, sellerId, listingId);
+    Long chatId = chatRepo.chatAlreadyExists(buyerId, sellerId, listingId).orElse(null);
 
     boolean isParticipant = chatRepo.userIsParticipant(buyerId, chatId);
     assertThat(isParticipant).isTrue();
@@ -115,7 +123,8 @@ public class ChatRepoTest {
 
   @Test
   public void testGetOtherParticipantId() {
-    long chatId = chatRepo.createChat(buyerId, sellerId, listingId);
+    chatRepo.createChat(buyerId, sellerId, listingId);
+    Long chatId = chatRepo.chatAlreadyExists(buyerId, sellerId, listingId).orElse(null);
 
     Long otherParticipantId = chatRepo.getOtherParticipantId(buyerId, chatId);
     assertThat(otherParticipantId).isEqualTo(sellerId);

@@ -6,9 +6,9 @@ import edu.ntnu.stud.model.Reservation;
 import edu.ntnu.stud.model.ReservationRequest;
 import edu.ntnu.stud.repo.ReservationRepo;
 import edu.ntnu.stud.util.Validate;
-
-import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,8 +38,8 @@ public class ReservationService {
     Validate.that(reservationRequest.getListingId(),
         Validate.isNotBlankOrNull(), "Listing ID cannot be null or empty");
     Long userId = jwtService.extractUserId(token.substring(7));
-    Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
-                             - Time.valueOf("01:00:00").getTime());
+    Timestamp expirationDate = Timestamp.from(
+          ZonedDateTime.now(ZoneId.systemDefault()).minusHours(1).toInstant());
     Reservation existingReservation = reservationRepo.getReservationByListingId(
         reservationRequest.getListingId(), expirationDate);
     // Check if a reservation already exists for the user and listing
@@ -81,8 +81,8 @@ public class ReservationService {
    */
   public List<Reservation> getReservationByUserId(String token) {
     Long userId = jwtService.extractUserId(token.substring(7));
-    Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
-                             - Time.valueOf("01:00:00").getTime());
+    Timestamp expirationDate = Timestamp.from(
+        ZonedDateTime.now(ZoneId.systemDefault()).minusHours(1).toInstant());
     return reservationRepo.getReservationsByUserId(userId, expirationDate);
   }
 
@@ -93,13 +93,9 @@ public class ReservationService {
    * @return the Reservation object if it exists, or null if not found
    */
   public Reservation checkReservation(String listingId) {
-    Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
-                             - Time.valueOf("01:00:00").getTime());
-    try {
-      return reservationRepo.getReservationByListingId(listingId, expirationDate);
-    } catch (Exception e) {
-      return null; // Return null if no reservation is found
-    }
+    Timestamp expirationDate = Timestamp.from(
+        ZonedDateTime.now(ZoneId.systemDefault()).minusHours(1).toInstant());
+    return reservationRepo.getReservationByListingId(listingId, expirationDate);
   }
 
   /**

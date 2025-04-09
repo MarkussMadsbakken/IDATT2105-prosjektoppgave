@@ -54,3 +54,7 @@ export type SendMessageRequest = {
     chatId: number;
     message: string;
 }
+
+export type userHistoryRequest = {
+    listingId: string;
+}

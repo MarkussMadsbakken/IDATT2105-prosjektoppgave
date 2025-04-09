@@ -1,27 +1,18 @@
 package edu.ntnu.stud.repo;
 
+import edu.ntnu.stud.model.Chat;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import edu.ntnu.stud.model.Chat;
-
+/**
+ * Repository class for managing chat-related database operations.
+ */
 @Repository
 public class ChatRepo {
-
-  @Value("${spring.datasource.url}")
-  private String url;
-  @Value("${spring.datasource.username}")
-  private String user;
-  @Value("${spring.datasource.password}")
-  private String password;
-
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
@@ -35,34 +26,16 @@ public class ChatRepo {
   };
 
   /**
-   * Initializes the MessageRepo and loads the MySQL JDBC driver.
-   */
-  public ChatRepo() {
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Creates a new chat with a buyer, seller, and listing, and returns the chat
-   * ID.
+   * Creates a new chat with a buyer, seller and listing.
    *
    * @param buyerId   The ID of the buyer
    * @param sellerId  The ID of the seller
    * @param listingId The ID of the listing
-   * @return the ID of the chat created, or -1 if the chat could not be created
+   * @return the amount of rows affected (should be 1 if successful)
    */
   public long createChat(long buyerId, long sellerId, String listingId) {
     String query = "INSERT INTO chat (buyer_id, seller_id, listing_id) VALUES (?, ?, ?)";
-    int rowsAffected = jdbcTemplate.update(query, buyerId, sellerId, listingId);
-    if (rowsAffected > 0) {
-      String selectQuery = "SELECT id FROM chat "
-          + "WHERE buyer_id = ? AND seller_id = ? AND listing_id = ?";
-      return jdbcTemplate.queryForObject(selectQuery, Long.class, buyerId, sellerId, listingId);
-    }
-    return -1;
+    return jdbcTemplate.update(query, buyerId, sellerId, listingId);
   }
 
   /**
@@ -90,13 +63,11 @@ public class ChatRepo {
   public Optional<Long> chatAlreadyExists(long buyerId, long sellerId, String listingId) {
     String query = "SELECT id FROM chat "
         + "WHERE buyer_id = ? AND seller_id = ? AND listing_id = ?";
-
-    try {
-      Long chatId = jdbcTemplate.queryForObject(query, Long.class, buyerId, sellerId, listingId);
-      return Optional.ofNullable(chatId);
-    } catch (EmptyResultDataAccessException e) {
-      return Optional.empty();
-    }
+    List<Long> chatId = jdbcTemplate.query(
+          query, (rs, rowNum) -> rs.getLong("id"), buyerId, sellerId, listingId);
+    return chatId.isEmpty() 
+        ? Optional.empty() 
+        : Optional.of(chatId.get(0));
   }
 
   /**
@@ -130,7 +101,8 @@ public class ChatRepo {
    */
   public Chat getChatById(Long chatId) {
     String query = "SELECT * FROM chat WHERE id = ?";
-    return jdbcTemplate.queryForObject(query, chatRowMapper, chatId);
+    List<Chat> chats = jdbcTemplate.query(query, chatRowMapper, chatId);
+    return chats.isEmpty() ? null : chats.get(0);
   }
 
   /**

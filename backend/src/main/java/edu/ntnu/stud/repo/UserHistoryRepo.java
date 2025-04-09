@@ -3,7 +3,6 @@ package edu.ntnu.stud.repo;
 import edu.ntnu.stud.model.UserHistory;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,14 +12,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class UserHistoryRepo {
-
-  @Value("${spring.datasource.url}")
-  private String url;
-  @Value("${spring.datasource.username}")
-  private String user;
-  @Value("${spring.datasource.password}")
-  private String password;
-
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
@@ -32,17 +23,6 @@ public class UserHistoryRepo {
     userHistory.setListingId(rs.getString("listing_id"));
     return userHistory;
   };
-
-  /**
-   * Initializes the UserHistoryRepo and loads the MySQL JDBC driver.
-   */
-  public UserHistoryRepo() {
-    try {
-      Class.forName("com.mysql.cj.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
 
   /**
    * Adds a new user history entry to the database.
