@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.response;
 
 import edu.ntnu.stud.model.base.DefaultResponse;
 

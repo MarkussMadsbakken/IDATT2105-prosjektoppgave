@@ -1,11 +1,11 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.ChangeCredentialsResponse;
-import edu.ntnu.stud.model.LoginResponse;
-import edu.ntnu.stud.model.RegisterResponse;
 import edu.ntnu.stud.model.request.ChangeCredentialsRequest;
 import edu.ntnu.stud.model.request.LoginRequest;
 import edu.ntnu.stud.model.request.RegisterRequest;
+import edu.ntnu.stud.model.response.ChangeCredentialsResponse;
+import edu.ntnu.stud.model.response.LoginResponse;
+import edu.ntnu.stud.model.response.RegisterResponse;
 import edu.ntnu.stud.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

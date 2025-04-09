@@ -1,6 +1,6 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.response;
 
-import edu.ntnu.stud.model.base.User;
+import edu.ntnu.stud.model.base.User;   
 import java.sql.Timestamp;
 
 

@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.response;
 
 import java.sql.Timestamp;
 

@@ -1,7 +1,7 @@
 package edu.ntnu.stud.factory;
 
-import edu.ntnu.stud.model.ReservationRequest;
 import edu.ntnu.stud.model.base.Reservation;
+import edu.ntnu.stud.model.request.ReservationRequest;
 
 /**
  * Factory class for creating and converting Reservation objects.

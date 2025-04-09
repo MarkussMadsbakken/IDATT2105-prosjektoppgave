@@ -1,15 +1,15 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.response;
 
 /**
- * Represents a change credentials response in the system.
- * This class contains the message and token returned to the user after a successful change of credentials.
+ * Represents a login response in the system.
+ * This class contains the message and token returned to the user after a successful login.
  */
-public class ChangeCredentialsResponse {
+public class LoginResponse {
   private String message;
 
   private String token;
 
-  public ChangeCredentialsResponse(String message, String token) {
+  public LoginResponse(String message, String token) {
     this.message = message;
     this.token = token;
   }

@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.response;
 
 /**
  * Represents a request to create or update a subcategory in the system.

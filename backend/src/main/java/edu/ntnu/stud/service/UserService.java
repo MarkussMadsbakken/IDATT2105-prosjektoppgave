@@ -3,10 +3,10 @@ package edu.ntnu.stud.service;
 import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
 import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
 
-import edu.ntnu.stud.model.UserImageResponse;
-import edu.ntnu.stud.model.UserResponse;
 import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.model.base.User;
+import edu.ntnu.stud.model.response.UserImageResponse;
+import edu.ntnu.stud.model.response.UserResponse;
 import edu.ntnu.stud.repo.UserRepo;
 import java.io.IOException;
 import java.sql.SQLException;

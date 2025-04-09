@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.response;
 
 /**
  * Represents a registration response in the system.

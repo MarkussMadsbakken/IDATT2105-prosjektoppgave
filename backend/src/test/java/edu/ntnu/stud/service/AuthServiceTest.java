@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.lenient;
 
-import edu.ntnu.stud.model.LoginResponse;
 import edu.ntnu.stud.model.base.User;
 import edu.ntnu.stud.model.request.LoginRequest;
 import edu.ntnu.stud.model.request.RegisterRequest;
+import edu.ntnu.stud.model.response.LoginResponse;
 import edu.ntnu.stud.repo.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

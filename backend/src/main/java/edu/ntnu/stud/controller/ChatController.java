@@ -1,11 +1,11 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.CreateChatResponse;
 import edu.ntnu.stud.model.base.Chat;
 import edu.ntnu.stud.model.base.DefaultResponse;
 import edu.ntnu.stud.model.base.Message;
 import edu.ntnu.stud.model.request.CreateChatRequest;
 import edu.ntnu.stud.model.request.MessageRequest;
+import edu.ntnu.stud.model.response.CreateChatResponse;
 import edu.ntnu.stud.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
