@@ -72,6 +72,7 @@ const profileTranslations = {
     passwordMismatch: "Passordene stemmer ikke overens",
     error: "Feil",
     userDoesNotExist: "Brukeren finnes ikke",
+    imageTooLarge: "Bilde er for stort",
     passwordCannotBeEmpty: "Passordet kan ikke være tomt",
     passwordMustContainLetter: "Passordet må inneholde minst en bokstav",
     passwordMustContainNumber: "Passordet må inneholde minst ett tall",
@@ -100,6 +101,7 @@ const profileTranslations = {
     updateFailed: "Update failed",
     credentialsUpdated: "User credentials updated",
     passwordMismatch: "Passwords do not match",
+    imageTooLarge: "Image is too large",
     passwordCannotBeEmpty: "Password cannot be empty",
     passwordMustContainLetter: "Password must contain at least one letter",
     passwordMustContainNumber: "Password must contain at least one number",
@@ -260,6 +262,28 @@ const articleSummaryTranslations = {
     inSummary: "In summary"
   }
 }
+
+const formTranslations = {
+  no: {
+    error: "Feil",
+    imageTooLarge: "Bilde er for stort (maks 1MB)",
+    releaseToUpload: "Slipp for å laste opp",
+    imageSelected: "Bilde valgt",
+    chooseImage: "Velg bilde",
+    uploadedImages: "Opplastede bilder",
+    thisFieldIsRequired: "Dette feltet er påkrevd",
+  },
+  en: {
+    error: "Error",
+    imageTooLarge: "Image is too large (max 1MB)",
+    releaseToUpload: "Release to upload",
+    imageSelected: "Image selected",
+    chooseImage: "Choose image",
+    uploadedImages: "Uploaded images",
+    thisFieldIsRequired: "This field is required",
+  }
+}
+
 const createListingViewTranslations = {
   no: {
     createListing: "Opprett en ny annonse",
@@ -386,15 +410,6 @@ const breadcrumbTranslations = {
   }
 }
 
-const formTranslations = {
-  no: {
-    thisFieldIsRequired: "Dette feltet er påkrevd",
-  },
-  en: {
-    thisFieldIsRequired: "This field is required",
-  }
-}
-
 const i18n = createI18n({
   locale: 'no',
   fallbackLocale: 'en',
@@ -428,6 +443,7 @@ const i18n = createI18n({
         ...searchTranslations.no,
       },
       breadcrumb: breadcrumbTranslations.no,
+      form: formTranslations.no,
       ...formTranslations.no,
     }, en: {
       listings: {
@@ -456,6 +472,7 @@ const i18n = createI18n({
         ...searchTranslations.en,
       },
       breadcrumb: breadcrumbTranslations.en,
+      form: formTranslations.en,
       ...formTranslations.en,
     }
   }
