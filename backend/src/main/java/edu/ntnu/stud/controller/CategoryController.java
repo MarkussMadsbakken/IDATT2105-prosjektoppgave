@@ -6,8 +6,9 @@ import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.model.SubCategory;
 import edu.ntnu.stud.model.SubCategoryRequest;
 import edu.ntnu.stud.service.CategoryService;
-import edu.ntnu.stud.service.JWTService;
 import edu.ntnu.stud.service.SubCategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for managing Categories and subcategories entities.
  */
+@Tag(name = "Category", 
+    description = "Endpoints for managing categories and subcategories")
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -40,6 +43,8 @@ public class CategoryController {
    * @return the category with the specified ID, or a 404 Not Found status if not
    *         found
    */
+  @Operation(summary = "Retrieve a category by ID", 
+      description = "Fetches a category by its unique identifier.")
   @GetMapping("/{id}")
   public ResponseEntity<Category> getCategoryById(@PathVariable int id) {
     Category category = categoryService.getCategoryById(id);
@@ -55,6 +60,8 @@ public class CategoryController {
    *
    * @return a list of all categories
    */
+  @Operation(summary = "Retrieve all categories", 
+      description = "Fetches all categories from the database.")
   @GetMapping
   public ResponseEntity<List<Category>> getAllCategories() {
     List<Category> categories = categoryService.getAllCategories();
@@ -71,6 +78,8 @@ public class CategoryController {
    * @param id the ID of the category
    * @return a list of subcategories associated with the specified category ID
    */
+  @Operation(summary = "Retrieve subcategory by ID", 
+      description = "Fetches a subcategory by its unique identifier.")
   @GetMapping("/subcategories/{id}")
   public ResponseEntity<SubCategory> getSubCategoryById(@PathVariable int id) {
     SubCategory subCategory = subCategoryService.getSubCategoryById(id);
@@ -87,6 +96,8 @@ public class CategoryController {
    * @param id the ID of the category
    * @return a list of subcategories associated with the specified category ID
    */
+  @Operation(summary = "Retrieve subcategories by category ID", 
+      description = "Fetches all subcategories associated with a specific category ID.")
   @GetMapping("/{id}/subcategories")
   public ResponseEntity<List<SubCategory>> getSubCategoriesByCategoryId(@PathVariable int id) {
     List<SubCategory> subCategories = subCategoryService.getSubCategoriesByCategoryId(id);
@@ -104,6 +115,8 @@ public class CategoryController {
    *
    * @return a list of all subcategories
    */
+  @Operation(summary = "Retrieve all subcategories", 
+      description = "Fetches all subcategories from the database.")
   @GetMapping("/subcategories")
   public ResponseEntity<List<SubCategory>> getAllSubCategories() {
     List<SubCategory> subCategories = subCategoryService.getAllSubCategories();
@@ -119,6 +132,7 @@ public class CategoryController {
    *
    * @param category the category to add
    */
+  @Operation(summary = "Add a new category", description = "Adds a new category to the database.")
   @PostMapping
   public ResponseEntity<DefaultResponse> addCategory(@RequestBody CategoryRequest category,
       @RequestHeader("Authorization") String token) {
@@ -132,6 +146,8 @@ public class CategoryController {
    *
    * @param category the category to update
    */
+  @Operation(summary = "Update an existing category", 
+      description = "Updates an existing category in the database.")
   @PutMapping
   public ResponseEntity<DefaultResponse> updateCategory(@RequestBody Category category,
       @RequestHeader("Authorization") String token) {
@@ -145,6 +161,8 @@ public class CategoryController {
    *
    * @param id the ID of the category to delete
    */
+  @Operation(summary = "Delete a category", 
+      description = "Deletes a category from the database by its ID.")
   @DeleteMapping("/{id}")
   public ResponseEntity<DefaultResponse> deleteCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
@@ -158,6 +176,8 @@ public class CategoryController {
    *
    * @param subCategory the subcategory to add
    */
+  @Operation(summary = "Add a new subcategory", 
+      description = "Adds a new subcategory to the database.")
   @PostMapping("/subcategories")
   public ResponseEntity<DefaultResponse> addSubCategory(@RequestBody SubCategoryRequest subCategory,
       @RequestHeader("Authorization") String token) {
@@ -171,6 +191,8 @@ public class CategoryController {
    *
    * @param subCategory the subcategory to update
    */
+  @Operation(summary = "Update an existing subcategory", 
+      description = "Updates an existing subcategory in the database.")
   @PutMapping("/subcategories")
   public ResponseEntity<String> updateSubCategory(@RequestBody SubCategory subCategory,
       @RequestHeader("Authorization") String token) {
@@ -183,6 +205,8 @@ public class CategoryController {
    *
    * @param id the ID of the subcategory to delete
    */
+  @Operation(summary = "Delete a subcategory", 
+      description = "Deletes a subcategory from the database by its ID.")
   @DeleteMapping("/subcategories/{id}")
   public ResponseEntity<DefaultResponse> deleteSubCategory(@PathVariable int id,
       @RequestHeader("Authorization") String token) {
