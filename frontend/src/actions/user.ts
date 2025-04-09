@@ -1,4 +1,4 @@
-import {API_BASE_URL } from "@/types";
+import { API_BASE_URL } from "@/types";
 import type { ChangeCredentialsResponse, changeUserCredentialsRequest } from "@/types";
 import type { EditUserInfo, GetUserResponse, Image, Listing } from "@/types";
 import Fetch, { FetchWithoutParse } from "@/util/fetch";
@@ -63,18 +63,13 @@ export const updateUserCredentials = async (
   return data;
 };
 
-export const useUpdateUserCredentials = (params?: { onSuccess?:
-    () => void, onError?: (error: unknown) => void }) => {
-  return useMutation<ChangeCredentialsResponse, unknown, changeUserCredentialsRequest>({
+export const useUpdateUserCredentials = () => {
+  return useMutation({
     mutationFn: updateUserCredentials,
-    onSuccess: () => {
-      params?.onSuccess?.();
-    },
-    onError: (error) => {
-      params?.onError?.(error);
-    },
   });
-};
+}
+
+
 export const getUser = async (userId: number): Promise<GetUserResponse> => {
   return await Fetch(`${API_BASE_URL}/api/user/${userId}`)
 }

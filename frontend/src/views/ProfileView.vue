@@ -3,8 +3,6 @@ import { logout } from '@/stores/auth';
 import { useRoute, useRouter } from 'vue-router';
 import Profile from '@/components/Profile.vue';
 
-const router = useRouter();
-
 const route = useRoute();
 const userId = Number(route.params.userid as string);
 

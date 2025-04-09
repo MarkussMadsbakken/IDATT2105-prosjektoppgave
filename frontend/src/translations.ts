@@ -69,11 +69,14 @@ const profileTranslations = {
     savePassword: "Lagre passord",
     updateFailed: "Oppdatering feilet",
     credentialsUpdated: "Brukeropplysninger oppdatert",
-    passWordTooShort: "Passordet må være minst 8 tegn langt",
     passwordMismatch: "Passordene stemmer ikke overens",
     error: "Feil",
     userDoesNotExist: "Brukeren finnes ikke",
     imageTooLarge: "Bilde er for stort",
+    passwordCannotBeEmpty: "Passordet kan ikke være tomt",
+    passwordMustContainLetter: "Passordet må inneholde minst en bokstav",
+    passwordMustContainNumber: "Passordet må inneholde minst ett tall",
+    passwordTooShort: "Passordet må være minst 8 tegn langt",
   },
   en: {
     memberSince: "Member since {date}",
@@ -97,9 +100,12 @@ const profileTranslations = {
     savePassword: "Save password",
     updateFailed: "Update failed",
     credentialsUpdated: "User credentials updated",
-    passwordTooShort: "Password must be at least 8 characters long",
     passwordMismatch: "Passwords do not match",
     imageTooLarge: "Image is too large",
+    passwordCannotBeEmpty: "Password cannot be empty",
+    passwordMustContainLetter: "Password must contain at least one letter",
+    passwordMustContainNumber: "Password must contain at least one number",
+    passwordTooShort: "Password must be at least 8 characters long",
   }
 }
 const registerTranslations = {
@@ -384,6 +390,7 @@ const breadcrumbTranslations = {
     chat: "Chat",
     editProfile: "Rediger profil",
     createListing: "Opprett annonse",
+    editCredentials: "Endre passord",
   },
   en: {
     home: "Home",
@@ -396,7 +403,17 @@ const breadcrumbTranslations = {
     checkout: "Checkout",
     chat: "Chat",
     editProfile: "Edit profile",
-    createListing: "Create listing"
+    createListing: "Create listing",
+    editCredentials: "Edit credentials",
+  }
+}
+
+const formTranslations = {
+  no: {
+    thisFieldIsRequired: "Dette feltet er påkrevd",
+  },
+  en: {
+    thisFieldIsRequired: "This field is required",
   }
 }
 
@@ -434,6 +451,7 @@ const i18n = createI18n({
       },
       breadcrumb: breadcrumbTranslations.no,
       form: formTranslations.no,
+      ...formTranslations.no,
     }, en: {
       listings: {
         archive: archivedListingsTranslations.en,
@@ -462,6 +480,7 @@ const i18n = createI18n({
       },
       breadcrumb: breadcrumbTranslations.en,
       form: formTranslations.en,
+      ...formTranslations.en,
     }
   }
 });
