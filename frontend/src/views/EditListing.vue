@@ -72,11 +72,11 @@ const { isPending, isError, error, mutate: editListingMutation } = useMutation({
                 severity: "success",
                 summary: t("success"),
                 detail: t("listing.updated"),
-                life: 30000,
+                life: 3000,
                 closable: true,
             }
         );
-        //router.push(`/listing/${listingId}`);
+        router.push(`/listing/${listingId}`);
     }
 })
 
