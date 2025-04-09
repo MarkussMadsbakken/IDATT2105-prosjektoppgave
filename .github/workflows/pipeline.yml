@@ -79,5 +79,4 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
-          build: false
           start: nohup npx serve -s frontend/dist --port 3000
