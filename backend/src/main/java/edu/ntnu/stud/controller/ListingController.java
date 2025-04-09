@@ -6,6 +6,8 @@ import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.model.ListingUpdate;
 import edu.ntnu.stud.service.ListingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
  * Controller class for managing Listing entities.
  * This class provides endpoints to add, retrieve, and paginate listings.
  */
+@Tag(name = "Listing", description = "Endpoints for managing listings")
 @RestController
 @RequestMapping("/api/listing")
 public class ListingController {
@@ -45,6 +48,8 @@ public class ListingController {
    * @return the listing with the specified UUID, or a 404 Not Found status if not
    *         found
    */
+  @Operation(summary = "Retrieve a listing by UUID", 
+      description = "Fetches a listing by its unique identifier.")
   @GetMapping("/{uuid}")
   public ResponseEntity<ListingResponse> getListingByUuid(@PathVariable String uuid) {
     logger.info("Fetching listing with UUID: {}", uuid);
@@ -65,6 +70,8 @@ public class ListingController {
    * @return the images of the listing with the specified UUID,
    *         or a 404 Not Found status if not found
    */
+  @Operation(summary = "Retrieve listing images by UUID", 
+      description = "Fetches images associated with a listing by its unique identifier.")
   @GetMapping("/{uuid}/images")
   public ResponseEntity<List<ListingImageResponse>> getListingImagesByUuid(
       @PathVariable String uuid) {
@@ -86,6 +93,8 @@ public class ListingController {
    * @param offset the number of items per page
    * @return a page of listings
    */
+  @Operation(summary = "Retrieve paginated listings", 
+      description = "Fetches a paginated list of listings.")
   @GetMapping
   public ResponseEntity<Page<ListingResponse>> getListingsPage(
       @RequestParam int page,
@@ -101,6 +110,8 @@ public class ListingController {
    *
    * @return a list of all active listings
    */
+  @Operation(summary = "Retrieve all active listings", 
+      description = "Fetches all active listings.")
   @GetMapping("/all")
   public ResponseEntity<List<ListingResponse>> getAllActiveListings() {
     logger.info("Fetching all listings");
@@ -117,6 +128,8 @@ public class ListingController {
    * @param offset the number of items per page
    * @return a page of listings owned by the specified user
    */
+  @Operation(summary = "Retrieve user listings", 
+      description = "Fetches a paginated list of listings owned by a specific user.")
   @GetMapping("/user/{userId}")
   public ResponseEntity<Page<ListingResponse>> getListingsByUserId(
       @PathVariable long userId,
@@ -124,7 +137,8 @@ public class ListingController {
       @RequestParam int offset) {
     logger.info(
         "Fetching listings for user with ID: {}, page: {}, offset: {}", userId, page, offset);
-    Page<ListingResponse> listingsPage = listingService.getListingsByUserIdPage(userId, page, offset);
+    Page<ListingResponse> listingsPage = 
+        listingService.getListingsByUserIdPage(userId, page, offset);
     logger.info("Listings for user fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -137,6 +151,8 @@ public class ListingController {
    * @param offset the number of items per page
    * @return a page of archived listings owned by the specified user
    */
+  @Operation(summary = "Retrieve archived user listings", 
+      description = "Fetches a paginated list of archived listings owned by a specific user.")
   @GetMapping("/user/{userId}/archived")
   public ResponseEntity<Page<ListingResponse>> getArchivedListingsByUserId(
       @PathVariable long userId,
@@ -147,7 +163,8 @@ public class ListingController {
         userId,
         page,
         offset);
-    Page<ListingResponse> listingsPage = listingService.getArchivedListingsByUserIdPage(userId, page, offset);
+    Page<ListingResponse> listingsPage = 
+        listingService.getArchivedListingsByUserIdPage(userId, page, offset);
     logger.info("Archived listings for user fetched successfully");
     return ResponseEntity.ok(listingsPage);
   }
@@ -161,6 +178,7 @@ public class ListingController {
    *                       images
    * @return the created listings corresponding response object
    */
+  @Operation(summary = "Create a new listing", description = "Creates a new listing with images.")
   @PostMapping
   public ResponseEntity<ListingResponse> createListing(
       @RequestPart("listingRequest") ListingRequest listingRequest,
@@ -185,6 +203,8 @@ public class ListingController {
    * @param listingRequest the ListingRequest to update the Listing
    * @param token          the JWT token for authorization
    */
+  @Operation(summary = "Update an existing listing", 
+      description = "Updates an existing listing by its UUID.")
   @PutMapping
   public ResponseEntity<DefaultResponse> updateListing(
       @RequestBody ListingUpdate listingRequest,
@@ -202,6 +222,7 @@ public class ListingController {
    * @param uuid  the UUID of the listing to delete
    * @param token the JWT token for authorization
    */
+  @Operation(summary = "Delete a listing", description = "Deletes a listing by its UUID.")
   @DeleteMapping("/{uuid}")
   public ResponseEntity<DefaultResponse> deleteListing(
       @PathVariable String uuid,
@@ -220,6 +241,8 @@ public class ListingController {
    * @param token the JWT token for authorization
    * @return a response indicating the success or failure of the purchase
    */
+  @Operation(summary = "Purchase a listing", 
+      description = "Marks a listing as purchased by its UUID.")
   @PostMapping("/{uuid}/purchase")
   public ResponseEntity<DefaultResponse> purchaseListing(
       @PathVariable String uuid,
@@ -239,6 +262,8 @@ public class ListingController {
    * @param token the JWT token for authorization
    * @return a response indicating the success or failure of the archiving
    */
+  @Operation(summary = "Archive a listing", 
+      description = "Archives or unarchives a listing by its UUID.")
   @PostMapping("/{uuid}/archive")
   public ResponseEntity<DefaultResponse> archiveListing(
       @PathVariable String uuid,
