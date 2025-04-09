@@ -19,7 +19,12 @@ import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { deleteListing } from '@/actions/createListing';
 import Alert from '@/components/Alert.vue';
-import { addBookmark, removeBookmark, useListingBookmarks } from '@/actions/bookmarks';
+import {
+  addBookmark,
+  removeBookmark,
+  useHasBookmarked,
+  useListingBookmarks
+} from '@/actions/bookmarks';
 import { useI18n } from 'vue-i18n';
 import { createChat } from '@/actions/chat';
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
@@ -42,9 +47,7 @@ const {
   isPending
 } = useGetListing(listingId);
 
-const { data: bookmarks } = useListingBookmarks(listingId);
 
-const bookmarked = ref(bookmarks.value?.hasBookmarked ?? false);
 
 const parsedDescription = computed(() => marked(listing.value?.description ?? ''));
 const isOwnListing = computed(() => {
@@ -122,34 +125,35 @@ const deleteMutation = useMutation({
   mutationFn: deleteListing,
 });
 
-const bookmarkCountLocal = ref(bookmarks.value?.bookMarkCount || 0);
-watch(bookmarks, (newval) => {
-  bookmarkCountLocal.value = newval ? newval.bookMarkCount : 0;
-  bookmarked.value = newval ? newval.hasBookmarked : false;
+const { data: bookmarks } = useListingBookmarks(listingId);
+const { data: hasBookmarkedRef } = useHasBookmarked(listingId, {
+  enabled: auth.isLoggedIn(),
 });
+
+const bookmarked = computed(() => auth.isLoggedIn() && (hasBookmarkedRef?.value ?? false));
+const bookmarkCount = computed(() => bookmarks.value?.bookMarkCount || 0);
 
 const bookmarkMutation = useMutation({
   mutationFn: async (removingBookmark: boolean) => {
     if (!listing.value) return;
-    if (removingBookmark) {
-      return await removeBookmark(listingId);
-    } else {
-      return await addBookmark(listingId);
-    }
+    return removingBookmark ? removeBookmark(listingId) : addBookmark(listingId);
   },
-  onMutate: async () => {
-    if (bookmarked.value) {
-      bookmarkCountLocal.value -= 1;
-    } else {
-      bookmarkCountLocal.value += 1;
-    }
-    bookmarked.value = !bookmarked.value;
+  onMutate: async (removingBookmark) => {
+    queryClient.setQueryData(["listing", "bookmarks", listingId], (oldData: any) => ({
+      ...oldData,
+      bookMarkCount: oldData.bookMarkCount + (removingBookmark ? -1 : 1),
+    }));
+    queryClient.setQueryData(["listing", "bookmarks", listingId, "exists"], !removingBookmark);
   },
-  onSuccess: (data) => {
-    queryClient.invalidateQueries({
-      queryKey: ['listing', listingId, "bookmarks"],
-    })
-  }
+  onError: (error, removingBookmark) => {
+    console.error("Error updating bookmark:", error);
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId] });
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId, "exists"] });
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId] });
+    queryClient.invalidateQueries({ queryKey: ["listing", "bookmarks", listingId, "exists"] });
+  },
 });
 
 
@@ -285,10 +289,10 @@ const handleDelete = () => {
             {{ $t("delete") }}
             <Trash2 :size="18" style="margin-left: 0.5rem;" />
           </Button>
-          <div @click="() => bookmarkMutation.mutate(bookmarked)" style="cursor: pointer" v-if="auth.isLoggedIn()"
+          <div @click="() => bookmarkMutation.mutate(bookmarked!)" style="cursor: pointer" v-if="auth.isLoggedIn()"
             class="bookmark">
             <div class="bookmark-count">
-              {{ bookmarkCountLocal }}
+              {{ bookmarkCount }}
             </div>
             <Bookmark class="bookmark" v-if="!bookmarked" :size="38" />
             <BookmarkCheck v-else :size="38" />
