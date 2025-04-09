@@ -1,9 +1,9 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.Chat;
 import edu.ntnu.stud.model.CreateChatRequest;
-import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
+import edu.ntnu.stud.model.base.Chat;
+import edu.ntnu.stud.model.base.Message;
 import edu.ntnu.stud.repo.ChatRepo;
 import java.sql.Timestamp;
 import java.util.List;

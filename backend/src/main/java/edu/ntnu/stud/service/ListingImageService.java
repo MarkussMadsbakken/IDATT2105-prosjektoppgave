@@ -1,6 +1,6 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.ListingImage;
+import edu.ntnu.stud.model.base.ListingImage;
 import edu.ntnu.stud.repo.ListingImageRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

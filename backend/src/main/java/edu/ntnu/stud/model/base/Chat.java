@@ -1,6 +1,4 @@
-package edu.ntnu.stud.model;
-
-import java.sql.Timestamp;
+package edu.ntnu.stud.model.base;
 
 /**
  * Represents a chat between a buyer and a seller for a specific listing.

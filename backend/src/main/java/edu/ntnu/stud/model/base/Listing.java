@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.base;
 
 import java.sql.Blob;
 import java.sql.Timestamp;

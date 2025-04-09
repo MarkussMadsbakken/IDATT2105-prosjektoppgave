@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.base;
 
 /**
  * This class represents a bookmark in the application.

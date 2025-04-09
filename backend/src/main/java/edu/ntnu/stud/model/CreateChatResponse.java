@@ -1,5 +1,7 @@
 package edu.ntnu.stud.model;
 
+import edu.ntnu.stud.model.base.DefaultResponse;
+
 /**
  * Represents a response for creating a chat.
  */

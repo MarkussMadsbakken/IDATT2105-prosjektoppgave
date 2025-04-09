@@ -1,12 +1,13 @@
 package edu.ntnu.stud.repo;
 
-import edu.ntnu.stud.model.Chat;
+import edu.ntnu.stud.model.base.Chat;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 
 /**
  * Repository class for managing chat-related database operations.

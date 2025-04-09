@@ -1,7 +1,6 @@
 package edu.ntnu.stud.factory;
 
-import java.sql.Timestamp;
-import edu.ntnu.stud.model.Notification;
+import edu.ntnu.stud.model.base.Notification;
 
 /**
  * Factory class for creating notifications.

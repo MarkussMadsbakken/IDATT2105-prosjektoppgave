@@ -1,10 +1,10 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.model.ListingUpdate;
+import edu.ntnu.stud.model.base.DefaultResponse;
 import edu.ntnu.stud.service.ListingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

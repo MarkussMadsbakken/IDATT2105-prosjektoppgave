@@ -3,13 +3,13 @@ package edu.ntnu.stud.service;
 import static edu.ntnu.stud.util.ImageUtil.convertBlobToBase64;
 import static edu.ntnu.stud.util.ImageUtil.convertMultipartFileToBlob;
 
-import edu.ntnu.stud.model.Listing;
-import edu.ntnu.stud.model.ListingImage;
 import edu.ntnu.stud.model.ListingImageResponse;
 import edu.ntnu.stud.model.ListingRequest;
 import edu.ntnu.stud.model.ListingResponse;
 import edu.ntnu.stud.model.ListingUpdate;
-import edu.ntnu.stud.model.Notification;
+import edu.ntnu.stud.model.base.Listing;
+import edu.ntnu.stud.model.base.ListingImage;
+import edu.ntnu.stud.model.base.Notification;
 import edu.ntnu.stud.repo.ListingRepo;
 import edu.ntnu.stud.util.Validate;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package edu.ntnu.stud.repo;
 
-import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingUpdate;
+import edu.ntnu.stud.model.base.Listing;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

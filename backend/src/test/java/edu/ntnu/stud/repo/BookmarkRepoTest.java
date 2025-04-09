@@ -2,8 +2,8 @@ package edu.ntnu.stud.repo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edu.ntnu.stud.model.Bookmark;
-import edu.ntnu.stud.model.Listing;
+import edu.ntnu.stud.model.base.Bookmark;
+import edu.ntnu.stud.model.base.Listing;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+
 
 /**
  * Test class for BookmarkRepo.

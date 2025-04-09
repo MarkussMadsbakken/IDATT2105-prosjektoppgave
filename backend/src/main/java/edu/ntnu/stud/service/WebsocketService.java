@@ -1,8 +1,7 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.Message;
-import edu.ntnu.stud.model.Notification;
-
+import edu.ntnu.stud.model.base.Message;
+import edu.ntnu.stud.model.base.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

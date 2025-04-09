@@ -6,7 +6,7 @@ import edu.ntnu.stud.model.LoginRequest;
 import edu.ntnu.stud.model.LoginResponse;
 import edu.ntnu.stud.model.RegisterRequest;
 import edu.ntnu.stud.model.RegisterResponse;
-import edu.ntnu.stud.model.User;
+import edu.ntnu.stud.model.base.User;
 import edu.ntnu.stud.repo.UserRepo;
 import edu.ntnu.stud.util.Validate;
 import org.springframework.beans.factory.annotation.Autowired;

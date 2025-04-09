@@ -1,7 +1,7 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.Message;
 import edu.ntnu.stud.model.MessageRequest;
+import edu.ntnu.stud.model.base.Message;
 import edu.ntnu.stud.repo.MessageRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

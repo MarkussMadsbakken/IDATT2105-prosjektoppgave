@@ -1,7 +1,7 @@
 package edu.ntnu.stud.repo;
 
-import edu.ntnu.stud.model.Category;
 import edu.ntnu.stud.model.CategoryRequest;
+import edu.ntnu.stud.model.base.Category;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

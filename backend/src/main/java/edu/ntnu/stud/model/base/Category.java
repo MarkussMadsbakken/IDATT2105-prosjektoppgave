@@ -1,4 +1,4 @@
-package edu.ntnu.stud.model;
+package edu.ntnu.stud.model.base;
 
 /**
  * Represents a category of items in the system.

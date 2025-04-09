@@ -1,10 +1,10 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.Category;
 import edu.ntnu.stud.model.CategoryRequest;
-import edu.ntnu.stud.model.DefaultResponse;
-import edu.ntnu.stud.model.SubCategory;
 import edu.ntnu.stud.model.SubCategoryRequest;
+import edu.ntnu.stud.model.base.Category;
+import edu.ntnu.stud.model.base.DefaultResponse;
+import edu.ntnu.stud.model.base.SubCategory;
 import edu.ntnu.stud.service.CategoryService;
 import edu.ntnu.stud.service.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,6 @@
 package edu.ntnu.stud.service;
 
-import edu.ntnu.stud.model.Notification;
+import edu.ntnu.stud.model.base.Notification;
 import edu.ntnu.stud.repo.NotificationRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;
@@ -91,8 +91,8 @@ public class NotificationService {
     Notification notification = notificationRepo.getNotificationById(id);
     Validate.that(notification, Validate.isNotNull(), "Notification not found");
     Validate.that(notification.getUserId() == userId,
-      Validate.isTrue(),
-      "You do not have permission to mark this notification as read");
+        Validate.isTrue(),
+        "You do not have permission to mark this notification as read");
     notificationRepo.markNotificationAsRead(id);
   }
 }

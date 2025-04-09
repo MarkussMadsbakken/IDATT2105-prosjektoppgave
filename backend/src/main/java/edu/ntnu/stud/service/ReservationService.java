@@ -1,9 +1,9 @@
 package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.factory.ReservationFactory;
-import edu.ntnu.stud.model.Notification;
-import edu.ntnu.stud.model.Reservation;
 import edu.ntnu.stud.model.ReservationRequest;
+import edu.ntnu.stud.model.base.Notification;
+import edu.ntnu.stud.model.base.Reservation;
 import edu.ntnu.stud.repo.ReservationRepo;
 import edu.ntnu.stud.util.Validate;
 import java.sql.Timestamp;

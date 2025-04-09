@@ -8,7 +8,7 @@ import static org.mockito.Mockito.lenient;
 import edu.ntnu.stud.model.LoginRequest;
 import edu.ntnu.stud.model.LoginResponse;
 import edu.ntnu.stud.model.RegisterRequest;
-import edu.ntnu.stud.model.User;
+import edu.ntnu.stud.model.base.User;
 import edu.ntnu.stud.repo.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

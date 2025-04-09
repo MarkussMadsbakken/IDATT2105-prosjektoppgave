@@ -1,6 +1,8 @@
 package edu.ntnu.stud.model;
 
+import edu.ntnu.stud.model.base.User;
 import java.sql.Timestamp;
+
 
 /**
  * Represents a UserResponse in the system.
