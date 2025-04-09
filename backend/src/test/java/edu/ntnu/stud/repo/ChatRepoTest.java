@@ -37,8 +37,8 @@ public class ChatRepoTest {
 
   @BeforeEach
   public void setUp() {
-    Listing listing = new Listing("test listing for bookmarkRepoTest", 100.0,
-        "test listing for bookmarkRepoTest", 1, 1, 0, 0, 1L);
+    Listing listing = new Listing("test listing for chatRepoTest", 100.0,
+        "test listing for chatRepoTest", 1, 1, 0, 0, 1L);
 
     listingRepo.saveListing(listing);
 
