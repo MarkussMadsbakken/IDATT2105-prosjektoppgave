@@ -89,6 +89,15 @@ CREATE TABLE notifications (
      CONSTRAINT fk_user_notifications FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE user_history (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    listing_id CHAR(36) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user_history FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_listing_history FOREIGN KEY (listing_id) REFERENCES listings(uuid)
+);
+
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('testuser', 'password');
 INSERT INTO users (username, password) VALUES ('testuser2', 'password');

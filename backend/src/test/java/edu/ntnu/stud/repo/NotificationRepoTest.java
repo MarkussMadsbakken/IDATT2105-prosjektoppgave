@@ -89,4 +89,28 @@ public class NotificationRepoTest {
     Notification updatedNotification = notificationRepo.getNotificationById(notificationId);
     assertThat(updatedNotification.isRead()).isTrue();
   }
+
+  @Test
+  public void testGetAllNotifications() {
+      Notification notification1 = new Notification();
+      notification1.setUserId(userId);
+      notification1.setMessage("First notification");
+      notification1.setLink("http://example.com/1");
+
+      Notification notification2 = new Notification();
+      notification2.setUserId(userId);
+      notification2.setMessage("Second notification");
+      notification2.setLink("http://example.com/2");
+
+      notificationRepo.addNotification(notification1);
+      notificationRepo.addNotification(notification2);
+
+      List<Notification> notifications = notificationRepo.getAllNotifications();
+
+      assertThat(notifications).hasSize(2);
+      assertThat(notifications).extracting(Notification::getMessage)
+          .containsExactlyInAnyOrder("First notification", "Second notification");
+      assertThat(notifications).extracting(Notification::getLink)
+          .containsExactlyInAnyOrder("http://example.com/1", "http://example.com/2");
+  }
 }

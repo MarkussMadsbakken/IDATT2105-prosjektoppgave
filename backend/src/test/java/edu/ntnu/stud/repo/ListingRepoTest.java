@@ -2,7 +2,7 @@ package edu.ntnu.stud.repo;
 
 import edu.ntnu.stud.model.Listing;
 import edu.ntnu.stud.model.ListingUpdate;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,8 +29,9 @@ public class ListingRepoTest {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  @AfterEach
+  @BeforeEach
   public void tearDown() {
+    jdbcTemplate.execute("DELETE FROM user_history");
     jdbcTemplate.execute("DELETE FROM listings");
   }
 
@@ -158,4 +159,98 @@ public class ListingRepoTest {
 
     assertThat(listingsPage.getTotalElements()).isEqualTo(2);
   }
+
+  @Test
+  public void testGetListingsByUuids() {
+    Listing listing1 = new Listing("Test Listing 1", 100.0,
+        "This is the first test listing", 0, 0, 0, 0, 1L);
+    Listing listing2 = new Listing("Test Listing 2", 200.0,
+        "This is the second test listing", 0, 0, 0, 0, 1L);
+
+    listingRepo.saveListing(listing1);
+    listingRepo.saveListing(listing2);
+
+    List<String> uuids = List.of(listing1.getUuid(), listing2.getUuid());
+
+    List<Listing> listings = listingRepo.getListingsByUuids(uuids);
+
+    assertThat(listings.size()).isEqualTo(2);
+  }
+
+  @Test
+  public void testGetAllActiveListings() {
+    Listing listing1 = new Listing("Test Listing 1", 100.0,
+        "This is the first test listing", 0, 0, 0, 0, 1L);
+    Listing listing2 = new Listing("Test Listing 2", 200.0,
+        "This is the second test listing", 0, 0, 0, 0, 1L);
+
+      listingRepo.saveListing(listing1);
+      listingRepo.saveListing(listing2);
+
+      // have to update listing to save it as inactive
+      ListingUpdate listingUpdate = new ListingUpdate();
+
+      listingUpdate.setUuid(listing2.getUuid());
+      listingUpdate.setName("Test listing 2 (inactive)");
+      listingUpdate.setActive(false);
+      listingRepo.updateListing(listingUpdate);
+
+      List<Listing> activeListings = listingRepo.getAllActiveListings();
+
+      assertThat(activeListings).hasSize(1);
+      assertThat(activeListings.getFirst().getName()).isEqualTo("Test Listing 1");
+  }
+
+  @Test
+  public void testGetArchivedListingsByUserIdPage() {
+    Listing listing1 = new Listing("Test Listing 1", 100.0,
+        "This is the first test listing", 0, 0, 0, 0, 1L);
+    Listing listing2 = new Listing("Test Listing 2", 200.0,
+        "This is the second test listing", 0, 0, 0, 0, 1L);
+
+    listingRepo.saveListing(listing1);
+    listingRepo.saveListing(listing2);
+
+    // have to update listing to save it as inactive
+    ListingUpdate listingUpdate = new ListingUpdate();
+
+    listingUpdate.setUuid(listing2.getUuid());
+    listingUpdate.setName("Test listing 2 (inactive)");
+    listingUpdate.setActive(false);
+    listingRepo.updateListing(listingUpdate);
+
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Listing> inActiveListingsPage = listingRepo.getArchivedListingsByUserIdPage(1L, pageable);
+
+    assertThat(inActiveListingsPage).hasSize(1);
+    assertThat(inActiveListingsPage.getContent().getFirst().getName()).isEqualTo("Test listing 2 (inactive)");
+  }
+
+  @Test
+  public void testGetRecomendedListingsPage() {
+      Listing listing1 = new Listing("Recommended Listing 1", 100.0,
+          "This is a recommended listing", 1, 1, 0, 0, 2L); // Matches criteria
+      Listing listing2 = new Listing("Recommended Listing 2", 200.0,
+          "This is another recommended listing", 1, 2, 0, 0, 2L); // Matches criteria
+      Listing listing3 = new Listing("Non-Recommended Listing", 300.0,
+          "This listing does not match", 2, 3, 0, 0, 2L); // Does not match criteria
+      Listing listing4 = new Listing("listing owned by user", 300.0,
+          "This listing does not match", 1, 2, 0, 0, 1L); // Does not match (owned by user)
+
+      listingRepo.saveListing(listing1);
+      listingRepo.saveListing(listing2);
+      listingRepo.saveListing(listing3);
+      listingRepo.saveListing(listing4);
+
+      jdbcTemplate.execute("INSERT INTO user_history (user_id, listing_id) VALUES (1, '" + listing1.getUuid() + "')");
+
+      Pageable pageable = PageRequest.of(0, 10);
+      Page<Listing> recommendedListingsPage = listingRepo.getRecomendedListingsPage(1L, pageable);
+
+      assertThat(recommendedListingsPage.getTotalElements()).isEqualTo(2);
+      assertThat(recommendedListingsPage.getContent())
+          .extracting(Listing::getName)
+          .containsExactlyInAnyOrder("Recommended Listing 1", "Recommended Listing 2");
+  }
+
 }
