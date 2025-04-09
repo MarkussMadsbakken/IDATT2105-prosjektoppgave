@@ -61,10 +61,18 @@ const profileTranslations = {
     saveChanges: "Lagre endringer",
     editProfile: "Rediger profil",
     noFavorites: "Ingen favoritter funnet",
+    editPassword: "Endre passord",
+    currentPassword: "Nåværende passord",
+    newPassword: "Nytt passord",
+    passwordUpdated: "Passordet ble oppdatert",
+    repeatPassword: "Gjenta passord",
+    savePassword: "Lagre passord",
+    updateFailed: "Oppdatering feilet",
+    credentialsUpdated: "Brukeropplysninger oppdatert",
+    passWordTooShort: "Passordet må være minst 8 tegn langt",
+    passwordMismatch: "Passordene stemmer ikke overens",
     error: "Feil",
     userDoesNotExist: "Brukeren finnes ikke",
-
-
   },
   en: {
     memberSince: "Member since {date}",
@@ -79,7 +87,17 @@ const profileTranslations = {
     lastName: "Last name",
     saveChanges: "Save Changes",
     editProfile: "Edit profile",
-    noFavorites: "No favorites found"
+    noFavorites: "No favorites found",
+    editPassword: "Edit password",
+    currentPassword: "Current password",
+    newPassword: "New password",
+    passwordUpdated: "Password updated",
+    repeatPassword: "Repeat password",
+    savePassword: "Save password",
+    updateFailed: "Update failed",
+    credentialsUpdated: "User credentials updated",
+    passwordTooShort: "Password must be at least 8 characters long",
+    passwordMismatch: "Passwords do not match",
   }
 }
 const registerTranslations = {
@@ -119,7 +137,7 @@ const registerTranslations = {
     chooseFirstName: "Choose first name",
     chooseLastName: "Choose last name",
     preview: "Preview",
-    profilePicture: "Profile picture"
+    profilePicture: "Profile picture",
   }
 }
 const homeViewTranslations = {

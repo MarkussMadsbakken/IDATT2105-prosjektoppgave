@@ -81,6 +81,11 @@ export type ReservationResponse = {
     createdAt: string
 };
 
+export type ChangeCredentialsResponse = {
+    message: string;
+    token: string;
+}
+
 /**
  * Error response returned from the API
  */

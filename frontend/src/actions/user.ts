@@ -1,4 +1,5 @@
-import { API_BASE_URL } from "@/types";
+import {API_BASE_URL } from "@/types";
+import type { ChangeCredentialsResponse, changeUserCredentialsRequest } from "@/types";
 import type { EditUserInfo, GetUserResponse, Image, Listing } from "@/types";
 import Fetch, { FetchWithoutParse } from "@/util/fetch";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/vue-query";
@@ -41,6 +42,39 @@ export const useUpdateUser = (params?: { onSuccess?: () => void }) => {
   });
 };
 
+export const updateUserCredentials = async (
+  req: changeUserCredentialsRequest
+): Promise<ChangeCredentialsResponse> => {
+  const res = await FetchWithoutParse(`${API_BASE_URL}/api/auth/change-credentials`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(req),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText);
+  }
+
+  const data: ChangeCredentialsResponse = await res.json();
+  console.log(data);
+  return data;
+};
+
+export const useUpdateUserCredentials = (params?: { onSuccess?:
+    () => void, onError?: (error: unknown) => void }) => {
+  return useMutation<ChangeCredentialsResponse, unknown, changeUserCredentialsRequest>({
+    mutationFn: updateUserCredentials,
+    onSuccess: () => {
+      params?.onSuccess?.();
+    },
+    onError: (error) => {
+      params?.onError?.(error);
+    },
+  });
+};
 export const getUser = async (userId: number): Promise<GetUserResponse> => {
   return await Fetch(`${API_BASE_URL}/api/user/${userId}`)
 }
