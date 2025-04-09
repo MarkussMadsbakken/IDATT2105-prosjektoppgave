@@ -50,9 +50,9 @@ const onEnter = (event: KeyboardEvent) => {
             </div>
             <div>
                 <label for="password">{{ $t('login.password') }}</label>
-                <TextInput v-model="password" type="password" autocomplete="off" @keypress.enter="onEnter" />
+                <TextInput id="password" v-model="password" type="password" autocomplete="off" @keypress.enter="onEnter" />
             </div>
-            <Button variant="primary" type="submit" class="submit">
+            <Button id="login-button" variant="primary" type="submit" class="submit">
                 <template v-if="isPending">
                     <LoadingSpinner />
                 </template>

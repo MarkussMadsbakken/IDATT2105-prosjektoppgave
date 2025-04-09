@@ -1,7 +1,7 @@
 package edu.ntnu.stud.model.base;
 
 import java.sql.Blob;
-import java.sql.Timestamp;
+import java.sql.Timestamp;;
 
 /**
  * Represents a user in the system.
@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  */
 public class User {
 
-  private long id;
+  private Long id;
 
   private String username;
 
@@ -52,7 +52,7 @@ public class User {
    *
    * @return the ID of the user
    */
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
