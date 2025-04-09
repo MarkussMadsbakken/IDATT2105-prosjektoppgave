@@ -61,6 +61,10 @@ const profileTranslations = {
     saveChanges: "Lagre endringer",
     editProfile: "Rediger profil",
     noFavorites: "Ingen favoritter funnet",
+    error: "Feil",
+    userDoesNotExist: "Brukeren finnes ikke",
+
+
   },
   en: {
     memberSince: "Member since {date}",
@@ -333,6 +337,7 @@ const breadcrumbTranslations = {
     profile: "Profil",
     listings: "Annonser",
     myFavorites: "Mine favoritter",
+    myListings: "Mine annonser",
     messages: "Meldinger",
     notifications: "Varslinger",
     checkout: "Kjøp",
@@ -345,6 +350,7 @@ const breadcrumbTranslations = {
     profile: "Profile",
     listings: "Listings",
     myFavorites: "My favorites",
+    myListings: "My listings",
     messages: "Messages",
     notifications: "Notifications",
     checkout: "Checkout",

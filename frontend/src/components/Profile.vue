@@ -33,7 +33,7 @@ const { data: favoriteListings, isPending: isBookmarkPending, isError: isBookmar
 <template>
     <div class="page">
         <div class="profile-header">
-            <ProfileHeaderSkeleton :is-own-profile="props.isOwnProfile" v-if="userIsPending" />
+            <ProfileHeaderSkeleton @logout="handleLogout" :is-own-profile="props.isOwnProfile" v-if="userIsPending" />
             <ProfileHeader v-else :user="user!" :is-own-profile="props.isOwnProfile"
                 @edit-profile="router.push('/profile/edit')" @logout="handleLogout" />
         </div>

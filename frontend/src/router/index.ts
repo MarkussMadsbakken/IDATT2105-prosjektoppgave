@@ -64,16 +64,17 @@ const router = createRouter({
     },
     {
       path: "/profile/:userid/listings",
+      component: () => import("../views/UserListingsView.vue"),
       children: [
         {
           path: "",
           name: "listings",
-          component: () => import("../views/UserListingsView.vue"),
+          component: () => import("../views/userListings/ActiveListingsView.vue"),
         },
         {
           path: "archived",
           name: "archivedListings",
-          component: () => import("../views/ArchivedListingsView.vue"),
+          component: () => import("../views/userListings/ArchivedListingsView.vue"),
         }
       ]
     }

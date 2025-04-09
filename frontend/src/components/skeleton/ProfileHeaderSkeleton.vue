@@ -29,9 +29,8 @@ const emit = defineEmits<{
             </div>
         </div>
         <div class="settings-container" v-if="isOwnProfile">
-            <Button class="settings-button" variant="outline" @click="$emit('editProfile')">
-                {{ $t("profile.editProfile") }}
-                <Settings :stroke-width="1.5">
+            <Button class="settings-button" variant="outline">
+                {{ $t("profile.editProfile") }} <Settings :stroke-width="1.5">
                 </Settings>
             </Button>
             <Button class="logout-button" variant="destructive" @click="$emit('logout')">
