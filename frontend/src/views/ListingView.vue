@@ -24,6 +24,7 @@ import { useI18n } from 'vue-i18n';
 import { createChat } from '@/actions/chat';
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import { useToast } from 'primevue/usetoast';
+import { pushUserHistory } from '@/actions/userHistory';
 
 const router = useRouter();
 const route = useRoute();
@@ -34,6 +35,13 @@ const i18n = useI18n();
 const toast = useToast();
 
 const listingId = route.params.id as string
+
+// Push user history
+if (listingId && auth.loggedIn) {
+  pushUserHistory({
+    listingId: listingId,
+  })
+};
 
 const {
   data: listing,
@@ -156,9 +164,7 @@ const bookmarkMutation = useMutation({
 const { mutate: toggleArchive, isPending: isArchivePending } = useToggleArchive();
 
 const handleToggleArchive = () => {
-
-  const oldState = listing.value?.active;
-  const newState = !oldState;
+  const newState = !listing.value?.active;
 
   toggleArchive(
     { uuid: listingId, state: newState },
