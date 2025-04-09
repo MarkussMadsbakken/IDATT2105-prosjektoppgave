@@ -1,10 +1,10 @@
 <template>
     <div class="chat-not-found">
         <div class="chat-not-found-header">
-            <h1>{{ $t("chatNotSelected") }}</h1>
+            <h1>{{ $t("notifications.chatNotSelected") }}</h1>
         </div>
         <div class="chat-not-found-content">
-            <p>{{ $t("chatNotSelectedDescription") }}</p>
+            <p>{{ $t("notifications.chatNotSelectedDescription") }}</p>
         </div>
     </div>
 </template>

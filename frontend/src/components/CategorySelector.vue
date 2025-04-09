@@ -68,7 +68,7 @@ const handleSubCategoryToggle = (id: number) => {
     </template>
     <template v-else>
         <Select :options="categories" :inputId="props.name" v-model="selectedCategory"
-            :placeholder="$t('selectCategory')" @value-change="handleCategoryChange">
+            :placeholder="$t('search.categorySelector.selectCategory')" @value-change="handleCategoryChange">
             <template #option="{ option }">
                 <div class="category-option">
                     <component :is="CategoryIcons[option.icon as keyof typeof CategoryIcons]" />
@@ -83,7 +83,7 @@ const handleSubCategoryToggle = (id: number) => {
             </template>
         </Select>
         <template v-if="selectedCategory">
-            <p> {{ $t('subCategories') }}</p>
+            <p> {{ $t('listings.create.subCategories') }}</p>
             <SubCategorySelector :selected-subcategories="props.initialSubCategories"
                 :selected-category-id="selectedCategory.id" :key="selectedCategory.id"
                 @subCategoryChanged="handleSubCategoryToggle" :multi-select="props.multiSelect" />

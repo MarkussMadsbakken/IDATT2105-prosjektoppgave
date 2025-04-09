@@ -92,9 +92,9 @@ const isReservedByMe = computed(() => {
 })
 const reserveButtonText = computed(() => {
   if (reservation?.value && isReservedByMe.value) {
-    return `${i18n.t("reservedUntil")}: ${reservationEndTime.value}`;
+    return `${i18n.t("listing.view.reservedByAnotherUser")}: ${reservationEndTime.value}`;
   }
-  return i18n.t("reserve");
+  return i18n.t("listings.reserve");
 })
 
 const deleteMutation = useMutation({
@@ -198,7 +198,7 @@ const handleDelete = () => {
   <div class="listing" v-else>
     <div class="title-picture">
       <Alert class="reserved-info" variant="Info" v-if="reservation && !isReservedByMe">
-        {{ $t("listing.reservedByAnotherUser") }} {{ reservationEndTime }}
+        {{ $t("listings.view.listingReservedByAnotherUser") }} {{ reservationEndTime }}
       </Alert>
       <Alert class="my-reservation-warn" variant="Info" v-if="reservation && isReservedByMe">
         {{ $t("listing.reservedByMe") }} {{ reservationEndTime }}
@@ -213,7 +213,7 @@ const handleDelete = () => {
         {{ $t("listing.isInactive") }}
       </Alert>
       <Alert class="sold-warning" variant="Info" v-else-if="listing?.sold">
-        {{ $t("listing.isPurchased") }}
+        {{ $t("checkout.listingIsPurchased") }}
       </Alert>
       <ListingImages :listing-id="listingId" />
       <div class="picture-footing">
@@ -221,7 +221,7 @@ const handleDelete = () => {
         <div class="listing-actions">
           <Button class="listing-option-button" variant="outline" v-if="isOwnListing && !listing?.sold"
             @click="router.push(`/listing/${listingId}/edit`)">
-            {{ $t("listing.edit") }}
+            {{ $t("listings.view.edit") }}
             <Pencil :size="18" style="margin-left: 0.5rem;" />
           </Button>
 
@@ -231,14 +231,14 @@ const handleDelete = () => {
               <LoadingSpinner />
             </template>
             <template v-else>
-              {{ listing?.active ? $t("archive") : $t("restore") }}
+              {{ listing?.active ? $t("listings.view.archiveThis") : $t("listing.view.restore") }}
               <component :is="listing?.active ? Archive : ArchiveRestore" :size="18" style="margin-left: 0.5rem;" />
             </template>
           </Button>
 
           <Button class="listing-option-button" variant="destructive" v-if="isOwnListing || auth.isAdmin"
             @click="handleDelete">
-            {{ $t("listing.delete") }}
+            {{ $t("listings.delete") }}
             <Trash2 :size="18" style="margin-left: 0.5rem;" />
           </Button>
           <div @click="() => bookmarkMutation.mutate(bookmarked)" style="cursor: pointer" v-if="auth.isLoggedIn()"
@@ -266,7 +266,7 @@ const handleDelete = () => {
       <div v-if="auth.isLoggedIn() && !listing!.sold" class="button-box">
         <Button variant="primary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
           @click="router.push(`/listing/${listingId}/checkout`)" :disabled="reservation && !isReservedByMe" style="width: 10rem;
-                 height: 3rem;">{{ $t("listing.buy") }}</Button>
+                 height: 3rem;">{{ $t("checkout.buy") }}</Button>
 
         <Button variant="secondary" :class="{ 'is-disabled': reservation && !isReservedByMe }"
           :disabled="reservation && isReservedByMe" @click="handleReserve" style="width: 10rem; height: 3rem;">

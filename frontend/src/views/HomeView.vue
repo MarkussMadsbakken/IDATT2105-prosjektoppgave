@@ -63,7 +63,7 @@ useInfiniteScroll(
     <SearchOptions @search="handleSearch" @select-category="handleCategoryClick" :open="true" />
     <Divider />
     <div class="header-title">
-      {{ $t('recommended') }}
+      {{ $t('home.recommended') }}
     </div>
     <div class="recommended-listings">
       <template v-for="(page, index) in listings">
@@ -77,7 +77,7 @@ useInfiniteScroll(
         <LoadingSpinner />
       </div>
       <div v-else-if="!hasNextPage" class="no-more-listings">
-        {{ $t('noMoreListings') }}
+        {{ $t('home.noMoreListings') }}
       </div>
     </div>
   </div>

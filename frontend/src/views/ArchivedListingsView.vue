@@ -18,7 +18,7 @@ const { data: user } = useGetUser(userId);
 <template>
   <div class="title-wrapper">
     <div class="title">
-      {{ $t('listingsByUser', { name: user?.username }) }}
+      {{ $t('profile.listingsByUser', { name: user?.username }) }}
     </div>
 
     <div class="tab-buttons">
@@ -26,7 +26,7 @@ const { data: user } = useGetUser(userId);
         :to="`/profile/${userId}/listings`"
         class="tab-link"
         :class="{ active: $route.path === `/profile/${userId}/listings` }"
-      >{{ $t("activeListings") }}
+      >{{ $t("listings.archive.activeListings") }}
 
       </router-link>
 
@@ -36,14 +36,14 @@ const { data: user } = useGetUser(userId);
         :to="`/profile/${userId}/listings/archived`"
         class="tab-link"
         :class="{ active: $route.path === `/profile/${userId}/listings/archived` }"
-      >{{ $t("archivedListings") }}
+      >{{ $t("profile.listings.archivedListings") }}
 
       </router-link>
     </div>
   </div>
 
   <div v-if="isPending">Laster oppføringer...</div>
-  <div v-else-if="isError">{{ $t("couldNotLoadListings") }}</div>
+  <div v-else-if="isError">{{ $t("profile.couldNotLoadListings") }}</div>
 
   <div v-if="archivedListings && archivedListings.pages?.length" class="listing-grid">
     <ListingCard
@@ -54,7 +54,7 @@ const { data: user } = useGetUser(userId);
     />
   </div>
   <div v-else class="no-listings">
-    {{ $t("emptyListings") }}
+    {{ $t("profile.emptyListings") }}
   </div>
 </template>
 

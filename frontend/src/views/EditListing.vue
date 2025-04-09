@@ -14,10 +14,14 @@ import { useMutation } from '@tanstack/vue-query';
 import { useDialog } from 'primevue/usedialog';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
 
 const router = useRouter();
 const route = useRoute();
 const dialog = useDialog();
+const { t } = useI18n();
+
 
 const listingId = route.params.id as string
 
@@ -104,7 +108,7 @@ const onSubmit = () => {
 const openPositionSelector = () => {
     const d = dialog.open(PositionSelectorModal, {
         props: {
-            header: "Select position",
+            header: t('map.selectPosition'),
             modal: true,
             draggable: false,
             dismissableMask: true,
@@ -147,7 +151,7 @@ const openPositionSelector = () => {
             <FormGroup :label="$t('position')" name="position">
                 <div class="position-selector">
                     <Button variant="primary" @click="openPositionSelector">
-                        {{ $t('selectPosition') }}
+                        {{ $t('map.selectPosition') }}
                     </Button>
                     <template v-if="position && position?.latitude !== 0 && position?.longitude !== 0">
                         <p>

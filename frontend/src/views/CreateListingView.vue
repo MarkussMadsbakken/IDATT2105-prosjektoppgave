@@ -12,6 +12,7 @@ import { useMutation } from '@tanstack/vue-query';
 import { useDialog } from 'primevue/usedialog';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 
 const title = ref("");
@@ -22,7 +23,7 @@ const category = ref<number | null>(null);
 const subCategories = ref<number[] | null>(null);
 const selectedImages = ref<File[]>([]);
 const dialog = useDialog();
-
+const { t } = useI18n();
 
 let errors = ref<{
     field: string;
@@ -81,7 +82,7 @@ const openPositionSelector = () => {
 
     const d = dialog.open(PositionSelectorModal, {
         props: {
-            header: "Select position",
+            header: t('map.selectPosition'),
             modal: true,
             draggable: false,
             dismissableMask: true,
@@ -104,31 +105,31 @@ const openPositionSelector = () => {
 <template>
     <div class="outer-create-listing-wrapper">
         <div class="page-title">
-            {{ $t("createListing") }}
+            {{ $t("listings.create.createListing") }}
         </div>
         <div class="listing-form">
             <div class="form-horizontal">
-                <label for="image">{{ $t('image') }}</label>
+                <label for="image">{{ $t('listings.create.image') }}</label>
                 <ImageSelector @file-select="onImagesSelected" />
             </div>
             <FormGroup :label="$t('image')" name="image" v-if="selectedImagesUrls.length > 0">
                 <PhotoGallery :images="selectedImagesUrls" id="uploadedImages" />
             </FormGroup>
-            <FormGroup :label="$t('title')" name="title"
+            <FormGroup :label="$t('listings.create.title')" name="title"
                 :isNotFilledIn="errors.find(e => e.field === 'title')?.isError">
                 <TextInput v-model="title" type="text" id="title" name="title" autocomplete="off" />
             </FormGroup>
-            <FormGroup :label="$t('description')" name="description">
+            <FormGroup :label="$t('listings.create.description')" name="description">
                 <textarea id="description" name="description" rows="4" v-model="description"></textarea>
             </FormGroup>
-            <FormGroup :label="$t('price')" name="price"
+            <FormGroup :label="$t('listings.create.price')" name="price"
                 :isNotFilledIn="errors.find(e => e.field === 'price')?.isError">
                 <TextInput v-model="price" type="number" id="price" name="price" autocomplete="off" />
             </FormGroup>
-            <FormGroup :label="$t('position')" name="position">
+            <FormGroup :label="$t('listings.create.position')" name="position">
                 <div class="position-selector">
                     <Button variant="primary" @click="openPositionSelector">
-                        {{ $t('selectPosition') }}
+                        {{ $t('listings.create.selectPosition') }}
                     </Button>
                     <template v-if="position && position?.latitude !== 0 && position?.longitude !== 0">
                         <p>
@@ -140,7 +141,7 @@ const openPositionSelector = () => {
                     </template>
                 </div>
             </FormGroup>
-            <FormGroup :label="$t('category')" name="category"
+            <FormGroup :label="$t('listings.create.category')" name="category"
                 :isNotFilledIn="errors.find(e => e.field === 'category')?.isError">
                 <CategorySelector name="category" @category-selected="category = $event"
                     @subcategories-updated="subCategories = $event" />
@@ -150,7 +151,7 @@ const openPositionSelector = () => {
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t('create') }}
+                    {{ $t('listings.create.create') }}
                 </template>
             </Button>
             <template v-if="isError">

@@ -59,14 +59,14 @@ const handleProfileClick = () => {
             <div class="username">{{ user?.username }}</div>
           </div>
           <div class="seller-meta">
-            <span class="joined-site">{{ $t('memberSince', {date}) }}</span>
+            <span class="joined-site">{{ $t('profile.memberSince', {date}) }}</span>
           </div>
         </div>
       </div>
     </div>
     <Button variant="outline" class="contact-button" @click="handleContactClick"
             v-if="props.canContactSeller && props.size !== 'small' && user?.id !== auth.userId">{{
-        $t("contactSeller") }}</Button>
+        $t("listings.seller.contactSeller") }}</Button>
   </div>
 
 </template>

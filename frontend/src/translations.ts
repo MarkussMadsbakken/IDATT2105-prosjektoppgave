@@ -55,7 +55,12 @@ const profileTranslations = {
     showAll: "Vis alle",
     couldNotLoadListings: "Kunne ikke hente annonser",
     emptyListings: "Her er det tomt",
-    myFavorites: "Mine favoritter"
+    myFavorites: "Mine favoritter",
+    firstName: "Fornavn",
+    lastName: "Etternavn",
+    saveChanges: "Lagre endringer",
+    editProfile: "Rediger profil",
+    noFavorites: "Ingen favoritter funnet",
   },
   en: {
     memberSince: "Member since {date}",
@@ -65,7 +70,12 @@ const profileTranslations = {
     showAll: "Show all",
     couldNotLoadListings: "Could not find listings",
     emptyListings: "No listings found",
-    myFavorites: "My favorites"
+    myFavorites: "My favorites",
+    firstName: "First name",
+    lastName: "Last name",
+    saveChanges: "Save Changes",
+    editProfile: "Edit profile",
+    noFavorites: "No favorites found"
   }
 }
 const registerTranslations = {
@@ -83,6 +93,7 @@ const registerTranslations = {
     chooseUsername: "Velg brukernavn",
     choosePassword: "Velg passord",
     chooseProfileImage: "Velg profilbilde",
+    profilePicture: "Profilbilde",
     chooseFirstName: "Velg fornavn",
     chooseLastName: "Velg etternavn",
     preview: "Forhåndsvisning",
@@ -104,6 +115,7 @@ const registerTranslations = {
     chooseFirstName: "Choose first name",
     chooseLastName: "Choose last name",
     preview: "Preview",
+    profilePicture: "Profile picture"
   }
 }
 const homeViewTranslations = {
@@ -237,13 +249,15 @@ const createListingViewTranslations = {
     noSubCategoriesFound: "Ingen underkategorier funnet",
     thisFieldIsRequired: "Dette feltet er påkrevd",
     selectSubCategory: "Velg underkategori",
+    selectPosition: "Velg posisjon",
+    position:"Posisjon"
   },
   en: {
     createListing: "Create a new listing",
     image: "Image",
     title: "Title",
     description: "Description",
-    price: "Pris",
+    price: "Price",
     postalCode: "Postal code",
     category: "Category",
     create: "Create",
@@ -255,12 +269,14 @@ const createListingViewTranslations = {
     thisFieldIsRequired: "This field is required",
     subCategories: "Sub categories",
     subCategory: "Sub category",
+    selectPosition: "Select position",
+    position:"Position"
   }
 }
 const notificationTranslations = {
   no: {
     notifications: "Varslinger",
-    unreadNotifications: "uleste varslinger",
+    unreadNotifications: "Du har ingen uleste varslinger | Du har {count} ulest varsling | Du har {count} uleste varslinger",
     markAllAsRead: "Marker alle som lest",
     noNotifications: "Du har ingen varslinger",
     newBookmark: "En bruker har bokmerket annonsen din",
@@ -271,7 +287,7 @@ const notificationTranslations = {
   },
   en: {
     notifications: "Notifications",
-    unreadNotifications: "unread notifications",
+    unreadNotifications: "You have no unread notifications | You have {count} unread notification | You have {count} unread notifications",
     markAllAsRead: "Mark all as read",
     noNotifications: "You have no notifications",
     newBookmark: "A user has bookmarked your listing",
@@ -296,6 +312,20 @@ const chatTranslations = {
   }
 
 }
+const mapTranslations= {
+  no:{
+    searchAddress: "Søk etter adresse",
+    selectPosition: "Velg posisjon",
+    noResults: "Ingen resultater funnet",
+    cancel: "Avbryt",
+  },
+  en:{
+    searchAddress: "Search for address",
+    selectPosition: "Select position",
+    noResults: "No results found",
+    cancel: "Cancel",
+  }
+}
 
 const i18n = createI18n({
   locale: 'no',
@@ -306,14 +336,16 @@ const i18n = createI18n({
         archive: archivedListingsTranslations.no,
         create: createListingViewTranslations.no,
         seller: sellerInfoTranslations.no,
+        view: listingViewTranslations.no,
         ...listingTranslations.no,
-        ...listingViewTranslations.no,
+
       },
       profile: {
         ...profileTranslations.no,
         listings: userListingsTranslations.no,
       },
       home: homeViewTranslations.no,
+      map: mapTranslations.no,
       checkout: checkoutTranslations.no,
       notFound: notFoundTranslations.no,
       messages: {
@@ -339,6 +371,7 @@ const i18n = createI18n({
         listings: userListingsTranslations.en,
       },
       home: homeViewTranslations.en,
+      map: mapTranslations.en,
       checkout: checkoutTranslations.en,
       notFound: notFoundTranslations.en,
       messages: {

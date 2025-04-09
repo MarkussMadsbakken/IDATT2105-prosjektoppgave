@@ -16,14 +16,14 @@
 
 <template>
   <div class="title-wrapper">
-    <div class="title">{{ $t('listingsByUser', {name: user?.username}) }} </div>
+    <div class="title">{{ $t('profile.listingsByUser', {name: user?.username}) }} </div>
     <div class="tab-buttons">
       <router-link
         :to="`/profile/${userId}/listings`"
         class="tab-link"
         :class="{ active: $route.path === `/profile/${userId}/listings` }"
       >
-        {{ $t("activeListings") }}
+        {{ $t("listings.archive.activeListings") }}
       </router-link>
       <span class="divider">|</span>
       <router-link
@@ -31,7 +31,7 @@
         class="tab-link"
         :class="{ active: $route.path === `/profile/${userId}/listings/archived` }"
       >
-        {{ $t("archivedListings") }}
+        {{ $t("listings.archive.activeListings") }}
       </router-link>
     </div>
 
@@ -47,7 +47,7 @@
     />
   </div>
   <div v-else class="no-listings">
-    {{ $t("emptyListings") }}
+    {{ $t("profile.emptyListings") }}
   </div>
 </template>
 
