@@ -1,14 +1,12 @@
 <script setup lang="ts">
 
-import Button from '@/components/Button.vue';
 import { useRouter } from 'vue-router';
 import ListingCard from "@/components/ListingCard.vue";
-import { Settings } from "lucide-vue-next";
-import UserImage from "@/components/UserImage.vue";
 import { useGetUser, useGetUserBookmarks, useGetUserListings } from '@/actions/user';
-import { computed } from 'vue';
 import Divider from '@/components/Divider.vue';
 import ListingCardSkeleton from './skeleton/ListingCardSkeleton.vue';
+import ProfileHeader from './profile/profileHeader.vue';
+import ProfileHeaderSkeleton from './skeleton/ProfileHeaderSkeleton.vue';
 
 const emit = defineEmits<{
     (e: 'logout'): void;
@@ -21,35 +19,23 @@ const props = defineProps<{
 
 
 const router = useRouter();
+
 const handleLogout = () => {
     emit('logout');
 }
 
-const { data: user } = useGetUser(props.userId);
+const { data: user, isPending: userIsPending } = useGetUser(props.userId);
 const { data: listings, isPending, isError, error } = useGetUserListings(props.userId);
 const { data: favoriteListings, isPending: isBookmarkPending, isError: isBookmarkError, error: bookmarkError } = useGetUserBookmarks();
-const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
 
 </script>
 
 <template>
     <div class="page">
-        <div class="user-box">
-            <div class="user-info-box">
-                <UserImage :user-id="props.userId" :size="120" stroke-width="1.5" />
-                <h3 class="username">{{ user?.username }}</h3>
-            </div>
-            <div class="text-field">
-                <div class="admin-field" v-if=user?.isAdmin>Admin</div>
-                <div class="member-since">{{ $t('profile.memberSince', { date }) }}</div>
-            </div>
-            <div class="settings-container" v-if="isOwnProfile">
-                <Settings class="settings-button" :size="35" @click="router.push('/profile/edit')" :stroke-width="2.2">
-                </Settings>
-                <Button class="logout-button" variant="primary" @click="handleLogout">{{ $t("profile.logout")
-                }}</Button>
-            </div>
-
+        <div class="profile-header">
+            <ProfileHeaderSkeleton :is-own-profile="props.isOwnProfile" v-if="userIsPending" />
+            <ProfileHeader v-else :user="user!" :is-own-profile="props.isOwnProfile"
+                @edit-profile="router.push('/profile/edit')" @logout="handleLogout" />
         </div>
         <Divider />
         <div class="title-wrapper">
@@ -100,23 +86,10 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
 
 
 <style scoped>
-.user-box {
-    margin-top: 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 5px;
-    width: 40rem;
-    height: 8rem;
-    gap: 3rem;
-}
-
-.user-info-box {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
+.profile-header {
+    margin-top: 1rem;
+    width: 80%;
+    min-width: 20rem;
 }
 
 .page {
@@ -128,21 +101,10 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     padding-bottom: 3rem;
 }
 
-.username {
-    font-size: 20px;
-    font-weight: bold;
-}
-
 .text-field {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 3rem;
-}
-
-.settings-button {
-    cursor: pointer;
-    display: block;
-
 }
 
 .settings-container {
@@ -176,13 +138,6 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     flex: 1 1 18rem;
     max-width: 25rem;
     box-sizing: border-box;
-}
-
-.logout-button {
-    width: 7rem;
-    height: 2rem;
-    font-size: 14px;
-    padding: 0.25rem 0.25rem;
 }
 
 .router-link {
