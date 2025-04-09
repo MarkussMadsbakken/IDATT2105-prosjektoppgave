@@ -56,9 +56,9 @@ public class UserRepoTest {
   @AfterAll
   public static void insertTestUsers(@Autowired JdbcTemplate jdbcTemplate) {
     jdbcTemplate.execute(
-        "INSERT INTO users (username, password) VALUES ('testuser', 'password');");
+        "INSERT INTO users (id, username, password) VALUES (1, 'testuser', 'password');");
     jdbcTemplate.execute(
-        "INSERT INTO users (username, password) VALUES ('testuser2', 'password');");
+        "INSERT INTO users (id, username, password) VALUES (2, 'testuser2', 'password');");
   }
 
   @Test

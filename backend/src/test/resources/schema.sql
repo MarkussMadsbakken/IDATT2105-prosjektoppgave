@@ -112,5 +112,5 @@ CREATE TABLE reservations (
 );
 
 -- Insert a user
-INSERT INTO users (username, password) VALUES ('testuser', 'password');
-INSERT INTO users (username, password) VALUES ('testuser2', 'password');
+INSERT INTO users (id, username, password) VALUES (1, 'testuser', 'password');
+INSERT INTO users (id, username, password) VALUES (2, 'testuser2', 'password');
