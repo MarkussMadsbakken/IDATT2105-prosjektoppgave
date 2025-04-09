@@ -1,8 +1,8 @@
 package edu.ntnu.stud.controller;
 
-import edu.ntnu.stud.model.UserUpdate;
 import edu.ntnu.stud.model.response.UserImageResponse;
 import edu.ntnu.stud.model.response.UserResponse;
+import edu.ntnu.stud.model.update.UserUpdate;
 import edu.ntnu.stud.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
