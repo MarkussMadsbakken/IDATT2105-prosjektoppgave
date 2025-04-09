@@ -140,16 +140,15 @@ export const getUsernameIsAvaiable = async (username: string): Promise<boolean> 
   return false;
 }
 
-
-
-
 export const getUserBookmarks = async (): Promise<Listing[]> => {
   return await Fetch(`${API_BASE_URL}/api/bookmark/user`);
 }
+
 export const useGetUserBookmarks = () => {
   return useQuery({
     queryKey: ['userBookmarks'],
     queryFn: getUserBookmarks,
   });
 };
+
 export default useUpdateUser;
