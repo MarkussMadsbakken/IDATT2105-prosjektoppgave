@@ -21,7 +21,7 @@ jobs:
       - name: Install Maven
         run: sudo apt-get update && sudo apt-get install maven -y
       - name: Build with Maven
-        run: cd backend && mvn -B package -Dspring.profiles.active=test
+        run: cd backend && mvn -B package -Dspring.profiles.active=test -Ptest
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
         with: 
