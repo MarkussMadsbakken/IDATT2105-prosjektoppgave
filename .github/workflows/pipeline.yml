@@ -75,10 +75,13 @@ jobs:
         run: |
           nohup java -jar backend/target/prosjektoppgave-0.0.1-SNAPSHOT.jar --spring.profiles.active=test > backend.log 2>&1 &
           sleep 10
+      - name: Checkout Code
+        uses: actions/checkout@v4
       - name: Install cypress
         run: npm install cypress
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
           install: false  
-          start: nohup npx serve -s frontend/dist --port 3000
+          start: nohup npx serve -s frontend/dist --port 4173
+          config-file: frontend/cypress.config.ts
