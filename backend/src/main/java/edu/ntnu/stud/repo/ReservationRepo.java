@@ -58,7 +58,7 @@ public class ReservationRepo {
    */
   public Reservation getReservationByListingId(String listingId, Timestamp expirationDate) {
     String query = "SELECT * FROM reservations "
-        + "WHERE listing_id = ? AND reservation_date < ? "
+        + "WHERE listing_id = ? AND reservation_date > ? "
         + "ORDER BY reservation_date DESC";
     List<Reservation> reservations = jdbcTemplate.query(
         query, reservationRowMapper, listingId, expirationDate);
@@ -73,7 +73,7 @@ public class ReservationRepo {
    * @return the Reservation object, or null if not found
    */
   public List<Reservation> getReservationsByUserId(long userId, Timestamp expirationDate) {
-    String query = "SELECT * FROM reservations WHERE user_id = ? AND reservation_date < ?";
+    String query = "SELECT * FROM reservations WHERE user_id = ? AND reservation_date > ?";
     return jdbcTemplate.query(query, reservationRowMapper, userId, expirationDate);
   }
 
@@ -88,7 +88,7 @@ public class ReservationRepo {
   public Reservation getReservationByUserIdAndListingId(
       long userId, String listingId, Timestamp expirationDate) {
     String query = 
-        "SELECT * FROM reservations WHERE user_id = ? AND listing_id = ? AND reservation_date < ? "
+        "SELECT * FROM reservations WHERE user_id = ? AND listing_id = ? AND reservation_date > ? "
         + "ORDER BY reservation_date DESC";
     List<Reservation> reservations = jdbcTemplate.query(
         query, reservationRowMapper, userId, listingId, expirationDate);
