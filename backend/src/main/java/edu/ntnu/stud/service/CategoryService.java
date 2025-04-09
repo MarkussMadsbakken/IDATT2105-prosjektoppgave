@@ -2,12 +2,10 @@ package edu.ntnu.stud.service;
 
 import edu.ntnu.stud.model.Category;
 import edu.ntnu.stud.model.CategoryRequest;
-import edu.ntnu.stud.model.DefaultResponse;
 import edu.ntnu.stud.repo.CategoryRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,7 +27,7 @@ public class CategoryService {
   public void addCategory(CategoryRequest category, String token) {
     Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
         "You are not authorized to add a category.");
-    Validate.that(category.getName(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(category.getName(), Validate.isNotBlankOrNull(),
         "Category name cannot be null or empty.");
     categoryRepo.addCategory(category);
   }
@@ -43,7 +41,7 @@ public class CategoryService {
   public void updateCategory(Category category, String token) {
     Validate.that(jwtService.extractIsAdmin(token.substring(7)), Validate.isTrue(),
         "You are not authorized to update a category.");
-    Validate.that(category.getName(), Validate.isNotEmptyOrBlankOrNull(),
+    Validate.that(category.getName(), Validate.isNotBlankOrNull(),
         "Category name cannot be null or empty.");
     categoryRepo.updateCategory(category);
   }

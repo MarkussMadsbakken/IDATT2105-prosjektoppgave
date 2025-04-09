@@ -36,7 +36,7 @@ public class ReservationService {
    */
   public Reservation addReservation(ReservationRequest reservationRequest, String token) {
     Validate.that(reservationRequest.getListingId(),
-        Validate.isNotEmptyOrBlankOrNull(), "Listing ID cannot be null or empty");
+        Validate.isNotBlankOrNull(), "Listing ID cannot be null or empty");
     Long userId = jwtService.extractUserId(token.substring(7));
     Timestamp expirationDate = new Timestamp(System.currentTimeMillis() 
                              - Time.valueOf("01:00:00").getTime());
