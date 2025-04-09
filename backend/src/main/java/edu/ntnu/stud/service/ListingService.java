@@ -420,6 +420,7 @@ public class ListingService {
    * Retrieves a list of listings by their UUIDs.
    */
   public List<ListingResponse> getListingsByUuids(List<String> uuids) {
+    Validate.that(uuids, Validate.isNotEmptyCollection(), "UUIDs must not be empty");
     List<Listing> listings = listingRepo.getListingsByUuids(uuids);
     return listings.stream()
         .map(this::convertToResponse)

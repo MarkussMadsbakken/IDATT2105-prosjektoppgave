@@ -1,5 +1,7 @@
 package edu.ntnu.stud.util;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -12,6 +14,10 @@ public class Validate {
 
   public static <T> Predicate<T> isNotNull() {
     return value -> value != null;
+  }
+
+  public static <U, T extends Collection<U>> Predicate<T> isNotEmptyCollection() {
+    return value -> value != null && !value.isEmpty();
   }
 
   public static Predicate<String> isNotEmpty() {
