@@ -38,7 +38,6 @@ public class UserRepoTest {
   @BeforeEach
   public void setUp() {
     user = new User();
-    user.setId(10L);
     user.setUsername("testuser10");
     user.setPassword("password");
   }
@@ -64,6 +63,7 @@ public class UserRepoTest {
   @Test
   public void testAddUser() {
     userRepo.addUser(user);
+    User user = userRepo.getAllUsers().get(0);
 
     User retrieved = userRepo.getUserById(user.getId());
     assertThat(retrieved).isNotNull();
@@ -73,6 +73,7 @@ public class UserRepoTest {
   @Test
   public void testGetUserById() {
     userRepo.addUser(user);
+    User user = userRepo.getAllUsers().get(0);
 
     User retrieved = userRepo.getUserById(user.getId());
     assertThat(retrieved).isNotNull();
@@ -82,6 +83,7 @@ public class UserRepoTest {
   @Test
   public void testGetAllUsers() {
     userRepo.addUser(user);
+    User user = userRepo.getAllUsers().get(0);
 
     List<User> users = userRepo.getAllUsers();
     assertThat(users).isNotEmpty();
@@ -91,6 +93,7 @@ public class UserRepoTest {
   @Test
   public void testGetUserByUsername() {
     userRepo.addUser(user);
+    User user = userRepo.getAllUsers().get(0);
 
     User retrieved = userRepo.getUserByUsername(user.getUsername());
     assertThat(retrieved).isNotNull();
@@ -100,6 +103,7 @@ public class UserRepoTest {
   @Test
   public void testUpdateUser() {
     userRepo.addUser(user);
+    User user = userRepo.getAllUsers().get(0);
 
     user.setFirstName("UpdatedFirstName");
     user.setLastName("UpdatedLastName");
@@ -115,6 +119,7 @@ public class UserRepoTest {
   @Test
   public void testUpdateUserWithoutImage() {
     userRepo.addUser(user);
+    User user = userRepo.getAllUsers().get(0);
 
     user.setFirstName("UpdatedFirstName");
     user.setLastName("UpdatedLastName");
