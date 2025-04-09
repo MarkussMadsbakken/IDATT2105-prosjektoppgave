@@ -23,8 +23,9 @@ const handleClick = (e: any) => {
     <div @click="handleClick" class="link">
         <div class="outer-wrapper" :class="props.size">
             <div class="image-wrapper" :class="props.size">
-                <ListingHeaderImage :listing-id="props.listing.uuid" :size="props.size == 'small' ? 40 : 80" />
-                <div class=" price" v-if="props.size !== 'small'" :class="props.size">
+                <ListingHeaderImage :listing-id="props.listing.uuid" class="image" :class="props.size"
+                    :size="props.size == 'small' ? 40 : 80" />
+                <div class="price" :class="props.size">
                     {{ props.listing.price }} kr
                 </div>
             </div>
@@ -32,10 +33,7 @@ const handleClick = (e: any) => {
                 <div class="title" :class="props.size">
                     {{ props.listing.name }}
                 </div>
-                <div class="price" v-if="props.size === 'small'" :class="props.size">
-                    {{ props.listing.price }} kr
-                </div>
-                <div class="description" v-if="props.size !== 'small'">
+                <div class="description" :class="props.size">
                     {{ props.listing.description }}
                 </div>
             </div>
@@ -50,11 +48,22 @@ const handleClick = (e: any) => {
     left: 0;
     padding-left: 1rem;
     padding-bottom: 1rem;
+    background-color: #ffffff;
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    display: inline-block;
+    color: #333;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 4, 10, 0.15);
+    border: 1px solid black;
 }
 
 .price.small {
     font-size: small;
     font-weight: 400;
+    line-height: 1;
 }
 
 .link {
@@ -64,9 +73,14 @@ const handleClick = (e: any) => {
 }
 
 .outer-wrapper {
+    background-color: #ffffff;
     display: flex;
     line-height: 0;
     overflow: hidden;
+    transition-property: box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    cursor: pointer;
 }
 
 .outer-wrapper.small {
@@ -74,6 +88,7 @@ const handleClick = (e: any) => {
     padding: 1rem;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     width: 18rem;
+    flex-direction: row-reverse;
 }
 
 .outer-wrapper.medium {
@@ -82,11 +97,12 @@ const handleClick = (e: any) => {
     flex-direction: column;
     width: 25rem;
     height: 12rem;
-    transition-property: box-shadow;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
 }
 
+.outer-wrapper.small:hover {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    cursor: pointer;
+}
 
 .outer-wrapper.medium:hover {
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -99,6 +115,16 @@ const handleClick = (e: any) => {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+}
+
+.image-wrapper.small {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.image.small {
+    width: 5rem;
+    height: 5rem;
 }
 
 .image-wrapper>img {
@@ -123,15 +149,21 @@ const handleClick = (e: any) => {
 
 .content-wrapper.small {
     gap: 1rem;
+    padding: 0.5rem;
 }
 
 
 .title.small {
-    text-align: center;
+    text-align: left;
     line-clamp: 1;
-    line-height: 1;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+    line-height: 1.5;
     font-weight: 400;
-    font-size: large;
+    font-size: medium;
+
 }
 
 .title.medium {
@@ -151,17 +183,11 @@ const handleClick = (e: any) => {
     overflow: hidden;
 }
 
-.price.medium,
-.price.small {
-    background-color: #ffffff;
-    padding: 0.5rem 0.5rem;
-    border-radius: 0.25rem;
-    font-weight: 600;
-    display: inline-block;
-    color: #333;
-    margin-left: 0.5rem;
-    margin-bottom: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 4, 10, 0.15);
-    border: 1px solid black;
+.description.small {
+    padding-right: 0.2rem;
+    text-align: left;
+    line-height: 1.2;
+    font-weight: 400;
+    font-size: small;
 }
 </style>

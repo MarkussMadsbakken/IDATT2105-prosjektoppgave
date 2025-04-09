@@ -1,17 +1,14 @@
 <script setup lang="ts">
 
 import Button from '@/components/Button.vue';
-import { logout, useAuth } from '@/stores/auth';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import ListingCard from "@/components/ListingCard.vue";
 import { Settings } from "lucide-vue-next";
 import UserImage from "@/components/UserImage.vue";
-import {useGetUser, useGetUserBookmarks} from '@/actions/user';
-import {computed, watch} from 'vue';
+import { useGetUser, useGetUserBookmarks, useGetUserListings } from '@/actions/user';
+import { computed } from 'vue';
 import Divider from '@/components/Divider.vue';
-import { useGetUserListings } from '@/actions/user';
-
-
+import ListingCardSkeleton from './skeleton/ListingCardSkeleton.vue';
 
 const emit = defineEmits<{
     (e: 'logout'): void;
@@ -30,7 +27,7 @@ const handleLogout = () => {
 
 const { data: user } = useGetUser(props.userId);
 const { data: listings, isPending, isError, error } = useGetUserListings(props.userId);
-const {data: favoriteListings, isPending: isBookmarkPending, isError: isBookmarkError, error: bookmarkError} = useGetUserBookmarks();
+const { data: favoriteListings, isPending: isBookmarkPending, isError: isBookmarkError, error: bookmarkError } = useGetUserBookmarks();
 const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
 
 </script>
@@ -44,12 +41,13 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
             </div>
             <div class="text-field">
                 <div class="admin-field" v-if=user?.isAdmin>Admin</div>
-                <div class="member-since">{{ $t('profile.memberSince', {date}) }}</div>
+                <div class="member-since">{{ $t('profile.memberSince', { date }) }}</div>
             </div>
             <div class="settings-container" v-if="isOwnProfile">
                 <Settings class="settings-button" :size="35" @click="router.push('/profile/edit')" :stroke-width="2.2">
                 </Settings>
-                <Button class="logout-button" variant="primary" @click="handleLogout">{{ $t("profile.logout") }}</Button>
+                <Button class="logout-button" variant="primary" @click="handleLogout">{{ $t("profile.logout")
+                }}</Button>
             </div>
 
         </div>
@@ -58,45 +56,42 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
             <div class="title"> {{ isOwnProfile ? $t("profile.ownListings") : $t("profile.listingsByUser", {
                 name: user?.firstName ?? user?.username
             }) }} </div>
-            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">{{ $t("profile.showAll") }}</RouterLink>
+            <RouterLink class="router-link" :to="(`/profile/${props.userId}/listings`)">{{ $t("profile.showAll") }}
+            </RouterLink>
         </div>
-      <div v-if="isPending">Laster oppføringer...</div>
-      <div v-else-if="isError">{{ $t("profile.couldNotLoadListings") }}</div>
-      <div v-else>
-        <div v-if="listings && listings.length > 0" class="listing-grid">
-          <ListingCard
-            v-for="listing in listings.slice(0, 3)"
-            :key="listing.uuid"
-            :listing="listing"
-            size="medium"
-          />
+        <div v-if="isPending" class="listing-grid">
+            <ListingCardSkeleton :size="'medium'" v-for="i in 3" :key="i" />
         </div>
-        <div v-else class="no-listings">
-          {{ $t('profile.emptyListings') }}
-        </div>
-      </div>
+        <div v-else-if="isError">{{ $t("profile.couldNotLoadListings") }}</div>
+        <template v-else>
+            <div v-if="listings && listings.length > 0" class="listing-grid">
+                <ListingCard v-for="listing in listings.slice(0, 3)" :key="listing.uuid" :listing="listing"
+                    size="medium" />
+            </div>
+            <div v-else class="no-listings">
+                {{ $t('profile.emptyListings') }}
+            </div>
+        </template>
         <template v-if="isOwnProfile">
             <Divider />
             <div class="title-wrapper">
-                <div class="title"> {{$t("profile.myFavorites")}} </div>
+                <div class="title"> {{ $t("profile.myFavorites") }} </div>
                 <RouterLink class="router-link" to="/favorites">{{ $t("profile.showAll") }}</RouterLink>
             </div>
 
-          <div v-if="isBookmarkPending">Laster oppføringer...</div>
-          <div v-else-if="isBookmarkError">{{ $t("profile.couldNotLoadListings") }}</div>
-          <div v-else>
-            <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
-              <ListingCard
-                v-for="listing in favoriteListings.slice(0, 3)"
-                :key="listing.uuid"
-                :listing="listing"
-                size="medium"
-              />
+            <div v-if="isBookmarkPending" class="listing-grid-favorites">
+                <ListingCardSkeleton :size="'medium'" v-for="i in 3" :key="i" />
             </div>
-            <div v-else class="no-listings">
-              {{ $t("profile.noFavorites") }}
+            <div v-else-if="isBookmarkError">{{ $t("profile.couldNotLoadListings") }}</div>
+            <div v-else>
+                <div v-if="favoriteListings && favoriteListings.length > 0" class="listing-grid-favorites">
+                    <ListingCard v-for="listing in favoriteListings.slice(0, 3)" :key="listing.uuid" :listing="listing"
+                        size="medium" />
+                </div>
+                <div v-else class="no-listings">
+                    {{ $t("profile.noFavorites") }}
+                </div>
             </div>
-          </div>
         </template>
 
     </div>
@@ -166,7 +161,8 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     max-width: calc(3*25rem + 2*2rem);
     margin: 0 auto;
 }
-.listing-grid-favorites{
+
+.listing-grid-favorites {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
@@ -213,9 +209,10 @@ const date = computed(() => new Date(user?.value?.createdAt!).getFullYear());
     font-size: 50px;
     font-weight: bold;
 }
-.no-listings{
-  font-size: 1rem;
-  padding-bottom: 1rem;
-  font-weight: bold;
+
+.no-listings {
+    font-size: 1rem;
+    padding-bottom: 1rem;
+    font-weight: bold;
 }
 </style>
