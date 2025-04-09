@@ -8,7 +8,7 @@ test-all:
 	mvn test -f ./backend/pom.xml
 test-frontend-unit:
 	npm run test:unit --prefix ./frontend
-test-frontend-e2e:
-	npm run test:e2e --prefix ./frontend
 test-backend:
 	mvn test -f ./backend/pom.xml
+test-e2e-dev:
+	npx dotenv-cli -v SPRING_PROFILES_ACTIVE=test -v DATABASE_URL=jdbc:h2:mem:testdb -v DATABASE_USER=h2 -v DATABASE_PASSWORD=h2 -v SPRING_DATABASE_DRIVER=org.h2.Driver -- npx concurrently --raw --kill-others "npm run test:e2e:dev --prefix ./frontend" "mvn spring-boot:run -f ./backend/pom.xml -Ptest"
