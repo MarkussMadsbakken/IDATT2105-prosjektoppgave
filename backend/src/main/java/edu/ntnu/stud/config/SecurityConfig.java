@@ -50,8 +50,8 @@ public class SecurityConfig {
                 "/ws/**",
                 "/swagger-ui.html",
                 "/swagger-ui/**",
-                "/swagger-ui/index.html", // Allow access to Swagger UI
-                "/v3/api-docs/**")        // Allow access to OpenAPI docs
+                "/swagger-ui/index.html",
+                "/api-docs/**")
             .permitAll()
             .requestMatchers(
                 HttpMethod.GET,
