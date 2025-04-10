@@ -37,7 +37,6 @@ const { mutate: deleteCategoryMutation } = useMutation({
 
 const dialog = useDialog();
 const queryClient = useQueryClient();
-const { t } = useI18n();
 
 const openCreateCategoryModal = () => {
     let d = dialog.open(CreateCategory, {
