@@ -59,7 +59,7 @@ const onSubmit = () => {
                 <TextInput v-model="categoryName" type="text" id="categoryName" name="categoryName"
                     autocomplete="off" />
             </FormGroup>
-            <FormGroup name="description" :label="$t('description')" :isNotFilledIn="false">
+            <FormGroup name="description" :label="$t('create.description')" :isNotFilledIn="false">
                 <TextInput id="description" name="description" v-model="description" type="text" autocomplete="off" />
             </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">

@@ -62,8 +62,9 @@ const openEditCategoryModal = (category: Category) => {
             modal: true,
             dismissableMask: true,
             draggable: false,
-            header: `Edit '${category.name}' `,
-        },
+            header: `${t('listings.create.edit')} '${category.name}'`,
+
+},
         data: {
             category: category,
         },

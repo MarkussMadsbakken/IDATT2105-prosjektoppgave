@@ -55,6 +55,7 @@ const listingTranslations = {
     delete: "Slett",
     areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?",
     createNewCategory: "Opprett ny kategori",
+    createNewSubCategory: "Opprett ny underkategori",
     updated: "Annonsen ble oppdatert",
     deleted: "Annonsen ble slettet",
   },
@@ -64,6 +65,7 @@ const listingTranslations = {
     delete: "Delete",
     areYouSureYouWantToDelete: "Are you sure you want to delete {content}?",
     createNewCategory: "Create new category",
+    createNewSubCategory: "Create new sub category",
     updated: "The listing was updated",
     deleted: "The listing was deleted",
   }
@@ -89,6 +91,7 @@ const profileTranslations = {
     firstName: "Fornavn",
     lastName: "Etternavn",
     saveChanges: "Lagre endringer",
+    save: "Lagre",
     editProfile: "Rediger profil",
     noFavorites: "Ingen favoritter funnet",
     editPassword: "Endre passord",
@@ -120,6 +123,7 @@ const profileTranslations = {
     firstName: "First name",
     lastName: "Last name",
     saveChanges: "Save Changes",
+    save: "save",
     editProfile: "Edit profile",
     noFavorites: "No favorites found",
     editPassword: "Edit password",
@@ -270,6 +274,7 @@ const searchTranslations = {
     advancedSearch: "Avansert søk",
     noSubCategories: "Ingen underkategorier funnet",
     noResultsFound: "Ingen resultater funnet",
+    searchLoadMore: "Last inn flere",
   },
   en: {
     showCategories: "Show categories",
@@ -281,6 +286,7 @@ const searchTranslations = {
     advancedSearch: "Advanced search",
     noSubCategories: "No sub categories found",
     noResultsFound: "No results found",
+    searchLoadMore: "Load more",
   }
 }
 const notFoundTranslations = {
