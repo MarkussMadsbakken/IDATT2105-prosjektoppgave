@@ -143,7 +143,7 @@ src
 ## Requirements
 - Java 21 (JDK) for backend development
 - Maven for backend dependency management
-- Node.js for frontend development
+- Node.js for frontend development 
 
 ## Setup
 make own env file and setup mysql db
