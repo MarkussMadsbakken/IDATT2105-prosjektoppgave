@@ -8,6 +8,7 @@ import { createCategory, createSubCategory } from '@/actions/categories';
 import LoadingSpinner from '../LoadingSpinner.vue';
 import FormGroup from '../FormGroup.vue';
 import { useMutation } from '@tanstack/vue-query';
+import { useI18n } from 'vue-i18n';
 
 interface DialogRef {
     value: {
@@ -18,6 +19,7 @@ interface DialogRef {
     close: () => void;
 }
 
+const { t } = useI18n();
 const dialogRef = inject<DialogRef>("dialogRef");
 const categoryName = ref("");
 const description = ref("");
@@ -54,12 +56,12 @@ const onSubmit = () => {
 <template>
     <div class="outer-wrapper">
         <div class="listing-form">
-            <FormGroup name="categoryName" :label="$t('name')"
+            <FormGroup name="categoryName" :label="$t('admin.name')"
                 :isNotFilledIn="notFilledInFields.includes('categoryName')">
                 <TextInput v-model="categoryName" type="text" id="categoryName" name="categoryName"
                     autocomplete="off" />
             </FormGroup>
-            <FormGroup name="description" :label="$t('description')" :isNotFilledIn="false">
+            <FormGroup name="description" :label="$t('admin.description')" :isNotFilledIn="false">
                 <TextInput id="description" name="description" v-model="description" type="text" autocomplete="off" />
             </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">
@@ -67,7 +69,7 @@ const onSubmit = () => {
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t('create') }}
+                    {{ $t('form.create') }}
                 </template>
             </Button>
         </div>

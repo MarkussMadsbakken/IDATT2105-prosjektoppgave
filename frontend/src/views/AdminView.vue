@@ -3,20 +3,15 @@ import Divider from '@/components/Divider.vue';
 import EditCategories from '@/components/admin/EditCategories.vue';
 import { Folders, Users } from 'lucide-vue-next';
 import { ref } from 'vue';
-import EditUsers from '@/components/admin/EditUsers.vue';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+
 const pages = [
     {
-        title: t('search.categories'),
+        title: t("admin.categories"),
         icon: Folders,
         component: EditCategories
-    },
-    {
-        title: t('search.users'),
-        icon: Users,
-        component: EditUsers
     }
 ]
 
@@ -28,7 +23,7 @@ const selectedPage = ref(0);
     <div class="outer-wrapper">
         <div class="sidebar">
             <div class="title">
-              {{ $t("home.adminPanel") }}
+                {{ $t("admin.adminPanel") }}
             </div>
             <Divider />
             <div v-for="(page, index) in pages" :key="index" @click="selectedPage = index"
