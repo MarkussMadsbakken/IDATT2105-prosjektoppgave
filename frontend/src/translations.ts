@@ -229,6 +229,7 @@ const loginTranslation = {
     register: "Registrer deg",
     login: "Logg inn",
     somethingWentWrong: "Noe gikk galt",
+    badCredentials: "Feil brukernavn eller passord",
   },
   en: {
     username: "Username",
@@ -237,6 +238,7 @@ const loginTranslation = {
     register: "Register",
     login: "Login",
     somethingWentWrong: "Something went wrong",
+    badCredentials: "Bad credentials",
   }
 }
 const sellerInfoTranslations = {
