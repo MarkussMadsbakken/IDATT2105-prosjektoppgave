@@ -37,7 +37,22 @@ export const useGetListings = () => {
 }
 
 export const getRecommendedListings = async (req: GetListingsRequest): Promise<GetListingsResponse> => {
-  return await Fetch(`${API_BASE_URL}/api/recommended`);
+  let res = await Fetch(`${API_BASE_URL}/api/recommended`);
+  if (!res){
+    return {
+      empty: false,
+      first: true,
+      numberOfElements: 0,
+      pageable: {offset: 0, pageNumber: 0, pageSize: 0, paged: false},
+      content: [],
+      last: true,
+      number: 0,
+      size: 0,
+      totalElements: 0,
+      totalPages: 0
+    }
+  }
+  return res;
 }
 
 export const useGetRecommendedListings = () => {
