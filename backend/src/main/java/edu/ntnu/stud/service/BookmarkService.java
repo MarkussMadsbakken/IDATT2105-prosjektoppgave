@@ -7,6 +7,7 @@ import edu.ntnu.stud.model.response.ListingResponse;
 import edu.ntnu.stud.repo.BookmarkRepo;
 import edu.ntnu.stud.util.Validate;
 import java.util.List;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +26,19 @@ public class BookmarkService {
   @Autowired
   private NotificationService notificationService;
 
+  Logger logger = org.slf4j.LoggerFactory.getLogger(BookmarkService.class);
+
   /**
    * Validates a bookmark request.
    *
    * @param bookmarkRequest the bookmark request to be validated
-   * @param token the JWT token of the user
+   * @param token           the JWT token of the user
    * @throws IllegalArgumentException if the request is invalid
    */
   public void validateBookmarkRequest(BookmarkUserRequest bookmarkRequest, String token) {
     Validate.that(bookmarkRepo.bookmarkExists(
         new Bookmark(jwtService.extractUserId(token.substring(7)), bookmarkRequest.getListingId())),
-        Validate.isFalse(), 
+        Validate.isFalse(),
         "Bookmark already exists");
     Validate.that(listingService.getListingByUuid(bookmarkRequest.getListingId()),
         Validate.isNotNull(),
@@ -46,14 +49,14 @@ public class BookmarkService {
    * Validate bookmark deletion request.
    *
    * @param bookmarkRequest the bookmark request to be validated
-   * @param token the JWT token of the user
+   * @param token           the JWT token of the user
    */
   public void validateBookmarkDeletionRequest(BookmarkUserRequest bookmarkRequest, String token) {
     Validate.that(bookmarkRequest.getListingId(), Validate.isNotBlankOrNull(),
         "Listing ID cannot be null or empty");
     Validate.that(bookmarkRepo.bookmarkExists(
         new Bookmark(jwtService.extractUserId(token.substring(7)), bookmarkRequest.getListingId())),
-        Validate.isTrue(), 
+        Validate.isTrue(),
         "Bookmark does not exist");
   }
 
@@ -112,9 +115,11 @@ public class BookmarkService {
     long userId = jwtService.extractUserId(token.substring(7));
     List<String> listingIds = bookmarkRepo.getBookmarksFromUser(userId);
     if (listingIds.isEmpty()) {
+      logger.info("No bookmarks found for user with ID: {}", userId);
       return List.of();
     }
     List<ListingResponse> listings = listingService.getListingsByUuids(listingIds);
+    logger.info("Fetched {} bookmarked listings for user with ID: {}", listings.size(), userId);
     return listings;
   }
 

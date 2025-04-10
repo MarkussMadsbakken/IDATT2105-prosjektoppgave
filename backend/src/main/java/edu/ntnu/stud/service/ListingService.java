@@ -429,7 +429,7 @@ public class ListingService {
    * Retrieves a list of listings by their UUIDs.
    */
   public List<ListingResponse> getListingsByUuids(List<String> uuids) {
-    if (Validate.<String, List<String>>isNotEmptyCollection().test(uuids)) {
+    if (!Validate.<String, List<String>>isNotEmptyCollection().test(uuids)) {
       return List.of();
     }
     List<Listing> listings = listingRepo.getListingsByUuids(uuids);
