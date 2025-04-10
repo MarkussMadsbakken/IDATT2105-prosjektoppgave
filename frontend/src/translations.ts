@@ -189,13 +189,15 @@ const homeViewTranslations = {
     recommended: "Anbefalt for deg",
     noMoreListings: "Ingen flere annonser funnet",
     listings: "Annonser",
-    adminPanel: "Admin panel"
+    adminPanel: "Admin panel",
+    noListings: "Ingen annonser funnet",
   },
   en: {
     recommended: "Recommended for you",
     noMoreListings: "No more listings found",
     listings: "Listings",
-    adminPanel: "Admin panel"
+    adminPanel: "Admin panel",
+    noListings: "No listings found",
   }
 }
 const checkoutTranslations = {
