@@ -12,7 +12,7 @@ public class ListingUpdate {
   private double price;
   private String description;
   private int category;
-  private int subcategory;
+  private Integer subcategory;
   private double longitude;
   private double latitude;
   private boolean active;
@@ -48,7 +48,7 @@ public class ListingUpdate {
       double price,
       String description,
       int category,
-      int subcategory,
+      Integer subcategory,
       long longitude,
       long latitude,
       boolean active,
@@ -105,15 +105,15 @@ public class ListingUpdate {
     return category;
   }
 
-  public void setCategory(int category) {
+  public void setCategory(Integer category) {
     this.category = category;
   }
 
-  public int getSubcategory() {
+  public Integer getSubcategory() {
     return subcategory;
   }
 
-  public void setSubcategory(int subcategory) {
+  public void setSubcategory(Integer subcategory) {
     this.subcategory = subcategory;
   }
 
