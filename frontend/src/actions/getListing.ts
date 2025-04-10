@@ -47,8 +47,9 @@ export const useGetListings = () => {
 export const getRecommendedListings = async (req: GetListingsRequest): Promise<GetListingsResponse> => {
   let res = await Fetch(`${API_BASE_URL}/api/recommended`);
 
+  // If we have no recommendations, fallback to the default listings
   if (!res) {
-    return EMPTY_PAGE;
+    return await getListings(req);
   }
   return res;
 }
