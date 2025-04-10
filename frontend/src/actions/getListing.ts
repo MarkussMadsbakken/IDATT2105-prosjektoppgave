@@ -47,8 +47,9 @@ export const useGetListings = () => {
 export const getRecommendedListings = async (req: GetListingsRequest): Promise<GetListingsResponse> => {
   let res = await Fetch(`${API_BASE_URL}/api/recommended`);
 
+  // If we have no recommendations, fallback to the default listings
   if (!res) {
-    return EMPTY_PAGE;
+    return await getListings(req);
   }
   return res;
 }
@@ -186,12 +187,14 @@ export const useReserveListing = () => {
       reserveListing(uuid)
   });
 };
+
 export const checkForReservation = async (
   uuid: string
 ): Promise<ReservationResponse> => {
   const params = new URLSearchParams({ listingId: uuid });
   return await Fetch(`${API_BASE_URL}/api/reservation/${uuid.toString()}`);
 }
+
 export const useCheckForReservation = (uuid: string, enabled: boolean) => {
   return useQuery({
     queryKey: ['reservation', uuid],
