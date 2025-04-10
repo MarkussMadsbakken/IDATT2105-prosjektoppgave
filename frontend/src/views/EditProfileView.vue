@@ -120,8 +120,8 @@ const onSubmit = () => {
       <FormGroup name="lastName" :label="$t('profile.lastName')">
         <TextInput v-model="lastName" type="text" id="lastName" />
       </FormGroup>
-      <div class="save-button-wrapper">
-        <Button variant="primary" @click="onSubmit">
+      <div class="button-wrapper">
+        <Button data-cy="save-button" variant="primary" @click="onSubmit">
           <template v-if="isUpdatingUser">
             <LoadingSpinner />
           </template>
@@ -130,7 +130,7 @@ const onSubmit = () => {
           </template>
         </Button>
       </div>
-      <Button class="edit-password-button" variant="primary" @click="router.push('/profile/change-credentials')">
+      <Button class="edit-password-button" variant="outline" @click="router.push('/profile/change-credentials')">
         {{ $t("profile.editPassword") }}
       </Button>
     </div>
@@ -247,7 +247,7 @@ const onSubmit = () => {
   margin-top: 1rem;
 }
 
-.save-button-wrapper {
+.button-wrapper {
   margin: 0 auto;
 }
 

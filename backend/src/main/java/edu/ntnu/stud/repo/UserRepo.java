@@ -89,13 +89,14 @@ public class UserRepo {
    */
   public boolean updateUser(User user) {
     String query = "UPDATE users SET "
-        + "first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?"
+        + "first_name = ?, last_name = ?, image_blob = ?, image_file_type = ?, is_admin = ?"
         + " WHERE id = ?";
     int rowsAffected = jdbcTemplate.update(query,
         user.getFirstName(),
         user.getLastName(),
         user.getImageBlob(),
         user.getImageFileType(),
+        user.isAdmin(),
         user.getId());
     return rowsAffected > 0;
   }

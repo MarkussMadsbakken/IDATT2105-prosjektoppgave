@@ -14,6 +14,8 @@ import LoadingSpinner from '../LoadingSpinner.vue';
 
 const { data, isError, error, isPending, } = useCategories();
 
+const { t } = useI18n();
+
 const categories = computed(() => {
     if (!data.value) { return [] };
     console.log(data.value);
@@ -137,7 +139,6 @@ const handleDeleteCategory = (id: number) => {
 
 <style scoped>
 .delete-category-button {
-    height: 4rem;
     width: 4rem;
     font-size: medium;
     font-weight: 500;

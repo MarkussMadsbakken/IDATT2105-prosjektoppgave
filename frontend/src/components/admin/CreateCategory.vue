@@ -54,7 +54,7 @@ const onSubmit = () => {
                 <TextInput v-model="categoryName" type="text" id="categoryName" name="categoryName"
                     autocomplete="off" />
             </FormGroup>
-            <FormGroup name="icon" :label="$t('icon')" :isNotFilledIn="notFilledInFields.includes('icon')">
+            <FormGroup name="icon" :label="$t('listings.category.icon')" :isNotFilledIn="notFilledInFields.includes('icon')">
                 <Select v-model="icon" id="icon" name="icon" :options="Object.keys(CategoryIcons)">
                     <template #value="option">
                         <div v-if="option.value" class="icon-option">
