@@ -64,7 +64,19 @@ public class ChatService {
     }
 
     // Create a new chat
-    return chatRepo.createChat(request.getBuyerId(), request.getSellerId(), request.getListingId());
+    chatRepo.createChat(request.getBuyerId(), request.getSellerId(), request.getListingId());
+
+    // Get the new chat ID
+    chatId = chatRepo.chatAlreadyExists(
+        request.getBuyerId(),
+        request.getSellerId(),
+        request.getListingId());
+    if (chatId.isPresent()) {
+      return chatId.get();
+    } else {
+      // If the chat ID is not present, return -1
+      return -1L;
+    }
   }
 
   /**
