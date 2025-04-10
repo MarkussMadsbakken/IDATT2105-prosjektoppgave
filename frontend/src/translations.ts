@@ -29,13 +29,15 @@ const listingTranslations = {
     reservedUntil: "Reservert til",
     reserve: "Reserver",
     delete: "Slett",
-    areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?"
+    areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?",
+    createNewCategory: "Opprett ny kategori",
   },
   en: {
     reservedUntil: "Reserved until",
     reserve: "Reserve",
     delete: "Delete",
-    areYouSureYouWantToDelete: "Are you sure you want to delete {content}?"
+    areYouSureYouWantToDelete: "Are you sure you want to delete {content}?",
+    createNewCategory: "Create new category",
   }
 }
 const userListingsTranslations = {
@@ -152,12 +154,14 @@ const homeViewTranslations = {
   no: {
     recommended: "Anbefalt for deg",
     noMoreListings: "Ingen flere annonser funnet",
-    listings: "Annonser"
+    listings: "Annonser",
+    adminPanel: "Admin panel"
   },
   en: {
     recommended: "Recommended for you",
     noMoreListings: "No more listings found",
-    listings: "Listings"
+    listings: "Listings",
+    adminPanel: "Admin panel"
   }
 }
 const checkoutTranslations = {
@@ -229,11 +233,15 @@ const searchTranslations = {
     showCategories: "Vis kategorier",
     search: "Søk",
     hideCategories: "Skjul kategorier",
+    categories: "Kategorier",
+    users: "Brukere",
   },
   en: {
     showCategories: "Show categories",
     search: "Search",
     hideCategories: "Hide categories",
+    categories: "Categories",
+    users: "Users",
   }
 }
 const notFoundTranslations = {
@@ -301,10 +309,12 @@ const createListingViewTranslations = {
     releaseToUpload: "Slipp for å velge bilde",
     imageSelected: "Bilde valgt!",
     noSubCategoriesFound: "Ingen underkategorier funnet",
+    noCategoriesFound: "Ingen kategorier funnet",
     thisFieldIsRequired: "Dette feltet er påkrevd",
     selectSubCategory: "Velg underkategori",
     selectPosition: "Velg posisjon",
-    position: "Posisjon"
+    position: "Posisjon",
+    submit: "Send",
   },
   en: {
     createListing: "Create a new listing",
@@ -324,7 +334,9 @@ const createListingViewTranslations = {
     subCategories: "Sub categories",
     subCategory: "Sub category",
     selectPosition: "Select position",
-    position: "Position"
+    position: "Position",
+    noCategoriesFound: "No categories found",
+    submit: "Submit",
   }
 }
 const notificationTranslations = {
@@ -411,6 +423,22 @@ const breadcrumbTranslations = {
     editCredentials: "Edit credentials",
   }
 }
+const categoryTranslations = {
+  no: {
+    deleteCategory: "Slett kategori",
+    areYouSureYouWantToDelete: "Er du sikker på at du vil slette denne kategorien?",
+    createNewCategory: "Opprett ny kategori",
+    choose: "Velg",
+    icon: "Ikon"
+  },
+  en:{
+    deleteCategory: "Delete category",
+    areYouSureYouWantToDelete: "Are you sure you want to delete this category?",
+    createNewCategory: "Create new category",
+    choose: "Choose",
+    icon: "Icon"
+  }
+}
 
 const availableLocales = ['no', 'en']
 const browserLocale = (navigator.language || 'en').split('-')[0]
@@ -429,6 +457,7 @@ const i18n = createI18n({
         create: createListingViewTranslations.no,
         seller: sellerInfoTranslations.no,
         view: listingViewTranslations.no,
+        category: categoryTranslations.no,
         ...listingTranslations.no,
 
       },
@@ -459,6 +488,7 @@ const i18n = createI18n({
         archive: archivedListingsTranslations.en,
         create: createListingViewTranslations.en,
         seller: sellerInfoTranslations.en,
+        category: categoryTranslations.en,
         ...listingTranslations.en,
       },
       profile: {
