@@ -535,8 +535,7 @@ const adminTranslations = {
 const availableLocales = ['no', 'en']
 const browserLocale = (navigator.language || 'en').split('-')[0]
 const mappedLocale = browserLocale === 'nb' ? 'no' : browserLocale;
-const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en'; 
-.log("Locale: ", locale)
+const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en';
 
 const i18n = createI18n({
   legacy: false, // if you're using Composition API
