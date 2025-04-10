@@ -27,7 +27,7 @@ describe("Message", () => {
     cy.wait(1000);
 
     cy.visit('/chat');
-    cy.get('.chat-card-wrapper').should('exist').click();
+    cy.get('.chats-wrapper').should('exist').click();
     cy.contains('.message-content', 'Hei, er denne fortsatt ledig?');
 
   });
