@@ -197,13 +197,15 @@ const checkoutTranslations = {
     listingIsPurchased: "Denne annonsen er solgt",
     name: "Navn",
     cardNumber: "Kortnummer(Ikke skriv ekte)",
-    buy: "Kjøp"
+    buy: "Kjøp",
+    inSummary: "Oppsummert",
   },
   en: {
     listingIsPurchased: "This listing is purchased",
     name: "Name",
     cardNumber: "Card number (NOT real)",
-    buy: "Purchase"
+    buy: "Purchase",
+    inSummary: "In summary",
   }
 }
 const messageViewTranslations = {
