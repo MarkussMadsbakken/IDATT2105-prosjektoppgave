@@ -142,6 +142,7 @@ src
 ```
 ## Requirements
 - Java 21 (JDK) for backend development
+- Maven for backend dependency management
 - Node.js for frontend development
 
 ## Setup
