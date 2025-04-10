@@ -412,9 +412,16 @@ const breadcrumbTranslations = {
   }
 }
 
+const availableLocales = ['no', 'en']
+const browserLocale = (navigator.language || 'en').split('-')[0]
+const mappedLocale = browserLocale === 'nb' ? 'no' : browserLocale;
+const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en';console.log("Locale: ", locale)
+console.log("Browser locale: ", browserLocale)
+
 const i18n = createI18n({
-  locale: 'no',
-  fallbackLocale: 'en',
+  legacy: false, // if you're using Composition API
+  locale: locale,
+  fallbackLocale: 'no',
   messages: {
     no: {
       listings: {
