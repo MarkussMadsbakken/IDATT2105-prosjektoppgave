@@ -186,12 +186,14 @@ export const useReserveListing = () => {
       reserveListing(uuid)
   });
 };
+
 export const checkForReservation = async (
   uuid: string
 ): Promise<ReservationResponse> => {
   const params = new URLSearchParams({ listingId: uuid });
   return await Fetch(`${API_BASE_URL}/api/reservation/${uuid.toString()}`);
 }
+
 export const useCheckForReservation = (uuid: string, enabled: boolean) => {
   return useQuery({
     queryKey: ['reservation', uuid],

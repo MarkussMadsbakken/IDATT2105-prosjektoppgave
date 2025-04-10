@@ -57,6 +57,7 @@ const listingTranslations = {
     createNewCategory: "Opprett ny kategori",
     updated: "Annonsen ble oppdatert",
     deleted: "Annonsen ble slettet",
+    reservedError: "Kunne ikke reservere annonsen",
   },
   en: {
     reservedUntil: "Reserved until",
@@ -66,6 +67,7 @@ const listingTranslations = {
     createNewCategory: "Create new category",
     updated: "The listing was updated",
     deleted: "The listing was deleted",
+    reservedError: "Could not reserve the listing",
   }
 }
 const userListingsTranslations = {

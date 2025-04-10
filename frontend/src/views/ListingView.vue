@@ -62,7 +62,6 @@ const {
 } = useGetListingWithCategory(listingId);
 
 
-
 const parsedDescription = computed(() => DOMPurify.sanitize(listing.value?.description ?? ''));
 const isOwnListing = computed(() => {
     if (!listing.value) return false;
@@ -90,18 +89,20 @@ const handleReserve = () => {
                     closable: true,
                 }
             );
-            queryClient.setQueryData(["listing", listingId], (oldData: any) => ({
+            queryClient.setQueryData(["reservation", listingId], (oldData: any) => ({
                 ...oldData,
-                reserved: true,
+                userId: auth.userId,
+                createdAt: new Date().toISOString(),
             }));
-            queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
+            queryClient.invalidateQueries({ queryKey: ['listing'] });
+            queryClient.invalidateQueries({ queryKey: ['reservation', listingId] });
         },
         onError: (error) => {
             toast.add(
                 {
                     severity: "error",
                     summary: i18n.t("Error"),
-                    detail: i18n.t("listing.reservedError"),
+                    detail: i18n.t("listings.reservedError"),
                     life: 3000,
                     closable: true,
                 }
