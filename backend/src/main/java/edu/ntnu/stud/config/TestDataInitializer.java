@@ -92,7 +92,7 @@ public class TestDataInitializer implements CommandLineRunner {
           subCategoryForCategory.getId(),
           10.395467071105747,
           63.42245621159982,
-          users.get(i % users.size()).getId()));
+          userRepo.getUserByUsername("testuser" + i % users.size()).getId()));
     }
     List<Listing> listing = listingRepo.getAllListings();
 
@@ -105,14 +105,14 @@ public class TestDataInitializer implements CommandLineRunner {
     }
 
     // Create test user history
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < listing.size(); i++) {
       UserHistory userHistory = new UserHistory();
-      userHistory.setUserId(users.get(i % users.size()).getId());
+      userHistory.setUserId(userRepo.getUserByUsername("testuser0").getId());
       userHistory.setListingId(listing.get(i % listing.size()).getUuid());
       userHistoryRepo.addUserHistory(userHistory);
 
       userHistory = new UserHistory();
-      userHistory.setUserId(users.get((i + 1) % users.size()).getId());
+      userHistory.setUserId(userRepo.getUserByUsername("testuser1").getId());
       userHistory.setListingId(listing.get((i + 1) % listing.size()).getUuid());
       userHistoryRepo.addUserHistory(userHistory);
     }
@@ -125,5 +125,6 @@ public class TestDataInitializer implements CommandLineRunner {
           users.get(i % users.size()).getId(),
           Timestamp.valueOf("2023-10-01 10:00:00" + i)));
     }
+
   }
 }
