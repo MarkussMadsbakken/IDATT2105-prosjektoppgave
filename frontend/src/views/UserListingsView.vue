@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useGetUserListings } from "@/actions/user.ts";
-import ListingCard from "@/components/ListingCard.vue";
 import { useGetUser } from "@/actions/user.ts";
-import ListingCardSkeleton from "@/components/skeleton/ListingCardSkeleton.vue";
 import { useRoute } from "vue-router";
 import Breadcrumb from "primevue/breadcrumb";
 

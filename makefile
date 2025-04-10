@@ -1,5 +1,5 @@
 dev:
-	set -o allexport; . .env.local; set +o allexport; npx concurrently --kill-others -n Vue,Java -c green,red --pad-prefix "npm run dev --prefix ./frontend" "mvn spring-boot:run -f ./backend/pom.xml"
+	npx dotenv-cli -e .env.local -- npx concurrently --kill-others -n Vue,Java -c green,red --pad-prefix "npm run dev --prefix ./frontend" "mvn spring-boot:run -f ./backend/pom.xml"
 install:
 	npm install --prefix ./frontend
 test-all:

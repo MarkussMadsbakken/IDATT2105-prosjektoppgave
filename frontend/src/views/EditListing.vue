@@ -73,7 +73,7 @@ const { isPending, isError, error, mutate: editListingMutation } = useMutation({
             {
                 severity: "success",
                 summary: t("success"),
-                detail: t("listing.updated"),
+                detail: t("listings.updated"),
                 life: 3000,
                 closable: true,
             }

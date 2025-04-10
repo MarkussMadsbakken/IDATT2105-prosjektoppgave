@@ -40,14 +40,14 @@ public class SubCategoryRepoTest {
   @BeforeEach
   public void setUp() {
     jdbcTemplate.execute(
-        "INSERT INTO categories (name, description, icon) " 
-        + "VALUES ('Parent Category', 'Parent Description', 'parent-icon.png')");
+        "INSERT INTO categories (name, description, icon) "
+            + "VALUES ('Parent Category', 'Parent Description', 'parent-icon.png')");
 
     parentCategoryId = categoryRepo.getAllCategories().getFirst().getId();
 
     jdbcTemplate.execute(
-        "INSERT INTO sub_categories (name, description, category_id) " 
-        + "VALUES ('Test SubCategory', 'Test Description', "
+        "INSERT INTO sub_categories (name, description, category_id) "
+            + "VALUES ('Test SubCategory', 'Test Description', "
             + parentCategoryId + ")");
 
   }
@@ -60,8 +60,7 @@ public class SubCategoryRepoTest {
 
   @Test
   public void testAddSubCategory() {
-    SubCategoryRequest subCategoryRequest = 
-        new SubCategoryRequest("New SubCategory", "New Description", "icon",
+    SubCategoryRequest subCategoryRequest = new SubCategoryRequest("New SubCategory", "New Description",
         parentCategoryId);
 
     subCategoryRepo.addSubCategory(subCategoryRequest);
@@ -113,8 +112,7 @@ public class SubCategoryRepoTest {
 
   @Test
   public void testGetSubCategoriesByCategoryId() {
-    List<SubCategory> subCategories = 
-        subCategoryRepo.getSubCategoriesByCategoryId(parentCategoryId);
+    List<SubCategory> subCategories = subCategoryRepo.getSubCategoriesByCategoryId(parentCategoryId);
 
     assertThat(subCategories).hasSize(1);
     assertThat(subCategories.getFirst().getName()).isEqualTo("Test SubCategory");

@@ -49,7 +49,7 @@ watch(subCategories, (newData) => {
         <p>Feil: {{ error?.message }}</p>
     </template>
     <template v-else-if="!subCategories?.length">
-        <p class="no-sub-categories-text">{{ $t('noSubCategories') }}</p>
+        <p class="no-sub-categories-text">{{ $t('search.noSubCategories') }}</p>
     </template>
     <div class="sub-category-selector" v-else>
         <div v-for="subcategory in subCategories" :key="subcategory.name" class="sub-category">

@@ -31,14 +31,14 @@ defineEmits(["accept", "cancel"]);
         </div>
         <div class="buttons">
             <Button @click="dialogRef?.close()" variant="outline" class="confirm-dialog-button">
-                {{ dialogRef?.data.cancelText ?? $t("cancel") }}
+                {{ dialogRef?.data.cancelText ?? $t("form.cancel") }}
             </Button>
             <Button @click="$emit('accept')" variant="primary" class="confirm-dialog-button">
                 <template v-if="dialogRef?.data.confirmLoading">
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ dialogRef?.data.confirmText ?? $t("confirm") }}
+                    {{ dialogRef?.data.confirmText ?? $t("form.confirm") }}
                 </template>
             </Button>
         </div>

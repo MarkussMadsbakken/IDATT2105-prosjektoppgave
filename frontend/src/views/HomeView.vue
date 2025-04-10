@@ -5,17 +5,18 @@ import { useRouter } from "vue-router";
 import SearchOptions from "@/components/SearchOptions.vue";
 import Divider from "@/components/Divider.vue";
 import { useGetListings, useGetRecommendedListings } from "@/actions/getListing";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import Button from "@/components/Button.vue";
 import { Client } from "@stomp/stompjs"
 import { useAuth } from "@/stores/auth";
+import ListingCardSkeleton from "@/components/skeleton/ListingCardSkeleton.vue";
 
 const auth = useAuth();
 
 const {
-  data,
+  data: listings,
   isError,
   error,
   isPending,
@@ -23,10 +24,6 @@ const {
   isFetching,
   fetchNextPage,
 } = auth.isLoggedIn() ? useGetRecommendedListings() : useGetListings();
-
-const listings = computed<Page<Listing>[]>(
-  () => data?.value?.pages ?? []
-);
 
 const router = useRouter();
 
@@ -59,9 +56,7 @@ useInfiniteScroll(
 </script>
 
 <template>
-  <span v-if="isPending">Loading...</span>
-  <span v-else-if="isError">Error: {{ error?.message }}</span>
-  <div class="page-wrapper" v-else>
+  <div class="page-wrapper">
     <SearchOptions @search="handleSearch" @select-category="handleCategoryClick" :open="true" />
     <Divider />
     <div class="header-title">
@@ -73,7 +68,16 @@ useInfiniteScroll(
       </template>
     </div>
     <div class="recommended-listings">
-      <template v-for="(page, index) in listings">
+      <template v-if="isPending">
+        <ListingCardSkeleton :size="'medium'" v-for="i in 6" :key="i" />
+      </template>
+      <div v-else-if="!listings || listings.pages.length === 0" class="no-listings">
+        {{ $t('home.noListings') }}
+      </div>
+      <div v-else-if="isError" class="error-message">
+        {{ $t('home.errorLoadingListings') }}
+      </div>
+      <template v-else v-for="(page, index) in listings.pages">
         <div v-for="listing in page.content" :key="index + listing.uuid">
           <ListingCard :listing="listing" />
         </div>
@@ -83,7 +87,7 @@ useInfiniteScroll(
       <div v-if="isPending" class="loading-spinner">
         <LoadingSpinner />
       </div>
-      <div v-else-if="!hasNextPage" class="no-more-listings">
+      <div v-else-if="!hasNextPage && !isError && listings?.pages[0].totalElements !== 0" class="no-more-listings">
         {{ $t('home.noMoreListings') }}
       </div>
     </div>
@@ -91,6 +95,11 @@ useInfiniteScroll(
 </template>
 
 <style scoped>
+.no-listings {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
 .no-more-listings {
   font-size: 1rem;
   text-align: center;

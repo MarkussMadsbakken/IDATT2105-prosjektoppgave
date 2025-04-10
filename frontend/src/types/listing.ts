@@ -11,4 +11,6 @@ export type Listing = {
     sold: false;
     ownerId: number,
     price: number;
+    updatedAt: string;
+    createdAt: string;
 }
