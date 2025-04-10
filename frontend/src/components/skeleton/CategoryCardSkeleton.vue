@@ -1,28 +1,12 @@
 <script setup lang="ts">
-import { CategoryIcons } from '@/util/categoryIcons';
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
-
-const props = withDefaults(defineProps<{
-    icon: keyof typeof CategoryIcons;
-    selected?: boolean;
-}>(), {
-    selected: false,
-});
-
-defineEmits<(e: "click") => void>();
-const Icon = CategoryIcons[props.icon];
-
 </script>
 
 <template>
-    <div class="category-card-outer-wrapper" :class="{ selected: props.selected }" @click="$emit('click')">
-        <div class="icon-wrapper">
+    <div class="category-card-outer-wrapper">
+        <div class="icon-wrapper-skeleton">
             <Icon :size="30" :stroke-width="1.5" />
         </div>
-        <div class="text-wrapper">
-            <slot />
+        <div class="text-wrapper-skeleton">
         </div>
     </div>
 </template>
@@ -33,13 +17,27 @@ const Icon = CategoryIcons[props.icon];
     color: white;
 }
 
-.text-wrapper {
+.text-wrapper-skeleton {
+    height: 2rem;
     width: 100%;
-    height: 100%;
     flex: 1;
     display: flex;
     justify-content: baseline;
     align-items: center;
+    background-color: var(--color-skeleton);
+    animation: pulse 1.5s infinite;
+    border-radius: 5px;
+}
+
+.icon-wrapper-skeleton {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-skeleton);
+    animation: pulse 1.5s infinite;
+    border-radius: 25%;
 }
 
 .category-card-outer-wrapper {

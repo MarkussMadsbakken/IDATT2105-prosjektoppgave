@@ -7,6 +7,7 @@ import AdvancedSearch from './AdvancedSearch.vue';
 import { computed } from 'vue';
 import { Map } from 'lucide-vue-next';
 import { useRouter } from 'vue-router';
+import CategoryCardSkeleton from './skeleton/CategoryCardSkeleton.vue';
 
 const props = withDefaults(defineProps<{
   selectedCategory?: number;
@@ -42,16 +43,17 @@ const selectedCategoryId = computed(() => {
 <template>
   <div class="search-outer-wrapper">
     <div class="search">
-      <Searchbar :placeholder="$t('search.search')" @input="$emit('newSearchValue', $event)" @search="$emit('search', $event)"
-        :value="props.searchValue" />
+      <Searchbar :placeholder="$t('search.search')" @input="$emit('newSearchValue', $event)"
+        @search="$emit('search', $event)" :value="props.searchValue" />
     </div>
-    <div class="search-icon-wrapper" @click="router.push('/search/map')">
+    <div class="map-icon-wrapper" @click="router.push('/search/map')">
       <Map class="search-icon" :size="24"></Map>
     </div>
   </div>
   <Collapsible :openTitle="$t('search.showCategories')" :closedTitle="$t('search.hideCategories')" :open="props.open">
     <div class="categories">
-      <div v-for="category in categories" :key="category.name">
+      <CategoryCardSkeleton v-for="i in 8" :key="i" v-if="isPending" />
+      <div v-for="category in categories" :key="category.name" v-else-if="categories">
         <CategoryCard :icon="category.icon" :categoryname="category.name"
           :selected="category.id === props.selectedCategory" @click="$emit('selectCategory', category.id)">
           {{ $t(category.name) }}
@@ -72,7 +74,7 @@ const selectedCategoryId = computed(() => {
   position: relative;
 }
 
-.search-icon-wrapper {
+.map-icon-wrapper {
   position: absolute;
   top: 0;
   right: -3rem;
