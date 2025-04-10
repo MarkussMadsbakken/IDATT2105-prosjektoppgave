@@ -9,7 +9,6 @@ import edu.ntnu.stud.model.base.User;
 import edu.ntnu.stud.model.request.LoginRequest;
 import edu.ntnu.stud.model.request.RegisterRequest;
 import edu.ntnu.stud.model.response.LoginResponse;
-import edu.ntnu.stud.repo.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ public class AuthServiceTest {
   private AuthService authService;
 
   @Mock
-  private UserRepo userRepo;
+  private UserService userService;
 
   @Mock
   private JWTService jwtService;
@@ -52,7 +51,7 @@ public class AuthServiceTest {
    * environment.
    * - Creates a mock `User` object with predefined username, password, and ID.
    * - Configures the `userRepo` mock to return the mock `User` object when
-   * `getUserByUsername` is called.
+   * `getUserResponseByUsername` is called.
    * - Configures the `userRepo` mock to do nothing when `addUser` is called.
    * - Configures the `encoder` mock to return a predefined encoded password.
    * - Configures the `jwtService` mock to return a predefined token.
@@ -68,8 +67,10 @@ public class AuthServiceTest {
     user.setPassword("encodedPassword");
     user.setId(1);
 
-    Mockito.lenient().when(userRepo.getUserByUsername("testuser")).thenReturn(user);
-    lenient().doNothing().when(userRepo).addUser(user);
+    Mockito.lenient().when(userService.getUserByUsername("testuser")).thenReturn(user);
+    Mockito.lenient().when(userService.getUserByUsername("wronguser")).thenReturn(null);
+    lenient().doNothing().when(userService).addUser(user);
+
     lenient().when(encoder.encode("password")).thenReturn("encodedPassword");
     lenient().when(jwtService.generateToken("testuser", 1L, false)).thenReturn("testToken");
 
@@ -95,6 +96,39 @@ public class AuthServiceTest {
   @DisplayName("Should fail registration with used username")
   void registerWithUsedUsername() {
     RegisterRequest registerRequest = new RegisterRequest("testuser", "password");
+
+    Exception exception = assertThrows(
+        Exception.class, () -> authService.register(registerRequest));
+
+    assertThat(exception.getMessage()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("Should fail registration with password with less than 8 characters")
+  void registerWithPasswordUnder8Chars() {
+    RegisterRequest registerRequest = new RegisterRequest("invalidpassworduser1", "password");
+
+    Exception exception = assertThrows(
+        Exception.class, () -> authService.register(registerRequest));
+
+    assertThat(exception.getMessage()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("Should fail registration with password without any number")
+  void registerWithPasswordWithoutDigit() {
+    RegisterRequest registerRequest = new RegisterRequest("invalidpassworduser2", "passwordpassword");
+
+    Exception exception = assertThrows(
+        Exception.class, () -> authService.register(registerRequest));
+
+    assertThat(exception.getMessage()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("Should fail registration with password without any letters")
+  void registerWithPasswordWithoutLetter() {
+    RegisterRequest registerRequest = new RegisterRequest("invalidpassworduser3", "111111111");
 
     Exception exception = assertThrows(
         Exception.class, () -> authService.register(registerRequest));

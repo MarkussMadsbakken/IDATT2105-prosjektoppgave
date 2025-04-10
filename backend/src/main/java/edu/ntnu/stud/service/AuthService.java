@@ -7,7 +7,6 @@ import edu.ntnu.stud.model.request.RegisterRequest;
 import edu.ntnu.stud.model.response.ChangeCredentialsResponse;
 import edu.ntnu.stud.model.response.LoginResponse;
 import edu.ntnu.stud.model.response.RegisterResponse;
-import edu.ntnu.stud.repo.UserRepo;
 import edu.ntnu.stud.util.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,9 +28,10 @@ public class AuthService {
   AuthenticationManager authManager;
 
   @Autowired
-  private UserRepo userRepo;
+  private UserService userService;
 
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
 
   /**
    * Registers a new user in the system.
@@ -59,7 +59,7 @@ public class AuthService {
 
     user.setUsername(registerRequest.getUsername());
     user.setPassword(encoder.encode(registerRequest.getPassword()));
-    userRepo.addUser(user);
+    userService.addUser(user);
 
     String token = authenticateUser(registerRequest.getUsername(), registerRequest.getPassword());
 
@@ -81,8 +81,8 @@ public class AuthService {
     Authentication authentication = authManager
         .authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-    if (authentication.isAuthenticated() && userRepo.getUserByUsername(username) != null) {
-      User user = userRepo.getUserByUsername(username);
+    if (authentication.isAuthenticated() && !isUsernameAvailable(username)) {
+      User user = userService.getUserByUsername(username);
       return jwtService.generateToken(user.getUsername(), user.getId(), user.isAdmin());
     } else {
       return null;
@@ -100,7 +100,7 @@ public class AuthService {
       ChangeCredentialsRequest changeCredentialsRequest,
       String token
   ) {
-    User user = userRepo.getUserByUsername(
+    User user = userService.getUserByUsername(
         jwtService.extractUserName(token.substring(7))
     );
     Validate.that(changeCredentialsRequest.getUsername(),
@@ -138,7 +138,7 @@ public class AuthService {
     // saving the new credentials
     user.setPassword(encoder.encode(changeCredentialsRequest.getNewPassword()));
     user.setUsername(changeCredentialsRequest.getUsername());
-    userRepo.updateUserCredentials(user);
+    userService.updateUserCredentials(user);
 
     String newToken = authenticateUser(
         changeCredentialsRequest.getUsername(),
@@ -185,6 +185,6 @@ public class AuthService {
    * @return true if the username is available or false if otherwise
    */
   public boolean isUsernameAvailable(String username) {
-    return userRepo.getUserByUsername(username) == null;
+    return userService.getUserByUsername(username) == null;
   }
 }

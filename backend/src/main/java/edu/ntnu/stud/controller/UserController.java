@@ -112,7 +112,7 @@ public class UserController {
   })
   @GetMapping("/username/{username}")
   public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
-    UserResponse userResponse = userService.getUserByUsername(username);
+    UserResponse userResponse = userService.getUserResponseByUsername(username);
     if (userResponse != null) {
       logger.info("User with username: {} found successfully", username);
       return ResponseEntity.ok(userResponse);
