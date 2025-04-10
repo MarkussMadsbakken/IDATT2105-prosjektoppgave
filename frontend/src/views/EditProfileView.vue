@@ -42,7 +42,7 @@ const {
       {
         severity: "success",
         summary: t("success"),
-        detail: t("profile.updated"),
+        detail: t("profile.profileUpdated"),
         life: 3000,
         closable: true,
       }
