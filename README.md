@@ -23,9 +23,14 @@
     - [Backend file structure](#backend-file-structure)
   - [Requirements](#requirements)
   - [Setup](#setup)
+      - [Setup local environment](#setup-local-environment)
+      - [Install and select a Database](#install-and-select-a-database)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Testing](#testing)
+  - [Building for production](#building-for-production)
+      - [Building with H2](#building-with-h2)
+      - [Examples](#examples)
   - [Further documentation](#further-documentation)
   - [Future work](#future-work)
 
@@ -146,15 +151,13 @@ src
 - Node.js for frontend development
 
 ## Setup
-
 #### Setup local environment
 To run the project, you need to set up a .env file with the following properties:
 - SPRING_DATABASE_DRIVER: The database driver to use (either com.mysql.cj.jdbc.Driver or org.h2.Driver)
 - SPRING_DATABASE_URL: The URL of the database to connect to (more on this below)
 - SPRING_DATABASE_USERNAME: The username to use for the database connection
 - SPRING_DATABASE_PASSWORD: The password to use for the database connection
-
-
+See the '.env.local.example' file in the root directory for an example of how to set up the .env file. You can copy this file to .env.local and fill in the values.
 #### Install and select a Database
 There are two database solutions that are preconfigured in this project:
 - MySQL server: Run a separate MySQL server instance and configure the env variables to connect to it. Choose com.mysql.cj.jdbc.Driver as SPRING_DATABASE_DRIVER.
@@ -165,7 +168,7 @@ There are two database solutions that are preconfigured in this project:
   - SPRING_DATABASE_USERNAME: sa
   - SPRING_DATABASE_PASSWORD: password
 
-*Note: If you are not running the backend and frontend on the same machine, you need to change the backend URL in the frontend code. This can be done in the file `/src/types/constants.ts`*
+*Note: If you are not running the backend and frontend on the same machine, you need to change the backend URL in the frontend code. This can be done in the file `/src/types/constants.ts`.*
 
 ## Installation
 With Make installed you can run `make install` in the root directory to install both the frontend and backend dependencies. This command will also run the tests and generate the necessary artifacts for deployment. Alternatviely, you can run: `npm install`in the frontend directory and `mvn install` in the backend directory.
