@@ -10,8 +10,12 @@ import Toast from 'primevue/toast';
 const auth = useAuth();
 const i18n = useI18n();
 
+const savedLanguage = localStorage.getItem('language') || i18n.locale.value;
+i18n.locale.value = savedLanguage;
+
 const changeLanguage = (lang: string) => {
   i18n.locale.value = lang;
+  localStorage.setItem('language', lang); // Save the selected language to localStorage
 }
 
 </script>
