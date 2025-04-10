@@ -49,19 +49,19 @@ const onSubmit = () => {
 <template>
     <div class="outer-wrapper">
         <div class="listing-form">
-            <FormGroup name="categoryName" :label="$t('name')"
+            <FormGroup name="categoryName" :label="$t('checkout.name')"
                 :isNotFilledIn="notFilledInFields.includes('categoryName')">
                 <TextInput v-model="categoryName" type="text" id="categoryName" name="categoryName"
                     autocomplete="off" />
             </FormGroup>
-            <FormGroup name="icon" :label="$t('icon')" :isNotFilledIn="notFilledInFields.includes('icon')">
+            <FormGroup name="icon" :label="$t('listings.category.icon')" :isNotFilledIn="notFilledInFields.includes('icon')">
                 <Select v-model="icon" id="icon" name="icon" :options="Object.keys(CategoryIcons)">
                     <template #value="option">
                         <div v-if="option.value" class="icon-option">
                             <component :is="CategoryIcons[option.value as keyof typeof CategoryIcons]" />
                             {{ option.value }}
                         </div>
-                        <div v-else>{{ $t('choose') }}</div>
+                        <div v-else>{{ $t('listings.category.choose') }}</div>
                     </template>
                     <template #option="option">
                         <div class="icon-option">
@@ -71,7 +71,7 @@ const onSubmit = () => {
                     </template>
                 </Select>
             </FormGroup>
-            <FormGroup name="description" :label="$t('description')" :isNotFilledIn="false">
+            <FormGroup name="description" :label="$t('listings.create.description')" :isNotFilledIn="false">
                 <TextInput id="description" name="description" v-model="description" type="text" />
             </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">
@@ -79,7 +79,7 @@ const onSubmit = () => {
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t('create') }}
+                    {{ $t('listings.create.submit') }}
                 </template>
             </Button>
         </div>

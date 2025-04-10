@@ -9,8 +9,11 @@ import ConfirmDialog from '../ConfirmDialog.vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import type { Category } from '@/types';
 import EditCategoryModal from './EditCategoryModal.vue';
+import { useI18n } from 'vue-i18n';
 
 const { data, isError, error, isPending, } = useCategories();
+
+const { t } = useI18n();
 
 const categories = computed(() => {
     if (!data.value) { return [] };
@@ -40,11 +43,10 @@ const openCreateCategoryModal = () => {
             modal: true,
             dismissableMask: true,
             draggable: false,
-            header: 'Create a new category',
+            header: t('listings.category.createNewCategory'),
         },
         emits: {
             onCategoryCreated: () => {
-                console.log('Category created');
                 queryClient.invalidateQueries({
                     queryKey: ['categories']
                 });
@@ -79,13 +81,13 @@ const openEditCategoryModal = (category: Category) => {
 const handleDeleteCategory = (id: number) => {
     const d = dialog.open(ConfirmDialog, {
         props: {
-            header: 'Delete category',
+            header: t('listings.category.deleteCategory'),
             modal: true,
             draggable: false,
             dismissableMask: true,
         },
         data: {
-            message: 'Are you sure you want to delete this category?',
+            message: t("listings.category.areYouSureYouWantToDelete"),
             variant: 'Caution',
         },
         emits: {
@@ -114,15 +116,15 @@ const handleDeleteCategory = (id: number) => {
                     </CategoryCard>
                     <Button @click="handleDeleteCategory(category.id)" variant="destructive"
                         class="delete-category-button">
-                        {{ $t("delete") }}
+                        {{ $t("listings.delete") }}
                     </Button>
                 </div>
                 <div v-else class="no-categories">
-                    No categories found
+                  {{ $t('listings.create.noCategoriesFound') }}
                 </div>
             </div>
             <Button class="create-category-button" @click="openCreateCategoryModal">
-                Create a new category
+              {{ $t("listings.category.createNewCategory") }}
             </Button>
         </div>
     </div>
@@ -131,7 +133,6 @@ const handleDeleteCategory = (id: number) => {
 
 <style scoped>
 .delete-category-button {
-    height: 4rem;
     width: 4rem;
     font-size: medium;
     font-weight: 500;
