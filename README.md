@@ -69,12 +69,51 @@ The aim of this project is to demonstrate full-stack development capabilities by
 
 ## Project structure
 ### System architecture
+![system-architecture.png](docs/system-architecture.png)
 ### Entity-relationship diagram
+![ER-diagram.png](docs/ER-diagram.png)
 ### System sequence diagram
+![register-sequence-diagram.png](docs/register-sequence-diagram.png)
 
 ### Frontend
 
 ### Backend
+.
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── edu
+│   │   │       └── ntnu
+│   │   │           └── stud
+│   │   │               ├── config
+│   │   │               ├── controller
+│   │   │               ├── exception
+│   │   │               ├── factory
+│   │   │               ├── filter
+│   │   │               ├── model
+│   │   │               │   ├── base
+│   │   │               │   ├── request
+│   │   │               │   ├── response
+│   │   │               │   └── update
+│   │   │               ├── repo
+│   │   │               ├── service
+│   │   │               └── util
+│   │   └── resources
+│   │       └── db
+│   │           └── migration
+│   └── test
+│       ├── java
+│       │   └── edu
+│       │       └── ntnu
+│       │           └── stud
+│       │               ├── repo
+│       │               ├── service
+│       │               └── util
+│       └── resources
+│           └── db
+│               └── testmigrations
+└── target
+
 
 ## Installation
 Run `npm install` in the `frontend` directory to install the frontend dependencies. 
