@@ -337,7 +337,7 @@ const handleDelete = () => {
                         <LoadingSpinner />
                     </template>
                     <template v-else>
-                        {{ reserveButtonText }} a {{ reservationEndTime }}
+                        {{ reserveButtonText }} {{ reservationEndTime }}
                     </template>
                 </Button>
             </div>
