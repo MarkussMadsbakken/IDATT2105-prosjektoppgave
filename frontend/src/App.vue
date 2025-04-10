@@ -48,7 +48,7 @@ const changeLanguage = (lang: string) => {
         <div class="link" v-if="auth.isLoggedIn()">
           <NotificationDropdown></NotificationDropdown>
         </div>
-        <RouterLink to="/chat" class="link" v-if="auth.isLoggedIn()">
+        <RouterLink id="chat-button" to="/chat" class="link" v-if="auth.isLoggedIn()">
           <MessageSquare />
         </RouterLink>
         <RouterLink :to="auth.isLoggedIn() ? '/profile' : '/login'" class="link profile">
