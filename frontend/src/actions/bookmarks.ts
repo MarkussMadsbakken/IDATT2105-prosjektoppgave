@@ -1,16 +1,16 @@
 import { API_BASE_URL, type GetListingBookmarksResponse } from "@/types";
-import Fetch, {FetchWithoutParse} from "@/util/fetch";
+import Fetch, { FetchWithoutParse } from "@/util/fetch";
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import {DomUtil} from "leaflet";
+import { DomUtil } from "leaflet";
 import enableImageDrag = DomUtil.enableImageDrag;
 
 export const getListingBookmarks = async (listingId: string): Promise<GetListingBookmarksResponse> => {
-    const bookMarkCount = await Fetch(`${API_BASE_URL}/api/bookmark/${listingId}/count`, {
-        method: "GET",
-    });
-    return {
-        bookMarkCount,
-    }
+  const bookMarkCount = await Fetch(`${API_BASE_URL}/api/bookmark/${listingId}/count`, {
+    method: "GET",
+  });
+  return {
+    bookMarkCount,
+  }
 }
 export const getHasBookmarked = async (listingId: string): Promise<boolean> => {
   const hasBookmarked = await Fetch(`${API_BASE_URL}/api/bookmark/${listingId}/exists`, {
@@ -18,6 +18,7 @@ export const getHasBookmarked = async (listingId: string): Promise<boolean> => {
   });
   return hasBookmarked;
 };
+
 export const useHasBookmarked = (listingId: string, options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ["listing", "bookmarks", listingId, "exists"],
@@ -27,16 +28,16 @@ export const useHasBookmarked = (listingId: string, options?: { enabled?: boolea
 };
 
 export const useListingBookmarks = (listingId: string) => {
-    return useQuery({
-        queryKey: ["listing", "bookmarks", listingId],
-        queryFn: async () => {
-            return await getListingBookmarks(listingId);
-        }
-    });
+  return useQuery({
+    queryKey: ["listing", "bookmarks", listingId],
+    queryFn: async () => {
+      return await getListingBookmarks(listingId);
+    }
+  });
 }
 
 export const addBookmark = async (listingId: string): Promise<void> => {
-   await FetchWithoutParse(`${API_BASE_URL}/api/bookmark`, {
+  await FetchWithoutParse(`${API_BASE_URL}/api/bookmark`, {
     method: "POST",
     body: JSON.stringify({ listingId: listingId }),
     headers: {
@@ -46,7 +47,7 @@ export const addBookmark = async (listingId: string): Promise<void> => {
 }
 
 export const removeBookmark = async (listingId: string): Promise<void> => {
-   await FetchWithoutParse(`${API_BASE_URL}/api/bookmark`, {
+  await FetchWithoutParse(`${API_BASE_URL}/api/bookmark`, {
     method: "DELETE",
     body: JSON.stringify({ listingId: listingId }),
     headers: {

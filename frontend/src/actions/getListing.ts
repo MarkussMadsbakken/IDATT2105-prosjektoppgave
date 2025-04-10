@@ -1,5 +1,6 @@
 import {
   API_BASE_URL,
+  EMPTY_PAGE,
   PAGE_SIZE,
   type GetListingsRequest,
   type GetListingsResponse,
@@ -17,7 +18,13 @@ export const getListings = async (req: GetListingsRequest): Promise<GetListingsR
   const params = new URLSearchParams();
   params.append("page", req.page.toString());
   params.append("offset", req.offset.toString());
-  return await Fetch(`${API_BASE_URL}/api/listing?${params.toString()}`);
+
+  const listings = await Fetch(`${API_BASE_URL}/api/listing?${params.toString()}`);
+
+  if (!listings) {
+    return EMPTY_PAGE;
+  }
+  return listings;
 }
 
 export const useGetListings = () => {
@@ -39,19 +46,9 @@ export const useGetListings = () => {
 
 export const getRecommendedListings = async (req: GetListingsRequest): Promise<GetListingsResponse> => {
   let res = await Fetch(`${API_BASE_URL}/api/recommended`);
-  if (!res){
-    return {
-      empty: false,
-      first: true,
-      numberOfElements: 0,
-      pageable: {offset: 0, pageNumber: 0, pageSize: 0, paged: false},
-      content: [],
-      last: true,
-      number: 0,
-      size: 0,
-      totalElements: 0,
-      totalPages: 0
-    }
+
+  if (!res) {
+    return EMPTY_PAGE;
   }
   return res;
 }
@@ -133,7 +130,12 @@ export const searchListings = async (queryString: string, page: number): Promise
   const pageParams = new URLSearchParams();
   pageParams.append("page", page.toString());
   pageParams.append("size", PAGE_SIZE.toString());
-  return await Fetch(`${API_BASE_URL}/api/search?${queryString.toString()}&${pageParams.toString()}`);
+  const listings = await Fetch(`${API_BASE_URL}/api/search?${queryString.toString()}&${pageParams.toString()}`);
+
+  if (!listings) {
+    return EMPTY_PAGE;
+  }
+  return listings;
 }
 
 export const useSearchListings = (queryString: Ref<string>) => {

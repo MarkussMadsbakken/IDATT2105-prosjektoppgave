@@ -21,6 +21,24 @@ export type Page<T> = {
     }
 }
 
+export const EMPTY_PAGE: Page<any> = {
+    content: [],
+    empty: true,
+    first: true,
+    last: true,
+    number: 0,
+    numberOfElements: 0,
+    size: 0,
+    totalElements: 0,
+    totalPages: 0,
+    pageable: {
+        offset: 0,
+        pageNumber: 0,
+        pageSize: 0,
+        paged: false
+    }
+}
+
 export const PAGE_SIZE = 6;
 
 export type GetChatsResponse = Chat[];
