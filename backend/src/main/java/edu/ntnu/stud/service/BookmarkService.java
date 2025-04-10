@@ -111,6 +111,9 @@ public class BookmarkService {
   public List<ListingResponse> getBookmarkedListingsFromUser(String token) {
     long userId = jwtService.extractUserId(token.substring(7));
     List<String> listingIds = bookmarkRepo.getBookmarksFromUser(userId);
+    if (listingIds.isEmpty()) {
+      return List.of();
+    }
     List<ListingResponse> listings = listingService.getListingsByUuids(listingIds);
     return listings;
   }
