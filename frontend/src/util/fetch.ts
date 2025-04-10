@@ -19,6 +19,10 @@ export default async function Fetch(input: string | URL | globalThis.Request, in
         throw new ApiError(err.error);
     }
 
+    if (res.status === 204) {
+        return null;
+    }
+
     return res.json();
 }
 

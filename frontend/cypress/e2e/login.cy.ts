@@ -24,15 +24,17 @@ describe("login", () => {
   });
   it('should be able to log into testuser1', () => {
     cy.visit("/login");
-    const form = cy.get("form").within(() =>
-    {
+
+    cy.get("form").within(() => {
       cy.get("input[name='username']").type("testuser1");
-      cy.get("input[name=username]").should("have.value", "testuser1");
-      cy.get('#password').type('password1');
-      cy.get("#password").should("have.value", "password1");
-      cy.get("button[type='submit']").should("not.be.disabled").click();
+      cy.get("#password").type("password1");
+      cy.get("button[type='submit']").click();
     });
+    cy.wait(3000);
+    cy.get('.link.profile').click();
+    cy.get(".username").should("contain.text", "@testuser1");
   });
+
 
 })
 

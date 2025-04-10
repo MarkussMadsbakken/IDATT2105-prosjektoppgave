@@ -41,7 +41,7 @@ const changeLanguage = (lang: string) => {
           </div>
         </RouterLink>
 
-        <RouterLink to="/profile/listings/create" class="link" v-if="auth.isLoggedIn()">
+        <RouterLink to="/profile/listings/create" class="link" v-if="auth.isLoggedIn()" data-testid="create-listing-link">
           <SquarePlus />
         </RouterLink>
 
