@@ -4,7 +4,6 @@
 <template>
     <div class="category-card-outer-wrapper">
         <div class="icon-wrapper-skeleton">
-            <Icon :size="30" :stroke-width="1.5" />
         </div>
         <div class="text-wrapper-skeleton">
         </div>

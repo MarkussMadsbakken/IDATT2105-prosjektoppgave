@@ -7,6 +7,7 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import ListingCard from "@/components/ListingCard.vue";
 import { useQueryClient } from "@tanstack/vue-query";
 import ListingCardSkeleton from "@/components/skeleton/ListingCardSkeleton.vue";
+import Button from "@/components/Button.vue";
 
 
 const router = useRouter();
@@ -51,7 +52,7 @@ const getParams = () => {
 
 
 const queryString = ref<string>(getParams().toString());
-const { data: searchResults, isError, error, isFetching } = useSearchListings(queryString);
+const { data: searchResults, isError, error, isFetching, fetchNextPage, hasNextPage } = useSearchListings(queryString);
 
 
 watch(route, () => {
@@ -98,11 +99,19 @@ const priceRange: [number, number] = (() => {
 
         <div class="search-results">
             <ListingCardSkeleton :size="'medium'" v-for="i in 6" :key="i" v-if="isFetching" />
-            <template v-for="(page, index) in searchResults.pages"
+            <template
                 v-else-if="searchResults && searchResults.pages.length > 0 && searchResults.pages[0].totalElements > 0">
-                <div v-for="listing in page.content" :key="index">
-                    <ListingCard :listing="listing" />
-                </div>
+                <template v-for="(page, index) in searchResults.pages">
+                    <div v-for="listing in page.content" :key="index">
+                        <ListingCard :listing="listing" />
+                    </div>
+                </template>
+                <Button v-if="hasNextPage" variant="primary" @click="() => fetchNextPage()">
+                    <LoadingSpinner v-if="isFetching" />
+                    <template v-else>
+                        {{ $t('search.loadMore') }}
+                    </template>
+                </Button>
             </template>
             <div v-else class="no-listings">
                 {{ $t('search.noResultsFound') }}

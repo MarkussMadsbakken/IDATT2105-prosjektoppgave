@@ -106,6 +106,33 @@ const selectedCategoryId = computed(() => {
   justify-items: center;
 }
 
+@media only screen and (max-width: 580px) {
+  .search {
+    width: 100%;
+    flex: 1;
+  }
+
+  .search-outer-wrapper {
+    width: 100%;
+    position: static;
+  }
+
+  .map-icon-wrapper {
+    position: static;
+    right: 0;
+    top: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .categories {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+    justify-content: center;
+    justify-items: center;
+  }
+}
+
 
 @media only screen and (min-width: 1200px) {
   .categories {

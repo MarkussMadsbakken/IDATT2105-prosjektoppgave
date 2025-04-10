@@ -63,6 +63,12 @@ watch(selectedRange, () => {
 </template>
 
 <style scoped>
+.advanced-search-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
 .sub-category {
     user-select: none;
     display: flex;
@@ -88,7 +94,6 @@ watch(selectedRange, () => {
     .sub-category-selector {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-
 }
 
 .price-input {
@@ -141,7 +146,17 @@ watch(selectedRange, () => {
     .price-selector-wrapper {
         flex-direction: column;
     }
+}
 
+@media only screen and (max-width: 580px) {
+    .advanced-search-outer-wrapper {
+        width: 100%;
+        flex: 1;
+    }
 
+    .price-selector-wrapper {
+        width: 100%;
+        flex-direction: column;
+    }
 }
 </style>

@@ -11,6 +11,7 @@ import Fetch from "@/util/fetch";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/vue-query";
 import { getListingImages } from "./images";
 import type { Ref } from "vue";
+import { getCategories } from "./categories";
 
 export const getListings = async (req: GetListingsRequest): Promise<GetListingsResponse> => {
   const params = new URLSearchParams();
@@ -79,6 +80,20 @@ export const useGetListing = (uuid: string) => {
     queryKey: ['listing', uuid],
     queryFn: async () => {
       return getListing(uuid);
+    }
+  });
+}
+
+export const useGetListingWithCategory = (uuid: string) => {
+  return useQuery({
+    queryKey: ['listing', uuid],
+    queryFn: async () => {
+      const listing = await getListing(uuid);
+      const category = await getCategories();
+      return {
+        ...listing,
+        category: category.find((cat) => cat.id === listing.category)
+      }
     }
   });
 }

@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<{
   userId: number;
   canContactSeller?: boolean;
   size?: 'small' | 'medium';
-}>(),{
+}>(), {
   canContactSeller: true,
   size: "medium"
 });
@@ -49,29 +49,34 @@ const handleProfileClick = () => {
   <div v-else-if="isError">
     <p>Feil: {{ error?.message }}</p>
   </div>
-  <div class="seller-container" :class="[props.size, { centered: !props.canContactSeller }]" v-else>
-  <div class="seller-left">
+  <div class="seller-container" :class="props.size" v-else>
+    <div class="seller-left">
       <div class="seller-wrapper" @click="handleProfileClick">
         <UserImage :user-id="user?.id!" />
-        <div class="seller-info" :class="{ centered: !props.canContactSeller }">
+        <div class="seller-info">
           <div class="seller-names">
             <div class="seller-name">{{ user?.firstName }} {{ user?.lastName }}</div>
             <div class="username">{{ user?.username }}</div>
           </div>
           <div class="seller-meta">
-            <span class="joined-site">{{ $t('profile.memberSince', {date}) }}</span>
+            <span class="joined-site">{{ $t('profile.memberSince', { date }) }}</span>
           </div>
         </div>
       </div>
     </div>
     <Button variant="outline" class="contact-button" @click="handleContactClick"
-            v-if="props.canContactSeller && props.size !== 'small' && user?.id !== auth.userId">{{
+      v-if="props.canContactSeller && props.size !== 'small' && user?.id !== auth.userId">{{
         $t("listings.seller.contactSeller") }}</Button>
   </div>
 
 </template>
 
 <style scoped>
+.button-filler {
+  width: 15rem;
+  height: 8rem;
+}
+
 .seller-container.medium {
   display: flex;
   justify-content: space-between;
@@ -85,10 +90,7 @@ const handleProfileClick = () => {
   padding-left: 2rem;
 }
 
-.seller-container.centered {
-  justify-content: center;
-}
-.seller-container.small{
+.seller-container.small {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -98,6 +100,7 @@ const handleProfileClick = () => {
   width: 25rem;
   height: 8rem;
 }
+
 .seller-wrapper {
   display: flex;
   flex-direction: row;
@@ -109,7 +112,6 @@ const handleProfileClick = () => {
 
 .seller-left {
   position: relative;
-  flex: 1;
   justify-content: center;
   display: flex;
   flex-direction: row;
@@ -117,11 +119,6 @@ const handleProfileClick = () => {
   gap: 1rem;
 }
 
-.seller-info.centered {
-  margin: 0 auto;
-  transform: none;
-  position: static;
-}
 .seller-container.small .seller-wrapper {
   margin-left: -3rem;
 }
@@ -132,6 +129,7 @@ const handleProfileClick = () => {
   font-size: 2rem;
   max-width: 10rem;
 }
+
 .seller-names {
   display: flex;
   flex-direction: column;
@@ -177,5 +175,4 @@ const handleProfileClick = () => {
 .contact-button {
   margin-right: 1rem;
 }
-
 </style>
