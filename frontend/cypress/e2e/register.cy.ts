@@ -63,9 +63,8 @@ describe("register", () => {
       cy.get('input[name="firstname"]').should('have.value', 'Jacob');
       cy.get("input[name='lastname']").type("Lein");
       cy.get("input[name='lastname']").should('have.value', 'Lein');
-
       cy.get("button.next-step").should("not.be.disabled").click();
-
+      cy.intercept('GET', '**/api/user/username/testuser').as('getUserByUsername');
     });
 
     it('should not allow registration with a used username', () => {
