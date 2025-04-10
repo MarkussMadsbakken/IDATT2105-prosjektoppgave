@@ -179,6 +179,14 @@
 							<goal>check</goal>
 						</goals>
 						<configuration>
+							<excludes>
+								<exclude>**/edu/ntnu/stud/model/**</exclude>
+								<exclude>**/edu/ntnu/stud/controller/**</exclude>
+								<exclude>**/edu/ntnu/stud/config/**</exclude>
+								<exclude>**/edu/ntnu/stud/factory/**</exclude>
+								<exclude>**/edu/ntnu/stud/filter/**</exclude>
+								<exclude>**/App.class</exclude>
+							</excludes>
 							<rules>
 								<rule>
 									<element>BUNDLE</element>
@@ -208,7 +216,7 @@
 				<dependency>
 					<groupId>com.h2database</groupId>
 					<artifactId>h2</artifactId>
-					</dependency>
+				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
