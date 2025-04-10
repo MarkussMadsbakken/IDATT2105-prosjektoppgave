@@ -143,19 +143,60 @@ src
 ## Requirements
 - Java 21 (JDK) for backend development
 - Maven for backend dependency management
-- Node.js for frontend development 
+- Node.js for frontend development
 
 ## Setup
-make own env file and setup mysql db
+
+#### Setup local environment
+To run the project, you need to set up a .env file with the following properties:
+- SPRING_DATABASE_DRIVER: The database driver to use (either com.mysql.cj.jdbc.Driver or org.h2.Driver)
+- SPRING_DATABASE_URL: The URL of the database to connect to (more on this below)
+- SPRING_DATABASE_USERNAME: The username to use for the database connection
+- SPRING_DATABASE_PASSWORD: The password to use for the database connection
+
+
+#### Install and select a Database
+There are two database solutions that are preconfigured in this project:
+- MySQL server: Run a separate MySQL server instance and configure the env variables to connect to it. Choose com.mysql.cj.jdbc.Driver as SPRING_DATABASE_DRIVER.
+
+- H2: Usage of H2 is only recommeded for local testing. To select this option, set the env variables as follows:
+  - SPRING_DATABASE_DRIVER: org.h2.Driver
+  - SPRING_DATABASE_URL: jdbc:h2:mem:testdb
+  - SPRING_DATABASE_USERNAME: sa
+  - SPRING_DATABASE_PASSWORD: password
+
+*Note: If you are not running the backend and frontend on the same machine, you need to change the backend URL in the frontend code. This can be done in the file `/src/types/constants.ts`*
 
 ## Installation
-With Make installed you can run `make install` in the root directory to install both the frontend and backend dependencies. This command will also run the tests and generate the necessary artifacts for deployment. Alternatviely, you can run: `npm install --prefix ./frontend` and `mvn install -f ./backend/pom.xml`
+With Make installed you can run `make install` in the root directory to install both the frontend and backend dependencies. This command will also run the tests and generate the necessary artifacts for deployment. Alternatviely, you can run: `npm install`in the frontend directory and `mvn install` in the backend directory.
 
 ## Usage
-With Make installed you can run `make dev` in the root directory to start both the frontend and backend servers. This will allow you to access the application at `http://localhost:5173` and the API at `http://localhost:8080`. Alternatively, you can run: `npx dotenv-cli -e .env.local -- npx concurrently --kill-others -n Vue,Java -c green,red --pad-prefix "npm run dev --prefix ./frontend" "mvn spring-boot:run -f ./backend/pom.xml"`
+With Make installed you can run `make dev` in the root directory to start both the frontend and backend servers, with environment variables loaded. This will also perform necessary database migrations. If you do not have Make installed, you can istead just run the commands specified in the `Makefile` manually.
+
+You can also run the frontend and backend servers separately. You can do this with the following commands (and their respective folders):
+- Frontend: `npm run dev`
+- Backend: `mvn spring-boot:run pom.xml`
+
+*Note: This will **not** include environment variables required for running the backend.*
 
 ## Testing
 With Make installed you can run `make test-all` in the root directory to run both the frontend and backend tests. This will execute the unit tests and generate a coverage report. Alternatively, you can run: `npm run test:unit --prefix ./frontend`, `npm run test:e2e --prefix ./frontend` and `mvn test -f ./backend/pom.xml`
+
+## Building for production
+To build the project for production with all dependencies, you can run `make build` in the root directory. This will create a production-ready build of the frontend and backend applications. The frontend build will be located in the `frontend/dist` directory, and the backend build will be located in the `backend/target` directory.
+
+To run the production build, you can, for example, use the following commands
+- Frontend: `npm run serve dist`
+- Backend: `java -jar target/IDATT2105-0.0.1-SNAPSHOT.jar`
+
+Again, you will need to set environment variables for the backend to run properly.
+
+
+#### Building with H2
+To build the project with H2, you will need to specify that the H2 database should be included in the build. You can do this by adding a -Ptest-e2e flag to the maven build command. This will also
+
+#### Examples
+For an example of how to build the project, you can look at the pipeline in the `.github/workflows` directory. This workflow build both the backend and frontend applications, and runs e2e tests, so it should be a good starting point for your own build process.
 
 ## Further documentation
 Jacoco test coverage report can be found in the `target/site/jacoco/index.html` file after running the tests with `mvn test`. The report provides insights into the code coverage of the unit tests, helping to identify areas that may require additional testing. Jacoco may also veryfi the test coverage against the requierd coverage of 50%, by running the command `mvn verify`.
