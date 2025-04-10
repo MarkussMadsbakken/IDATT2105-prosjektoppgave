@@ -17,10 +17,9 @@ public class SubCategoryRequest {
    * @param icon        an icon representing the subcategory
    * @param parrentId   the ID of the parent category
    */
-  public SubCategoryRequest(String name, String description, String icon, int parrentId) {
+  public SubCategoryRequest(String name, String description, int parrentId) {
     this.name = name;
     this.description = description;
-    this.icon = icon;
     this.parentId = parrentId;
   }
 
@@ -38,14 +37,6 @@ public class SubCategoryRequest {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public String getIcon() {
-    return icon;
-  }
-
-  public void setIcon(String icon) {
-    this.icon = icon;
   }
 
   public int getParentId() {

@@ -68,14 +68,13 @@ public class TestDataInitializer implements CommandLineRunner {
       categoryRepo.addCategory(new CategoryRequest(
           "Test Category " + i,
           "Test Description " + i,
-          "icon" + i + ".png"));
+          "activity"));
     }
     List<Category> categories = categoryRepo.getAllCategories();
     for (int i = 0; i < 6; i++) {
       subCategoryRepo.addSubCategory(new SubCategoryRequest(
           "Test SubCategory " + i,
           "Test Description " + i,
-          "icon" + i + ".png",
           categories.get(i % categories.size()).getId()));
     }
 

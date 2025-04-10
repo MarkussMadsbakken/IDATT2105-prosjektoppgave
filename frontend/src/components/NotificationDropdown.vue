@@ -52,9 +52,11 @@ const ws = useWebSocket();
 ws.subscribe(
   "/user/queue/notifications",
   (notification: Notification) => {
-    console.log(notification);
     if (!notifications.value) return;
     notifications.value = [...notifications.value, notification];
+    queryClient.invalidateQueries({
+      queryKey: ['notifications'],
+    });
   }
 );
 
@@ -123,7 +125,7 @@ const variants = {
           <Divider />
           <div class="unread" v-if="unreadCount > 0">
             <div>
-              {{ $tc('notifications.unreadNotifications', unreadCount) }}
+              {{ $t('notifications.unreadNotifications', unreadCount) }}
             </div>
             <Button class="mark-as-read-button" variant="outline" @click="handleMarkAllAsRead">
               <template v-if="readMultipleIsPending">
@@ -136,7 +138,7 @@ const variants = {
           </div>
           <div class="dropdown-notifications">
             <NotificationElement v-if="notifications && notifications.length > 0" v-for="notification in notifications"
-              :key="notification.message" :notification="notification"
+              :key="notification.message + notification.id + notification.time" :notification="notification"
               @click.prevent="handleNotificationClick(notification)" />
             <div v-else class="dropdown-empty">
               <div>

@@ -2,26 +2,50 @@ import { createI18n } from "vue-i18n";
 
 const listingViewTranslations = {
   no: {
-    listingReservedByAnotherUser: "Artikkelen er reservert av en annen bruker fram til",
-    listingReservedByMe: "Du har reservert artikkelen fram til",
-    listingIsDeleted: "Denne annonsen er slettet",
-    listingIsInactive: "Denne annonsen er inaktiv",
+    reservedByAnotherUser: "Artikkelen er reservert av en annen bruker fram til",
+    reservedByMe: "Du har reservert artikkelen fram til",
+    isDeleted: "Denne annonsen er slettet",
+    isInactive: "Denne annonsen er inaktiv",
     edit: "Rediger",
     archiveThis: "Arkiver",
     restore: "Gjenoprett",
-    listingHasNoDescriptionLong: "Annonsen har ingen beskrivelse. Legg til en beskrivelse via \"Rediger\"-knappen.",
-    thisListing: "annonsen",
+    noDescriptionLong: "Annonsen har ingen beskrivelse. Legg til en beskrivelse via \"Rediger\"-knappen.",
+    thisListing: "denne annonsen",
+    archived: "Annonsen er arkivert",
+    restored: "Annonsen er gjenopprettet",
+    archiveError: "Kunne ikke endre arkiveringsstatus",
+    buy: "kjøp",
+    description: "Beskrivelse",
+    details: "Detaljer",
+    published: "Publisert",
+    reserved: "Annonsen ble reservert",
+    deleteListing: "Slett annonse",
+    seller: "Selger",
+    position: "Posisjon",
+    hasNoPosition: "Denne annonsen har ingen posisjon",
   },
   en: {
-    listingReservedByAnotherUser: "Listing is reserved by another user until",
-    listingReservedByMe: "You have reserved this listing until",
-    listingIsDeleted: "This listing is deleted",
-    listingIsInactive: "This listing is inacitve",
+    reservedByAnotherUser: "Listing is reserved by another user until",
+    reservedByMe: "You have reserved this listing until",
+    isDeleted: "This listing is deleted",
+    isInactive: "This listing is inacitve",
     edit: "Edit",
     archiveThis: "Archive",
     restore: "Restore",
-    listingHasNoDescriptionLong: "This listing has no description. Add a description via the \"Edit\" button.",
+    noDescriptionLong: "This listing has no description. Add a description via the \"Edit\" button.",
+    archived: "Listing is archived",
+    restored: "Listing is restored",
+    archiveError: "Could not change archive status",
+    buy: "buy",
+    description: "Description",
+    details: "Details",
+    published: "Published",
+    reserved: "Listing was reserved",
     thisListing: "this listing",
+    deleteListing: "Delete listing",
+    seller: "Seller",
+    position: "Position",
+    hasNoPosition: "This listing has no position",
   }
 }
 const listingTranslations = {
@@ -31,6 +55,8 @@ const listingTranslations = {
     delete: "Slett",
     areYouSureYouWantToDelete: "Er du sikker på at du har lyst til å slette denne {content}?",
     createNewCategory: "Opprett ny kategori",
+    updated: "Annonsen ble oppdatert",
+    deleted: "Annonsen ble slettet",
   },
   en: {
     reservedUntil: "Reserved until",
@@ -38,6 +64,8 @@ const listingTranslations = {
     delete: "Delete",
     areYouSureYouWantToDelete: "Are you sure you want to delete {content}?",
     createNewCategory: "Create new category",
+    updated: "The listing was updated",
+    deleted: "The listing was deleted",
   }
 }
 const userListingsTranslations = {
@@ -235,13 +263,20 @@ const searchTranslations = {
     hideCategories: "Skjul kategorier",
     categories: "Kategorier",
     users: "Brukere",
+    advancedSearch: "Avansert søk",
+    noSubCategories: "Ingen underkategorier funnet",
+    noResultsFound: "Ingen resultater funnet",
   },
   en: {
     showCategories: "Show categories",
     search: "Search",
     hideCategories: "Hide categories",
+
     categories: "Categories",
     users: "Users",
+    advancedSearch: "Advanced search",
+    noSubCategories: "No sub categories found",
+    noResultsFound: "No results found",
   }
 }
 const notFoundTranslations = {
@@ -282,6 +317,10 @@ const formTranslations = {
     chooseImage: "Velg bilde",
     uploadedImages: "Opplastede bilder",
     thisFieldIsRequired: "Dette feltet er påkrevd",
+    success: "Suksess",
+    cancel: "Avbryt",
+    confirm: "Bekreft",
+    areYouSureYouWantToDelete: "Er du sikker på at du vil slette {content}?"
   },
   en: {
     error: "Error",
@@ -291,7 +330,11 @@ const formTranslations = {
     chooseImage: "Choose image",
     uploadedImages: "Uploaded images",
     thisFieldIsRequired: "This field is required",
+    success: "Success",
+    cancel: "Cancel",
+    confirm: "Confirm",
   }
+
 }
 
 const createListingViewTranslations = {
@@ -315,6 +358,7 @@ const createListingViewTranslations = {
     selectPosition: "Velg posisjon",
     position: "Posisjon",
     submit: "Send",
+    reserved: "Reservert",
   },
   en: {
     createListing: "Create a new listing",
@@ -487,6 +531,7 @@ const i18n = createI18n({
       listings: {
         archive: archivedListingsTranslations.en,
         create: createListingViewTranslations.en,
+        view: listingViewTranslations.en,
         seller: sellerInfoTranslations.en,
         category: categoryTranslations.en,
         ...listingTranslations.en,
@@ -517,46 +562,4 @@ const i18n = createI18n({
   }
 });
 
-const notUsedTranslations = {
-  no: {
-    listing: "annonse",
-    interior: "Interiør",
-    electronics: "Elektronikk",
-    appliances: "Hvitevarer",
-    leisure: "Fritid",
-    sports: "Sport",
-    clothing: "Klær",
-    transport: "Transport",
-    garden: "Hage",
-    registerHere: "Lag en bruker her",
-    loginHere: "Logg inn her",
-    open: "Åpne",
-    close: "Lukk",
-    createNewSubCategory: "Opprett ny underkategori",
-    finish: "Fullfør",
-    purchaseAccomplished: "Kjøp fullført",
-    userReservedYourListing: "En bruker har reservert annonsen din",
-  },
-  en: {
-    interior: "Interior",
-    electronics: "Electronics",
-    appliances: "Appliances",
-    leisure: "Leisure",
-    sports: "Sports",
-    clothing: "Clothing",
-    transport: "Transport",
-    garden: "Garden",
-    registerHere: "Register here",
-    loginHere: "Log in here",
-    open: "Open",
-    close: "Close",
-    price: "Price",
-    noSubCategoriesFound: "No sub categories found",
-    createNewSubCategory: "Create new sub category",
-    noSubCategories: "No sub categories",
-    selectSubCategory: "Select sub category",
-    listing: "listing",
-    finish: "Finish",
-  }
-}
 export default i18n;

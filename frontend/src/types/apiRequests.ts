@@ -31,7 +31,7 @@ export type CreateListingRequest = {
     images: File[];
 }
 
-export type EditListingRequest = Omit<Listing, "ownerId">
+export type EditListingRequest = Omit<Listing, "ownerId" | "createdAt" | "updatedAt">
 
 export type GetListingsRequest = {
     page: number;
