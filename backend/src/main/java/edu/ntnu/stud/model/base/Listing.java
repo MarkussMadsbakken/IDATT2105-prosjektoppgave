@@ -19,7 +19,7 @@ public class Listing {
   private Timestamp updatedAt;
   private List<Blob> pictures;
   private int category;
-  private int subcategory;
+  private Integer subcategory;
   private double longitude;
   private double latitude;
   private boolean active;
@@ -52,7 +52,7 @@ public class Listing {
       double price,
       String description,
       int category,
-      int subcategory,
+      Integer subcategory,
       double longitude,
       double latitude,
       Long ownerId) {
@@ -216,7 +216,7 @@ public class Listing {
    *
    * @return the subcategory of the listing
    */
-  public int getSubcategory() {
+  public Integer getSubcategory() {
     return subcategory;
   }
 
@@ -225,7 +225,7 @@ public class Listing {
    *
    * @param subcategory the subcategory to set
    */
-  public void setSubcategory(int subcategory) {
+  public void setSubcategory(Integer subcategory) {
     this.subcategory = subcategory;
   }
 
