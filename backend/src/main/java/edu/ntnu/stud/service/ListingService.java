@@ -85,7 +85,7 @@ public class ListingService {
         listingRequest.getCategory()), Validate.isNotNull(), "Category must exist in database");
 
 
-    if (listingRequest.getSubcategory() != null) {
+    if (listingRequest.getSubcategory() != null && listingRequest.getSubcategory() != 0) {
       Validate.that(subCategoryService.getSubCategoryById(
               listingRequest.getSubcategory()), Validate.isNotNull(),
           "subcategory must exist in database");
@@ -132,7 +132,7 @@ public class ListingService {
     Validate.that(listingUpdate.getPrice(), Validate.isNotNegative(), "Price cannot be negative");
     Validate.that(categoryService.getCategoryById(
         listingUpdate.getCategory()), Validate.isNotNull(), "Category must exist in database");
-    if (listingUpdate.getSubcategory() != null) {
+    if (listingUpdate.getSubcategory() != null && listingUpdate.getSubcategory() != 0) {
       Validate.that(subCategoryService.getSubCategoryById(
               listingUpdate.getSubcategory()), Validate.isNotNull(),
           "subcategory must exist in database");
@@ -147,13 +147,16 @@ public class ListingService {
   /**
    * Updates an existing listing in the database.
    *
-   * @param listing the listing to update
+   * @param listingUpdate the listing to update
    * @param token   the JWT token of the user making the request
    * @return the number of rows affected
    */
-  public int updateListing(ListingUpdate listing, String token) {
-    validateListingUpdate(listing, token);
-    return listingRepo.updateListing(listing);
+  public int updateListing(ListingUpdate listingUpdate, String token) {
+    validateListingUpdate(listingUpdate, token);
+    if (listingUpdate.getSubcategory() != null && listingUpdate.getSubcategory() == 0) {
+      listingUpdate.setSubcategory(null);
+    }
+    return listingRepo.updateListing(listingUpdate);
   }
 
   /**
@@ -170,6 +173,9 @@ public class ListingService {
     Validate.that((ownerId == existingListing.getOwnerId() || isAdmin), Validate.isTrue(),
         "User does not own the listing with UUID: " + uuid);
     ListingUpdate listingUpdate = convertToListingUpdate(existingListing);
+    if (listingUpdate.getSubcategory() != null && listingUpdate.getSubcategory() == 0) {
+      listingUpdate.setSubcategory(null);
+    }
     listingUpdate.setDeleted(true);
     listingRepo.updateListing(listingUpdate);
   }

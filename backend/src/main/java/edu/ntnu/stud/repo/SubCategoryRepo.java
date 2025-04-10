@@ -37,13 +37,13 @@ public class SubCategoryRepo {
   }
 
   /**
-   * Deletes a category from the database.
+   * Deletes a subcategory from the database.
    *
-   * @param categoryId the ID of the category to be deleted
+   * @param subcategoryId the ID of the subcategory to be deleted
    */
-  public void deleteSubCategory(int categoryId) {
+  public void deleteSubCategory(Integer subcategoryId) {
     String query = "DELETE FROM sub_categories WHERE id = ?";
-    jdbcTemplate.update(query, categoryId);
+    jdbcTemplate.update(query, subcategoryId);
   }
 
   /**
@@ -64,12 +64,12 @@ public class SubCategoryRepo {
   /**
    * Retrieves a category from the database by its ID.
    *
-   * @param categoryId the ID of the category to be retrieved
+   * @param subcategoryId the ID of the category to be retrieved
    * @return the category object, or null if not found
    */
-  public SubCategory getSubCategoryById(int categoryId) {
+  public SubCategory getSubCategoryById(Integer subcategoryId) {
     String query = "SELECT * FROM sub_categories WHERE id = ?";
-    List<SubCategory> subCategories = jdbcTemplate.query(query, subCategoryRowMapper, categoryId);
+    List<SubCategory> subCategories = jdbcTemplate.query(query, subCategoryRowMapper, subcategoryId);
     return subCategories.isEmpty() ? null : subCategories.get(0);
   }
 
