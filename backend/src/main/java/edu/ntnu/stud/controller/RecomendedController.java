@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * This class handles the API endpoints for recommended listings.
  */
-@Tag(name = "Recomended", 
-    description = "Endpoints for managing recommended listings")
+@Tag(name = "Recommended", description = "Endpoints for managing recommended listings")
 @RestController
-@RequestMapping("/api/recomended")
+@RequestMapping("/api/recommended")
 public class RecomendedController {
   @Autowired
   private RecomendedService recomendedService;
@@ -29,26 +28,22 @@ public class RecomendedController {
   /**
    * Retrives a paginated list of recommended listings for a user.
    *
-   * @param page the page number to retrieve
-   * @param size the number of listings per page
+   * @param page  the page number to retrieve
+   * @param size  the number of listings per page
    * @param token the JWT token of the user
    * @return a paginated list of recommended listings
    */
-  @Operation(summary = "Get recommended listings", 
-      description = "Retrieves a paginated list of recommended listings for a user.")
+  @Operation(summary = "Get recommended listings", description = "Retrieves a paginated list of recommended listings for a user.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", 
-          description = "Successfully retrieved recommended listings"),
-      @ApiResponse(responseCode = "204", 
-          description = "No recommended listings found")
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved recommended listings"),
+      @ApiResponse(responseCode = "204", description = "No recommended listings found")
   })
   @GetMapping
   public ResponseEntity<Page<ListingResponse>> getRecomendedListingsPage(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestHeader("Authorization") String token) {
-    Page<ListingResponse> recomendedListings = 
-        recomendedService.getRecomendedListingsPage(page, size, token);
+    Page<ListingResponse> recomendedListings = recomendedService.getRecomendedListingsPage(page, size, token);
     if (recomendedListings.isEmpty()) {
       return ResponseEntity.noContent().build();
     }

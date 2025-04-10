@@ -152,10 +152,12 @@ const homeViewTranslations = {
   no: {
     recommended: "Anbefalt for deg",
     noMoreListings: "Ingen flere annonser funnet",
+    listings: "Annonser"
   },
   en: {
     recommended: "Recommended for you",
-    noMoreListings: "No more listings found"
+    noMoreListings: "No more listings found",
+    listings: "Listings"
   }
 }
 const checkoutTranslations = {

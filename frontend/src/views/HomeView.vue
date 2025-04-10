@@ -4,13 +4,15 @@ import { API_BASE_URL, WS_BASE_URL, type Category, type GetListingsResponse, typ
 import { useRouter } from "vue-router";
 import SearchOptions from "@/components/SearchOptions.vue";
 import Divider from "@/components/Divider.vue";
-import { useGetListings } from "@/actions/getListing";
+import { useGetListings, useGetRecommendedListings } from "@/actions/getListing";
 import { computed, ref } from "vue";
 import { useInfiniteScroll } from "@vueuse/core";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import Button from "@/components/Button.vue";
 import { Client } from "@stomp/stompjs"
 import { useAuth } from "@/stores/auth";
+
+const auth = useAuth();
 
 const {
   data,
@@ -20,7 +22,7 @@ const {
   hasNextPage,
   isFetching,
   fetchNextPage,
-} = useGetListings();
+} = auth.isLoggedIn() ? useGetRecommendedListings() : useGetListings();
 
 const listings = computed<Page<Listing>[]>(
   () => data?.value?.pages ?? []
@@ -63,11 +65,16 @@ useInfiniteScroll(
     <SearchOptions @search="handleSearch" @select-category="handleCategoryClick" :open="true" />
     <Divider />
     <div class="header-title">
-      {{ $t('home.recommended') }}
+      <template v-if="auth.isLoggedIn()">
+        {{ $t('home.recommended') }}
+      </template>
+      <template v-else>
+        {{ $t('home.listings') }}
+      </template>
     </div>
     <div class="recommended-listings">
       <template v-for="(page, index) in listings">
-        <div v-for="listing in page.content" :key="index">
+        <div v-for="listing in page.content" :key="index + listing.uuid">
           <ListingCard :listing="listing" />
         </div>
       </template>
