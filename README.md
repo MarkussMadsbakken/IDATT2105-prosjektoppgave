@@ -211,3 +211,8 @@ The java code is documented using JavaDoc comments, which provide detailed descr
 The JS code is documented using JSDoc comments, which provide detailed descriptions of functions, parameters, and return values. The JSDoc comments are intended to help developers understand the codebase and facilitate future maintenance and development.
 
 ## Future work
+Some features that could be added in the future include:
+- Implementing a payment system for transactions
+- Adding a review and rating system for users and items
+- Improving the search functionality with location-based filtering
+- Increasing the test coverage
