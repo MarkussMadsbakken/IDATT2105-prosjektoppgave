@@ -61,7 +61,7 @@ const onEnter = (event: KeyboardEvent) => {
                 </template>
             </button>
         </form>
-        <div v-if="isError" class="errorText">{{ $t(error?.message ?? "login.somethingWentWrong") }} </div>
+        <div v-if="isError" class="errorText">{{ $t(error?.message ?? "login.badCredentials") }} </div>
         <div>
             {{ $t("login.noAccount") }}
             <RouterLink to="/register" class="register-link">
