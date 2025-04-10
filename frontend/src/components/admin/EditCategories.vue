@@ -9,6 +9,8 @@ import ConfirmDialog from '../ConfirmDialog.vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import type { Category } from '@/types';
 import EditCategoryModal from './EditCategoryModal.vue';
+import { useI18n } from 'vue-i18n';
+import LoadingSpinner from '../LoadingSpinner.vue';
 
 const { data, isError, error, isPending, } = useCategories();
 
@@ -33,6 +35,7 @@ const { mutate: deleteCategoryMutation } = useMutation({
 
 const dialog = useDialog();
 const queryClient = useQueryClient();
+const { t } = useI18n();
 
 const openCreateCategoryModal = () => {
     let d = dialog.open(CreateCategory, {
@@ -40,11 +43,10 @@ const openCreateCategoryModal = () => {
             modal: true,
             dismissableMask: true,
             draggable: false,
-            header: 'Create a new category',
+            header: t("admin.createNewCategory"),
         },
         emits: {
             onCategoryCreated: () => {
-                console.log('Category created');
                 queryClient.invalidateQueries({
                     queryKey: ['categories']
                 });
@@ -60,7 +62,9 @@ const openEditCategoryModal = (category: Category) => {
             modal: true,
             dismissableMask: true,
             draggable: false,
-            header: `Edit '${category.name}' `,
+            header: t("Edit", {
+                name: category.name
+            }),
         },
         data: {
             category: category,
@@ -79,13 +83,13 @@ const openEditCategoryModal = (category: Category) => {
 const handleDeleteCategory = (id: number) => {
     const d = dialog.open(ConfirmDialog, {
         props: {
-            header: 'Delete category',
+            header: t("admin.deleteCategory"),
             modal: true,
             draggable: false,
             dismissableMask: true,
         },
         data: {
-            message: 'Are you sure you want to delete this category?',
+            message: t("admin.areYouSureYouWantToDelete"),
             variant: 'Caution',
         },
         emits: {
@@ -103,7 +107,9 @@ const handleDeleteCategory = (id: number) => {
 
 <template>
     <div class="edit-categories-outer-wrapper">
-        <div v-if="isPending">Loading...</div>
+        <div v-if="isPending">
+            <LoadingSpinner />
+        </div>
         <div v-else-if="isError">Error: {{ error?.message }}</div>
         <div class="edit-categories-content" v-else>
             <div class="categories">
@@ -114,15 +120,15 @@ const handleDeleteCategory = (id: number) => {
                     </CategoryCard>
                     <Button @click="handleDeleteCategory(category.id)" variant="destructive"
                         class="delete-category-button">
-                        {{ $t("delete") }}
+                        {{ $t("form.delete") }}
                     </Button>
                 </div>
                 <div v-else class="no-categories">
-                    No categories found
+                    {{ $t("admin.noCategoriesFound") }}
                 </div>
             </div>
             <Button class="create-category-button" @click="openCreateCategoryModal">
-                Create a new category
+                {{ $t("admin.createNewCategory") }}
             </Button>
         </div>
     </div>

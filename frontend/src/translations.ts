@@ -309,7 +309,11 @@ const formTranslations = {
     success: "Suksess",
     cancel: "Avbryt",
     confirm: "Bekreft",
-    areYouSureYouWantToDelete: "Er du sikker på at du vil slette {content}?"
+    areYouSureYouWantToDelete: "Er du sikker på at du vil slette {content}?",
+    delete: "Slett",
+    save: "Lagre",
+    choose: "Velg",
+    create: "Opprett",
   },
   en: {
     error: "Error",
@@ -322,6 +326,10 @@ const formTranslations = {
     success: "Success",
     cancel: "Cancel",
     confirm: "Confirm",
+    delete: "Slett",
+    save: "Save",
+    choose: "Choose",
+    create: "Create",
   }
 
 }
@@ -453,11 +461,49 @@ const breadcrumbTranslations = {
   }
 }
 
+const adminTranslations = {
+  no: {
+    adminPanel: "Admin panel",
+    categories: "Kategorier",
+    createNewCategory: "Opprett ny kategori",
+    crateCategory: "Opprett kategori",
+    name: "Navn",
+    description: "Beskrivelse",
+    icon: "Ikon",
+    subCategories: "Underkategorier",
+    noSubCategoriesFound: "Ingen underkategorier funnet",
+    createNewSubCategory: "Opprett ny underkategori",
+    createSubCategory: "Opprett underkategori",
+    edit: "Rediger {name}",
+    deleteCategory: "Slett kategori",
+    areYouSureYouWantToDelete: "Er du sikker på at du vil slette {name}?",
+    save: "Lagre",
+    noCategoriesFound: "Fant ingen kategorier",
+  },
+  en: {
+    adminPanel: "Admin panel",
+    categories: "Categories",
+    createNewCategory: "Create new category",
+    crateCategory: "Create category",
+    name: "Name",
+    description: "Description",
+    icon: "Icon",
+    subCategories: "Sub categories",
+    noSubCategoriesFound: "No sub categories found",
+    createNewSubCategory: "Create new sub category",
+    createSubCategory: "Create sub category",
+    edit: "Edit {name}",
+    deleteCategory: "Delete category",
+    areYouSureYouWantToDelete: "Are you sure you want to delete {name}?",
+    save: "Save",
+    noCategoriesFound: "Could not find any categories",
+  }
+}
+
 const availableLocales = ['no', 'en']
 const browserLocale = (navigator.language || 'en').split('-')[0]
 const mappedLocale = browserLocale === 'nb' ? 'no' : browserLocale;
-const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en';console.log("Locale: ", locale)
-console.log("Browser locale: ", browserLocale)
+const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en'; console.log("Locale: ", locale)
 
 const i18n = createI18n({
   legacy: false, // if you're using Composition API
@@ -494,6 +540,7 @@ const i18n = createI18n({
       },
       breadcrumb: breadcrumbTranslations.no,
       form: formTranslations.no,
+      admin: adminTranslations.no,
       ...formTranslations.no,
     }, en: {
       listings: {
@@ -524,6 +571,7 @@ const i18n = createI18n({
       },
       breadcrumb: breadcrumbTranslations.en,
       form: formTranslations.en,
+      admin: adminTranslations.en,
       ...formTranslations.en,
     }
   }

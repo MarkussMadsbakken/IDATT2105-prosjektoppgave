@@ -49,7 +49,7 @@ const onSubmit = () => {
 <template>
     <div class="outer-wrapper">
         <div class="listing-form">
-            <FormGroup name="categoryName" :label="$t('name')"
+            <FormGroup name="categoryName" :label="$t('admin.name')"
                 :isNotFilledIn="notFilledInFields.includes('categoryName')">
                 <TextInput v-model="categoryName" type="text" id="categoryName" name="categoryName"
                     autocomplete="off" />
@@ -61,7 +61,7 @@ const onSubmit = () => {
                             <component :is="CategoryIcons[option.value as keyof typeof CategoryIcons]" />
                             {{ option.value }}
                         </div>
-                        <div v-else>{{ $t('choose') }}</div>
+                        <div v-else>{{ $t('form.choose') }}</div>
                     </template>
                     <template #option="option">
                         <div class="icon-option">
@@ -71,7 +71,7 @@ const onSubmit = () => {
                     </template>
                 </Select>
             </FormGroup>
-            <FormGroup name="description" :label="$t('description')" :isNotFilledIn="false">
+            <FormGroup name="description" :label="$t('admin.description')" :isNotFilledIn="false">
                 <TextInput id="description" name="description" v-model="description" type="text" />
             </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">
@@ -79,7 +79,7 @@ const onSubmit = () => {
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t('create') }}
+                    {{ $t('form.create') }}
                 </template>
             </Button>
         </div>

@@ -12,7 +12,6 @@ const props = withDefaults(defineProps<{
 });
 
 const router = useRouter();
-
 const handleClick = (e: any) => {
     e.stopPropagation();
     router.push(`/listing/${props.listing.uuid}`);
