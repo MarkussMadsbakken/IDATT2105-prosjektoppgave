@@ -112,7 +112,7 @@ if (messages.value) {
         </template>
         <form class="chat-box-wrapper" @submit.prevent="sendMessageMutation({ chatId: chatId, message: message })">
             <TextInput class="input" v-model="message" />
-            <Button variant="primary">
+            <Button id="send-button" variant="primary">
                 <template v-if="sendMessageIsPending">
                     <LoadingSpinner />
                 </template>
