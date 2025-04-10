@@ -111,6 +111,7 @@ const profileTranslations = {
     passwordMustContainLetter: "Passordet må inneholde minst en bokstav",
     passwordMustContainNumber: "Passordet må inneholde minst ett tall",
     passwordTooShort: "Passordet må være minst 8 tegn langt",
+    profileUpdate: "Brukeropplysninger oppdatert",
   },
   en: {
     memberSince: "Member since {date}",
@@ -140,6 +141,7 @@ const profileTranslations = {
     passwordMustContainLetter: "Password must contain at least one letter",
     passwordMustContainNumber: "Password must contain at least one number",
     passwordTooShort: "Password must be at least 8 characters long",
+    profileUpdate: "User profile updated",
   }
 }
 const registerTranslations = {
@@ -274,17 +276,18 @@ const searchTranslations = {
     advancedSearch: "Avansert søk",
     noSubCategories: "Ingen underkategorier funnet",
     noResultsFound: "Ingen resultater funnet",
+    searchLoadMore: "Last flere resultater",
   },
   en: {
     showCategories: "Show categories",
     search: "Search",
     hideCategories: "Hide categories",
-
     categories: "Categories",
     users: "Users",
     advancedSearch: "Advanced search",
     noSubCategories: "No sub categories found",
     noResultsFound: "No results found",
+    searchLoadMore: "Load more results",
   }
 }
 const notFoundTranslations = {
