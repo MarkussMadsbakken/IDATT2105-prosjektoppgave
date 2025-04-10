@@ -196,7 +196,7 @@ Again, you will need to set environment variables for the backend to run properl
 
 
 #### Building with H2
-To build the project with H2, you will need to specify that the H2 database should be included in the build. You can do this by adding a -Ptest-e2e flag to the maven build command. This will also
+To build the project with H2, you will need to specify that the H2 database should be included in the build. You can do this by adding a -Ptest-e2e flag to the maven build command. This will also initialize the database with some test data.
 
 #### Examples
 For an example of how to build the project, you can look at the pipeline in the `.github/workflows` directory. This workflow build both the backend and frontend applications, and runs e2e tests, so it should be a good starting point for your own build process.
