@@ -26,7 +26,7 @@ public class UserService {
   private JWTService jwtService;
 
   /**
-   * Retrieves a user by their ID.
+   * Retrieves the userResponse DTO of a user by their ID.
    *
    * @param id the ID of the user to retrieve
    * @return the UserResoponse object if found, null otherwise
@@ -40,14 +40,24 @@ public class UserService {
   }
 
   /**
+   * Retrieves the userResponse DTO of a user by their username.
+   *
+   * @param username the username of the user to retrieve
+   * @return the UserResponse object if found, null otherwise
+   */
+  public UserResponse getUserResponseByUsername(String username) {
+    User user = userRepo.getUserByUsername(username);
+    return user == null ? null : new UserResponse(user);
+  }
+
+  /**
    * Retrieves a user by their username.
    *
    * @param username the username of the user to retrieve
    * @return the UserResponse object if found, null otherwise
    */
-  public UserResponse getUserByUsername(String username) {
-    User user = userRepo.getUserByUsername(username);
-    return user == null ? null : new UserResponse(user);
+  public User getUserByUsername(String username) {
+    return userRepo.getUserByUsername(username);
   }
 
   /**
@@ -69,6 +79,15 @@ public class UserService {
   public boolean userExists(String token) {
     String username = jwtService.extractUserName(token.substring(7));
     return userRepo.getUserByUsername(username) != null;
+  }
+
+  /**
+   * Adds a new user to the database.
+   *
+   * @param user the User object to add
+   */
+  public void addUser(User user) {
+    userRepo.addUser(user);
   }
 
   /**
@@ -108,6 +127,15 @@ public class UserService {
     }
 
     return null;
+  }
+
+  /**
+   * Updates the credentials of an existing user.
+   *
+   * @param user the User object with updated credentials
+   */
+  public void updateUserCredentials(User user) {
+    userRepo.updateUserCredentials(user);
   }
 
   /**
