@@ -162,6 +162,10 @@ const openPositionSelector = () => {
 </template>
 
 <style scoped>
+.form-horizontal {
+    width: 100%;
+}
+
 .position-selector {
     display: flex;
     flex-direction: row;
@@ -184,6 +188,12 @@ const openPositionSelector = () => {
     gap: 1rem;
     margin-top: 1rem;
     width: 50rem;
+}
+
+@media screen and (max-width: 768px) {
+    .listing-form {
+        width: 100%;
+    }
 }
 
 .outer-create-listing-wrapper {

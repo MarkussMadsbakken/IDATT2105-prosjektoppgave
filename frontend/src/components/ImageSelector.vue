@@ -63,8 +63,8 @@ const debounceSuccess = useDebounceFn(() => {
 </script>
 
 <template>
-  <div ref="dropZoneRef" class="drop-zone" data-cy="drop-zone">
-  <AnimatePresence mode="popLayout">
+    <div ref="dropZoneRef" class="drop-zone" data-cy="drop-zone">
+        <AnimatePresence mode="popLayout">
             <motion.div v-if="isOverDropZone" initial="hidden" animate="visible" :variants="variants"
                 :exit="{ opacity: 0 }">
                 {{ $t('form.releaseToUpload') }}
@@ -108,5 +108,12 @@ const debounceSuccess = useDebounceFn(() => {
     font-size: 1.5rem;
     color: black;
     background-color: oklch(0.97 0 0);
+}
+
+@media only screen and (max-width: 520px) {
+    .drop-zone {
+        width: 100%;
+        height: 10rem;
+    }
 }
 </style>
