@@ -113,7 +113,7 @@ public class GlobalExceptionHandler {
    */
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
-    logger.error("Authentication failed: {}", ex.getMessage(), ex);
+    logger.error("Authentication failed: {}", ex.getMessage());
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
         .body("Authentication failed: " + ex.getMessage());
   }
