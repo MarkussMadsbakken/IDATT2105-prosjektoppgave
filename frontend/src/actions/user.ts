@@ -136,7 +136,11 @@ export const getUsernameIsAvaiable = async (username: string): Promise<boolean> 
 }
 
 export const getUserBookmarks = async (): Promise<Listing[]> => {
-  return await Fetch(`${API_BASE_URL}/api/bookmark/user`);
+  const bookmarks = await Fetch(`${API_BASE_URL}/api/bookmark/user`);
+  if (!bookmarks) {
+    return [];
+  }
+  return bookmarks;
 }
 
 export const useGetUserBookmarks = () => {

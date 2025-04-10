@@ -367,6 +367,7 @@ const createListingViewTranslations = {
     position: "Posisjon",
     submit: "Send",
     reserved: "Reservert",
+    subCategories: "Underkategorier",
   },
   en: {
     createListing: "Create a new listing",
@@ -483,7 +484,7 @@ const categoryTranslations = {
     choose: "Velg",
     icon: "Ikon"
   },
-  en:{
+  en: {
     deleteCategory: "Delete category",
     areYouSureYouWantToDelete: "Are you sure you want to delete this category?",
     createNewCategory: "Create new category",
@@ -534,7 +535,8 @@ const adminTranslations = {
 const availableLocales = ['no', 'en']
 const browserLocale = (navigator.language || 'en').split('-')[0]
 const mappedLocale = browserLocale === 'nb' ? 'no' : browserLocale;
-const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en'; console.log("Locale: ", locale)
+const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en'; 
+.log("Locale: ", locale)
 
 const i18n = createI18n({
   legacy: false, // if you're using Composition API
