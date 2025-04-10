@@ -23,8 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for managing bookmarks.
  */
-@Tag(name = "Bookmark", 
-    description = "Endpoints for managing bookmarks")
+@Tag(name = "Bookmark", description = "Endpoints for managing bookmarks")
 @RestController
 @RequestMapping("/api/bookmark")
 public class BookmarkController {
@@ -44,14 +43,16 @@ public class BookmarkController {
   public ResponseEntity<List<ListingResponse>> getBookmarks(
       @RequestHeader("Authorization") String token) {
     List<ListingResponse> bookmarks = bookmarkService.getBookmarkedListingsFromUser(token);
+    if (bookmarks.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
     return ResponseEntity.ok(bookmarks);
   }
 
   /**
    * Adds a new bookmark to the database.
    */
-  @Operation(summary = "Add a bookmark", 
-      description = "Adds a new bookmark to the database.")
+  @Operation(summary = "Add a bookmark", description = "Adds a new bookmark to the database.")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "Successfully added bookmark"),
   })
@@ -66,8 +67,7 @@ public class BookmarkController {
   /**
    * Removes a bookmark from the database.
    */
-  @Operation(summary = "Remove a bookmark", 
-      description = "Removes a bookmark from the database.")
+  @Operation(summary = "Remove a bookmark", description = "Removes a bookmark from the database.")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "Successfully removed bookmark"),
   })
