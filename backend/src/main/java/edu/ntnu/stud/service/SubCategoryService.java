@@ -89,7 +89,7 @@ public class SubCategoryService {
    * @param subCategoryId the ID of the subcategory to be retrieved
    * @return the subcategory with the specified ID, or null if not found
    */
-  public SubCategory getSubCategoryById(int subCategoryId) {
+  public SubCategory getSubCategoryById(Integer subCategoryId) {
     return subCategoryRepo.getSubCategoryById(subCategoryId);
   }
 
