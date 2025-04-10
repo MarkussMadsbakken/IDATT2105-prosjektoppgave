@@ -213,12 +213,12 @@ const checkoutTranslations = {
 const messageViewTranslations = {
   no: {
     messages: "Meldinger",
-    noMessages: "Ingen meldinger funnet. Vær den første til å sende en melding!",
+    noMessages: "Ingen meldinger funnet. Kontakt en bruker gjennom en annonse for å starte en chat.",
     error: "Feil. Kunne ikke hente meldinger"
   },
   en: {
     messages: "Messages",
-    noMessages: "No messages found. Be the first to send a message!",
+    noMessages: "No messages found. Contact a user through a listing to start a chat.",
     error: "Error. Could not fetch messages"
   }
 
