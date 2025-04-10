@@ -229,11 +229,17 @@ const searchTranslations = {
     showCategories: "Vis kategorier",
     search: "Søk",
     hideCategories: "Skjul kategorier",
+    advancedSearch: "Avansert søk",
+    noSubCategories: "Ingen underkategorier funnet",
+    noResultsFound: "Ingen resultater funnet",
   },
   en: {
     showCategories: "Show categories",
     search: "Search",
     hideCategories: "Hide categories",
+    advancedSearch: "Advanced search",
+    noSubCategories: "No sub categories found",
+    noResultsFound: "No results found",
   }
 }
 const notFoundTranslations = {

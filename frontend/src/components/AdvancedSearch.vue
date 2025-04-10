@@ -8,7 +8,6 @@ import NumberInput from './NumberInput.vue';
 import FormGroup from './FormGroup.vue';
 import Checkbox from 'primevue/checkbox';
 import { useDebounceFn } from '@vueuse/core';
-import type { Category } from '@/types';
 import SubCategorySelector from './SubCategorySelector.vue';
 
 const props = withDefaults(defineProps<{
@@ -19,7 +18,7 @@ const props = withDefaults(defineProps<{
     showLoadingState?: boolean
 }>(), {
     selectedPriceRange: () => [0, 100],
-    allowedSearchRange: () => [0, 100],
+    allowedSearchRange: () => [0, 1000],
     showLoadingState: false,
 });
 
@@ -27,9 +26,6 @@ const emit = defineEmits<{
     (e: "priceRangeChanged", value: [number, number]): void
     (e: "subCategoryChanged", value: number): void
 }>();
-
-const { data: subCategories, isError, error, isPending } = useSubCategories(props.selectedCategoryId);
-
 
 const selectedRange = ref(props.selectedPriceRange);
 
@@ -51,7 +47,7 @@ watch(selectedRange, () => {
         </div>
         <div v-else class="advanced-search-inner-wrapper">
             <div class="advanced-search-title">
-                {{ $t('advancedSearch') }}
+                {{ $t('search.advancedSearch') }}
             </div>
             <div class="price-selector-wrapper">
                 <NumberInput v-model="selectedRange[0]" class="price-input" />
@@ -134,6 +130,7 @@ watch(selectedRange, () => {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    background-color: white;
 }
 
 @media only screen and (max-width: 1200px) {

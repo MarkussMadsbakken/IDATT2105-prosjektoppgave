@@ -5,13 +5,12 @@ import { ref, watch } from "vue";
 import { useSearchListings } from "@/actions/getListing";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import ListingCard from "@/components/ListingCard.vue";
-import { useDebounceFn } from "@vueuse/core";
 import { useQueryClient } from "@tanstack/vue-query";
+import ListingCardSkeleton from "@/components/skeleton/ListingCardSkeleton.vue";
 
 
 const router = useRouter();
 const route = useRoute();
-const queryClient = useQueryClient();
 
 const handleToggleSubCategory = (id: number) => {
     const subCategoryIds = Array.isArray(route.query.subCategoryId) ? route.query.subCategoryId : (route.query.subCategoryId ? [route.query.subCategoryId] : []);
@@ -56,12 +55,8 @@ const { data: searchResults, isError, error, isFetching } = useSearchListings(qu
 
 
 watch(route, () => {
-    updateSearch(getParams());
+    queryString.value = getParams().toString();
 });
-
-const updateSearch = useDebounceFn((params: URLSearchParams) => {
-    queryString.value = params.toString();
-}, 500);
 
 
 // Extract pricerange from query
@@ -72,7 +67,7 @@ const priceRange: [number, number] = (() => {
     if (pr.length === 2) {
         return [Number(pr[0]), Number(pr[1])];
     }
-    return [0, 100];
+    return [0, 10000];
 })();
 
 </script>
@@ -102,13 +97,15 @@ const priceRange: [number, number] = (() => {
                     })" show-advanced-search />
 
         <div class="search-results">
-            <template v-for="(page, index) in searchResults.pages" v-if="searchResults && !isFetching">
+            <ListingCardSkeleton :size="'medium'" v-for="i in 6" :key="i" v-if="isFetching" />
+            <template v-for="(page, index) in searchResults.pages"
+                v-else-if="searchResults && searchResults.pages.length > 0 && searchResults.pages[0].totalElements > 0">
                 <div v-for="listing in page.content" :key="index">
                     <ListingCard :listing="listing" />
                 </div>
             </template>
-            <div v-if="isFetching" class="loading-spinner">
-                <LoadingSpinner />
+            <div v-else class="no-listings">
+                {{ $t('search.noResultsFound') }}
             </div>
         </div>
     </div>
@@ -116,6 +113,17 @@ const priceRange: [number, number] = (() => {
 
 
 <style scoped>
+.no-listings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.2rem;
+    font-weight: 400;
+    grid-column: 1 / -1;
+}
+
 .search-results {
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));

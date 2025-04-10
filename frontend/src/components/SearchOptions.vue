@@ -2,7 +2,7 @@
 import Searchbar from './Searchbar.vue';
 import CategoryCard from './CategoryCard.vue';
 import Collapsible from './Collapsible.vue';
-import { useCategories, useSubCategories } from '@/actions/categories';
+import { useCategories } from '@/actions/categories';
 import AdvancedSearch from './AdvancedSearch.vue';
 import { computed } from 'vue';
 import { Map } from 'lucide-vue-next';
@@ -65,7 +65,7 @@ const selectedCategoryId = computed(() => {
     :showLoadingState="isPending"
     :selectedSubcategories="props.selectedSubCategories ? props.selectedSubCategories.map(Number) : undefined"
     @subCategoryChanged="$emit('toggleSubCategory', $event)" @priceRangeChanged="$emit('newPriceRange', $event)"
-    :allowedSearchRange="[0, 100]" :selectedPriceRange="props.selectedPriceRange" />
+    :allowedSearchRange="[0, 10000]" :selectedPriceRange="props.selectedPriceRange" />
 </template>
 
 

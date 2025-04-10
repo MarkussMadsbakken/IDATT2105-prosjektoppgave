@@ -63,4 +63,12 @@ const Icon = CategoryIcons[props.icon];
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     cursor: pointer;
 }
+
+
+.category-card-outer-wrapper.selected {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    cursor: pointer;
+    background-color: var(--color-primaryButton);
+    color: white;
+}
 </style>
