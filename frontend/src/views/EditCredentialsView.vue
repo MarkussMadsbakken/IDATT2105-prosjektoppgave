@@ -118,7 +118,7 @@ const onSubmit = () => {
           {
             severity: "success",
             summary: t("success"),
-            detail: t("profile.credentialUpdated"),
+            detail: t("profile.credentialsUpdated"),
             life: 3000,
             closable: true,
           }

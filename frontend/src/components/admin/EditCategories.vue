@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import type { Category } from '@/types';
 import EditCategoryModal from './EditCategoryModal.vue';
 import { useI18n } from 'vue-i18n';
+import LoadingSpinner from '../LoadingSpinner.vue';
 
 const { data, isError, error, isPending, } = useCategories();
 
@@ -43,7 +44,7 @@ const openCreateCategoryModal = () => {
             modal: true,
             dismissableMask: true,
             draggable: false,
-            header: t('listings.category.createNewCategory'),
+            header: t("admin.createNewCategory"),
         },
         emits: {
             onCategoryCreated: () => {
@@ -62,7 +63,9 @@ const openEditCategoryModal = (category: Category) => {
             modal: true,
             dismissableMask: true,
             draggable: false,
-            header: `Edit '${category.name}' `,
+            header: t("Edit", {
+                name: category.name
+            }),
         },
         data: {
             category: category,
@@ -81,13 +84,13 @@ const openEditCategoryModal = (category: Category) => {
 const handleDeleteCategory = (id: number) => {
     const d = dialog.open(ConfirmDialog, {
         props: {
-            header: t('listings.category.deleteCategory'),
+            header: t("admin.deleteCategory"),
             modal: true,
             draggable: false,
             dismissableMask: true,
         },
         data: {
-            message: t("listings.category.areYouSureYouWantToDelete"),
+            message: t("admin.areYouSureYouWantToDelete"),
             variant: 'Caution',
         },
         emits: {
@@ -105,7 +108,9 @@ const handleDeleteCategory = (id: number) => {
 
 <template>
     <div class="edit-categories-outer-wrapper">
-        <div v-if="isPending">Loading...</div>
+        <div v-if="isPending">
+            <LoadingSpinner />
+        </div>
         <div v-else-if="isError">Error: {{ error?.message }}</div>
         <div class="edit-categories-content" v-else>
             <div class="categories">
@@ -116,15 +121,15 @@ const handleDeleteCategory = (id: number) => {
                     </CategoryCard>
                     <Button @click="handleDeleteCategory(category.id)" variant="destructive"
                         class="delete-category-button">
-                        {{ $t("listings.delete") }}
+                        {{ $t("form.delete") }}
                     </Button>
                 </div>
                 <div v-else class="no-categories">
-                  {{ $t('listings.create.noCategoriesFound') }}
+                    {{ $t("admin.noCategoriesFound") }}
                 </div>
             </div>
             <Button class="create-category-button" @click="openCreateCategoryModal">
-              {{ $t("listings.category.createNewCategory") }}
+                {{ $t("admin.createNewCategory") }}
             </Button>
         </div>
     </div>

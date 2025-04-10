@@ -255,8 +255,8 @@ const handleDelete = () => {
                         toast.add(
                             {
                                 severity: "error",
-                                summary: i18n.t("Error"),
-                                detail: i18n.t("listing.deleteError"),
+                                summary: i18n.t("error"),
+                                detail: i18n.t("listings.deleteError"),
                                 life: 3000,
                                 closable: true,
                             }

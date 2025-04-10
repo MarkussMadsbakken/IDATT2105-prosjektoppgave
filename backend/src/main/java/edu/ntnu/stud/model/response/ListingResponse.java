@@ -11,7 +11,7 @@ public class ListingResponse {
   private double price;
   private String description;
   private int category;
-  private int subcategory;
+  private Integer subcategory;
   private double longitude;
   private double latitude;
   private boolean active;
@@ -63,11 +63,11 @@ public class ListingResponse {
     this.category = category;
   }
 
-  public int getSubcategory() {
+  public Integer getSubcategory() {
     return subcategory;
   }
 
-  public void setSubcategory(int subcategory) {
+  public void setSubcategory(Integer subcategory) {
     this.subcategory = subcategory;
   }
 

@@ -12,6 +12,7 @@ import type { Category } from '@/types';
 import Divider from '../Divider.vue';
 import CreateSubCategoryModal from './CreateSubCategoryModal.vue';
 import { useDialog } from 'primevue/usedialog';
+import { useI18n } from 'vue-i18n';
 
 interface DialogRef {
     value: {
@@ -22,6 +23,7 @@ interface DialogRef {
     close: () => void;
 }
 
+const { t } = useI18n();
 const dialogRef = inject<DialogRef>("dialogRef");
 const categoryName = ref(dialogRef?.value.data.category.name ?? "");
 const description = ref(dialogRef?.value.data.category.description ?? "");
@@ -70,7 +72,7 @@ const handleCreateSubCategory = () => {
             modal: true,
             dismissableMask: true,
             draggable: false,
-            header: 'Create a new sub category',
+            header: t("admin.createNewSubCategory"),
         },
         data: {
             categoryId: dialogRef?.value.data.category.id!
@@ -106,19 +108,19 @@ const { mutate: deleteSubCategoryMutation, isPending: deleteSubCategoryMutationI
 <template>
     <div class="outer-wrapper">
         <div class="listing-form">
-            <FormGroup name="categoryName" :label="$t('name')"
+            <FormGroup name="categoryName" :label="$t('admin.name')"
                 :isNotFilledIn="notFilledInFields.includes('categoryName')">
                 <TextInput v-model="categoryName" type="text" id="categoryName" name="categoryName"
                     autocomplete="off" />
             </FormGroup>
-            <FormGroup name="icon" :label="$t('icon')" :isNotFilledIn="notFilledInFields.includes('icon')">
+            <FormGroup name="icon" :label="$t('admin.icon')" :isNotFilledIn="notFilledInFields.includes('icon')">
                 <Select v-model="icon" id="icon" name="icon" :options="Object.keys(CategoryIcons)">
                     <template #value="option">
                         <div v-if="option.value" class="icon-option">
                             <component :is="CategoryIcons[option.value as keyof typeof CategoryIcons]" />
                             {{ option.value }}
                         </div>
-                        <div v-else>{{ $t('choose') }}</div>
+                        <div v-else>{{ $t('form.choose') }}</div>
                     </template>
                     <template #option="option">
                         <div class="icon-option">
@@ -128,13 +130,13 @@ const { mutate: deleteSubCategoryMutation, isPending: deleteSubCategoryMutationI
                     </template>
                 </Select>
             </FormGroup>
-            <FormGroup name="description" :label="$t('description')" :isNotFilledIn="false">
+            <FormGroup name="description" :label="$t('admin.description')" :isNotFilledIn="false">
                 <TextInput id="description" name="description" v-model="description" type="text" />
             </FormGroup>
 
             <div class="sub-categories">
                 <Divider />
-                <h3>{{ $t('subCategories') }}</h3>
+                <h3>{{ $t('admin.subCategories') }}</h3>
                 <div v-if="subCategoriesIsPending">
                     <LoadingSpinner />
                 </div>
@@ -156,10 +158,10 @@ const { mutate: deleteSubCategoryMutation, isPending: deleteSubCategoryMutationI
                     </Button>
                 </div>
                 <div v-else>
-                    <p class="no-sub-categories-found">{{ $t('noSubCategoriesFound') }}</p>
+                    <p class="no-sub-categories-found">{{ $t('admin.noSubCategoriesFound') }}</p>
                 </div>
                 <Button class="create-sub-category-button" @click="handleCreateSubCategory">
-                    {{ $t('createNewSubCategory') }}
+                    {{ $t('admin.createNewSubCategory') }}
                 </Button>
             </div>
 
@@ -175,7 +177,7 @@ const { mutate: deleteSubCategoryMutation, isPending: deleteSubCategoryMutationI
                         <LoadingSpinner />
                     </template>
                     <template v-else>
-                        {{ $t('save') }}
+                        {{ $t('form.save') }}
                     </template>
                 </Button>
             </div>

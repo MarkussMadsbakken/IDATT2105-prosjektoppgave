@@ -109,7 +109,7 @@ const priceRange: [number, number] = (() => {
                 <Button v-if="hasNextPage" variant="primary" @click="() => fetchNextPage()">
                     <LoadingSpinner v-if="isFetching" />
                     <template v-else>
-                        {{ $t('search.loadMore') }}
+                        {{ $t('search.searchLoadMore') }}
                     </template>
                 </Button>
             </template>

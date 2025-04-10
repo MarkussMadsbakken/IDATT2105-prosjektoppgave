@@ -58,6 +58,7 @@ const listingTranslations = {
     updated: "Annonsen ble oppdatert",
     deleted: "Annonsen ble slettet",
     reservedError: "Kunne ikke reservere annonsen",
+    deleteError: "Kunne ikke slette annonsen",
   },
   en: {
     reservedUntil: "Reserved until",
@@ -68,6 +69,7 @@ const listingTranslations = {
     updated: "The listing was updated",
     deleted: "The listing was deleted",
     reservedError: "Could not reserve the listing",
+    deleteError: "Could not delete the listing",
   }
 }
 const userListingsTranslations = {
@@ -109,6 +111,7 @@ const profileTranslations = {
     passwordMustContainLetter: "Passordet må inneholde minst en bokstav",
     passwordMustContainNumber: "Passordet må inneholde minst ett tall",
     passwordTooShort: "Passordet må være minst 8 tegn langt",
+    profileUpdate: "Brukeropplysninger oppdatert",
   },
   en: {
     memberSince: "Member since {date}",
@@ -138,6 +141,7 @@ const profileTranslations = {
     passwordMustContainLetter: "Password must contain at least one letter",
     passwordMustContainNumber: "Password must contain at least one number",
     passwordTooShort: "Password must be at least 8 characters long",
+    profileUpdate: "User profile updated",
   }
 }
 const registerTranslations = {
@@ -213,12 +217,12 @@ const checkoutTranslations = {
 const messageViewTranslations = {
   no: {
     messages: "Meldinger",
-    noMessages: "Ingen meldinger funnet. Vær den første til å sende en melding!",
+    noMessages: "Ingen meldinger funnet. Kontakt en bruker gjennom en annonse for å starte en chat.",
     error: "Feil. Kunne ikke hente meldinger"
   },
   en: {
     messages: "Messages",
-    noMessages: "No messages found. Be the first to send a message!",
+    noMessages: "No messages found. Contact a user through a listing to start a chat.",
     error: "Error. Could not fetch messages"
   }
 
@@ -272,17 +276,18 @@ const searchTranslations = {
     advancedSearch: "Avansert søk",
     noSubCategories: "Ingen underkategorier funnet",
     noResultsFound: "Ingen resultater funnet",
+    searchLoadMore: "Last flere resultater",
   },
   en: {
     showCategories: "Show categories",
     search: "Search",
     hideCategories: "Hide categories",
-
     categories: "Categories",
     users: "Users",
     advancedSearch: "Advanced search",
     noSubCategories: "No sub categories found",
     noResultsFound: "No results found",
+    searchLoadMore: "Load more results",
   }
 }
 const notFoundTranslations = {
@@ -326,7 +331,11 @@ const formTranslations = {
     success: "Suksess",
     cancel: "Avbryt",
     confirm: "Bekreft",
-    areYouSureYouWantToDelete: "Er du sikker på at du vil slette {content}?"
+    areYouSureYouWantToDelete: "Er du sikker på at du vil slette {content}?",
+    delete: "Slett",
+    save: "Lagre",
+    choose: "Velg",
+    create: "Opprett",
   },
   en: {
     error: "Error",
@@ -339,6 +348,10 @@ const formTranslations = {
     success: "Success",
     cancel: "Cancel",
     confirm: "Confirm",
+    delete: "Slett",
+    save: "Save",
+    choose: "Choose",
+    create: "Create",
   }
 
 }
@@ -491,11 +504,49 @@ const categoryTranslations = {
   }
 }
 
+const adminTranslations = {
+  no: {
+    adminPanel: "Admin panel",
+    categories: "Kategorier",
+    createNewCategory: "Opprett ny kategori",
+    crateCategory: "Opprett kategori",
+    name: "Navn",
+    description: "Beskrivelse",
+    icon: "Ikon",
+    subCategories: "Underkategorier",
+    noSubCategoriesFound: "Ingen underkategorier funnet",
+    createNewSubCategory: "Opprett ny underkategori",
+    createSubCategory: "Opprett underkategori",
+    edit: "Rediger {name}",
+    deleteCategory: "Slett kategori",
+    areYouSureYouWantToDelete: "Er du sikker på at du vil slette {name}?",
+    save: "Lagre",
+    noCategoriesFound: "Fant ingen kategorier",
+  },
+  en: {
+    adminPanel: "Admin panel",
+    categories: "Categories",
+    createNewCategory: "Create new category",
+    crateCategory: "Create category",
+    name: "Name",
+    description: "Description",
+    icon: "Icon",
+    subCategories: "Sub categories",
+    noSubCategoriesFound: "No sub categories found",
+    createNewSubCategory: "Create new sub category",
+    createSubCategory: "Create sub category",
+    edit: "Edit {name}",
+    deleteCategory: "Delete category",
+    areYouSureYouWantToDelete: "Are you sure you want to delete {name}?",
+    save: "Save",
+    noCategoriesFound: "Could not find any categories",
+  }
+}
+
 const availableLocales = ['no', 'en']
 const browserLocale = (navigator.language || 'en').split('-')[0]
 const mappedLocale = browserLocale === 'nb' ? 'no' : browserLocale;
-const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en'; console.log("Locale: ", locale)
-console.log("Browser locale: ", browserLocale)
+const locale = availableLocales.includes(mappedLocale) ? mappedLocale : 'en';
 
 const i18n = createI18n({
   legacy: false, // if you're using Composition API
@@ -533,6 +584,7 @@ const i18n = createI18n({
       },
       breadcrumb: breadcrumbTranslations.no,
       form: formTranslations.no,
+      admin: adminTranslations.no,
       ...formTranslations.no,
     }, en: {
       listings: {
@@ -564,6 +616,7 @@ const i18n = createI18n({
       },
       breadcrumb: breadcrumbTranslations.en,
       form: formTranslations.en,
+      admin: adminTranslations.en,
       ...formTranslations.en,
     }
   }
