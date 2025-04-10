@@ -70,14 +70,23 @@ The aim of this project is to demonstrate full-stack development capabilities by
 ## Project structure
 ### System architecture
 ![system-architecture.png](docs/system-architecture.png)
+
 ### Entity-relationship diagram
 ![ER-diagram.png](docs/ER-diagram.png)
+
 ### System sequence diagram
 ![register-sequence-diagram.png](docs/register-sequence-diagram.png)
 
-### Frontend
+### limited class diagram
+![limited-class-diagram.png](docs/limited-class-diagram.png)
 
-### Backend
+### Frontend file structure
+```plaintext
+insert filestructure here
+```
+
+### Backend file structure
+```plaintext
 .
 ├── src
 │   ├── main
@@ -113,6 +122,7 @@ The aim of this project is to demonstrate full-stack development capabilities by
 │           └── db
 │               └── testmigrations
 └── target
+```
 
 
 ## Installation
