@@ -111,7 +111,7 @@ const profileTranslations = {
     passwordMustContainLetter: "Passordet må inneholde minst en bokstav",
     passwordMustContainNumber: "Passordet må inneholde minst ett tall",
     passwordTooShort: "Passordet må være minst 8 tegn langt",
-    profileUpdate: "Brukeropplysninger oppdatert",
+    profileUpdated: "Brukeropplysninger oppdatert",
   },
   en: {
     memberSince: "Member since {date}",
@@ -141,7 +141,7 @@ const profileTranslations = {
     passwordMustContainLetter: "Password must contain at least one letter",
     passwordMustContainNumber: "Password must contain at least one number",
     passwordTooShort: "Password must be at least 8 characters long",
-    profileUpdate: "User profile updated",
+    profileUpdated: "User profile updated",
   }
 }
 const registerTranslations = {

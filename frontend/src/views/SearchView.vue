@@ -52,7 +52,7 @@ const getParams = () => {
 
 
 const queryString = ref<string>(getParams().toString());
-const { data: searchResults, isError, error, isFetching, fetchNextPage, hasNextPage } = useSearchListings(queryString);
+const { data: searchResults, isError, error, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = useSearchListings(queryString);
 
 
 watch(route, () => {
@@ -98,7 +98,7 @@ const priceRange: [number, number] = (() => {
                     })" show-advanced-search />
 
         <div class="search-results">
-            <ListingCardSkeleton :size="'medium'" v-for="i in 6" :key="i" v-if="isFetching" />
+            <ListingCardSkeleton :size="'medium'" v-for="i in 6" :key="i" v-if="isFetching && !isFetchingNextPage" />
             <template
                 v-else-if="searchResults && searchResults.pages.length > 0 && searchResults.pages[0].totalElements > 0">
                 <template v-for="(page, index) in searchResults.pages">
@@ -106,7 +106,7 @@ const priceRange: [number, number] = (() => {
                         <ListingCard :listing="listing" />
                     </div>
                 </template>
-                <Button v-if="hasNextPage" variant="primary" @click="() => fetchNextPage()">
+                <Button class="load-more-button" v-if="hasNextPage" variant="primary" @click="() => fetchNextPage()">
                     <LoadingSpinner v-if="isFetching" />
                     <template v-else>
                         {{ $t('search.searchLoadMore') }}
@@ -122,6 +122,10 @@ const priceRange: [number, number] = (() => {
 
 
 <style scoped>
+.load-more-button {
+    grid-column: 1 / -1;
+}
+
 .no-listings {
     display: flex;
     justify-content: center;

@@ -136,7 +136,7 @@ const isReservedByMe = computed(() => {
 })
 const reserveButtonText = computed(() => {
     if (reservation?.value && !isReservedByMe.value) {
-        return `${i18n.t("listings.view.reservedByAnotherUser")}: ${reservationEndTime.value}`;
+        return `${i18n.t("listings.view.reservedByAnotherUser")}`;
     }
 
     if (reservation?.value && isReservedByMe.value) {
@@ -337,7 +337,7 @@ const handleDelete = () => {
                         <LoadingSpinner />
                     </template>
                     <template v-else>
-                        {{ reserveButtonText }} {{ reservationEndTime }}
+                        {{ reserveButtonText }} a {{ reservationEndTime }}
                     </template>
                 </Button>
             </div>
