@@ -225,7 +225,19 @@ public class ListingRepo {
         subCategory, subCategory, // subcategory check
         minPrice, maxPrice, // price range
         limit, offset);
-    int total = listings.size();
+    String totalSql = "SELECT * FROM listings WHERE deleted = false AND active = true AND "
+        + "(LOWER(name) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?)) AND "
+        + "(category = ? OR ? IS NULL) AND "
+        + "(subcategory = ? OR ? IS NULL) AND "
+        + "(price BETWEEN ? AND ?) ";
+    List<Listing> totalListings = jdbcTemplate.query(
+        totalSql,
+        listingRowMapper,
+        "%" + query + "%", "%" + query + "%", // search pattern
+        category, category, // category check
+        subCategory, subCategory, // subcategory check
+        minPrice, maxPrice); // price range
+    int total = totalListings.size();
     return new PageImpl<>(listings, pageable, total);
   }
 
