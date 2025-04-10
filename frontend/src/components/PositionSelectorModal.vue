@@ -138,7 +138,7 @@ const selectPosition = (result: any) => {
             <Button variant="outline" @click="dialogRef?.close()">
                 {{ $t('map.cancel') }}
             </Button>
-            <Button @click="emit('position-selected', {
+            <Button id="select-position-popup" @click="emit('position-selected', {
                 latitude: selectedPosition[0],
                 longitude: selectedPosition[1],
                 label: address

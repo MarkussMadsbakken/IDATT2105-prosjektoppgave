@@ -128,7 +128,7 @@ const openPositionSelector = () => {
             </FormGroup>
             <FormGroup :label="$t('listings.create.position')" name="position">
                 <div class="position-selector">
-                    <Button variant="primary" @click="openPositionSelector">
+                    <Button id="select-position-button" variant="primary" @click="openPositionSelector">
                         {{ $t('listings.create.selectPosition') }}
                     </Button>
                     <template v-if="position && position?.latitude !== 0 && position?.longitude !== 0">
@@ -146,7 +146,7 @@ const openPositionSelector = () => {
                 <CategorySelector name="category" @category-selected="category = $event"
                     @subcategories-updated="subCategories = $event" />
             </FormGroup>
-            <Button label="Submit" variant="primary" @click="onSubmit">
+            <Button id="submit-button" label="Submit" variant="primary" @click="onSubmit">
                 <template v-if="isPending">
                     <LoadingSpinner />
                 </template>
