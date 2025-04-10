@@ -121,7 +121,7 @@ const onSubmit = () => {
         <TextInput v-model="lastName" type="text" id="lastName" />
       </FormGroup>
       <div class="button-wrapper">
-        <Button variant="primary" @click="onSubmit">
+        <Button data-cy="save-button" variant="primary" @click="onSubmit">
           <template v-if="isUpdatingUser">
             <LoadingSpinner />
           </template>
