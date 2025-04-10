@@ -58,6 +58,7 @@ const listingTranslations = {
     updated: "Annonsen ble oppdatert",
     deleted: "Annonsen ble slettet",
     reservedError: "Kunne ikke reservere annonsen",
+    deleteError: "Kunne ikke slette annonsen",
   },
   en: {
     reservedUntil: "Reserved until",
@@ -68,6 +69,7 @@ const listingTranslations = {
     updated: "The listing was updated",
     deleted: "The listing was deleted",
     reservedError: "Could not reserve the listing",
+    deleteError: "Could not delete the listing",
   }
 }
 const userListingsTranslations = {
