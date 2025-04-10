@@ -83,7 +83,22 @@ The aim of this project is to demonstrate full-stack development capabilities by
 
 ### Frontend file structure
 ```plaintext
-insert filestructure here
+src
+├── actions
+├── assets
+├── components
+│   ├── admin
+│   ├── icons
+│   ├── profile
+│   ├── register
+│   └── skeleton
+├── router
+├── stores
+├── types
+├── util
+└── views
+    ├── chat
+    └── userListings
 ```
 
 ### Backend file structure
