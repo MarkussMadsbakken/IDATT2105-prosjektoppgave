@@ -439,4 +439,24 @@ public class ListingService {
         .map(this::convertToResponse)
         .collect(Collectors.toList());
   }
+
+  /**
+   * Creates a new listing with associated images.
+   * This method first saves the listing using the provided `ListingRequest` and token,
+   * then validates that the images are not null, and finally saves the images
+   * associated with the created listing.
+   *
+   * @param listingRequest the request object containing the details of the listing to be created
+   * @param images         the list of images to associate with the listing
+   * @param token          the JWT token for authorization
+   * @return the response object representing the created listing
+   */
+  public ListingResponse createListingWithImages(
+      ListingRequest listingRequest, List<MultipartFile> images, String token
+  ) {
+    ListingResponse listingResponse = saveListing(listingRequest, token);
+    Validate.that(images, Validate.isNotNull(), "Images cannot be null");
+    saveListingImages(images, listingResponse.getUuid());
+    return listingResponse;
+  }
 }

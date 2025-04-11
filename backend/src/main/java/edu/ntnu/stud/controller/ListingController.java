@@ -185,15 +185,7 @@ public class ListingController {
       @RequestPart("images") List<MultipartFile> images,
       @RequestHeader("Authorization") String token) {
     logger.info("Creating new listing with name: {}", listingRequest.getName());
-    ListingResponse listingResponse = listingService.saveListing(listingRequest, token);
-
-    logger.info("Saving images for listing with name: {}", listingRequest.getName());
-    logger.info("Listing created successfully with UUID: {}", listingResponse.getUuid());
-    if (images == null || listingResponse.getUuid() == null) {
-      logger.error("cant save listingimages");
-    }
-    listingService.saveListingImages(images, listingResponse.getUuid());
-    logger.info("Images saved successfully for listing with UUID: {}", listingResponse.getUuid());
+    ListingResponse listingResponse = listingService.createListingWithImages(listingRequest, images, token);
     return ResponseEntity.ok(listingResponse);
   }
 
