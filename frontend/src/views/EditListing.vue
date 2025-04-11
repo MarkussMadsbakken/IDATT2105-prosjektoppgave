@@ -230,4 +230,18 @@ const openPositionSelector = () => {
     padding: 1rem;
     padding-bottom: 3rem;
 }
+
+@media only screen and (max-width: 820px) {
+    .listing-form {
+        width: 100%;
+    }
+
+    .outer-create-listing-wrapper {
+        width: 100%;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+}
 </style>
