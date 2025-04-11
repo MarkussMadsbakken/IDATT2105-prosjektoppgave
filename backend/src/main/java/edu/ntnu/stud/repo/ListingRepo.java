@@ -30,7 +30,7 @@ public class ListingRepo {
     listing.setCreatedAt(rs.getTimestamp("created_at"));
     listing.setUpdatedAt(rs.getTimestamp("updated_at"));
     listing.setCategory(rs.getInt("category"));
-    listing.setSubcategory(rs.getInt("subcategory"));
+    listing.setSubcategory(rs.getObject("subcategory", Integer.class));
     listing.setLongitude(rs.getDouble("longitude"));
     listing.setLatitude(rs.getDouble("latitude"));
     listing.setActive(rs.getBoolean("active"));

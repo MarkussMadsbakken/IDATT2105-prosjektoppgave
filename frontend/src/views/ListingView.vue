@@ -376,8 +376,8 @@ const handleDelete = () => {
                 <div class="listing-description-title">
                     {{ $t("listings.view.seller") }}
                 </div>
-                <SellerInfo :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()" size="medium"
-                    @contact-seller="createChatMutation(listingId)" />
+                <SellerInfo v-if="listing?.ownerId" :userId="listing?.ownerId!" :can-contact-seller="auth.isLoggedIn()"
+                    size="medium" @contact-seller="createChatMutation(listingId)" />
             </div>
             <div class="map-container">
                 <div class="listing-description-title">

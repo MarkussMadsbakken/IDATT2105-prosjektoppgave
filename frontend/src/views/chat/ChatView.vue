@@ -22,7 +22,6 @@ const message = ref<string>("");
 const chatId = ref(Number(route.params.id));
 
 watch(route, (newRoute) => {
-    console.log(newRoute.params.id);
     chatId.value = Number(newRoute.params.id);
 });
 
@@ -94,7 +93,7 @@ if (messages.value) {
         </template>
         <template v-else-if="!chatIsError">
             <div class="seller-info-wrapper">
-                <SellerInfo :can-contact-seller="false" :key="chat?.chatId"
+                <SellerInfo v-if="chat" :can-contact-seller="false" :key="chat?.chatId"
                     :userId="isSeller ? chat?.buyerId! : chat?.sellerId!" />
             </div>
             <div v-if="messagesIsError" class="error">
@@ -102,7 +101,7 @@ if (messages.value) {
             </div>
             <div v-else-if="!messages || messages.length === 0 && !messagesIsPending && !chatIsPending"
                 class="no-messages">
-                <p>{{ $t("noMessages") }}</p>
+                <p>{{ $t("messages.chat.noMessages") }}</p>
             </div>
             <div class="messages-wrapper">
 
@@ -117,7 +116,7 @@ if (messages.value) {
                     <LoadingSpinner />
                 </template>
                 <template v-else>
-                    {{ $t("send") }}
+                    {{ $t("messages.chat.send") }}
                 </template>
             </Button>
         </form>

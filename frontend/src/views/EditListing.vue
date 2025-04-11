@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { createListing, editListing } from '@/actions/createListing';
+import { editListing } from '@/actions/createListing';
 import { useGetListingWithImages } from '@/actions/getListing';
 import Button from '@/components/Button.vue';
 import CategorySelector from '@/components/CategorySelector.vue';
 import FormGroup from '@/components/FormGroup.vue';
-import ImageSelector from '@/components/ImageSelector.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NumberInput from '@/components/NumberInput.vue';
 import PhotoGallery from '@/components/PhotoGallery.vue';
@@ -48,7 +47,7 @@ watch(listingWithImages, (newListing) => {
     description.value = newListing?.listing.description ?? "";
     price.value = newListing?.listing.price ?? 0;
     category.value = newListing?.listing.category;
-    subcategory.value = newListing?.listing.subcategory ?? 0;
+    subcategory.value = newListing?.listing.subcategory ?? null;
     position.value = {
         latitude: newListing?.listing.latitude,
         longitude: newListing?.listing.longitude
@@ -174,12 +173,13 @@ const openPositionSelector = () => {
                     </template>
                 </div>
             </FormGroup>
-            <FormGroup :label="$t('category')" name="category"
+            <FormGroup :label="$t('listings.view.category')" name="category"
                 :isNotFilledIn="errors.find(e => e.field === 'category')?.isError">
                 <CategorySelector
-                    :initial-sub-categories="listingWithImages?.listing.subcategory ? [listingWithImages.listing.subcategory] : undefined"
-                    :initial-category="listingWithImages?.listing.category" name="category" :multi-select="false"
-                    @category-selected="category = $event" @subcategories-updated="subcategory = $event[0]" />
+                    :initial-sub-categories="listingWithImages?.listing?.subcategory ? [listingWithImages.listing.subcategory] : undefined"
+                    :initial-category="listingWithImages?.listing?.category" name="category" :multi-select="false"
+                    @category-selected="category = $event" @subcategories-updated="subcategory = $event[0] ?? null"
+                    :key="listingWithImages?.listing?.uuid" />
             </FormGroup>
             <Button label="Submit" variant="primary" @click="onSubmit">
                 <template v-if="isPending">
@@ -229,5 +229,19 @@ const openPositionSelector = () => {
     justify-content: center;
     padding: 1rem;
     padding-bottom: 3rem;
+}
+
+@media only screen and (max-width: 820px) {
+    .listing-form {
+        width: 100%;
+    }
+
+    .outer-create-listing-wrapper {
+        width: 100%;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
 }
 </style>

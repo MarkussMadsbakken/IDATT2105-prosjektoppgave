@@ -449,12 +449,16 @@ const chatTranslations = {
     noChats: "Ingen chatter funnet. Kontakt en selger for å starte en chat.",
     youHaveNotSentMessage: "Du har ikke sendt en melding enda",
     youHaveNotReceivedMessage: "Du har ikke mottatt en melding enda",
+    noMessages: "Ingen meldinger funnet",
+    send: "Send",
 
   },
   en: {
     noChats: "No chats found. Contact a seller to start a chat.",
     youHaveNotSentMessage: "You have not sent a message yet",
     youHaveNotReceivedMessage: "You have not received a message yet",
+    noMessages: "No messages found",
+    send: "Send",
   }
 
 }

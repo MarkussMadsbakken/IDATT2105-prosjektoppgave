@@ -55,7 +55,7 @@ watch(subCategories, (newData) => {
         <div v-for="subcategory in subCategories" :key="subcategory.name" class="sub-category">
             <Checkbox @value-change="() => handleSubCategoryChanged(subcategory.id)" v-model="selectedCategories"
                 :value="subcategory" :name="subcategory.name" :input-id="subcategory.name" />
-            <label :for="subcategory.name"> {{ $t(subcategory.name) }} </label>
+            <label :for="subcategory.name"> {{ subcategory.name }} </label>
         </div>
     </div>
 </template>
