@@ -56,7 +56,7 @@ const selectedCategoryId = computed(() => {
       <div v-for="category in categories" :key="category.name" v-else-if="categories">
         <CategoryCard :icon="category.icon" :categoryname="category.name"
           :selected="category.id === props.selectedCategory" @click="$emit('selectCategory', category.id)">
-          {{ $t(category.name) }}
+          {{ category.name }}
         </CategoryCard>
       </div>
     </div>
