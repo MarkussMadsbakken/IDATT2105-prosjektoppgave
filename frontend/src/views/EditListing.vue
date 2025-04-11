@@ -47,7 +47,7 @@ watch(listingWithImages, (newListing) => {
     description.value = newListing?.listing.description ?? "";
     price.value = newListing?.listing.price ?? 0;
     category.value = newListing?.listing.category;
-    subcategory.value = newListing?.listing.subcategory ?? 0;
+    subcategory.value = newListing?.listing.subcategory ?? null;
     position.value = {
         latitude: newListing?.listing.latitude,
         longitude: newListing?.listing.longitude
