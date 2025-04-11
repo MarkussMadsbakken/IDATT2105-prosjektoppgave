@@ -23,6 +23,11 @@ const listingViewTranslations = {
     seller: "Selger",
     position: "Posisjon",
     hasNoPosition: "Denne annonsen har ingen posisjon",
+    editListing: "Rediger annonse",
+    image: "Bilde",
+    price: "Pris",
+    category: "Kategori",
+    title: "Tittel",
   },
   en: {
     reservedByAnotherUser: "Listing is reserved by another user until",
@@ -46,6 +51,11 @@ const listingViewTranslations = {
     seller: "Seller",
     position: "Position",
     hasNoPosition: "This listing has no position",
+    editListing: "Edit listing",
+    image: "Image",
+    price: "Price",
+    category: "Category",
+    title: "Title",
   }
 }
 const listingTranslations = {
