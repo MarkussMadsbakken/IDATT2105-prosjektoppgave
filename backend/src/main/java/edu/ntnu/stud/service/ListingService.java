@@ -84,7 +84,7 @@ public class ListingService {
     Validate.that(categoryService.getCategoryById(
         listingRequest.getCategory()), Validate.isNotNull(), "Category must exist in database");
 
-    if (listingRequest.getSubcategory() != null && listingRequest.getSubcategory() != 0) {
+    if (listingRequest.getSubcategory() != null) {
       Validate.that(subCategoryService.getSubCategoryById(
           listingRequest.getSubcategory()), Validate.isNotNull(),
           "subcategory must exist in database");
@@ -131,7 +131,7 @@ public class ListingService {
     Validate.that(listingUpdate.getPrice(), Validate.isNotNegative(), "Price cannot be negative");
     Validate.that(categoryService.getCategoryById(
         listingUpdate.getCategory()), Validate.isNotNull(), "Category must exist in database");
-    if (listingUpdate.getSubcategory() != null && listingUpdate.getSubcategory() != 0) {
+    if (listingUpdate.getSubcategory() != null) {
       Validate.that(subCategoryService.getSubCategoryById(
           listingUpdate.getSubcategory()), Validate.isNotNull(),
           "subcategory must exist in database");
