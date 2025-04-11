@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import ArticleSummary from "@/components/ArticleSummary.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import TextInput from "@/components/TextInput.vue";
 import FormGroup from "@/components/FormGroup.vue";
 import { ref } from "vue";
@@ -10,15 +10,18 @@ import { usePurchaseListing } from "@/actions/getListing.ts";
 import { useI18n } from "vue-i18n";
 import Alert from "@/components/Alert.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { useQueryClient } from "@tanstack/vue-query";
+import { useToast } from "primevue/usetoast";
 
-
+const { t } = useI18n();
+const toast = useToast();
+const queryClient = useQueryClient();
+const router = useRouter();
 const route = useRoute();
 const listingId = route.params.id as string
 const cardNumber = ref('')
 const errors = ref<{ field: string; isError: boolean }[]>([]);
 const userName = ref('');
-const { t } = useI18n();
-const showSuccess = ref(false);
 
 const { mutate: purchaseListing, isPending, isError, error, isSuccess } = usePurchaseListing();
 const submitPurchase = async () => {
@@ -35,7 +38,16 @@ const submitPurchase = async () => {
       { uuid: listingId },
       {
         onSuccess: () => {
-          showSuccess.value = true;
+          queryClient.invalidateQueries({ queryKey: ['listing', listingId] });
+          toast.add({
+            severity: "success",
+            summary: t("checkout.success"),
+            detail: t("checkout.successMessage"),
+            closable: true,
+            life: 3000,
+          });
+          router.replace(`/listing/${listingId}`)
+
         },
         onError: (err) => {
           console.error("Purchase failed:", err);
@@ -49,7 +61,7 @@ const submitPurchase = async () => {
 
 <template>
   <ArticleSummary :listing-id="listingId" :key="listingId" />
-  <div v-if="!showSuccess" class="form">
+  <div class="form">
     <form @submit.prevent="submitPurchase">
 
       <FormGroup :label="$t('checkout.name')" name="name"

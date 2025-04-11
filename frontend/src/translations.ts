@@ -217,6 +217,8 @@ const checkoutTranslations = {
     cardNumber: "Kortnummer(Ikke skriv ekte)",
     buy: "Kjøp",
     inSummary: "Oppsummert",
+    success: "Suksess!",
+    successMessage: "Betalingen ble gjennomført.",
   },
   en: {
     listingIsPurchased: "This listing is purchased",
@@ -224,6 +226,8 @@ const checkoutTranslations = {
     cardNumber: "Card number (NOT real)",
     buy: "Purchase",
     inSummary: "In summary",
+    success: "Success!",
+    successMessage: "The payment was successful.",
   }
 }
 const messageViewTranslations = {
