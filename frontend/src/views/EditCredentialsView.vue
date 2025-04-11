@@ -143,7 +143,7 @@ const onSubmit = () => {
   <div class="outer-wrapper">
     <div class="edit-profile-header">
       <div class="title-wrapper">
-        <div class="title">{{ $t("profile.editPassword") }}: </div>
+        <div class="title">{{ $t("profile.editCredentials") }}: </div>
       </div>
       <div class="breadcrumb">
         <Breadcrumb
@@ -200,7 +200,7 @@ const onSubmit = () => {
   left: 2rem;
 }
 
-@media (max-width: 950px) {
+@media (max-width: 1200px) {
   .edit-profile-header {
     flex-direction: column-reverse;
     gap: 0.5rem;
