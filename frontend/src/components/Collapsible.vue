@@ -38,7 +38,7 @@ const variants = {
                 </div>
             </motion.div>
         </AnimatePresence>
-        <div class="title" @click="toggleOpen">
+        <div class="title" @click="toggleOpen" data-cy="collapsible-title">
             <ChevronUp v-if="open" class="icon" stroke-width="2px" />
             {{ open ? props.closedTitle ?? $t("close") : props.openTitle ?? $t("open") }}
             <ChevronDown v-if="!open" class="icon" />
