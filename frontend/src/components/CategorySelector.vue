@@ -26,7 +26,7 @@ const emit = defineEmits<{
 
 const { data: categories, isPending, isError, error } = useCategories();
 const selectedCategory = ref<Category | null>(props.initialCategory ? (categories.value?.find(c => c.id === props.initialCategory) ?? null) : null);
-const selectedSubCategories = ref<number[]>([]);
+const selectedSubCategories = ref<number[]>(props.initialSubCategories ?? []);
 
 watchOnce(categories, (categories) => {
     if (!props.initialCategory) return;
@@ -49,11 +49,25 @@ const handleCategoryChange = () => {
 
 const handleSubCategoryToggle = (id: number) => {
     const index = selectedSubCategories.value.indexOf(id);
+
+    // If not multiSelect, we want to select only one subcategory
+    if (!props.multiSelect) {
+        if (index === -1) {
+            selectedSubCategories.value = [id];
+        } else {
+            selectedSubCategories.value = [];
+        }
+        emit('subcategoriesUpdated', selectedSubCategories.value);
+        return;
+    }
+
+    // If multiSelect, we want to add or remove the subcategory from the list
     if (index === -1) {
         selectedSubCategories.value.push(id);
     } else {
         selectedSubCategories.value.splice(index, 1);
     }
+
     emit('subcategoriesUpdated', selectedSubCategories.value);
 }
 
