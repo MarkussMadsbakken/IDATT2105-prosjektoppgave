@@ -17,11 +17,22 @@ const handleToggleSubCategory = (id: number) => {
     const subCategoryIds = Array.isArray(route.query.subCategoryId) ? route.query.subCategoryId : (route.query.subCategoryId ? [route.query.subCategoryId] : []);
     const isRemoving = subCategoryIds.includes(id.toString());
 
+
+    if (isRemoving) {
+        router.push({
+            query: {
+                q: route.query.q,
+                category: route.query.category,
+                priceRange: route.query.priceRange
+            }
+        });
+        return;
+    }
     router.push({
         query: {
             q: route.query.q,
             category: route.query.category,
-            subCategoryId: isRemoving ? subCategoryIds.filter((subCategoryId) => subCategoryId !== id.toString()) : [...subCategoryIds, id.toString()],
+            subCategoryId: id,
             priceRange: route.query.priceRange
         }
     })

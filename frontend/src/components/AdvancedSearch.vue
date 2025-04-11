@@ -56,7 +56,7 @@ watch(selectedRange, () => {
                 <NumberInput v-model="selectedRange[1]" class="price-input" />
             </div>
             <SubCategorySelector :selected-category-id="props.selectedCategoryId"
-                :selected-subcategories="props.selectedSubcategories"
+                :selected-subcategories="props.selectedSubcategories" :multi-select="false"
                 @subCategoryChanged="$emit('subCategoryChanged', $event)" />
         </div>
     </div>
