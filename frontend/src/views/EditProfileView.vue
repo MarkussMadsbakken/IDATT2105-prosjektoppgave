@@ -131,7 +131,7 @@ const onSubmit = () => {
         </Button>
       </div>
       <Button class="edit-password-button" variant="outline" @click="router.push('/profile/change-credentials')">
-        {{ $t("profile.editPassword") }}
+        {{ $t("profile.editCredentials") }}
       </Button>
     </div>
   </div>

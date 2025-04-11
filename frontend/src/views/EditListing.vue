@@ -142,24 +142,24 @@ const openPositionSelector = () => {
 <template>
     <div class="outer-create-listing-wrapper">
         <div class="page-title">
-            {{ $t("editListing") }}
+            {{ $t("listings.view.editListing") }}
         </div>
         <div class="listing-form" v-if="!listingWithImagesIsPending">
-            <FormGroup :label="$t('image')" name="image" v-if="images && images?.length! > 0">
+            <FormGroup :label="$t('listings.view.image')" name="image" v-if="images && images?.length! > 0">
                 <PhotoGallery :images="images!" id="uploadedImages" />
             </FormGroup>
-            <FormGroup :label="$t('title')" name="title"
+            <FormGroup :label="$t('listings.view.title')" name="title"
                 :isNotFilledIn="errors.find(e => e.field === 'title')?.isError">
                 <TextInput v-model="title" type="text" id="title" name="title" autocomplete="off" />
             </FormGroup>
-            <FormGroup :label="$t('description')" name="description">
+            <FormGroup :label="$t('listings.view.description')" name="description">
                 <textarea id="description" name="description" rows="4" v-model="description"></textarea>
             </FormGroup>
-            <FormGroup :label="$t('price')" name="price"
+            <FormGroup :label="$t('listings.view.price')" name="price"
                 :isNotFilledIn="errors.find(e => e.field === 'price')?.isError">
                 <NumberInput v-model="price" type="number" id="price" name="price" autocomplete="off" />
             </FormGroup>
-            <FormGroup :label="$t('position')" name="position">
+            <FormGroup :label="$t('listings.view.position')" name="position">
                 <div class="position-selector">
                     <Button variant="primary" @click="openPositionSelector">
                         {{ $t('map.selectPosition') }}

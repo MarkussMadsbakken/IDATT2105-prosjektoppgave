@@ -23,6 +23,11 @@ const listingViewTranslations = {
     seller: "Selger",
     position: "Posisjon",
     hasNoPosition: "Denne annonsen har ingen posisjon",
+    editListing: "Rediger annonse",
+    image: "Bilde",
+    price: "Pris",
+    category: "Kategori",
+    title: "Tittel",
   },
   en: {
     reservedByAnotherUser: "Listing is reserved by another user until",
@@ -46,6 +51,11 @@ const listingViewTranslations = {
     seller: "Seller",
     position: "Position",
     hasNoPosition: "This listing has no position",
+    editListing: "Edit listing",
+    image: "Image",
+    price: "Price",
+    category: "Category",
+    title: "Title",
   }
 }
 const listingTranslations = {
@@ -95,7 +105,7 @@ const profileTranslations = {
     saveChanges: "Lagre endringer",
     editProfile: "Rediger profil",
     noFavorites: "Ingen favoritter funnet",
-    editPassword: "Endre passord",
+    editCredentials: "Endre brukernavn eller passord",
     currentPassword: "Nåværende passord",
     newPassword: "Nytt passord",
     passwordUpdated: "Passordet ble oppdatert",
@@ -127,7 +137,7 @@ const profileTranslations = {
     saveChanges: "Save Changes",
     editProfile: "Edit profile",
     noFavorites: "No favorites found",
-    editPassword: "Edit password",
+    editCredentials: "Change credentials",
     currentPassword: "Current password",
     newPassword: "New password",
     passwordUpdated: "Password updated",
